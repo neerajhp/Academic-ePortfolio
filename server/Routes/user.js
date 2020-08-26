@@ -23,16 +23,19 @@ router.post("/signup", (req, res) => {
     });
 
     console.log(newUser.firstName);
+    console.log(newUser.lastName);
 
-    res.send(req.body);
+    newUser.save()
+        .then(data => {
+            res.json(data);
+        })
+        .catch(err => {
+            res.json({message: err});
+        })
 
-    // newUser.save()
-    //     .then(data => {
-    //         res.json(data);
-    //     })
-    //     .catch(err => {
-    //         res.json({message: err});
-    //     })
+    console.log("User added")
+
+    // res.send(req.body)
     // Call on a sign up function from the user controller
 });
 

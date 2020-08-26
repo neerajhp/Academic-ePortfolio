@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 require('dotenv').config();
 
 const server = express();
@@ -20,9 +21,7 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
 // Assign routes
 server.use('/user', userRoute);
 
-//Point to front end
-server.use(express.static('client/'));
-
+//Change to point to front end
 server.get('/', (req, res) => {
   res.send('Hello World');
 });

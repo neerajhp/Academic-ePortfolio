@@ -20,6 +20,9 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
 // Assign routes
 server.use('/user', userRoute);
 
+//Point to front end
+server.use(express.static('client/'));
+
 server.get('/', (req, res) => {
   res.send('Hello World');
 });

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Models/User");
+const userController = require("../Controllers/userController");
 const mongoose  = require("mongoose");
 
 router.get("/", (req, res) => {
@@ -16,6 +17,7 @@ router.post("/signup", (req, res) => {
     const newUser = new User({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
+        email: req.body.email
     });
 
     console.log(newUser.firstName);

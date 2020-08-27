@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../Models/User.js");
+const User = require("../Models/User");
 const mongoose  = require("mongoose");
 
 router.get("/", (req, res) => {
@@ -23,9 +23,7 @@ router.post("/signup", (req, res) => {
 
     newUser.save()
         .then(data => {
-            console.log("User added");
             res.json(data);
-            console.log("User added")
         })
         .catch(err => {
             res.json({message: err});

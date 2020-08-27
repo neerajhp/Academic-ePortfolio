@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Models/User.js");
+const mongoose  = require("mongoose");
 
 // For signup
 // Maybe sign up might need its own route instead
@@ -28,12 +29,13 @@ router.post("/signup", (req, res) => {
     newUser.save()
         .then(data => {
             res.json(data);
+            console.log("User added")
         })
         .catch(err => {
             res.json({message: err});
         })
 
-    console.log("User added")
+    
 
     // res.send(req.body)
     // Call on a sign up function from the user controller

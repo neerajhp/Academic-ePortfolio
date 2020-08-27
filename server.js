@@ -22,8 +22,8 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
 server.use('/user', userRoute);
 
 //Change to point to front end
-server.get('/', (req, res) => {
-  res.send('Hello World');
+server.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 const PORT = process.env.PORT || 5000;

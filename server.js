@@ -14,9 +14,15 @@ const userRoute = require("./Server/Routes/user");
 server.use("/user", userRoute);
 
 // Database connection
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
-  console.log('connected to DB!')
-);
+
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  function (err) {
+      if (!err) {
+          console.log('Connected to mongoDB.');
+      } else {
+          console.log('Failed to connect to mongoDB!', err);
+      }
+  });
 
 
 //Change to point to front end

@@ -21,8 +21,11 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
 // Assign routes
 server.use('/user', userRoute);
 
-//Change to point to front end
-server.get('*', (req, res) => {
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+// Handles any requests that don't match the ones above
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 

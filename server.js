@@ -1,31 +1,30 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const path = require('path');
+const express = require("express");
+const mongoose = require("mongoose");
+// const cors = require("cors");
 require('dotenv').config();
 
 const server = express();
 
-// Used to parse the request body
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+// Middlewares
+server.use(express.json());
+// server.use(cors);
 
-// Import routes
-const userRoute = require('./server/Routes/user.js');
+// Import routes and put them into server.use()
+const userRoute = require("./Server/Routes/user");
+server.use("/user", userRoute);
 
-// Connect to database
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
+// Database connection
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
   console.log('connected to DB!')
 );
 
-// Assign routes
-server.use('/user', userRoute);
 
 //Change to point to front end
 server.get('/', (req, res) => {
   res.send('This is the Backend Server');
 });
 
+// Start the server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

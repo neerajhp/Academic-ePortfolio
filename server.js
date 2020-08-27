@@ -23,7 +23,7 @@ server.use('/user', userRoute);
 
 //Change to point to front end
 server.get('/', (req, res) => {
-  res.send('Hello World');
+  res.send('This is the Backend Server');
 });
 
 const PORT = process.env.PORT || 5000;

@@ -1,16 +1,22 @@
 const express = require("express");
 const multer = require("multer");
 
+// Temporary storage for uploaded images
 const storage = multer.diskStorage({
+    // Destination will change
+    // At the moment this is just a placeholder
     destination: (req, file, cb) => {
-        cb(null, "uploads/images/");
+        cb(null, "server/uploads/images");
     },
+
+    // We also might have to change the way we name our files
     filename: (req, file, cb) => {
         const fileName = file.originalname.toLowerCase().split(" ").join("-");
         cb(null, fileName);;
     } 
 });
 
+// Middleware for uploading images
 const imageUpload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
@@ -26,5 +32,5 @@ const imageUpload = multer({
 
 
 module.exports = {
-    imageUpload: imageUpload
+    imageUpload,
 }

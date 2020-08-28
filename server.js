@@ -11,7 +11,9 @@ server.use(express.json());
 
 // Import routes and put them into server.use()
 const userRoute = require("./Server/Routes/user");
+const uploadRoute = require("./Server/Routes/upload");
 server.use("/user", userRoute);
+server.use("/upload", uploadRoute);
 
 // Database connection
 

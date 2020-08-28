@@ -7,11 +7,14 @@ const server = express();
 
 // Middlewares
 server.use(express.json());
+
 // server.use(cors);
 
 // Import routes and put them into server.use()
 const userRoute = require("./Server/Routes/user");
 server.use("/user", userRoute);
+
+
 
 // Database connection
 

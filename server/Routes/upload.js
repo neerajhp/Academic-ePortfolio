@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const imageUpload = require("../Middleware/imageUpload");
+var path = require('path')
 
 router.get("/", (req, res) => {
-    res.send("This is the upload page");
+    res.sendFile(path.resolve("./server/public/upload.html"))
 });
 
 router.post("/image", imageUpload, async (req, res) => {

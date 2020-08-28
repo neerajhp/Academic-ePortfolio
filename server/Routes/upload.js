@@ -5,6 +5,7 @@ const path = require("path");
 
 const parse = require("../Middleware/upload");
 const uploadController = require("../Controllers/uploadController");
+const { imageUpload } = require("../Middleware/upload");
 
 // Sends a form for testing purposes
 router.get("/", (req, res) => {

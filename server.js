@@ -7,6 +7,7 @@ const server = express();
 
 // Middlewares
 server.use(express.json());
+server.use(express.urlencoded({extended: true}));
 // server.use(cors);
 
 // Import routes and put them into server.use()

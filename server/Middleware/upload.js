@@ -1,20 +1,25 @@
 const express = require("express");
 const multer = require("multer");
+const GridFsStorage = require("multer-gridfs-storage");
+require('dotenv').config();
 
-// Temporary storage for uploaded images
-const storage = multer.diskStorage({
-    // Destination will change
-    // At the moment this is just a placeholder
-    destination: (req, file, cb) => {
-        cb(null, "server/uploads/images");
-    },
+// The mongoDB database
+const storage = new GridFsStorage({url: process.env.DB_CONNECTION});
 
-    // We also might have to change the way we name our files
-    filename: (req, file, cb) => {
-        const fileName = file.originalname.toLowerCase().split(" ").join("-");
-        cb(null, fileName);;
-    } 
-});
+// // Temporary storage for uploaded images
+// const storage = multer.diskStorage({
+//     // Destination will change
+//     // At the moment this is just a placeholder
+//     destination: (req, file, cb) => {
+//         cb(null, "server/uploads/images");
+//     },
+
+//     // We also might have to change the way we name our files
+//     filename: (req, file, cb) => {
+//         const fileName = file.originalname.toLowerCase().split(" ").join("-");
+//         cb(null, fileName);;
+//     } 
+// });
 
 // Middleware for uploading images
 const imageUpload = multer({

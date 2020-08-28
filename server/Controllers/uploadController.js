@@ -1,3 +1,4 @@
+// Allows the upload of images to the database
 const uploadImage = async (req, res) => {
     try{
         if(req.file){

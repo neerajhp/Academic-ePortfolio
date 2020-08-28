@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+// Allows storage of files in MongoDB
 const GridFsStorage = require("multer-gridfs-storage");
 require('dotenv').config();
 
@@ -32,7 +33,7 @@ const imageUpload = multer({
             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
         }
     }
-}).single("photo");
+}).single("image");
 
 
 

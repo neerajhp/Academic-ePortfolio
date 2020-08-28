@@ -7,12 +7,16 @@ router.get("/", (req, res) => {
     res.sendFile(path.resolve("./server/public/upload.html"))
 });
 
-router.post("/image", imageUpload, async (req, res) => {
-    try{
+// router.post("/image", imageUpload, (req, res) => {
+//     try{
+//         if(req.file){
+//             res.send("Image uploaded");
+//         }
+//     }catch(err){
+//         res.status(400).send({
+//             error: "An error has occurred"
+//         })
+//     }
+// })
 
-    }catch(err){
-        res.status(400).send({
-            error: "An error has occurred"
-        })
-    }
-})
+module.exports = router;

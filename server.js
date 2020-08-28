@@ -16,6 +16,8 @@ const uploadRoute = require("./Server/Routes/upload");
 server.use("/user", userRoute);
 server.use("/upload", uploadRoute);
 
+
+
 // Database connection
 
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },

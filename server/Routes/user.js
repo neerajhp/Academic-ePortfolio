@@ -4,6 +4,7 @@ const User = require("../Models/User");
 const userController = require("../Controllers/userController");
 const mongoose  = require("mongoose");
 
+
 router.get("/", (req, res) => {
     res.send("You are in the users page");
 });

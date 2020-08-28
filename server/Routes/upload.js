@@ -4,7 +4,7 @@ const imageUpload = require("../Middleware/imageUpload");
 const multer = require("multer");
 
 router.get("/", (req, res) => {
-    res.send("This is the upload page");
+    res.sendFile(path.resolve("./server/public/upload.html"))
 });
 
 router.post("/image", imageUpload.imageUpload, (req, res) => {

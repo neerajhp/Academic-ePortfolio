@@ -14,23 +14,6 @@ router.get("/signup", (req, res) => {
 
 router.post("/signup", (req, res) => {
     userController.signUp(req,res);
-    // Call on a sign up function from the user controller
-    // const newUser = new User({
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     email: req.body.email
-    // });
-
-    // console.log(newUser.firstName);
-    // console.log(newUser.lastName);
-
-    // newUser.save()
-    //     .then(data => {
-    //         res.json(data);
-    //     })
-    //     .catch(err => {
-    //         res.json({message: err});
-    //     })
 
 });
 

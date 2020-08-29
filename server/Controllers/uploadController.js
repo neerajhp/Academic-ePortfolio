@@ -1,7 +1,8 @@
-// Allows the upload of images to the database
+// Allows the upload of an image to the database
 const uploadSingle = async (req, res) => {
     try{
         if(req.file){
+            
             res.status(200).send("file saved");
         }else{
             throw Error();

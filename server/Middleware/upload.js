@@ -9,7 +9,7 @@ const storage = new GridFsStorage({
     url: process.env.DB_CONNECTION,
     file: (req, file) => {
         return{
-            filename: file.originalname.toLowerCase().split(" ").join("-")// This is dependent on the case
+            filename: file.originalname.toLowerCase()// This is dependent on the case
         };
     }
 });
@@ -61,7 +61,7 @@ const imageMultipleUpload = multer({
 const documentUpload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
-        if(file.mimetype == "application/pdf"){
+        if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
             cb(null, true);
         }else{
             cb(null, false);

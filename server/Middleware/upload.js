@@ -5,7 +5,14 @@ const GridFsStorage = require("multer-gridfs-storage");
 require('dotenv').config();
 
 // The mongoDB database
-const storage = new GridFsStorage({url: process.env.DB_CONNECTION});
+const storage = new GridFsStorage({
+    url: process.env.DB_CONNECTION,
+    file: (req, file) => {
+        return{
+            filename: file.originalname.toLowerCase().split(" ").join("-")// This is dependent on the case
+        };
+    }
+});
 
 // // Temporary storage for uploaded images
 // const storage = multer.diskStorage({

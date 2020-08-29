@@ -12,12 +12,10 @@ router.get("/", (req, res) => {
 });
 
 // Handles the file upload
-router.post("/files", (req, res) => {
-
-});
+router.post("/files", parse.documentUpload, uploadController.uploadMultiple);
 
 // Handles the image upload
-router.post("/image", parse.imageUpload, uploadController.uploadImage);
+router.post("/image", parse.imageSingleUpload, uploadController.uploadSingle);
 
 
 module.exports = router;

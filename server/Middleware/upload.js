@@ -29,8 +29,9 @@ const storage = new GridFsStorage({
 //     } 
 // });
 
-// Middleware for uploading images
-const imageUpload = multer({
+// Middleware for uploading single images
+// Can be used for the profile picture
+const imageSingleUpload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
@@ -42,8 +43,37 @@ const imageUpload = multer({
     }
 }).single("image");
 
+// Middleware for uploading multiple images
+const imageMultipleUpload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
+            cb(null, true);
+        } else{
+            cb(null, false);
+            return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
+        }
+    }
+}).array("images", 5);
+
+// Upload of documents
+// Can be used for the eportfolio document upload
+const documentUpload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if(file.mimetype == "application/pdf"){
+            cb(null, true);
+        }else{
+            cb(null, false);
+            return cb(new Error("Only .pdf is allowed"));
+        }
+    }
+
+}).array("documents", 10);
 
 
 module.exports = {
-    imageUpload,
+    imageSingleUpload,
+    imageMultipleUpload,
+    documentUpload
 }

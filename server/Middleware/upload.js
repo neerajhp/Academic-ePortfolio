@@ -81,18 +81,29 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
-// This function uploads files to aws s3 server
+// This function uploads documents to aws s3 server
+// This might be the main document upload function
 const altDocumentUpload = multer({
+    // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
     storage: multerS3({
+        acl: "public-read",
         s3: s3,
-        bucket: "documents-eportfolio",
+        bucket: "documents-eportfolio/Documents",
         metadata: (req, file, cb) => {
             cb(null, {fieldName: file.fieldname});
         },
         key: (req, file, cb) => {
             cb(null, file.originalname);
         }
-    })
+    }),
+    fileFilter: (req, file, cb) => {
+        if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+            cb(null, true);
+        }else{
+            cb(null, false);
+            return cb(new Error("Only .pdf and .docx are allowed"));
+        }
+    }
 }).array("documents", 5);
 
 

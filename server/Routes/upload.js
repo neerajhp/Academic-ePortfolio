@@ -14,9 +14,11 @@ router.get("/", (req, res) => {
 // Handles the file upload
 router.post("/files", parse.documentUpload, uploadController.uploadMultiple);
 
-router.post("/altfiles", parse.altDocumentUpload, function(req, res, next){
-    res.send("Successfully uploaded " + req.files.length + " files!");
-});
+// router.post("/altfiles", parse.altDocumentUpload, function(req, res, next){
+//     res.send("Successfully uploaded " + req.files.length + " files!");
+// });
+
+router.post("/altfiles", parse.altDocumentUpload, uploadController.uploadMultiple);
 
 // Handles the image upload
 router.post("/image", parse.imageSingleUpload, uploadController.uploadSingle);

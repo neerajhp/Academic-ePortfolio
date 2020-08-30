@@ -27,7 +27,7 @@ const uploadMultiple = async (req, res) => {
             res.send("You must select at least 1 file");
         }
 
-        res.send("Files have been uploaded");
+        res.send(req.files.length + " files have been uploaded");
     }catch(err){
         res.status(400).send({error: "Unable to upload files."});
         console.log(err);

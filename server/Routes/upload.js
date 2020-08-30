@@ -11,13 +11,8 @@ router.get("/", (req, res) => {
     res.sendFile(path.resolve("./server/public/upload.html"))
 });
 
-// Handles the file upload
-// router.post("/files", parse.documentUpload, uploadController.uploadMultiple);
 
-// router.post("/altfiles", parse.altDocumentUpload, function(req, res, next){
-//     res.send("Successfully uploaded " + req.files.length + " files!");
-// });
-
+// Handles the document uploads
 router.post("/files", parse.altDocumentUpload(1001), uploadController.uploadMultiple);
 
 // Handles the image upload

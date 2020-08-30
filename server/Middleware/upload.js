@@ -18,6 +18,24 @@ const storage = new GridFsStorage({
     }
 });
 
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+});
+
+// The s3 server
+const imageStorage = multerS3({
+    acl: "public-read",
+    s3: s3,
+    bucket: "documents-eportfolio", // The bucket depends on the userID
+    metadata: (req, file, cb) => {
+        cb(null, {fieldName: file.fieldname});
+    },
+    key: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+})
+
 // // Temporary storage for uploaded images
 // const storage = multer.diskStorage({
 //     // Destination will change
@@ -36,7 +54,7 @@ const storage = new GridFsStorage({
 // Middleware for uploading single images
 // Can be used for the profile picture
 const imageSingleUpload = multer({
-    storage: storage,
+    storage: imageStorage,
     fileFilter: (req, file, cb) => {
         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
             cb(null, true);
@@ -49,7 +67,7 @@ const imageSingleUpload = multer({
 
 // Middleware for uploading multiple images
 const imageMultipleUpload = multer({
-    storage: storage,
+    storage: imageStorage,
     fileFilter: (req, file, cb) => {
         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
             cb(null, true);
@@ -76,10 +94,10 @@ const documentUpload = multer({
 }).array("document", 10);
 
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-});
+// const s3 = new AWS.S3({
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_KEY,
+// });
 
 
 // This function uploads documents to aws s3 server
@@ -90,7 +108,7 @@ const altDocumentUpload = (userID) => {
         storage: multerS3({
             acl: "public-read",
             s3: s3,
-            bucket: "documents-eportfolio/user-" + userID, // The bucket depends on the userID
+            bucket: "documents-eportfolio/user-" + userID, // The bucket location depends on the userID
             metadata: (req, file, cb) => {
                 cb(null, {fieldName: file.fieldname});
             },
@@ -106,7 +124,7 @@ const altDocumentUpload = (userID) => {
                 return cb(new Error("Only .pdf and .docx are allowed"));
             }
         }
-    }).array("documents", 5);
+    }).array("document", 5);
 }; 
 
 

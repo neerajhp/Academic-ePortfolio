@@ -7,6 +7,7 @@ require('dotenv').config();
 const uploadSingle = async (req, res) => {
     try{
         if(req.file){
+            console.log(req.file);
             
             res.status(200).send("file saved");
         }else{
@@ -28,19 +29,29 @@ const uploadMultiple = async (req, res) => {
         }
 
         res.send(req.files.length + " files have been uploaded");
+
+        // Creates a document reference for each file 
+        // These references are then saved to mongoDB
+        req.files.forEach(saveFileReference);
     }catch(err){
         res.status(400).send({error: "Unable to upload files."});
         console.log(err);
     }
 };
 
-// const s3 = new AWS.S3({
-//     accessKeyId: process.env.AWS_ACCESS_KEY,
-//     secretAccessKey: process.env.AWS_SECRET_KEY,
-//     Bucket: "documents-eportfolio"
-// })
+const saveFileReference = (file) => {
+    var newFile = {
+        fileLink: file.location,
+        s3_key: file.originalname
+    }
 
-// const uploadDocument = async (userID, )
+    var document = new Document(newFile);
+    document.save((err, file) => {
+        if(err){
+            throw err;
+        }
+    });
+}
 
 module.exports = {
     uploadSingle,

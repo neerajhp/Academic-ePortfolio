@@ -1,3 +1,8 @@
+const Document = require("../Models/Document");
+const multer = require("multer");
+const AWS = require("aws-sdk");
+require('dotenv').config();
+
 // Allows the upload of an image to the database
 const uploadSingle = async (req, res) => {
     try{
@@ -28,6 +33,14 @@ const uploadMultiple = async (req, res) => {
         console.log(err);
     }
 };
+
+// const s3 = new AWS.S3({
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_KEY,
+//     Bucket: "documents-eportfolio"
+// })
+
+// const uploadDocument = async ()
 
 module.exports = {
     uploadSingle,

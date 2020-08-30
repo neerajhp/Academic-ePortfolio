@@ -1,5 +1,9 @@
 const express = require("express");
 const multer = require("multer");
+const multerS3 = require("multer-s3");
+const Document = require("../Models/Document");
+const AWS = require("aws-sdk");
+AWS.config.update({ region:'ap-southeast-2' });
 // Allows storage of files in MongoDB
 const GridFsStorage = require("multer-gridfs-storage");
 require('dotenv').config();
@@ -65,15 +69,36 @@ const documentUpload = multer({
             cb(null, true);
         }else{
             cb(null, false);
-            return cb(new Error("Only .pdf is allowed"));
+            return cb(new Error("Only .pdf and .docx are allowed"));
         }
     }
 
 }).array("documents", 10);
 
 
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+});
+
+// This function uploads files to aws s3 server
+const altDocumentUpload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: "documents-eportfolio",
+        metadata: (req, file, cb) => {
+            cb(null, {fieldName: file.fieldname});
+        },
+        key: (req, file, cb) => {
+            cb(null, file.originalname);
+        }
+    })
+}).array("documents", 5);
+
+
 module.exports = {
     imageSingleUpload,
     imageMultipleUpload,
-    documentUpload
+    documentUpload,
+    altDocumentUpload
 }

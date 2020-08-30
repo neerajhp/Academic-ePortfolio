@@ -1,7 +1,12 @@
 import React from 'react';
+import LoginPage from './LoginPage';
 
 function App() {
-  return <div> Succesfully deployed!</div>;
+  return (
+    <div>
+      <LoginPage />
+    </div>
+  );
 }
 
 export default App;

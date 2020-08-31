@@ -17,9 +17,9 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 const useStyles = makeStyles(({}) => ({
     //Page container
     root: {
-        height: '100vh',
+        height: '110vh',
         width: '100vw',
-        position: 'fixed',
+        position: 'flex',
     },
     banner: {
         position: 'sticky',
@@ -34,7 +34,7 @@ const useStyles = makeStyles(({}) => ({
     },
     formContainer: {
         width: '100%',
-        height: '80%',
+        height: '90%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -163,6 +163,7 @@ const SignUp = () => {
                                 {"Now,Login?"}
                             </Link>
                         </Grid>
+
                     </form>
                 </Paper>
             </div>

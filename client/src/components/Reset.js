@@ -106,10 +106,10 @@ const Reset = () => {
                             margin='normal'
                             required
                             fullWidth
-                            name='password'
+                            name='resetpassword'
                             label='ResetPassword'
                             type='password'
-                            id='password'
+                            id='resetpassword'
                             autoComplete='current-password'
                         />
                         <FormControlLabel

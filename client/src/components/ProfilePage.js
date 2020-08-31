@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -9,7 +10,11 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
+import CreateIcon from '@material-ui/icons/Create';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import FileExplorer from './FileExplorer';
 
 // Styling
 const useStyles = makeStyles(({}) => ({
@@ -27,6 +32,10 @@ const useStyles = makeStyles(({}) => ({
     background: '#333B55',
     color: '#FFFFFF',
   },
+  navBarIcon: {
+    fontSize: 30,
+    color: '#FFFFFF',
+  },
   profileContainer: {
     marginLeft: '2%',
     height: '100%',
@@ -37,7 +46,7 @@ const useStyles = makeStyles(({}) => ({
     justifyContent: 'space-between',
   },
   characterCard: {
-    margin: '1%',
+    margin: '0.5%',
     flexGrow: 1,
     height: '20%',
     background: '#536684',
@@ -56,7 +65,7 @@ const useStyles = makeStyles(({}) => ({
     color: 'white !important ',
   },
   showcaseCard: {
-    margin: '1%',
+    margin: '0.5%',
     flexGrow: 5,
     height: '20%',
     background: '#F7F5E7',
@@ -79,13 +88,14 @@ const useStyles = makeStyles(({}) => ({
     alignItems: 'flex-start',
   },
   fileExplorerCard: {
-    margin: '1%',
+    margin: '0.5%',
     flexGrow: 5,
     height: '20%',
     background: '#F7F5E7',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'space-evenly',
+    padding: '2%',
   },
 }));
 
@@ -99,23 +109,29 @@ const ProfilePage = () => {
         <List>
           <ListItem button>
             <ListItemIcon>
-              <FaceIcon />
+              <FaceIcon className={styles.navBarIcon} />
             </ListItemIcon>
             <ListItemText primary='My Profile'></ListItemText>
           </ListItem>
           <ListItem button>
-            <ListItemIcon></ListItemIcon>
+            <ListItemIcon>
+              <CreateIcon className={styles.navBarIcon} />
+            </ListItemIcon>
             <ListItemText primary='My Blog'></ListItemText>
           </ListItem>
           <ListItem button>
-            <ListItemIcon></ListItemIcon>
+            <ListItemIcon>
+              <MenuBookIcon className={styles.navBarIcon} />
+            </ListItemIcon>
             <ListItemText primary='My Projects'></ListItemText>
           </ListItem>
           <ListItem button>
-            <ListItemIcon></ListItemIcon>
+            <ListItemIcon>
+              <AccountBoxIcon className={styles.navBarIcon} />
+            </ListItemIcon>
             <ListItemText primary='My CV'></ListItemText>
           </ListItem>
-        </List>{' '}
+        </List>
       </div>
       <div className={styles.profileContainer}>
         <Paper className={styles.characterCard}>
@@ -133,7 +149,9 @@ const ProfilePage = () => {
             <p>Project description goes here</p>
           </div>
         </Paper>
-        <Paper className={styles.fileExplorerCard}>File Explorer</Paper>
+        <Paper className={styles.fileExplorerCard}>
+          <FileExplorer />
+        </Paper>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ const multer = require("multer");
 const AWS = require("aws-sdk");
 require('dotenv').config();
 
+
 // Allows the upload of an image to the database
 const uploadSingle = async (req, res) => {
     try{
@@ -43,19 +44,39 @@ const uploadMultiple = async (req, res, userID) => {
     }
 };
 
-const saveFileReference = (file, userID) => {
+const saveFileReference = async (file, userID) => {
+    // Check for file in mongoDB
     var newFile = {
         user_id: userID,
         fileLink: file.location,
-        s3_key: file.originalname
+        s3_key: `user-${userID}/${file.originalname}`
     }
-
-    var document = new Document(newFile);
-    document.save((err, file) => {
-        if(err){
-            throw err;
+    
+    await Document.findOne({s3_key: file.originalname, user_id: userID})
+    .then(async searchedFile => {
+        if(!searchedFile){
+            var document = new Document(newFile);
+            document.save((err, file) => {
+                if(err){
+                    throw err;
+                }
+            });
+          
+            console.log("File to be saved")
+        } else{
+            console.log("File already exists");
+            // Make the user upload again?
+            // Rename the file?
         }
     });
+    
+
+    // var document = new Document(newFile);
+    // document.save((err, file) => {
+    //     if(err){
+    //         throw err;
+    //     }
+    // });
 }
 
 module.exports = {

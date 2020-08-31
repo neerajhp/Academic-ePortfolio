@@ -9,14 +9,14 @@ const GridFsStorage = require("multer-gridfs-storage");
 require('dotenv').config();
 
 // The mongoDB database
-const storage = new GridFsStorage({
-    url: process.env.DB_CONNECTION,
-    file: (req, file) => {
-        return{
-            filename: file.originalname.toLowerCase()// This is dependent on the case
-        };
-    }
-});
+// const storage = new GridFsStorage({
+//     url: process.env.DB_CONNECTION,
+//     file: (req, file) => {
+//         return{
+//             filename: file.originalname.toLowerCase()// This is dependent on the case
+//         };
+//     }
+// });
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -36,25 +36,35 @@ const imageStorage = multerS3({
     }
 })
 
-// // Temporary storage for uploaded images
-// const storage = multer.diskStorage({
-//     // Destination will change
-//     // At the moment this is just a placeholder
-//     destination: (req, file, cb) => {
-//         cb(null, "server/uploads/images");
-//     },
-
-//     // We also might have to change the way we name our files
-//     filename: (req, file, cb) => {
-//         const fileName = file.originalname.toLowerCase().split(" ").join("-");
-//         cb(null, fileName);;
-//     } 
-// });
+const createStorage = (userID) => {
+    return multerS3({
+        acl: "public-read",
+        s3: s3,
+        bucket: "documents-eportfolio/user-" + userID,
+        metadata: (req, file, cb) => {
+            cb(null, {fieldName: file.fieldname});
+        },
+        key: (req, file, cb) => {
+            cb(null, file.originalname);
+        }
+    });
+}
 
 // Middleware for uploading single images
 // Can be used for the profile picture
 const imageSingleUpload = multer({
-    storage: imageStorage,
+    //storage: imageStorage,
+    storage: multerS3({
+        acl: "public-read",
+        s3: s3,
+        bucket: "documents-eportfolio",
+        metadata: (req, file, cb) => {
+            cb(null, {fieldName: file.fieldname});
+        },
+        key: (req, file, cb) => {
+            cb(null, file.originalname);
+        }
+    }),
     fileFilter: (req, file, cb) => {
         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
             cb(null, true);
@@ -78,50 +88,20 @@ const imageMultipleUpload = multer({
     }
 }).array("images", 5);
 
-// Upload of documents
-// This function uploads documents to mongoDB 
-const documentUpload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-        if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-            cb(null, true);
-        }else{
-            cb(null, false);
-            return cb(new Error("Only .pdf and .docx are allowed"));
-        }
-    }
-
-}).array("document", 10);
-
-
-// const s3 = new AWS.S3({
-//     accessKeyId: process.env.AWS_ACCESS_KEY,
-//     secretAccessKey: process.env.AWS_SECRET_KEY,
-// });
-
+var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/png", "image/jpeg"];
 
 // This function uploads documents to aws s3 server
 // Every user will get their own folder in the bucket
 const altDocumentUpload = (userID) => {
     return multer({
         // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
-        storage: multerS3({
-            acl: "public-read",
-            s3: s3,
-            bucket: "documents-eportfolio/user-" + userID, // The bucket location depends on the userID
-            metadata: (req, file, cb) => {
-                cb(null, {fieldName: file.fieldname});
-            },
-            key: (req, file, cb) => {
-                cb(null, file.originalname);
-            }
-        }),
+        storage: createStorage(userID),
         fileFilter: (req, file, cb) => {
-            if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+            if(allowedFiles.includes(file.mimetype)){
                 cb(null, true);
             }else{
                 cb(null, false);
-                return cb(new Error("Only .pdf and .docx are allowed"));
+                return cb(new Error("Only .pdf, .docx, .png and .jpg are allowed"));
             }
         }
     }).array("document", 5);
@@ -131,6 +111,5 @@ const altDocumentUpload = (userID) => {
 module.exports = {
     imageSingleUpload,
     imageMultipleUpload,
-    documentUpload,
     altDocumentUpload
 }

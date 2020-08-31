@@ -16,11 +16,11 @@ exports.postSignup = async(req, res) => {
 
         })
 
-        console.log(newUser.firstName);
-        console.log(newUser.lastName);
-        console.log(newUser.email);
-        console.log(newUser.password);
-        console.log("User added");
+        // console.log(newUser.firstName);
+        // console.log(newUser.lastName);
+        // console.log(newUser.email);
+        // console.log(newUser.password);
+        // console.log("User added");
 
         //see if the email is already registered
         await User.findOne({

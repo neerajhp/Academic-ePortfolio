@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const AWS = require("aws-sdk");
 
 const parse = require("../Middleware/upload");
 const uploadController = require("../Controllers/uploadController");
+
+const Document = require("../Models/Document");
 
 // Sends a form for testing purposes
 router.get("/", (req, res) => {

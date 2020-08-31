@@ -79,7 +79,7 @@ const imageMultipleUpload = multer({
 }).array("images", 5);
 
 // Upload of documents
-// Can be used for the eportfolio document upload
+// This function uploads documents to mongoDB 
 const documentUpload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {

@@ -13,7 +13,16 @@ router.get("/", (req, res) => {
 
 
 // Handles the document uploads
-router.post("/files", parse.altDocumentUpload(1001), uploadController.uploadMultiple);
+// The userID is added to the function so that the userID can be attached to the document object in mongoDB
+// This isn't final. It depends on how the user upload will work.
+router.post("/files", parse.altDocumentUpload(1001), (req, res) => {
+    try{
+        uploadController.uploadMultiple(req, res, 1001);
+    }catch(err){
+        res.status(400).json(err);    
+    }
+    
+});
 
 // Handles the image upload
 router.post("/image", parse.imageSingleUpload, uploadController.uploadSingle);

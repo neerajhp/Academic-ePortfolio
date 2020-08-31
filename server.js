@@ -10,11 +10,11 @@ server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 // server.use(cors);
 
-// Import routes and put them into server.use()
+// Import routes
 const userRoute = require("./Server/Routes/user");
 const uploadRoute = require("./Server/Routes/upload");
 
-
+// Attach the routes
 server.use("/user", userRoute);
 server.use("/upload", uploadRoute);
 

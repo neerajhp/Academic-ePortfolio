@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     // password
     // educational background
 
-})
+});
 
 
 

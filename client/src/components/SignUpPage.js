@@ -38,9 +38,10 @@ const useStyles = makeStyles(({}) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+
+    paddingTop: '5%',
   },
   formPaper: {
-    height: '80%',
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
@@ -54,11 +55,6 @@ const useStyles = makeStyles(({}) => ({
   icon: { fontSize: 40, color: '#333B55' },
   submit: {
     backgroundColor: '#F8C736',
-  },
-  options: {
-    '& .MuiTypography-colorPrimary': {
-      color: '#f0f2f6 !important',
-    },
   },
 }));
 
@@ -82,7 +78,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const LoginPage = () => {
+const SignUpPage = () => {
   // Styling
   const styles = useStyles();
 
@@ -92,12 +88,34 @@ const LoginPage = () => {
         <h1>Welcome to ePortfolio</h1>
       </div>
       <div className={styles.formContainer}>
-        <Paper elevation={1} className={styles.formPaper}>
+        <div className={styles.formPaper}>
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Sign In</h2>
+          <h2> Sign Up</h2>
           <form className={styles.form} noValidate>
+            <CssTextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='givenname'
+              label='Given Name'
+              name='givenname'
+              autoComplete='givenname'
+              autoFocus
+            />
+            <CssTextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='lastname'
+              label='Last Name'
+              name='lastname'
+              autoComplete='lastname'
+              autoFocus
+            />
             <CssTextField
               variant='outlined'
               margin='normal'
@@ -120,6 +138,17 @@ const LoginPage = () => {
               id='password'
               autoComplete='current-password'
             />
+            <CssTextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='confirmpassword'
+              label='Confirm Password'
+              type='confirmpassword'
+              id='confirmpassword'
+              autoComplete='current-password'
+            />
             <FormControlLabel
               control={<Checkbox value='remember' color='white' />}
               label='Remember me'
@@ -131,25 +160,18 @@ const LoginPage = () => {
               color='primary'
               className={styles.submit}
             >
-              Sign In
+              Sign Up
             </Button>
-            <Grid container className={styles.options}>
-              <Grid item xs>
-                <Link href='./Reset' variant='body2'>
-                  Forgot password?
-                 </Link>
-              </Grid>
-              <Grid item>
-                <Link href='./SignUp' variant='body2'>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+            <Grid item>
+              <Link href='/' variant='body2'>
+                {'Now,Login?'}
+              </Link>
             </Grid>
           </form>
-        </Paper>
+        </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignUpPage;

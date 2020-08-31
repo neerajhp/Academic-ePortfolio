@@ -34,6 +34,12 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
 //Change to point to front end
 server.get('/', (req, res) => {
   res.send('This is the Backend Server');
+// Serve the static files from the React app
+server.use(express.static(path.join(__dirname, 'client/build')));
+
+// Handles any requests that don't match the ones above
+server.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 // Start the server

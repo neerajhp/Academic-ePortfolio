@@ -42,6 +42,11 @@ server.get('/', (req, res) => {
   res.send('This is the Backend Server');
 });
 
+// Handles any requests that don't match the ones above
+server.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
+
 
 
 // Start the server

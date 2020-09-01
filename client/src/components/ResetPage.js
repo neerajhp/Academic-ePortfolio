@@ -55,11 +55,6 @@ const useStyles = makeStyles(({}) => ({
   submit: {
     backgroundColor: '#F8C736',
   },
-  options: {
-    '& .MuiTypography-colorPrimary': {
-      color: '#f0f2f6 !important',
-    },
-  },
 }));
 
 const CssTextField = withStyles({
@@ -82,7 +77,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const LoginPage = () => {
+const ResetPage = () => {
   // Styling
   const styles = useStyles();
 
@@ -96,7 +91,7 @@ const LoginPage = () => {
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Sign In</h2>
+          <h2> Reset</h2>
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
@@ -115,7 +110,7 @@ const LoginPage = () => {
               required
               fullWidth
               name='password'
-              label='Password'
+              label='ResetPassword'
               type='password'
               id='password'
               autoComplete='current-password'
@@ -125,25 +120,18 @@ const LoginPage = () => {
               label='Remember me'
             />
             <Button
-              type='submit'
+              type='reset'
               fullWidth
               variant='contained'
               color='primary'
               className={styles.submit}
             >
-              Sign In
+              Confirm
             </Button>
-            <Grid container className={styles.options}>
-              <Grid item xs>
-                <Link href='./Reset' variant='body2'>
-                  Forgot password?
-                 </Link>
-              </Grid>
-              <Grid item>
-                <Link href='./SignUp' variant='body2'>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+            <Grid item>
+              <Link href='SignUp' variant='body2'>
+                {"Don't have an account? Sign Up"}
+              </Link>
             </Grid>
           </form>
         </Paper>
@@ -152,4 +140,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPage;

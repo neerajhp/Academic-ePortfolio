@@ -81,7 +81,7 @@ var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedoc
 
 // This function uploads documents to aws s3 server
 // Every user will get their own folder in the bucket
-const altDocumentUpload = multer({
+const documentUpload = multer({
     // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
     storage: createStorage,
     fileFilter: (req, file, cb) => {
@@ -96,7 +96,6 @@ const altDocumentUpload = multer({
 
 
 module.exports = {
-    //imageSingleUpload,
     imageUpload,
-    altDocumentUpload
+    documentUpload
 }

@@ -7,8 +7,6 @@ const AWS = require("aws-sdk");
 const parse = require("../Middleware/upload");
 const uploadController = require("../Controllers/uploadController");
 
-const Document = require("../Models/Document");
-
 // Sends a form for testing purposes
 router.get("/", (req, res) => {
     res.sendFile(path.resolve("./server/public/upload.html"))
@@ -18,17 +16,19 @@ router.get("/", (req, res) => {
 // Handles the document uploads
 // The userID is added to the function so that the userID can be attached to the document object in mongoDB
 // This isn't final. It depends on how the user upload will work.
-router.post("/files", parse.altDocumentUpload(1001), (req, res) => {
-    try{
-        uploadController.uploadMultiple(req, res, 1001);
-    }catch(err){
-        res.status(400).json(err);    
-    }
-    
-});
+// Maybe get the userID from the request?
+router.post("/files", parse.altDocumentUpload.array("document", 5), uploadController.uploadMultiple);
 
-// Handles the image upload
-router.post("/image", parse.imageSingleUpload, uploadController.uploadSingle);
+// Handles the upload of a single document
+// Probably best for cv?
+router.post("/cv", parse.altDocumentUpload.single("cv"), uploadController.uploadSingle);
+
+// Handles the upload of a single image
+// Can be used for profile picture uploads maybe?
+router.post("/profile-pic", parse.imageUpload.single("profile-pic"), uploadController.uploadSingle);
+
+// Handles the upload of multiple images
+router.post("/images", parse.imageUpload.array("image", 5), uploadController.uploadMultiple);
 
 
 module.exports = router;

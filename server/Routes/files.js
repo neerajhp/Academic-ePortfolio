@@ -54,4 +54,44 @@ router.get("/:id", async (req, res, next) => {
     })
 });
 
+// Deletes a document based on its mongoDB id
+router.delete("/:id", async(req, res, next) => {
+    await Document.findById(req.params.id, (err, doc) => {
+        if(err){
+            console.log("File not found");
+            return next(err);
+        }
+
+        if(!doc){
+            console.log("File not found");
+        }else{
+            var params = {
+                Bucket: "documents-eportfolio",
+                Key: doc.s3_key
+            }
+            s3.deleteObject(params, (err, data) => {
+                if(err){
+                    console.log(err);
+                    console.log("error in callback");
+                }else{
+                    console.log("file removed from s3");
+                }
+            })
+            //res.json(doc.s3_key);
+            //console.log("File found");
+        }
+    });
+    
+    // Delete document and its reference 
+    await Document.deleteOne({_id: req.params.id}, (err) => {
+        if(err){
+            console.log("Uh oh stinky");
+            res.status(400).json(err);
+        }else{
+            console.log("file reference deleted");
+            res.json({message: "Both the file and its reference have been deleted"});
+        }
+    });
+});
+
 module.exports = router;

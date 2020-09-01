@@ -50,7 +50,12 @@ const useStyles = makeStyles(({}) => ({
     background: '#333B55',
     color: '#FFFFFF ',
   },
-  avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
+  avatar: {
+    height: '70px',
+    width: '70px',
+    background: '#FFFFFF',
+    margin: '5%',
+  },
   icon: { fontSize: 40, color: '#333B55' },
   submit: {
     backgroundColor: '#F8C736',
@@ -82,7 +87,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const LoginPage = () => {
+const ResetPage = () => {
   // Styling
   const styles = useStyles();
 
@@ -96,7 +101,7 @@ const LoginPage = () => {
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Sign In</h2>
+          <h2> Reset Your Password</h2>
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
@@ -109,39 +114,23 @@ const LoginPage = () => {
               autoComplete='email'
               autoFocus
             />
-            <CssTextField
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              name='password'
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
-            />
             <FormControlLabel
               control={<Checkbox value='remember' color='white' />}
               label='Remember me'
             />
             <Button
-              type='submit'
+              type='reset'
               fullWidth
               variant='contained'
               color='primary'
               className={styles.submit}
             >
-              Sign In
+              Confirm
             </Button>
             <Grid container className={styles.options}>
               <Grid item xs>
-                <Link href='./reset' variant='body2'>
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href='./signup' variant='body2'>
-                  {"Don't have an account? Sign Up"}
+                <Link href='./' variant='body2'>
+                  Login
                 </Link>
               </Grid>
             </Grid>
@@ -152,4 +141,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPage;

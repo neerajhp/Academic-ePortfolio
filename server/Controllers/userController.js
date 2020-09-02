@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Models/User.js");
+const EduUni = require("../Models/User.js");
+const EduHigh = require("../Models/User.js"); 
 var bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -64,4 +66,51 @@ exports.postLogin = async(req, res) => {
         .catch(err => {
             console.log("Error is ", err.message);
         });
+}
+
+//Education History user control
+
+exports.postEduUni = async(req, res) => {
+
+    const newEduUni = new EduUni({
+        //get userid from from authentication JWT
+        //user_id: ,
+        uniName: req.body.uniName,
+        course: req.body.facultyName,
+        major: req.body.courseName,
+        monthStart:req.body.monthStart,
+        yearStart: req.body.yearStart,
+        monthEnd: req.body.monthEnd,
+        yearEnd: req.body.yearEnd,
+    });
+    
+    res.json(req.body);
+    //controller function
+
+    //plan out how to check for profile
+    // await EduUni.findOne({
+    //     //user_id
+    // })
+    // .then(async profile => {
+    //     if(!profile){
+    //       newEduUni.save()
+    //       res.send("University Education History added");
+    //     } else{
+    //       res.send("User already exists...");
+    //     }
+}
+
+exports.postEduHigh = async(req, res) => {
+    const newEduUni = new EduHigh({
+        //get userid from from authentication JWT
+        //user_id: ,
+        highName: req.body.highName,
+        monthStart:req.body.monthStart,
+        yearStart: req.body.yearStart,
+        monthEnd: req.body.monthEnd,
+        yearEnd: req.body.yearEnd,
+    });
+
+    res.json(req.body);
+    //controller functions
 }

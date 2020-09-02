@@ -38,8 +38,6 @@ const useStyles = makeStyles(({}) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-
-    paddingTop: '5%',
   },
   formPaper: {
     width: '30%',
@@ -47,7 +45,7 @@ const useStyles = makeStyles(({}) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '5%',
+    padding: '2%',
     background: '#333B55',
     color: '#FFFFFF ',
   },
@@ -55,6 +53,11 @@ const useStyles = makeStyles(({}) => ({
   icon: { fontSize: 40, color: '#333B55' },
   submit: {
     backgroundColor: '#F8C736',
+  },
+  options: {
+    '& .MuiTypography-colorPrimary': {
+      color: '#f0f2f6 !important',
+    },
   },
 }));
 
@@ -96,7 +99,7 @@ const SignUpPage = () => {
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
-              margin='normal'
+              margin='dense'
               required
               fullWidth
               id='givenname'
@@ -107,7 +110,7 @@ const SignUpPage = () => {
             />
             <CssTextField
               variant='outlined'
-              margin='normal'
+              margin='dense'
               required
               fullWidth
               id='lastname'
@@ -118,7 +121,7 @@ const SignUpPage = () => {
             />
             <CssTextField
               variant='outlined'
-              margin='normal'
+              margin='dense'
               required
               fullWidth
               id='email'
@@ -129,7 +132,7 @@ const SignUpPage = () => {
             />
             <CssTextField
               variant='outlined'
-              margin='normal'
+              margin='dense'
               required
               fullWidth
               name='password'
@@ -140,7 +143,7 @@ const SignUpPage = () => {
             />
             <CssTextField
               variant='outlined'
-              margin='normal'
+              margin='dense'
               required
               fullWidth
               name='confirmpassword'
@@ -162,10 +165,12 @@ const SignUpPage = () => {
             >
               Sign Up
             </Button>
-            <Grid item>
-              <Link href='/' variant='body2'>
-                {'Now,Login?'}
-              </Link>
+            <Grid container className={styles.options}>
+              <Grid item xs>
+                <Link href='./' variant='body2'>
+                  Login
+                </Link>
+              </Grid>
             </Grid>
           </form>
         </div>

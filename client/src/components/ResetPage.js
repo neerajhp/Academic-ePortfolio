@@ -50,10 +50,20 @@ const useStyles = makeStyles(({}) => ({
     background: '#333B55',
     color: '#FFFFFF ',
   },
-  avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
+  avatar: {
+    height: '70px',
+    width: '70px',
+    background: '#FFFFFF',
+    margin: '5%',
+  },
   icon: { fontSize: 40, color: '#333B55' },
   submit: {
     backgroundColor: '#F8C736',
+  },
+  options: {
+    '& .MuiTypography-colorPrimary': {
+      color: '#f0f2f6 !important',
+    },
   },
 }));
 
@@ -91,7 +101,7 @@ const ResetPage = () => {
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Reset</h2>
+          <h2> Reset Your Password</h2>
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
@@ -103,17 +113,6 @@ const ResetPage = () => {
               name='email'
               autoComplete='email'
               autoFocus
-            />
-            <CssTextField
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              name='password'
-              label='ResetPassword'
-              type='password'
-              id='password'
-              autoComplete='current-password'
             />
             <FormControlLabel
               control={<Checkbox value='remember' color='white' />}
@@ -128,10 +127,12 @@ const ResetPage = () => {
             >
               Confirm
             </Button>
-            <Grid item>
-              <Link href='SignUp' variant='body2'>
-                {"Don't have an account? Sign Up"}
-              </Link>
+            <Grid container className={styles.options}>
+              <Grid item xs>
+                <Link href='./' variant='body2'>
+                  Login
+                </Link>
+              </Grid>
             </Grid>
           </form>
         </Paper>

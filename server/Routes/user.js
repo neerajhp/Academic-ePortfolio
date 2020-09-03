@@ -32,6 +32,7 @@ router.post("/editprofile/highschool", async (req, res) => {
 });
 
 router.post("/editprofile/university", async (req, res) => {
+    //console.log(userController);
     userController.postEduUni(req, res);
 });
 

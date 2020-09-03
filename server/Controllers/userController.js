@@ -1,14 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../Models/User.js");
-const EduUni = require("../Models/User.js");
-const EduHigh = require("../Models/User.js"); 
+//const User = require("../Models/User.js");
+const {User, eduUni, eduHigh} = require("../Models/User.js");
+
+// const EduUni = require("../Models/User.js");
+// const EduHigh = require("../Models/User.js"); 
 var bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 exports.postSignup = async(req, res) => {
     //hash the password
     bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+        //const User = models.User;
 
         const newUser = new User({
             firstName: req.body.firstName,
@@ -72,12 +75,12 @@ exports.postLogin = async(req, res) => {
 
 exports.postEduUni = async(req, res) => {
 
-    const newEduUni = new EduUni({
+    const newEduUni = new eduUni({
         //get userid from from authentication JWT
         //user_id: ,
         uniName: req.body.uniName,
-        course: req.body.facultyName,
-        major: req.body.courseName,
+        courseName: req.body.courseName,
+        majorName: req.body.majorName,
         monthStart:req.body.monthStart,
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
@@ -85,8 +88,21 @@ exports.postEduUni = async(req, res) => {
         graduated: req.body.graduated,
     });
     
-    res.json(req.body);
     //controller function
+
+    try{
+        await newEduUni.save((err, file) => {
+            if(err){
+                console.log("Error found");
+                throw(err)
+            }else{
+                console.log("saved");
+                res.json(file);
+            }
+        });
+    }catch(err){
+        res.status(400).json("Something's wrong");
+    }
 
     //plan out how to check for profile
     // await EduUni.findOne({
@@ -102,7 +118,7 @@ exports.postEduUni = async(req, res) => {
 }
 
 exports.postEduHigh = async(req, res) => {
-    const newEduUni = new EduHigh({
+    const newEduHigh = new eduHigh({
         //get userid from from authentication JWT
         //user_id: ,
         highName: req.body.highName,

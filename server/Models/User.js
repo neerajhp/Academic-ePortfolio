@@ -18,8 +18,8 @@ const userSchema = mongoose.Schema({
 const eduUniSchema = mongoose.Schema({
     // user_id: {type: String, required: true},
     uniName: {type: String, required: true},
-    facultyName: {type: String, required: true},
     courseName: {type: String, required: true},
+    majorName: {type: String, required: true},
     monthStart: {type: Number, required: true},
     yearStart: {type: Number, required: true},
     monthEnd: {type: Number, required: true},
@@ -42,6 +42,11 @@ const eduHighSchema = mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 const eduUni = mongoose.model("eduUni", eduUniSchema);
 const eduHigh = mongoose.model("eduHigh", eduHighSchema);
-module.exports = User;
-module.exports = eduUni;
-module.exports = eduHigh;
+
+//module.exports  = User;
+
+module.exports = {
+    User,
+    eduUni,
+    eduHigh
+}

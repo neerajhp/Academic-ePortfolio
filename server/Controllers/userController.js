@@ -82,6 +82,7 @@ exports.postEduUni = async(req, res) => {
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
         yearEnd: req.body.yearEnd,
+        graduated: req.body.graduated,
     });
     
     res.json(req.body);
@@ -109,6 +110,7 @@ exports.postEduHigh = async(req, res) => {
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
         yearEnd: req.body.yearEnd,
+        graduated: req.body.graduated,
     });
 
     res.json(req.body);

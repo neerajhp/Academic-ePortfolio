@@ -24,6 +24,7 @@ const eduUniSchema = mongoose.Schema({
     yearStart: {type: Number, required: true},
     monthEnd: {type: Number, required: true},
     yearEnd: {type: Number, required: true},
+    graduated: {type: Boolean, default: true}
 });
 
 //HighSchool Education History Schema
@@ -34,6 +35,7 @@ const eduHighSchema = mongoose.Schema({
     yearStart: {type: Number, required: true},
     monthEnd: {type: Number, required: true},
     yearEnd: {type: Number, required: true},
+    graduated: {type: Boolean, default: true}
 });
 
 // Binds the userSchema to a user model

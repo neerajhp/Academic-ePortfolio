@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 //const User = require("../Models/User.js");
-const {User, eduUni, eduHigh} = require("../Models/User.js");
+const {User, EduUni, EduHigh} = require("../Models/User.js");
 
 // const EduUni = require("../Models/User.js");
 // const EduHigh = require("../Models/User.js"); 
@@ -12,7 +12,7 @@ exports.postSignup = async(req, res) => {
     //hash the password
     bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
         //const User = models.User;
-
+        
         const newUser = new User({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
@@ -75,7 +75,7 @@ exports.postLogin = async(req, res) => {
 
 exports.postEduUni = async(req, res) => {
 
-    const newEduUni = new eduUni({
+    const newEduUni = new EduUni({
         //get userid from from authentication JWT
         //user_id: ,
         uniName: req.body.uniName,
@@ -87,8 +87,6 @@ exports.postEduUni = async(req, res) => {
         yearEnd: req.body.yearEnd,
         graduated: req.body.graduated,
     });
-    
-    //controller function
 
     try{
         await newEduUni.save((err, file) => {
@@ -97,7 +95,7 @@ exports.postEduUni = async(req, res) => {
                 throw(err)
             }else{
                 console.log("saved");
-                res.json(file);
+                res.send(file);
             }
         });
     }catch(err){
@@ -118,7 +116,7 @@ exports.postEduUni = async(req, res) => {
 }
 
 exports.postEduHigh = async(req, res) => {
-    const newEduHigh = new eduHigh({
+    const newEduHigh = new EduHigh({
         //get userid from from authentication JWT
         //user_id: ,
         highName: req.body.highName,
@@ -129,6 +127,17 @@ exports.postEduHigh = async(req, res) => {
         graduated: req.body.graduated,
     });
 
-    res.json(req.body);
-    //controller functions
+    try{
+        await newEduHigh.save((err, file) => {
+            if(err){
+                console.log("Error found");
+                throw(err)
+            }else{
+                console.log("saved");
+                res.json(file);
+            }
+        });
+    }catch(err){
+        res.status(400).json("Something's wrong");
+    }
 }

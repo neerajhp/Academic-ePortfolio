@@ -21,8 +21,6 @@ const useStyles = makeStyles(() => ({
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-  const styles = useStyles();
-
   return (
     <div
       role='tabpanel'

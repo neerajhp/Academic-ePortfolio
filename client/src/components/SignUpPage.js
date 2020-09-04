@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  AppBar,
-  Paper,
   Avatar,
   TextField,
   FormControlLabel,
@@ -14,7 +12,7 @@ import {
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 // Styling
-const useStyles = makeStyles(({}) => ({
+const useStyles = makeStyles(() => ({
   //Page container
   root: {
     height: '100vh',

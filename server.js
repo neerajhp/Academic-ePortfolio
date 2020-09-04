@@ -21,9 +21,6 @@ server.use('/api/user', userRoute);
 server.use('/api/upload', uploadRoute);
 server.use('/api/files', filesRoute);
 
-// Serve the static files from the React app
-server.use(express.static(path.join(__dirname, 'client/build')));
-
 // Database connection
 mongoose.connect(
   process.env.DB_CONNECTION,

@@ -34,13 +34,16 @@ mongoose.connect(
   }
 );
 
-// Serve the static files from the React app
-server.use(express.static(path.join(__dirname, 'client/build')));
-
-// Handles any requests that don't match the ones above
-server.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'));
-});
+//Serve static files from client
+if (
+  process.env.NODE_ENV === 'production' ||
+  process.env.NODE_ENV === 'staging'
+) {
+  server.use(express.static('client/build'));
+  server.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+  });
+}
 
 // Start the server
 const PORT = process.env.PORT || 5000;

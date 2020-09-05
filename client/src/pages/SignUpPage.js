@@ -79,8 +79,16 @@ const CssTextField = withStyles({
         borderColor: 'white',
       },
     },
+    '& input:+ fieldset': {
+      borderColor: '#FFFFFF',
+      borderWidth: 2,
+    },
   },
 })(TextField);
+
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
 
 class SignUpPage extends React.Component {
   constructor() {
@@ -90,26 +98,65 @@ class SignUpPage extends React.Component {
       lastName: '',
       email: '',
       password: '',
+      errors: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+      },
     };
   }
 
+  validateForm = (errors) => {
+    let valid = true;
+    Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
+    return valid;
+  };
+
   onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    //Validate Field
+    const { name, value } = e.target;
+    let errors = this.state.errors;
+
+    switch (name) {
+      case 'firstName':
+        errors.firstName =
+          value.length < 5 ? 'Full Name must be 5 characters long!' : '';
+        break;
+      case 'email':
+        errors.email = validEmailRegex.test(value) ? '' : 'Email is not valid!';
+        break;
+      case 'password':
+        errors.password =
+          value.length < 8 ? 'Password must be 8 characters long!' : '';
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ errors, [name]: value }, () => {
+      console.log(errors);
+    });
   };
 
   onSubmit = (e) => {
     e.preventDefault();
 
-    const newUser = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-      password: this.state.password,
-    };
+    if (this.validateForm(this.state.errors)) {
+      console.info('Valid Form');
+      const newUser = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        password: this.state.password,
+      };
 
-    API.userSignup(newUser).then((res) => {
-      this.props.history.push(`/`);
-    });
+      API.userSignup(newUser).then((res) => {
+        this.props.history.push(`/`);
+      });
+    } else {
+      console.error('Invalid Form');
+    }
   };
 
   render() {
@@ -126,28 +173,31 @@ class SignUpPage extends React.Component {
             </Avatar>
             <h2> Sign Up</h2>
             <form className={classes.form} noValidate onSubmit={this.onSubmit}>
-              <CssTextField
-                variant='outlined'
-                margin='dense'
-                required
-                fullWidth
-                label='First Name'
-                name='firstName'
-                autoComplete='firstName'
-                autoFocus
-                onChange={this.onChange}
-              />
-              <CssTextField
-                variant='outlined'
-                margin='dense'
-                required
-                fullWidth
-                label='Last Name'
-                name='lastName'
-                autoComplete='lastName'
-                autoFocus
-                onChange={this.onChange}
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <CssTextField
+                    variant='outlined'
+                    margin='dense'
+                    required
+                    fullWidth
+                    label='First Name'
+                    name='firstName'
+                    autoComplete=''
+                    onChange={this.onChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <CssTextField
+                    variant='outlined'
+                    margin='dense'
+                    required
+                    fullWidth
+                    label='Last Name'
+                    name='lastName'
+                    onChange={this.onChange}
+                  />
+                </Grid>
+              </Grid>
               <CssTextField
                 variant='outlined'
                 margin='dense'
@@ -155,8 +205,6 @@ class SignUpPage extends React.Component {
                 fullWidth
                 label='Email Address'
                 name='email'
-                autoComplete='email'
-                autoFocus
                 onChange={this.onChange}
               />
               <CssTextField
@@ -168,7 +216,6 @@ class SignUpPage extends React.Component {
                 label='Password'
                 type='password'
                 id='password'
-                autoComplete='current-password'
                 onChange={this.onChange}
               />
               <CssTextField

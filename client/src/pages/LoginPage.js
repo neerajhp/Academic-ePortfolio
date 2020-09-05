@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
+  Paper,
   Avatar,
   TextField,
   FormControlLabel,
@@ -38,12 +39,13 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   formPaper: {
+    height: '80%',
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '2%',
+    padding: '5%',
     background: '#333B55',
     color: '#FFFFFF ',
   },
@@ -79,7 +81,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const SignUpPage = () => {
+const LoginPage = () => {
   // Styling
   const styles = useStyles();
 
@@ -89,37 +91,15 @@ const SignUpPage = () => {
         <h1>Welcome to ePortfolio</h1>
       </div>
       <div className={styles.formContainer}>
-        <div className={styles.formPaper}>
+        <Paper elevation={1} className={styles.formPaper}>
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Sign Up</h2>
+          <h2> Sign In</h2>
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              id='givenname'
-              label='Given Name'
-              name='givenname'
-              autoComplete='givenname'
-              autoFocus
-            />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              id='lastname'
-              label='Last Name'
-              name='lastname'
-              autoComplete='lastname'
-              autoFocus
-            />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
+              margin='normal'
               required
               fullWidth
               id='email'
@@ -130,7 +110,7 @@ const SignUpPage = () => {
             />
             <CssTextField
               variant='outlined'
-              margin='dense'
+              margin='normal'
               required
               fullWidth
               name='password'
@@ -139,19 +119,8 @@ const SignUpPage = () => {
               id='password'
               autoComplete='current-password'
             />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              name='confirmpassword'
-              label='Confirm Password'
-              type='confirmpassword'
-              id='confirmpassword'
-              autoComplete='current-password'
-            />
             <FormControlLabel
-              control={<Checkbox value='remember' color='white' />}
+              control={<Checkbox value='remember' />}
               label='Remember me'
             />
             <Button
@@ -161,20 +130,25 @@ const SignUpPage = () => {
               color='primary'
               className={styles.submit}
             >
-              Sign Up
+              Sign In
             </Button>
             <Grid container className={styles.options}>
               <Grid item xs>
-                <Link href='./' variant='body2'>
-                  Login
+                <Link href='./reset' variant='body2'>
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href='./signup' variant='body2'>
+                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </form>
-        </div>
+        </Paper>
       </div>
     </div>
   );
 };
 
-export default SignUpPage;
+export default LoginPage;

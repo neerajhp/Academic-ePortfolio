@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
+//const User = require("../Models/User.js");
+const { User, EduUni, EduHigh } = require('../Models/User.js');
 
-const User = require('../Models/User.js');
+// const EduUni = require("../Models/User.js");
+// const EduHigh = require("../Models/User.js");
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
+
 exports.postSignup = async (req, res) => {
   //hash the password
   bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
@@ -28,7 +32,7 @@ exports.postSignup = async (req, res) => {
     }).then(async (profile) => {
       if (!profile) {
         newUser.save();
-        res.send('User ' + newUser.firstName + ' added');
+        res.send('User added');
       } else {
         res.send('User already exists...');
       }

@@ -12,9 +12,9 @@ server.use(express.urlencoded({ extended: true }));
 // server.use(cors);
 
 // Import routes
-const userRoute = require('./Server/Routes/user');
-const uploadRoute = require('./Server/Routes/upload');
-const filesRoute = require('./Server/Routes/files');
+const userRoute = require('./server/Routes/user');
+const uploadRoute = require('./server/Routes/upload');
+const filesRoute = require('./server/Routes/files');
 
 // Attach the routes
 server.use('/api/user', userRoute);

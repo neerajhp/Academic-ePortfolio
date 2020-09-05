@@ -86,9 +86,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const validEmailRegex = RegExp(
-  /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([^<>()[].,;:\s@"]+.)+[^<>()[].,;:\s@"]{2,})$/i
-);
+const validEmailRegex = RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 
 class SignUpPage extends React.Component {
   constructor() {

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+
+const {User, EduUni, EduHigh} = require("../Models/User.js");
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
-const {User, EduUni, EduHigh} = require("../Models/User.js");
 
 exports.postSignup = async(req, res) => {
     //hash the password
@@ -68,8 +69,6 @@ exports.postLogin = async (req, res) => {
       console.log('Error is ', err.message);
     });
 };
-
-
 
 //Education History user control
 

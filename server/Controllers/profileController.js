@@ -160,7 +160,15 @@ const updateBio = async(req, res) => {
             res.status(404).json(err);
         }else{
             console.log("successfully updated");
-            res.json(result);
+            User.findOne({ _id: req.query.userID}, (err, result) => {
+                if(err){
+                    res.status(500).json(err);
+                }else{
+                    res.json(result);
+                }
+                //res.json(result);
+            })
+            //res.json(result);
         }
     })
 }

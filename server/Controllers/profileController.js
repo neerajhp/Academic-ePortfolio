@@ -3,7 +3,10 @@ const router = express.Router();
 
 const Document = require("../Models/Document");
 const User = require("../Models/User").User;
-const {EduUni, EduHigh} = require("../Models/User.js");
+const {
+    EduUni,
+    EduHigh
+} = require("../Models/User.js");
 
 const AWS = require("aws-sdk");
 require('dotenv').config();
@@ -15,8 +18,10 @@ const s3 = new AWS.S3({
 
 const getAllInfo = async (req, res) => {
     // Get cv, profile picture, first name, last name, email, bio
-    try{
-        const userRecord = await User.findOne({dummyID: req.query.userID});
+    try {
+        const userRecord = await User.findOne({
+            dummyID: req.query.userID
+        });
         console.log("user found");
         const cv = await searchCV(req.query.userID);
         console.log("cv found");
@@ -33,30 +38,36 @@ const getAllInfo = async (req, res) => {
         }
 
         res.json(profile);
-    }catch(err){
+    } catch (err) {
         console.log("user not found");
         res.status(404).json(err);
     }
-    
+
 }
 
 
 
 const searchCV = async (userID) => {
-    try{
-        const cv = await Document.findOne({user_id: userID, fieldName: "cv"});
+    try {
+        const cv = await Document.findOne({
+            user_id: userID,
+            fieldName: "cv"
+        });
         return cv;
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
 
 const searchProfilePic = async (userID) => {
-    try{
-        const profilePic = await Document.findOne({user_id: userID, fieldName: "profile-pic"});
+    try {
+        const profilePic = await Document.findOne({
+            user_id: userID,
+            fieldName: "profile-pic"
+        });
         return profilePic;
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
@@ -64,37 +75,47 @@ const searchProfilePic = async (userID) => {
 
 
 const getCV = async (req, res) => {
-    try{
+    try {
         const cv = await searchCV(req.query.userID);
-        if(!cv){
+        if (!cv) {
             console.log("cv not found");
-            res.status(404).json({error: "CV not found"});
-        }else{
+            res.status(404).json({
+                error: "CV not found"
+            });
+        } else {
             res.json(cv);
         }
-    }catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(400).json({error: "Something's up"});
+        res.status(400).json({
+            error: "Something's up"
+        });
     }
 }
 
 const getProfilePic = async (req, res) => {
-    try{
+    try {
         const profilePic = await searchProfilePic(req.query.userID);
-        if(!profilePic){
+        if (!profilePic) {
             console.log("profile picture not found");
-            res.status(404).json({error: "Profile picture not found"});
-        }else{
+            res.status(404).json({
+                error: "Profile picture not found"
+            });
+        } else {
             res.json(profilePic);
         }
-    }catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(400).json({error: "Something's up"});
+        res.status(400).json({
+            error: "Something's up"
+        });
     }
 }
 
-//Education History
-const postEduUni = async(req, res) => {
+
+// Education History //
+// University 
+const postEduUni = async (req, res) => {
 
     const newEduUni = new EduUni({
         //get userid from from authentication JWT
@@ -102,112 +123,149 @@ const postEduUni = async(req, res) => {
         uniName: req.body.uniName,
         courseName: req.body.courseName,
         majorName: req.body.majorName,
-        monthStart:req.body.monthStart,
+        monthStart: req.body.monthStart,
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
         yearEnd: req.body.yearEnd,
         graduated: req.body.graduated,
     });
 
-    try{
+    try {
         await newEduUni.save((err, file) => {
-            if(err){
+            if (err) {
                 console.log("Error found");
-                throw(err)
-            }else{
+                throw (err)
+            } else {
                 console.log("saved");
                 res.send(file);
             }
         });
-    }catch(err){
+    } catch (err) {
         res.status(400).json("Something's wrong");
     }
- //plan out how to edit profile and check if it already exists
-}
+    //Check if the record already exists for the user
+};
 
-const putEduUni = async(req, res) => {
-    await EduUni.findByIdAndUpdate({_id: req.body._id}, req.body).then(function(err, result) {
-        if(err){
-            res.status(404).json({error: "education history not found"});
-        }
-        else{
-            res.status(200).json(result);
-        }
-    }
+// Update works, check if error checking function is working working !!!!!!!!!!!
+const putEduUni = async (req, res) => {
 
-    )};
+    await EduUni.findByIdAndUpdate({
+        _id: req.body._id
+    }, req.body, function(err, result) {
+            if (err) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
+
     
+};
 
-const deleteEduUni = async(req, res) => {
+// Delete works, Error checking not working !!!!!!!!!!! error is null
+const deleteEduUni = async (req, res) => {
 
-    const newEduUni = new EduUni({
-        //get userid from from authentication JWT
-        //user_id: ,
-        uniName: req.body.uniName,
-        courseName: req.body.courseName,
-        majorName: req.body.majorName,
-        monthStart:req.body.monthStart,
-        yearStart: req.body.yearStart,
-        monthEnd: req.body.monthEnd,
-        yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated,
-    });
-
-    try{
-        await newEduUni.save((err, file) => {
-            if(err){
-                console.log("Error found");
-                throw(err)
-            }else{
-                console.log("saved");
-                res.send(file);
+    await EduUni.findByIdAndDelete({
+        _id: req.body._id
+    }, function(err, result) {
+            console.log(err);
+            console.log(result);
+            if (err) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
             }
-        });
-    }catch(err){
-        res.status(400).json("Something's wrong");
-    }
-}
+        })
+
+};
 
 
-
-const postEduHigh = async(req, res) => {
+// Highschool
+const postEduHigh = async (req, res) => {
     const newEduHigh = new EduHigh({
         //get userid from from authentication JWT
-        //user_id: ,
+        //user_id:
         highName: req.body.highName,
-        monthStart:req.body.monthStart,
+        monthStart: req.body.monthStart,
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
         yearEnd: req.body.yearEnd,
         graduated: req.body.graduated,
     });
 
-    try{
+    try {
         await newEduHigh.save((err, file) => {
-            if(err){
+            if (err) {
                 console.log("Error found");
-                throw(err)
-            }else{
+                throw (err)
+            } else {
                 console.log("saved");
                 res.json(file);
             }
         });
-    }catch(err){
+    } catch (err) {
         res.status(400).json("Something's wrong");
     }
+    //Check if the record already exists for the user
 };
 
-const updateBio = async(req, res) => {
+const putEduHigh = async (req, res) => {
+
+    await EduHigh.findByIdAndUpdate({
+        _id: req.body._id
+    }, req.body, function(err, result) {
+            if (err) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
+
+    
+};
+
+const deleteEduHigh = async (req, res) => {
+
+    await EduHigh.findByIdAndDelete({
+        _id: req.body._id
+    }, function(err, result) {
+            console.log(err);
+            console.log(result);
+            if (err) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
+
+};
+
+// Biography
+const updateBio = async (req, res) => {
     // update the bio field 
-    await User.updateOne({ _id: req.query.userID }, { biography: req.body.bio }, (err, result) => {
-        if(err){
+    await User.updateOne({
+        _id: req.query.userID
+    }, {
+        biography: req.body.bio
+    }, (err, result) => {
+        if (err) {
             res.status(404).json(err);
-        }else{
+        } else {
             console.log("successfully updated");
-            User.findOne({ _id: req.query.userID}, (err, result) => {
-                if(err){
+            User.findOne({
+                _id: req.query.userID
+            }, (err, result) => {
+                if (err) {
                     res.status(500).json(err);
-                }else{
+                } else {
                     res.json(result);
                 }
                 //res.json(result);
@@ -222,7 +280,10 @@ module.exports = {
     getCV,
     getProfilePic,
     postEduUni,
-    postEduHigh,
     putEduUni,
+    deleteEduUni,
+    postEduHigh,
+    putEduHigh,
+    deleteEduHigh,
     updateBio
 }

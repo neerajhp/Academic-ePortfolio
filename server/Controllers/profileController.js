@@ -153,10 +153,23 @@ const postEduHigh = async(req, res) => {
     }
 };
 
+const updateBio = async(req, res) => {
+    // update the bio field 
+    await User.updateOne({ _id: req.query.userID }, { biography: req.body.bio }, (err, result) => {
+        if(err){
+            res.status(404).json(err);
+        }else{
+            console.log("successfully updated");
+            res.json(result);
+        }
+    })
+}
+
 module.exports = {
     getAllInfo,
     getCV,
     getProfilePic,
     postEduUni,
-    postEduHigh
+    postEduHigh,
+    updateBio
 }

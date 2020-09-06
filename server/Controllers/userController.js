@@ -10,11 +10,12 @@ exports.postSignup = async(req, res) => {
         //const User = models.User;
         
         const newUser = new User({
-            dummyID: req.body.dummyID,
+            //dummyID: req.body.dummyID,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
             password: hash,
+            biography: req.body.biography
 
         })
 

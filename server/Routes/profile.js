@@ -27,9 +27,7 @@ router.get("/bio", (req, res) => {
     res.send("User's bio");
 });
 
-router.put("/bio", (req, res) => {
-    res.send("Edit bio");
-});
+router.put("/bio", profileController.updateBio);
 
 
 

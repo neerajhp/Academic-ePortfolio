@@ -41,9 +41,10 @@ const getDocument = async (req, res, next) => {
                     console.log("error in callback");
                 }else{
                     console.log("success");
+                    res.json(doc.fileLink);
                 }
             })
-            res.json(doc.s3_key);
+            
             console.log("File found");
         }
         

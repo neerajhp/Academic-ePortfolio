@@ -72,9 +72,53 @@ const postEduUni = async(req, res) => {
     }catch(err){
         res.status(400).json("Something's wrong");
     }
-
-    //plan out how to edit profile and check if it already exists
+ //plan out how to edit profile and check if it already exists
 }
+
+const putEduUni = async(req, res) => {
+    await EduUni.findByIdAndUpdate({_id: req.body._id}, req.body).then(function(err, result) {
+        if(err){
+            res.status(404).json({error: "education history not found"});
+        }
+        else{
+            res.status(200).json(result);
+        }
+    }
+
+    )};
+    
+
+const deleteEduUni = async(req, res) => {
+
+    const newEduUni = new EduUni({
+        //get userid from from authentication JWT
+        //user_id: ,
+        uniName: req.body.uniName,
+        courseName: req.body.courseName,
+        majorName: req.body.majorName,
+        monthStart:req.body.monthStart,
+        yearStart: req.body.yearStart,
+        monthEnd: req.body.monthEnd,
+        yearEnd: req.body.yearEnd,
+        graduated: req.body.graduated,
+    });
+
+    try{
+        await newEduUni.save((err, file) => {
+            if(err){
+                console.log("Error found");
+                throw(err)
+            }else{
+                console.log("saved");
+                res.send(file);
+            }
+        });
+    }catch(err){
+        res.status(400).json("Something's wrong");
+    }
+}
+
+
 
 const postEduHigh = async(req, res) => {
     const newEduHigh = new EduHigh({
@@ -107,5 +151,6 @@ module.exports = {
     getCV,
     getProfilePic,
     postEduUni,
-    postEduHigh
+    postEduHigh,
+    putEduUni
 }

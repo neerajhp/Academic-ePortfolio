@@ -14,7 +14,7 @@ exports.postSignup = async(req, res) => {
             lastName: req.body.lastName,
             email: req.body.email,
             password: hash,
-
+            
         })
 
     // console.log(newUser.firstName);

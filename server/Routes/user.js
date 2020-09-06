@@ -23,15 +23,5 @@ router.post("/login", async (req, res) => {
   userController.postLogin(req, res);
 });
 
-//Edit profile endpoint
-//change names or create new route file instead
-router.post("/editprofile/highschool", async (req, res) => {
-    userController.postEduHigh(req, res);
-});
-
-router.post("/editprofile/university", async (req, res) => {
-    //console.log(userController);
-    userController.postEduUni(req, res);
-});
 
 module.exports = router;

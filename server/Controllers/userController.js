@@ -1,27 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
-const User = require('../Models/User.js');
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
-
-exports.postSignup = async (req, res) => {
-  //hash the password
-  bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-    const newUser = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hash,
-    });
-
-//const User = require("../Models/User.js");
 const {User, EduUni, EduHigh} = require("../Models/User.js");
-
-// const EduUni = require("../Models/User.js");
-// const EduHigh = require("../Models/User.js"); 
-var bcrypt = require("bcrypt");
-const saltRounds = 10;
 
 exports.postSignup = async(req, res) => {
     //hash the password
@@ -88,7 +69,7 @@ exports.postLogin = async (req, res) => {
     });
 };
 
-}
+
 
 //Education History user control
 
@@ -159,5 +140,4 @@ exports.postEduHigh = async(req, res) => {
     }catch(err){
         res.status(400).json("Something's wrong");
     }
-}
-
+};

@@ -5,10 +5,10 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import ProfilePage from './ProfilePage';
-import LoginPage from './LoginPage';
-import ResetPage from './ResetPage';
-import SignUpPage from './SignUpPage';
+import ProfilePage from '../pages/ProfilePage';
+import LoginPage from '../pages/LoginPage';
+import ResetPage from '../pages/ResetPage';
+import SignUpPage from '../pages/SignUpPage';
 
 function App() {
   return (

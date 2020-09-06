@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  AppBar,
   Paper,
   Avatar,
   TextField,
@@ -14,7 +13,7 @@ import {
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 // Styling
-const useStyles = makeStyles(({}) => ({
+const useStyles = makeStyles(() => ({
   //Page container
   root: {
     height: '100vh',
@@ -40,16 +39,22 @@ const useStyles = makeStyles(({}) => ({
     alignItems: 'center',
   },
   formPaper: {
+    height: '80%',
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '2%',
+    padding: '5%',
     background: '#333B55',
     color: '#FFFFFF ',
   },
-  avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
+  avatar: {
+    height: '70px',
+    width: '70px',
+    background: '#FFFFFF',
+    margin: '5%',
+  },
   icon: { fontSize: 40, color: '#333B55' },
   submit: {
     backgroundColor: '#F8C736',
@@ -81,7 +86,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const SignUpPage = () => {
+const ResetPage = () => {
   // Styling
   const styles = useStyles();
 
@@ -91,37 +96,15 @@ const SignUpPage = () => {
         <h1>Welcome to ePortfolio</h1>
       </div>
       <div className={styles.formContainer}>
-        <div className={styles.formPaper}>
+        <Paper elevation={1} className={styles.formPaper}>
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Sign Up</h2>
+          <h2> Reset Your Password</h2>
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              id='givenname'
-              label='Given Name'
-              name='givenname'
-              autoComplete='givenname'
-              autoFocus
-            />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              id='lastname'
-              label='Last Name'
-              name='lastname'
-              autoComplete='lastname'
-              autoFocus
-            />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
+              margin='normal'
               required
               fullWidth
               id='email'
@@ -130,40 +113,18 @@ const SignUpPage = () => {
               autoComplete='email'
               autoFocus
             />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              name='password'
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
-            />
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              name='confirmpassword'
-              label='Confirm Password'
-              type='confirmpassword'
-              id='confirmpassword'
-              autoComplete='current-password'
-            />
             <FormControlLabel
               control={<Checkbox value='remember' color='white' />}
               label='Remember me'
             />
             <Button
-              type='submit'
+              type='reset'
               fullWidth
               variant='contained'
               color='primary'
               className={styles.submit}
             >
-              Sign Up
+              Confirm
             </Button>
             <Grid container className={styles.options}>
               <Grid item xs>
@@ -173,10 +134,10 @@ const SignUpPage = () => {
               </Grid>
             </Grid>
           </form>
-        </div>
+        </Paper>
       </div>
     </div>
   );
 };
 
-export default SignUpPage;
+export default ResetPage;

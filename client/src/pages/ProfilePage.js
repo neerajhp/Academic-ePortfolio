@@ -13,10 +13,10 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import FileExplorer from './FileExplorer';
+import FileExplorer from '../components/FileExplorer';
 
 // Styling
-const useStyles = makeStyles(({}) => ({
+const useStyles = makeStyles(() => ({
   //Page container
   root: {
     height: '100vh',

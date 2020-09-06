@@ -20,36 +20,6 @@ const getAllDocs = async (req, res) => {
     }
 }
 
-const getCV = async (req, res) => {
-    try{
-        const cv = await Document.find({user_id: req.query.userID, fieldName: "cv"});
-        if(cv.length == 0){
-            console.log("cv not found");
-            res.status(404).json({error: "CV not found"});
-        }else{
-            res.json(cv);
-        }
-    }catch(err){
-        console.log(err);
-        res.status(400).json({error: "Something's up"});
-    }
-}
-
-const getProfilePic = async (req, res) => {
-    try{
-        const profilePic = await Document.find({user_id: req.query.userID, fieldName: "profile-pic"});
-        if(profilePic.length == 0){
-            console.log("profile picture not found");
-            res.status(404).json({error: "Profile picture not found"});
-        }else{
-            res.json(profilePic);
-        }
-    }catch(err){
-        console.log(err);
-        res.status(400).json({error: "Something's up"});
-    }
-}
-
 const getDocument = async (req, res, next) => {
     await Document.findById(req.params.id, (err, doc) => {
         if(err){
@@ -121,8 +91,6 @@ const deleteDocument = async (req, res, next) => {
 
 module.exports = {
     getAllDocs,
-    getCV,
-    getProfilePic,
     getDocument,
     deleteDocument
 }

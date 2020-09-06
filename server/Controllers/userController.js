@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const {User, EduUni, EduHigh} = require("../Models/User.js");
+const User = require("../Models/User.js");
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -70,73 +69,3 @@ exports.postLogin = async (req, res) => {
     });
 };
 
-//Education History user control
-
-exports.postEduUni = async(req, res) => {
-
-    const newEduUni = new EduUni({
-        //get userid from from authentication JWT
-        //user_id: ,
-        uniName: req.body.uniName,
-        courseName: req.body.courseName,
-        majorName: req.body.majorName,
-        monthStart:req.body.monthStart,
-        yearStart: req.body.yearStart,
-        monthEnd: req.body.monthEnd,
-        yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated,
-    });
-
-    try{
-        await newEduUni.save((err, file) => {
-            if(err){
-                console.log("Error found");
-                throw(err)
-            }else{
-                console.log("saved");
-                res.send(file);
-            }
-        });
-    }catch(err){
-        res.status(400).json("Something's wrong");
-    }
-
-    //plan out how to check for profile
-    // await EduUni.findOne({
-    //     //user_id
-    // })
-    // .then(async profile => {
-    //     if(!profile){
-    //       newEduUni.save()
-    //       res.send("University Education History added");
-    //     } else{
-    //       res.send("User already exists...");
-    //     }
-}
-
-exports.postEduHigh = async(req, res) => {
-    const newEduHigh = new EduHigh({
-        //get userid from from authentication JWT
-        //user_id: ,
-        highName: req.body.highName,
-        monthStart:req.body.monthStart,
-        yearStart: req.body.yearStart,
-        monthEnd: req.body.monthEnd,
-        yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated,
-    });
-
-    try{
-        await newEduHigh.save((err, file) => {
-            if(err){
-                console.log("Error found");
-                throw(err)
-            }else{
-                console.log("saved");
-                res.json(file);
-            }
-        });
-    }catch(err){
-        res.status(400).json("Something's wrong");
-    }
-};

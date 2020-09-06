@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const profileController = require("../Controllers/profileController");
 
-router.get("/", (req, res) => {
-    res.send("This is the profile page");
-});
+// Gets everything needed for the user's profile display
+router.get("/", profileController.getAllInfo);
 
 // Gets the user's cv
 router.get("/cv", profileController.getCV);

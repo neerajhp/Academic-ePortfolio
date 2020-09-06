@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require("../Models/User.js");
+const User = require("../Models/User.js").User;
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -10,6 +10,7 @@ exports.postSignup = async(req, res) => {
         //const User = models.User;
         
         const newUser = new User({
+            dummyID: req.body.dummyID,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,

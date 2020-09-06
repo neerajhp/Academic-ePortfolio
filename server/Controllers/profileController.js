@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Document = require("../Models/Document");
+const User = require("../Models/User").User;
 const {EduUni, EduHigh} = require("../Models/User.js");
 
 const AWS = require("aws-sdk");
@@ -12,11 +13,60 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
+const getAllInfo = async (req, res) => {
+    // Get cv, profile picture, first name, last name, email, bio
+    try{
+        const userRecord = await User.findOne({dummyID: req.query.userID});
+        console.log("user found");
+        const cv = await searchCV(req.query.userID);
+        console.log("cv found");
+        const profilePic = await searchProfilePic(req.query.userID);
+        console.log("profile pic found");
+
+        const profile = {
+            firstName: userRecord.firstName,
+            lastName: userRecord.lastName,
+            email: userRecord.email,
+            bio: userRecord.biography,
+            cv: cv.fileLink,
+            profilePic: profilePic.fileLink
+        }
+
+        res.json(profile);
+    }catch(err){
+        console.log("user not found");
+        res.status(404).json(err);
+    }
+    
+}
+
+
+
+const searchCV = async (userID) => {
+    try{
+        const cv = await Document.findOne({user_id: userID, fieldName: "cv"});
+        return cv;
+
+    }catch(error){
+        console.log(error);
+    }
+}
+
+const searchProfilePic = async (userID) => {
+    try{
+        const profilePic = await Document.findOne({user_id: userID, fieldName: "profile-pic"});
+        return profilePic;
+    }catch(error){
+        console.log(error);
+    }
+}
+
+
 
 const getCV = async (req, res) => {
     try{
-        const cv = await Document.find({user_id: req.query.userID, fieldName: "cv"});
-        if(cv.length == 0){
+        const cv = await searchCV(req.query.userID);
+        if(!cv){
             console.log("cv not found");
             res.status(404).json({error: "CV not found"});
         }else{
@@ -30,8 +80,8 @@ const getCV = async (req, res) => {
 
 const getProfilePic = async (req, res) => {
     try{
-        const profilePic = await Document.find({user_id: req.query.userID, fieldName: "profile-pic"});
-        if(profilePic.length == 0){
+        const profilePic = await searchProfilePic(req.query.userID);
+        if(!profilePic){
             console.log("profile picture not found");
             res.status(404).json({error: "Profile picture not found"});
         }else{
@@ -104,6 +154,7 @@ const postEduHigh = async(req, res) => {
 };
 
 module.exports = {
+    getAllInfo,
     getCV,
     getProfilePic,
     postEduUni,

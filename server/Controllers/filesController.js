@@ -73,6 +73,7 @@ const deleteDocument = async (req, res, next) => {
                     console.log("error in callback");
                 }else{
                     console.log("file removed from s3");
+                    res.status(200).json("Object has been deleted");
                 }
             })
             //res.json(doc.s3_key);

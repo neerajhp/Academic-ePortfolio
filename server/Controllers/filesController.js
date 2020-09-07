@@ -20,6 +20,7 @@ const getAllDocs = async (req, res) => {
     }
 }
 
+// Returns the document's link for download
 const getDocument = async (req, res, next) => {
     await Document.findById(req.params.id, (err, doc) => {
         if(err){

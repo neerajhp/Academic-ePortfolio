@@ -266,7 +266,7 @@ const updateBio = async (req, res) => {
                 if (err) {
                     res.status(500).json(err);
                 } else {
-                    res.json(result);
+                    res.json(result.bio);
                 }
                 //res.json(result);
             })

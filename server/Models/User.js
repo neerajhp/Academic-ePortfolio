@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
     lastName: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
-    biography: {type: String}
+    biography: {type: String, default: ""}
 });
 
 //Education history must support multiple entries of universities or highschool, start and end date 

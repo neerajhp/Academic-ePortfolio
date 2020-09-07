@@ -52,7 +52,7 @@ const saveFileReference = async (file, userID) => {
         user_id: userID,
         fieldName: file.fieldname,
         fileLink: file.location,
-        s3_key: `user-${userID}/${file.originalname}`
+        s3_key: file.originalname
     }
 
     console.log(newFile);

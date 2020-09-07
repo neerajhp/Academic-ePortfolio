@@ -10,4 +10,10 @@ export default {
       password: user.password,
     });
   },
+  userLogin: function (user) {
+    return axios.post('/api/user/login', {
+      email: user.email,
+      password: user.password,
+    });
+  },
 };

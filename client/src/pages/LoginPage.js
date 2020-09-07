@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { useAuth } from '../context/auth';
+import API from '../utils/API';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -93,6 +95,34 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const { setAuthTokens } = useAuth();
 
+  function onSubmit(e) {
+    e.preventDefault();
+
+    // Submit login information
+    API.userLogin({
+      email: userName,
+      password: password,
+    })
+      .then((result) => {
+        if (result.status === 200) {
+          //Login information matches records
+          setAuthTokens(result.data);
+          setLoggedIn(true);
+        } else {
+          //Login information does not match record
+          setIsError(true);
+        }
+      })
+      .catch((e) => {
+        setIsError(true);
+      });
+  }
+
+  //If logged in redirect to profile page
+  if (isLoggedIn) {
+    return <Redirect to='/profile' />;
+  }
+
   return (
     <div className={styles.root}>
       <div className={styles.banner}>
@@ -104,7 +134,7 @@ const LoginPage = () => {
             <MenuBookIcon className={styles.icon} />
           </Avatar>
           <h2> Sign In</h2>
-          <form className={styles.form} noValidate>
+          <form className={styles.form} noValidate onSubmit={onSubmit}>
             <CssTextField
               variant='outlined'
               margin='normal'
@@ -114,7 +144,9 @@ const LoginPage = () => {
               label='Email Address'
               name='email'
               autoComplete='email'
-              autoFocus
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
               error={isError}
               helperText={isError ? 'Please enter a valid email' : ' '}
             />
@@ -128,6 +160,9 @@ const LoginPage = () => {
               type='password'
               id='password'
               autoComplete='current-password'
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <FormControlLabel
               control={<Checkbox value='remember' />}

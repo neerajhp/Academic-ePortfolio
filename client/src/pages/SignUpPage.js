@@ -86,7 +86,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const validEmailRegex = RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+const validEmailRegex = RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 
 class SignUpPage extends React.Component {
   constructor() {
@@ -130,7 +130,7 @@ class SignUpPage extends React.Component {
         break;
       case 'confirmpassword':
         errors.confirmpassword =
-          this.state.password !== this.state.confirmpassword ? true : false;
+          this.state.password === this.state.confirmpassword ? true : false;
         break;
       default:
         break;

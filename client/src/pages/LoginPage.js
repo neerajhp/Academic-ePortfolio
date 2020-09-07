@@ -84,6 +84,7 @@ const CssTextField = withStyles({
 const LoginPage = () => {
   // Styling
   const styles = useStyles();
+  const isError = true;
 
   return (
     <div className={styles.root}>
@@ -107,6 +108,8 @@ const LoginPage = () => {
               name='email'
               autoComplete='email'
               autoFocus
+              error={isError}
+              helperText={isError ? 'Please enter a valid email' : ' '}
             />
             <CssTextField
               variant='outlined'

@@ -30,7 +30,7 @@ exports.postSignup = async(req, res) => {
     }).then(async (profile) => {
       if (!profile) {
         newUser.save();
-        res.send('User ' + newUser.firstName + ' added');
+        res.send('User added');
       } else {
         res.send('User already exists...');
       }
@@ -62,7 +62,6 @@ exports.postLogin = async (req, res) => {
             res.send('incorrect password!');
           }
         });
-
       }
     })
     .catch((err) => {

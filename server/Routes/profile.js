@@ -17,22 +17,26 @@ router.get("/education", (req, res) => {
     res.send("User's education history");
 });
 
+// University education history
+// Create
+router.post("/education/university", profileController.postEduUni);
+// Get
+router.get("/education/university", profileController.getEduUni);
+// Update
+router.put("/education/university", profileController.putEduUni);
+// Delete
+router.delete("/education/university", profileController.deleteEduUni);
+
 // Highschool education history
 // Create
 router.post("/education/highschool", profileController.postEduHigh);
+// Get
+router.get("/education/highschool", profileController.getEduHigh);
 // Update
 router.put("/education/highschool", profileController.putEduHigh);
 // Delete
 router.delete("/education/highschool", profileController.deleteEduHigh);
 
-
-// University education history
-// Create
-router.post("/education/university", profileController.postEduUni);
-// Update
-router.put("/education/university", profileController.putEduUni);
-// Delete
-router.delete("/education/university", profileController.deleteEduUni);
 
 
 

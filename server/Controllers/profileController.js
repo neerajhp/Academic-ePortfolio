@@ -146,6 +146,20 @@ const postEduUni = async (req, res) => {
     //Check if the record already exists for the user
 };
 
+const getEduUni = async (req, res) => {
+    await EduUni.findById({
+        _id: req.body._id
+    }, function(err, result) {
+            if (err) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
+};
+
 // Update works, check if error checking function is working working !!!!!!!!!!!
 const putEduUni = async (req, res) => {
 
@@ -211,6 +225,20 @@ const postEduHigh = async (req, res) => {
         res.status(400).json("Something's wrong");
     }
     //Check if the record already exists for the user
+};
+
+const getEduHigh = async (req, res) => {
+    await EduHigh.findById({
+        _id: req.body._id
+    }, function(err, result) {
+            if (err) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
 };
 
 const putEduHigh = async (req, res) => {
@@ -280,9 +308,11 @@ module.exports = {
     getCV,
     getProfilePic,
     postEduUni,
+    getEduUni,
     putEduUni,
     deleteEduUni,
     postEduHigh,
+    getEduHigh,
     putEduHigh,
     deleteEduHigh,
     updateBio

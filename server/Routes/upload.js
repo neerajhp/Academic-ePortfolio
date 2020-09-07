@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
 });
 
 
-// Handles the document uploads
+// Handles the document uploads (pdf, docx, png, jpg, mp4)
 // The userID is added to the function so that the userID can be attached to the document object in mongoDB
 // This isn't final. It depends on how the user upload will work.
 // Maybe get the userID from the request?

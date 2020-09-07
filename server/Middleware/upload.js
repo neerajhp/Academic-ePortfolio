@@ -37,20 +37,7 @@ const createStorage = multerS3({
     });
 
 
-// Middleware for uploading single images
-// Can be used for the profile picture
-// const imageSingleUpload = multer({
-//     storage: createStorage,
-//     fileFilter: (req, file, cb) => {
-//         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
-//             cb(null, true);
-//         } else{
-//             cb(null, false);
-//             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
-//         }
-//     }
-// }).single("image");
-
+// Middleware for uploading images
 const imageUpload = multer({
     storage: createStorage,
     fileFilter: (req, file, cb) => {
@@ -63,18 +50,6 @@ const imageUpload = multer({
     }
 });
 
-// // Middleware for uploading multiple images
-// const imageMultipleUpload = multer({
-//     storage: createStorage,
-//     fileFilter: (req, file, cb) => {
-//         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
-//             cb(null, true);
-//         } else{
-//             cb(null, false);
-//             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
-//         }
-//     }
-// }).array("images", 5);
 
 // Allowed file formats
 var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/png", "image/jpeg", "video/mp4"];

@@ -20,6 +20,7 @@ exports.postSignup = async (req, res) => {
       password: hash,
     });
 
+
     // console.log(newUser.firstName);
     // console.log(newUser.lastName);
     // console.log(newUser.email);

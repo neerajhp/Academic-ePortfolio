@@ -63,9 +63,10 @@ exports.postLogin = async (req, res) => {
             res.send('User authenticated');
             // Create JWT Payload
             const payload = {
-              id: user.id,
-              name: user.name,
+              id: profile._id,
+              name: profile.firstName,
             };
+            console.log(payload);
 
             // Sign token
             jwt.sign(

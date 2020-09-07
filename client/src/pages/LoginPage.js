@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useAuth } from '../context/auth';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -84,7 +85,13 @@ const CssTextField = withStyles({
 const LoginPage = () => {
   // Styling
   const styles = useStyles();
-  const isError = true;
+
+  //Authentication
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const { setAuthTokens } = useAuth();
 
   return (
     <div className={styles.root}>

@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../Controllers/userController.js");
-const User = require("../Models/User.js");
-var bcrypt = require("bcrypt");
-const saltRounds = 10;
+
 
 router.get("/", (req, res) => {
     res.send("You are in the users page");
@@ -25,15 +23,5 @@ router.post("/login", async (req, res) => {
   userController.postLogin(req, res);
 });
 
-//Edit profile endpoint
-//change names or create new route file instead
-router.post("/editprofile/highschool", async (req, res) => {
-    userController.postEduHigh(req, res);
-});
-
-router.post("/editprofile/university", async (req, res) => {
-    //console.log(userController);
-    userController.postEduUni(req, res);
-});
 
 module.exports = router;

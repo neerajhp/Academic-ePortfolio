@@ -1,24 +1,22 @@
 const express = require('express');
 const router = express.Router();
-//const User = require("../Models/User.js");
-const { User, EduUni, EduHigh } = require('../Models/User.js');
-
-// const EduUni = require("../Models/User.js");
-// const EduHigh = require("../Models/User.js");
+const User = require("../Models/User.js").User;
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-exports.postSignup = async (req, res) => {
-  //hash the password
-  bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-    //const User = models.User;
-
-    const newUser = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hash,
-    });
+exports.postSignup = async(req, res) => {
+    //hash the password
+    bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+        //const User = models.User;
+        
+        const newUser = new User({
+            //dummyID: req.body.dummyID,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: hash,
+            biography: req.body.biography
+        })
 
     // console.log(newUser.firstName);
     // console.log(newUser.lastName);
@@ -71,72 +69,3 @@ exports.postLogin = async (req, res) => {
     });
 };
 
-//Education History user control
-
-exports.postEduUni = async (req, res) => {
-  const newEduUni = new EduUni({
-    //get userid from from authentication JWT
-    //user_id: ,
-    uniName: req.body.uniName,
-    courseName: req.body.courseName,
-    majorName: req.body.majorName,
-    monthStart: req.body.monthStart,
-    yearStart: req.body.yearStart,
-    monthEnd: req.body.monthEnd,
-    yearEnd: req.body.yearEnd,
-    graduated: req.body.graduated,
-  });
-
-  try {
-    await newEduUni.save((err, file) => {
-      if (err) {
-        console.log('Error found');
-        throw err;
-      } else {
-        console.log('saved');
-        res.send(file);
-      }
-    });
-  } catch (err) {
-    res.status(400).json("Something's wrong");
-  }
-
-  //plan out how to check for profile
-  // await EduUni.findOne({
-  //     //user_id
-  // })
-  // .then(async profile => {
-  //     if(!profile){
-  //       newEduUni.save()
-  //       res.send("University Education History added");
-  //     } else{
-  //       res.send("User already exists...");
-  //     }
-};
-
-exports.postEduHigh = async (req, res) => {
-  const newEduHigh = new EduHigh({
-    //get userid from from authentication JWT
-    //user_id: ,
-    highName: req.body.highName,
-    monthStart: req.body.monthStart,
-    yearStart: req.body.yearStart,
-    monthEnd: req.body.monthEnd,
-    yearEnd: req.body.yearEnd,
-    graduated: req.body.graduated,
-  });
-
-  try {
-    await newEduHigh.save((err, file) => {
-      if (err) {
-        console.log('Error found');
-        throw err;
-      } else {
-        console.log('saved');
-        res.json(file);
-      }
-    });
-  } catch (err) {
-    res.status(400).json("Something's wrong");
-  }
-};

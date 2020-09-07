@@ -37,20 +37,7 @@ const createStorage = multerS3({
     });
 
 
-// Middleware for uploading single images
-// Can be used for the profile picture
-// const imageSingleUpload = multer({
-//     storage: createStorage,
-//     fileFilter: (req, file, cb) => {
-//         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
-//             cb(null, true);
-//         } else{
-//             cb(null, false);
-//             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
-//         }
-//     }
-// }).single("image");
-
+// Middleware for uploading images
 const imageUpload = multer({
     storage: createStorage,
     fileFilter: (req, file, cb) => {
@@ -63,25 +50,13 @@ const imageUpload = multer({
     }
 });
 
-// // Middleware for uploading multiple images
-// const imageMultipleUpload = multer({
-//     storage: createStorage,
-//     fileFilter: (req, file, cb) => {
-//         if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
-//             cb(null, true);
-//         } else{
-//             cb(null, false);
-//             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
-//         }
-//     }
-// }).array("images", 5);
 
 // Allowed file formats
 var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/png", "image/jpeg", "video/mp4"];
 
-// This function uploads documents to aws s3 server
+// This function uploads files to aws s3 server
 // Every user will get their own folder in the bucket
-const documentUpload = multer({
+const fileUpload = multer({
     // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
     storage: createStorage,
     fileFilter: (req, file, cb) => {
@@ -94,8 +69,23 @@ const documentUpload = multer({
     }
 })
 
+// Allows the upload of pdf or jpeg
+const documentUpload = multer({
+    // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
+    storage: createStorage,
+    fileFilter: (req, file, cb) => {
+        if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+            cb(null, true);
+        }else{
+            cb(null, false);
+            return cb(new Error("Only .pdf, .docx, .png and .jpg are allowed"));
+        }
+    }
+})
+
 
 module.exports = {
     imageUpload,
+    fileUpload,
     documentUpload
 }

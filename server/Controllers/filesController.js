@@ -32,20 +32,20 @@ const getDocument = async (req, res, next) => {
             console.log("File not found");
             res.status(404).json({error: "File not found"});
         }else{
-            var params = {
-                Bucket: "documents-eportfolio",
-                Key: doc.s3_key
-            }
-            s3.getObject(params, (err, data) => {
-                if(err){
-                    console.log(err);
-                    console.log("error in callback");
-                }else{
-                    console.log("success");
-                    res.json(doc.fileLink);
-                }
-            })
-            
+            // var params = {
+            //     Bucket: "documents-eportfolio",
+            //     Key: doc.s3_key
+            // }
+            // s3.getObject(params, (err, data) => {
+            //     if(err){
+            //         console.log(err);
+            //         console.log("error in callback");
+            //     }else{
+            //         console.log("success");
+            //         res.json(doc.fileLink);
+            //     }
+            // })
+            res.json(doc.fileLink);
             console.log("File found");
         }
         

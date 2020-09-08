@@ -86,7 +86,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const validEmailRegex = RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+const validEmailRegex = RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 
 class SignUpPage extends React.Component {
   constructor() {
@@ -96,11 +96,13 @@ class SignUpPage extends React.Component {
       lastName: '',
       email: '',
       password: '',
+      confirmpassword: '',
       errors: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        confirmpassword: false,
       },
     };
   }
@@ -118,15 +120,17 @@ class SignUpPage extends React.Component {
 
     switch (name) {
       case 'firstName':
-        errors.firstName =
-          value.length < 5 ? 'Full Name must be 5 characters long!' : '';
+        errors.firstName = value.length < 5 ? true : false;
         break;
       case 'email':
-        errors.email = validEmailRegex.test(value) ? '' : 'Email is not valid!';
+        errors.email = validEmailRegex.test(value) ? true : false;
         break;
       case 'password':
-        errors.password =
-          value.length < 8 ? 'Password must be 8 characters long!' : '';
+        errors.password = value.length < 8 ? true : false;
+        break;
+      case 'confirmpassword':
+        errors.confirmpassword =
+          this.state.password === this.state.confirmpassword ? true : false;
         break;
       default:
         break;
@@ -182,6 +186,12 @@ class SignUpPage extends React.Component {
                     name='firstName'
                     autoComplete=''
                     onChange={this.onChange}
+                    error={this.state.errors.firstName}
+                    helperText={
+                      this.state.errors.firstName
+                        ? 'Name must be longer than 5 characters'
+                        : ' '
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -204,6 +214,10 @@ class SignUpPage extends React.Component {
                 label='Email Address'
                 name='email'
                 onChange={this.onChange}
+                error={this.state.errors.email}
+                helperText={
+                  this.state.errors.email ? 'Please enter a valid email' : ' '
+                }
               />
               <CssTextField
                 variant='outlined'
@@ -215,6 +229,12 @@ class SignUpPage extends React.Component {
                 type='password'
                 id='password'
                 onChange={this.onChange}
+                error={this.state.errors.password}
+                helperText={
+                  this.state.errors.password
+                    ? 'Password must be 8 characters long!'
+                    : ' '
+                }
               />
               <CssTextField
                 variant='outlined'
@@ -225,7 +245,13 @@ class SignUpPage extends React.Component {
                 label='Confirm Password'
                 type='password'
                 id='confirmpassword'
-                autoComplete='current-password'
+                onChange={this.onChange}
+                error={this.state.errors.confirmpassword}
+                helperText={
+                  this.state.errors.confirmpassword
+                    ? 'Passwords do not match'
+                    : ' '
+                }
               />
               <FormControlLabel
                 control={<Checkbox value='remember' />}

@@ -114,6 +114,24 @@ const getProfilePic = async (req, res) => {
 
 
 // Education History //
+const getEduAll = async (req, res) => {
+    try {
+        eduhigh = await getEduHigh
+        eduuni = await getEduUni
+
+        const eduhistory = {
+            EduHigh: eduhigh,
+            EduUni: eduuni
+        }
+
+        res.json(eduhistory);
+    } catch (err) {
+        console.log("education history not found");
+        res.status(404).json(err);
+    }
+            
+};
+
 // University 
 const postEduUni = async (req, res) => {
 

@@ -109,11 +109,10 @@ const ProfilePage = () => {
   // Styling
   const styles = useStyles();
 
-  //Tokens
   const { setAuthTokens } = useAuth();
 
   function logOut() {
-    setAuthTokens();
+    setAuthTokens(null);
   }
 
   return (

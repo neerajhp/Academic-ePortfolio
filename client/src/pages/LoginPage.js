@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
-// Styling
+/* ================ Styling ================ */
 const useStyles = makeStyles(() => ({
   //Page container
   root: {
@@ -84,6 +84,8 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+/* ================ Component ================ */
+
 const LoginPage = () => {
   // Styling
   const styles = useStyles();
@@ -106,7 +108,7 @@ const LoginPage = () => {
       .then((result) => {
         if (result.status === 200) {
           //Login information matches records
-          setAuthTokens(result.data);
+          setAuthTokens(result.data.token);
           setLoggedIn(true);
         } else {
           //Login information does not match record
@@ -148,7 +150,6 @@ const LoginPage = () => {
                 setEmail(e.target.value);
               }}
               error={isError}
-              helperText={isError ? 'Please enter a valid email' : ' '}
             />
             <CssTextField
               variant='outlined'
@@ -163,6 +164,10 @@ const LoginPage = () => {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              error={isError}
+              helperText={
+                isError ? 'Password or email does not match our records' : ' '
+              }
             />
             <FormControlLabel
               control={<Checkbox value='remember' />}

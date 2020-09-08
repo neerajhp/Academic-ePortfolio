@@ -55,7 +55,7 @@ exports.postLogin = async (req, res) => {
     .then((profile) => {
       //Email does not exist
       if (!profile) {
-        res.send('User does not exist');
+        return res.status(400).send('User does not exist');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -80,12 +80,12 @@ exports.postLogin = async (req, res) => {
               (err, token) => {
                 res.json({
                   success: true,
-                  token: 'Bearer ' + token,
+                  token: token,
                 });
               }
             );
           } else {
-            res.send('incorrect password!');
+            return res.status(400).send('Password is incorrect');
           }
         });
       }

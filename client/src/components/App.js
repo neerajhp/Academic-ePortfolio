@@ -12,6 +12,7 @@ function App() {
   const existingTokens = JSON.parse(localStorage.getItem('tokens'));
   const [authTokens, setAuthTokens] = useState(existingTokens);
 
+  //Set local storage
   const setTokens = (data) => {
     localStorage.setItem('tokens', JSON.stringify(data));
     setAuthTokens(data);
@@ -23,7 +24,6 @@ function App() {
         <Router>
           <Switch>
             <Route exact path='/' component={LoginPage} />
-
             <Route path='/reset' component={ResetPage} />
             <Route path='/signup' component={SignUpPage} />
             <PrivateRoute path='/profile' component={ProfilePage} />

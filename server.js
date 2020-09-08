@@ -14,7 +14,7 @@ server.use(passport.initialize());
 // server.use(cors);
 
 // Passport config
-require('./server/middleware/passport')(passport);
+require('./server/Middleware/passport')(passport);
 
 // Import routes
 const userRoute = require('./server/Routes/user');

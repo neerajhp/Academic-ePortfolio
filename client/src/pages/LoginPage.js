@@ -91,7 +91,7 @@ const LoginPage = () => {
   //Authentication
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [userEmail, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setAuthTokens } = useAuth();
 
@@ -100,7 +100,7 @@ const LoginPage = () => {
 
     // Submit login information
     API.userLogin({
-      email: userName,
+      email: userEmail,
       password: password,
     })
       .then((result) => {
@@ -140,12 +140,12 @@ const LoginPage = () => {
               margin='normal'
               required
               fullWidth
-              id='email'
+              id='userEmail'
               label='Email Address'
-              name='email'
+              name='userEmail'
               autoComplete='email'
               onChange={(e) => {
-                setUserName(e.target.value);
+                setEmail(e.target.value);
               }}
               error={isError}
               helperText={isError ? 'Please enter a valid email' : ' '}

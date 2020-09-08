@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const passport = require('passport');
 // const cors = require("cors");
 require('dotenv').config();
 
@@ -9,7 +10,11 @@ const server = express();
 // Middlewares
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+server.use(passport.initialize());
 // server.use(cors);
+
+// Passport config
+require('./server/middleware/passport')(passport);
 
 // Import routes
 const userRoute = require('./server/Routes/user');

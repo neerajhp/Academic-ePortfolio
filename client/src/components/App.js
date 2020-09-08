@@ -8,6 +8,7 @@ import ResetPage from '../pages/ResetPage';
 import SignUpPage from '../pages/SignUpPage';
 
 function App() {
+  //Check login tokens
   const existingTokens = JSON.parse(localStorage.getItem('tokens'));
   const [authTokens, setAuthTokens] = useState(existingTokens);
 
@@ -18,7 +19,7 @@ function App() {
 
   return (
     <div>
-      <AuthContext.Provider value={false}>
+      <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
         <Router>
           <Switch>
             <Route exact path='/' component={LoginPage} />

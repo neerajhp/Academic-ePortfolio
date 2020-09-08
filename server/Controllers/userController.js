@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const User = require('../Models/User.js').User;
 var bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const saltRounds = 10;
 
 //SIGNUP
@@ -60,7 +63,6 @@ exports.postLogin = async (req, res) => {
           result
         ) {
           if (result == true) {
-            res.send('User authenticated');
             // Create JWT Payload
             const payload = {
               id: profile._id,
@@ -71,7 +73,7 @@ exports.postLogin = async (req, res) => {
             // Sign token
             jwt.sign(
               payload,
-              keys.secretOrKey,
+              process.env.SECRET_OR_KEY,
               {
                 expiresIn: 31556926, // 1 year in seconds
               },

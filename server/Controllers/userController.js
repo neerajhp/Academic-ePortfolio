@@ -1,22 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const User = require("../Models/User.js").User;
+const User = require('../Models/User.js').User;
 var bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const saltRounds = 10;
 
-exports.postSignup = async(req, res) => {
-    //hash the password
-    bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-        //const User = models.User;
-        
-        const newUser = new User({
-            //dummyID: req.body.dummyID,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: hash,
-            biography: req.body.biography
-        })
+//SIGNUP
+exports.postSignup = async (req, res) => {
+  //hash the password
+  bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+    //const User = models.User;
+
+    const newUser = new User({
+      //dummyID: req.body.dummyID,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: hash,
+      biography: req.body.biography,
+    });
 
     // console.log(newUser.firstName);
     // console.log(newUser.lastName);
@@ -38,18 +42,20 @@ exports.postSignup = async(req, res) => {
   });
 };
 
+//LOGIN
 exports.postLogin = async (req, res) => {
   var newUser = {};
   newUser.email = req.body.email;
   newUser.password = req.body.password;
-
-  //test if password matches
+  console.log(newUser.email);
+  //Check if user exists
   await User.findOne({
     email: newUser.email,
   })
     .then((profile) => {
+      //Email does not exist
       if (!profile) {
-        res.send('User not exist');
+        return res.status(400).send('User does not exist');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -57,9 +63,29 @@ exports.postLogin = async (req, res) => {
           result
         ) {
           if (result == true) {
-            res.send('User authenticated');
+            // Create JWT Payload
+            const payload = {
+              id: profile._id,
+              name: profile.firstName,
+            };
+            console.log(payload);
+
+            // Sign token
+            jwt.sign(
+              payload,
+              process.env.SECRET_OR_KEY,
+              {
+                expiresIn: 31556926, // 1 year in seconds
+              },
+              (err, token) => {
+                res.json({
+                  success: true,
+                  token: token,
+                });
+              }
+            );
           } else {
-            res.send('incorrect password!');
+            return res.status(400).send('Password is incorrect');
           }
         });
       }
@@ -68,4 +94,3 @@ exports.postLogin = async (req, res) => {
       console.log('Error is ', err.message);
     });
 };
-

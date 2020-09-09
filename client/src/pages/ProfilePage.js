@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../context/auth';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -7,6 +8,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Button,
 } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -15,7 +17,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FileExplorer from '../components/FileExplorer';
 
-// Styling
+/* ================ Styling ================ */
 const useStyles = makeStyles(() => ({
   //Page container
   root: {
@@ -96,11 +98,22 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-evenly',
     padding: '2%',
   },
+  submit: {
+    backgroundColor: '#F8C736',
+  },
 }));
+
+/* ================ Component ================ */
 
 const ProfilePage = () => {
   // Styling
   const styles = useStyles();
+
+  const { setAuthTokens } = useAuth();
+
+  function logOut() {
+    setAuthTokens(null);
+  }
 
   return (
     <div className={styles.root}>
@@ -131,6 +144,16 @@ const ProfilePage = () => {
             <ListItemText primary='My CV'></ListItemText>
           </ListItem>
         </List>
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          color='primary'
+          className={styles.submit}
+          onClick={logOut}
+        >
+          Logout
+        </Button>
       </div>
       <div className={styles.profileContainer}>
         <Paper className={styles.characterCard}>

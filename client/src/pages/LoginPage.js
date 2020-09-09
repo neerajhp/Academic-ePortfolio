@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { useAuth } from '../context/auth';
+import API from '../utils/API';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -12,7 +15,7 @@ import {
 } from '@material-ui/core';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
-// Styling
+/* ================ Styling ================ */
 const useStyles = makeStyles(() => ({
   //Page container
   root: {
@@ -81,9 +84,46 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+/* ================ Component ================ */
+
 const LoginPage = () => {
   // Styling
   const styles = useStyles();
+
+  //Authentication
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [userEmail, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { setAuthTokens } = useAuth();
+
+  function onSubmit(e) {
+    e.preventDefault();
+
+    // Submit login information
+    API.userLogin({
+      email: userEmail,
+      password: password,
+    })
+      .then((result) => {
+        if (result.status === 200) {
+          //Login information matches records
+          setAuthTokens(result.data.token);
+          setLoggedIn(true);
+        } else {
+          //Login information does not match record
+          setIsError(true);
+        }
+      })
+      .catch((e) => {
+        setIsError(true);
+      });
+  }
+
+  //If logged in redirect to profile page
+  if (isLoggedIn) {
+    return <Redirect to='/profile' />;
+  }
 
   return (
     <div className={styles.root}>
@@ -96,17 +136,20 @@ const LoginPage = () => {
             <MenuBookIcon className={styles.icon} />
           </Avatar>
           <h2> Sign In</h2>
-          <form className={styles.form} noValidate>
+          <form className={styles.form} noValidate onSubmit={onSubmit}>
             <CssTextField
               variant='outlined'
               margin='normal'
               required
               fullWidth
-              id='email'
+              id='userEmail'
               label='Email Address'
-              name='email'
+              name='userEmail'
               autoComplete='email'
-              autoFocus
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              error={isError}
             />
             <CssTextField
               variant='outlined'
@@ -118,6 +161,13 @@ const LoginPage = () => {
               type='password'
               id='password'
               autoComplete='current-password'
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              error={isError}
+              helperText={
+                isError ? 'Password or email does not match our records' : ' '
+              }
             />
             <FormControlLabel
               control={<Checkbox value='remember' />}

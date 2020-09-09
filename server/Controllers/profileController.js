@@ -135,9 +135,8 @@ const getProfilePic = async (req, res) => {
 
 // University 
 const postEduUni = async (req, res) => {
-
+    console.log(req.header)
     const newEduUni = new EduUni({
-        //get userid from from authentication JWT
         //user_id: ,
         uniName: req.body.uniName,
         courseName: req.body.courseName,
@@ -169,7 +168,7 @@ const getEduUni = async (req, res) => {
     await EduUni.findById({
         _id: req.body._id
     }, function(err, result) {
-            if (err) {
+            if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
@@ -185,7 +184,7 @@ const putEduUni = async (req, res) => {
     await EduUni.findByIdAndUpdate({
         _id: req.body._id
     }, req.body, function(err, result) {
-            if (err) {
+            if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
@@ -202,10 +201,8 @@ const deleteEduUni = async (req, res) => {
 
     await EduUni.findByIdAndDelete({
         _id: req.body._id
-    }, function(err, result) {
-            console.log(err);
-            console.log(result);
-            if (err) {
+    }, function(err, result) {   
+            if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
@@ -250,7 +247,7 @@ const getEduHigh = async (req, res) => {
     await EduHigh.findById({
         _id: req.body._id
     }, function(err, result) {
-            if (err) {
+            if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
@@ -265,7 +262,7 @@ const putEduHigh = async (req, res) => {
     await EduHigh.findByIdAndUpdate({
         _id: req.body._id
     }, req.body, function(err, result) {
-            if (err) {
+            if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
@@ -282,9 +279,7 @@ const deleteEduHigh = async (req, res) => {
     await EduHigh.findByIdAndDelete({
         _id: req.body._id
     }, function(err, result) {
-            console.log(err);
-            console.log(result);
-            if (err) {
+            if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });

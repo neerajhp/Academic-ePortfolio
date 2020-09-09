@@ -135,9 +135,8 @@ const getProfilePic = async (req, res) => {
 
 // University 
 const postEduUni = async (req, res) => {
-    console.log(req.header)
     const newEduUni = new EduUni({
-        //user_id: ,
+        user_id: req.user.id,
         uniName: req.body.uniName,
         courseName: req.body.courseName,
         majorName: req.body.majorName,
@@ -161,12 +160,11 @@ const postEduUni = async (req, res) => {
     } catch (err) {
         res.status(400).json("Something's wrong");
     }
-    //Check if the record already exists for the user
 };
 
 const getEduUni = async (req, res) => {
-    await EduUni.findById({
-        _id: req.body._id
+    await EduUni.find({
+        user_id: req.user.id
     }, function(err, result) {
             if (!result) {
                 res.status(404).json({
@@ -178,36 +176,40 @@ const getEduUni = async (req, res) => {
         })
 };
 
-// Update works, check if error checking function is working working !!!!!!!!!!!
 const putEduUni = async (req, res) => {
 
-    await EduUni.findByIdAndUpdate({
-        _id: req.body._id
+    await EduUni.findOneAndUpdate({
+        _id: req.body._id,
+        user_id: req.user.id
     }, req.body, function(err, result) {
             if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
             } else {
-                res.status(200).json(result);
+                EduUni.findById({
+                    _id: req.body._id
+                }, function (err, updated) {
+                    res.status(200).json(updated);
+                })
             }
-        })
+    })
 
     
 };
 
-// Delete works, Error checking not working !!!!!!!!!!! error is null
 const deleteEduUni = async (req, res) => {
 
-    await EduUni.findByIdAndDelete({
-        _id: req.body._id
+    await EduUni.findOneAndDelete({
+        _id: req.body._id,
+        user_id: req.user.id
     }, function(err, result) {   
             if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
             } else {
-                res.status(200).json(result);
+                res.status(200).json("education history deleted");
             }
         })
 
@@ -217,8 +219,7 @@ const deleteEduUni = async (req, res) => {
 // Highschool
 const postEduHigh = async (req, res) => {
     const newEduHigh = new EduHigh({
-        //get userid from from authentication JWT
-        //user_id:
+        user_id: req.user.id,
         highName: req.body.highName,
         monthStart: req.body.monthStart,
         yearStart: req.body.yearStart,
@@ -244,8 +245,8 @@ const postEduHigh = async (req, res) => {
 };
 
 const getEduHigh = async (req, res) => {
-    await EduHigh.findById({
-        _id: req.body._id
+    await EduHigh.find({
+        user_id: req.user.id
     }, function(err, result) {
             if (!result) {
                 res.status(404).json({
@@ -259,32 +260,38 @@ const getEduHigh = async (req, res) => {
 
 const putEduHigh = async (req, res) => {
 
-    await EduHigh.findByIdAndUpdate({
-        _id: req.body._id
+    await EduHigh.findOneAndUpdate({
+        _id: req.body._id,
+        user_id: req.user.id
     }, req.body, function(err, result) {
             if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
             } else {
-                res.status(200).json(result);
+                EduHigh.findById({
+                    _id: req.body._id
+                }, function (err, updated) {
+                    res.status(200).json(updated);
+                })
             }
-        })
+    })
 
     
 };
 
 const deleteEduHigh = async (req, res) => {
 
-    await EduHigh.findByIdAndDelete({
-        _id: req.body._id
-    }, function(err, result) {
+    await EduHigh.findOneAndDelete({
+        _id: req.body._id,
+        user_id: req.user.id
+    }, function(err, result) {   
             if (!result) {
                 res.status(404).json({
                     error: "education history not found"
                 });
             } else {
-                res.status(200).json(result);
+                res.status(200).json("education history deleted");
             }
         })
 

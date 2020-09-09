@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
 
 // University Education History Schema
 const eduUniSchema = mongoose.Schema({
-    // user_id: {type: String, required: true},
+    user_id: {type: String, required: true},
     uniName: {type: String, required: true},
     courseName: {type: String, required: true},
     majorName: {type: String, required: true},

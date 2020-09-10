@@ -17,18 +17,16 @@ router.get("/profile-pic", profileController.getProfilePic);
 // Education Section //
 
 // Create
-router.post("/education", authenticate.authenticateToken, profileController.postEdu);
+router.post("/education", profileController.postEdu);
 // Get
-router.get("/education", authenticate.authenticateToken, profileController.getEdu);
+router.get("/education", profileController.getEdu);
 // Update
-router.put("/education", authenticate.authenticateToken, profileController.putEdu);
+router.put("/education", profileController.putEdu);
 // Delete
-router.delete("/education", authenticate.authenticateToken, profileController.deleteEdu);
+router.delete("/education", profileController.deleteEdu);
 
 
-router.get("/bio", (req, res) => {
-    res.send("User's bio");
-});
+router.get("/bio", profileController.getBio);
 
 router.put("/bio", profileController.updateBio);
 

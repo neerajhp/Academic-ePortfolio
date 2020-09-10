@@ -205,24 +205,38 @@ const deleteEdu = async (req, res) => {
 
 
 // Biography
+const getBio = async (req, res) => {
+    await User.findById({
+        _id: req.user.id
+    }, function (err, result) {
+        if(!result.biography){
+            res.status(404).json({
+                error: "biography not found"
+            })
+        } else {
+            res.status(200).json(result.biography)
+        }
+    })
+}
+
 const updateBio = async (req, res) => {
     // update the bio field 
     await User.updateOne({
-        _id: req.query.userID
+        _id: req.user.id
     }, {
-        biography: req.body.bio
+        biography: req.body.biography
     }, (err, result) => {
         if (err) {
             res.status(404).json(err);
         } else {
             console.log("successfully updated");
             User.findOne({
-                _id: req.query.userID
+                _id: req.user.id
             }, (err, result) => {
                 if (err) {
                     res.status(500).json(err);
                 } else {
-                    res.json(result.bio);
+                    res.json(result.biography);
                 }
                 //res.json(result);
             })
@@ -239,5 +253,6 @@ module.exports = {
     getEdu,
     putEdu,
     deleteEdu,
+    getBio,
     updateBio
 }

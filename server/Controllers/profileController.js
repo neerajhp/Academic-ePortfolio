@@ -17,13 +17,22 @@ const getAllInfo = async (req, res) => {
     // Get cv, profile picture, first name, last name, email, bio
     try {
         const userRecord = await User.findOne({
-            dummyID: req.query.userID
+            _id: req.query.userID
         });
         console.log("user found");
-        const cv = await searchCV(req.query.userID);
-        console.log("cv found");
-        const profilePic = await searchProfilePic(req.query.userID);
-        console.log("profile pic found");
+        let cv = await searchCV(req.query.userID);
+        if(!cv){
+            cv = "";
+        }else{
+            console.log("cv found");
+        }
+        
+        let profilePic = await searchProfilePic(req.query.userID);
+        if(!profilePic){
+            profilePic = "";
+        }else{
+            console.log("profile pic found");
+        }
 
         const profile = {
             firstName: userRecord.firstName,

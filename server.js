@@ -9,7 +9,9 @@ const server = express();
 
 // Middlewares
 server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
+server.use(express.urlencoded({
+  extended: true
+}));
 server.use(passport.initialize());
 // server.use(cors);
 
@@ -30,8 +32,11 @@ server.use('/api/profile', profileRoute);
 
 // Database connection
 mongoose.connect(
-  process.env.DB_CONNECTION,
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  process.env.DB_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+  },
   function (err) {
     if (!err) {
       console.log('Connected to mongoDB.');

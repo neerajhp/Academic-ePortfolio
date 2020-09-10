@@ -14,11 +14,6 @@ router.get("/profile-pic", profileController.getProfilePic);
 
 // Education Section //
 
-router.get("/education", (req, res) => {
-    res.send("User's education history");
-});
-
-// University education history
 // Create
 router.post("/education", authenticate.authenticateToken, profileController.postEdu);
 // Get

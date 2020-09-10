@@ -143,15 +143,15 @@ const postEdu = async (req, res) => {
 const getEdu = async (req, res) => {
     await Edu.find({
         user_id: req.user.id
-    }, function(err, result) {
-            if (!result) {
-                res.status(404).json({
-                    error: "education history not found"
-                });
-            } else {
-                res.status(200).json(result);
-            }
-        })
+    }, function (err, result) {
+        if (!result) {
+            res.status(404).json({
+                error: "education history not found"
+            });
+        } else {
+            res.status(200).json(result);
+        }
+    })
 };
 
 const putEdu = async (req, res) => {
@@ -159,21 +159,21 @@ const putEdu = async (req, res) => {
     await Edu.findOneAndUpdate({
         _id: req.body._id,
         user_id: req.user.id
-    }, req.body, function(err, result) {
-            if (!result) {
-                res.status(404).json({
-                    error: "education history not found"
-                });
-            } else {
-                EduUni.findById({
-                    _id: req.body._id
-                }, function (err, updated) {
-                    res.status(200).json(updated);
-                })
-            }
+    }, req.body, function (err, result) {
+        if (!result) {
+            res.status(404).json({
+                error: "education history not found"
+            });
+        } else {
+            EduUni.findById({
+                _id: req.body._id
+            }, function (err, updated) {
+                res.status(200).json(updated);
+            })
+        }
     })
 
-    
+
 };
 
 const deleteEdu = async (req, res) => {
@@ -181,15 +181,15 @@ const deleteEdu = async (req, res) => {
     await Edu.findOneAndDelete({
         _id: req.body._id,
         user_id: req.user.id
-    }, function(err, result) {   
-            if (!result) {
-                res.status(404).json({
-                    error: "education history not found"
-                });
-            } else {
-                res.status(200).json("education history deleted");
-            }
-        })
+    }, function (err, result) {
+        if (!result) {
+            res.status(404).json({
+                error: "education history not found"
+            });
+        } else {
+            res.status(200).json("education history deleted");
+        }
+    })
 
 };
 

@@ -33,10 +33,36 @@ export default {
   getEducation: function() {
     return axios.get("/api/profile/education");
   },
+  getAllFiles: function() {
+    return axios.get("api/files/"); // Gets an array of all Document objects that belong to the user
+  },
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function(body) {
     return axios.put("/api/profile/bio", {
        biography: body.bio
     });
   },
+  uploadFiles: function(body) {
+    return axios.post("/api/upload/files", {
+        files: body.files // This is an array of files (current limit: 5 files)
+    });
+  },
+  uploadCV: function(body) {
+    return axios.post("/api/upload/cv", {
+        file: body.file // This is a single file
+    })
+  },
+  uploadProfilePic: function(body){
+    return axios.post("/api/upload/profile-pic", {
+        file: body.file
+    })
+  },
+  uploadImages: function(body){
+    return axios.post("/api/upload/images", {
+        files: body.files // This is an array of images (current limit: 5 files)
+    })
+  },
+
+
+
 };

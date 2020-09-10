@@ -104,6 +104,7 @@ const getProfilePic = async (req, res) => {
     try {
         const profilePic = await searchProfilePic(req.user.id);
         if (!profilePic) {
+            // Maybe return a generic profile picture instead
             console.log("profile picture not found");
             res.status(404).json({
                 error: "Profile picture not found"

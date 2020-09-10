@@ -16,24 +16,16 @@ const userSchema = mongoose.Schema({
 // not overlapping, end date not more than current date available create dropdown menu to and 
 // javascript to check for this in the front end, backend will not check for figures(may cause crash 
 // if not validated properly)
+// Education history, a combination for university and highschool,
 
-// University Education History Schema
-const eduUniSchema = mongoose.Schema({
+// Education History Schema
+const eduSchema = mongoose.Schema({
+    edu_type:{type: String, enum: ["University","Highschool"], required: true},
     user_id: {type: String, required: true},
-    uniName: {type: String, required: true},
-    courseName: {type: String, required: true},
-    majorName: {type: String, required: true},
-    monthStart: {type: Number, required: true},
-    yearStart: {type: Number, required: true},
-    monthEnd: {type: Number, required: true},
-    yearEnd: {type: Number, required: true},
-    graduated: {type: Boolean, default: true}
-});
-
-//HighSchool Education History Schema
-const eduHighSchema = mongoose.Schema({
-    // user_id: {type: String, required: true},
-    highName: {type: String, required: true},
+    highName:{type: String},
+    uniName: {type: String},
+    unicourseName: {type: String},
+    unimajorName: {type: String},
     monthStart: {type: Number, required: true},
     yearStart: {type: Number, required: true},
     monthEnd: {type: Number, required: true},
@@ -43,13 +35,11 @@ const eduHighSchema = mongoose.Schema({
 
 // Binds the userSchema to a user model
 const User = mongoose.model("User", userSchema);
-const EduUni = mongoose.model("EduUni", eduUniSchema);
-const EduHigh = mongoose.model("EduHigh", eduHighSchema);
+const Edu = mongoose.model("Edu", eduSchema);
 
 //module.exports  = User;
 
 module.exports = {
     User,
-    EduUni,
-    EduHigh
+    Edu,
 }

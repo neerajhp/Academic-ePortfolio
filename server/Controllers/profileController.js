@@ -3,10 +3,7 @@ const router = express.Router();
 
 const Document = require("../Models/Document");
 const User = require("../Models/User").User;
-const {
-    EduUni,
-    EduHigh
-} = require("../Models/User.js");
+const Edu = require("../Models/User").Edu;
 
 const AWS = require("aws-sdk");
 require('dotenv').config();
@@ -112,43 +109,24 @@ const getProfilePic = async (req, res) => {
     }
 }
 
-
-// Education History //
-
-// const getEduAll = async (req, res) => {
-//     try {
-//         eduhigh = await getEduHigh
-//         eduuni = await getEduUni
-
-//         const eduhistory = {
-//             EduHigh: eduhigh,
-//             EduUni: eduuni
-//         }
-
-//         res.json(eduhistory);
-//     } catch (err) {
-//         console.log("education history not found");
-//         res.status(404).json(err);
-//     }
-            
-// };
-
 // University 
-const postEduUni = async (req, res) => {
-    const newEduUni = new EduUni({
+const postEdu = async (req, res) => {
+    const newEdu = new Edu({
+        edu_type: req.body.edu_type,
         user_id: req.user.id,
+        highName: req.body.highName,
         uniName: req.body.uniName,
-        courseName: req.body.courseName,
-        majorName: req.body.majorName,
+        unicourseName: req.body.unicourseName,
+        unimajorName: req.body.unimajorName,
         monthStart: req.body.monthStart,
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
         yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated,
+        graduated: req.body.graduated
     });
 
     try {
-        await newEduUni.save((err, file) => {
+        await newEdu.save((err, file) => {
             if (err) {
                 console.log("Error found");
                 throw (err)
@@ -162,8 +140,8 @@ const postEduUni = async (req, res) => {
     }
 };
 
-const getEduUni = async (req, res) => {
-    await EduUni.find({
+const getEdu = async (req, res) => {
+    await Edu.find({
         user_id: req.user.id
     }, function(err, result) {
             if (!result) {
@@ -176,9 +154,9 @@ const getEduUni = async (req, res) => {
         })
 };
 
-const putEduUni = async (req, res) => {
+const putEdu = async (req, res) => {
 
-    await EduUni.findOneAndUpdate({
+    await Edu.findOneAndUpdate({
         _id: req.body._id,
         user_id: req.user.id
     }, req.body, function(err, result) {
@@ -198,9 +176,9 @@ const putEduUni = async (req, res) => {
     
 };
 
-const deleteEduUni = async (req, res) => {
+const deleteEdu = async (req, res) => {
 
-    await EduUni.findOneAndDelete({
+    await Edu.findOneAndDelete({
         _id: req.body._id,
         user_id: req.user.id
     }, function(err, result) {   
@@ -215,87 +193,6 @@ const deleteEduUni = async (req, res) => {
 
 };
 
-
-// Highschool
-const postEduHigh = async (req, res) => {
-    const newEduHigh = new EduHigh({
-        user_id: req.user.id,
-        highName: req.body.highName,
-        monthStart: req.body.monthStart,
-        yearStart: req.body.yearStart,
-        monthEnd: req.body.monthEnd,
-        yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated,
-    });
-
-    try {
-        await newEduHigh.save((err, file) => {
-            if (err) {
-                console.log("Error found");
-                throw (err)
-            } else {
-                console.log("saved");
-                res.json(file);
-            }
-        });
-    } catch (err) {
-        res.status(400).json("Something's wrong");
-    }
-    //Check if the record already exists for the user
-};
-
-const getEduHigh = async (req, res) => {
-    await EduHigh.find({
-        user_id: req.user.id
-    }, function(err, result) {
-            if (!result) {
-                res.status(404).json({
-                    error: "education history not found"
-                });
-            } else {
-                res.status(200).json(result);
-            }
-        })
-};
-
-const putEduHigh = async (req, res) => {
-
-    await EduHigh.findOneAndUpdate({
-        _id: req.body._id,
-        user_id: req.user.id
-    }, req.body, function(err, result) {
-            if (!result) {
-                res.status(404).json({
-                    error: "education history not found"
-                });
-            } else {
-                EduHigh.findById({
-                    _id: req.body._id
-                }, function (err, updated) {
-                    res.status(200).json(updated);
-                })
-            }
-    })
-
-    
-};
-
-const deleteEduHigh = async (req, res) => {
-
-    await EduHigh.findOneAndDelete({
-        _id: req.body._id,
-        user_id: req.user.id
-    }, function(err, result) {   
-            if (!result) {
-                res.status(404).json({
-                    error: "education history not found"
-                });
-            } else {
-                res.status(200).json("education history deleted");
-            }
-        })
-
-};
 
 // Biography
 const updateBio = async (req, res) => {
@@ -328,13 +225,9 @@ module.exports = {
     getAllInfo,
     getCV,
     getProfilePic,
-    postEduUni,
-    getEduUni,
-    putEduUni,
-    deleteEduUni,
-    postEduHigh,
-    getEduHigh,
-    putEduHigh,
-    deleteEduHigh,
+    postEdu,
+    getEdu,
+    putEdu,
+    deleteEdu,
     updateBio
 }

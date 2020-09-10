@@ -20,25 +20,13 @@ router.get("/education", (req, res) => {
 
 // University education history
 // Create
-router.post("/education/university", authenticate.authenticateToken, profileController.postEduUni);
+router.post("/education", authenticate.authenticateToken, profileController.postEdu);
 // Get
-router.get("/education/university", authenticate.authenticateToken, profileController.getEduUni);
+router.get("/education", authenticate.authenticateToken, profileController.getEdu);
 // Update
-router.put("/education/university", authenticate.authenticateToken, profileController.putEduUni);
+router.put("/education", authenticate.authenticateToken, profileController.putEdu);
 // Delete
-router.delete("/education/university", authenticate.authenticateToken, profileController.deleteEduUni);
-
-// Highschool education history
-// Create
-router.post("/education/highschool", authenticate.authenticateToken, profileController.postEduHigh);
-// Get
-router.get("/education/highschool", authenticate.authenticateToken, profileController.getEduHigh);
-// Update
-router.put("/education/highschool", authenticate.authenticateToken, profileController.putEduHigh);
-// Delete
-router.delete("/education/highschool", authenticate.authenticateToken, profileController.deleteEduHigh);
-
-
+router.delete("/education", authenticate.authenticateToken, profileController.deleteEdu);
 
 
 router.get("/bio", (req, res) => {

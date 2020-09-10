@@ -208,7 +208,7 @@ const deleteEdu = async (req, res) => {
 const updateBio = async (req, res) => {
     // update the bio field 
     await User.updateOne({
-        _id: req.query.userID
+        _id: req.user.id
     }, {
         biography: req.body.bio
     }, (err, result) => {
@@ -217,12 +217,12 @@ const updateBio = async (req, res) => {
         } else {
             console.log("successfully updated");
             User.findOne({
-                _id: req.query.userID
+                _id: req.user.id
             }, (err, result) => {
                 if (err) {
                     res.status(500).json(err);
                 } else {
-                    res.json(result.bio);
+                    res.json(result.biography);
                 }
                 //res.json(result);
             })

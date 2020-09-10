@@ -31,7 +31,7 @@ const createStorage = multerS3({
             cb(null, {fieldName: file.fieldname});
         },
         key: (req, file, cb) => {
-            var fullPath = "user-" + req.query.userID + "/" + file.originalname;
+            var fullPath = "user-" + req.user.id + "/" + file.originalname;
             cb(null, fullPath);
         }
     });

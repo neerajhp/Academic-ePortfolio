@@ -17,17 +17,17 @@ const getAllInfo = async (req, res) => {
     // Get cv, profile picture, first name, last name, email, bio
     try {
         const userRecord = await User.findOne({
-            _id: req.query.userID
+            _id: req.user.id
         });
         console.log("user found");
-        let cv = await searchCV(req.query.userID);
+        let cv = await searchCV(req.user.id);
         if(!cv){
             cv = "";
         }else{
             console.log("cv found");
         }
         
-        let profilePic = await searchProfilePic(req.query.userID);
+        let profilePic = await searchProfilePic(req.user.id);
         if(!profilePic){
             profilePic = "";
         }else{
@@ -39,12 +39,13 @@ const getAllInfo = async (req, res) => {
             lastName: userRecord.lastName,
             email: userRecord.email,
             bio: userRecord.biography,
-            cv: cv.fileLink,
-            profilePic: profilePic.fileLink
+            cv: cv,
+            profilePic: profilePic
         }
 
         res.json(profile);
     } catch (err) {
+        console.log(err);
         console.log("user not found");
         res.status(404).json(err);
     }
@@ -82,7 +83,7 @@ const searchProfilePic = async (userID) => {
 
 const getCV = async (req, res) => {
     try {
-        const cv = await searchCV(req.query.userID);
+        const cv = await searchCV(req.user.id);
         if (!cv) {
             console.log("cv not found");
             res.status(404).json({
@@ -101,7 +102,7 @@ const getCV = async (req, res) => {
 
 const getProfilePic = async (req, res) => {
     try {
-        const profilePic = await searchProfilePic(req.query.userID);
+        const profilePic = await searchProfilePic(req.user.id);
         if (!profilePic) {
             console.log("profile picture not found");
             res.status(404).json({

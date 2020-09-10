@@ -3,6 +3,8 @@ const multer = require("multer");
 const AWS = require("aws-sdk");
 require('dotenv').config();
 
+const filesController = require("../Controllers/filesController");
+
 
 // Allows the upload of a single file
 const uploadSingle = async (req, res) => {
@@ -20,19 +22,17 @@ const uploadSingle = async (req, res) => {
     }
 };
 
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+});
+
+
 const uploadCV = async (req, res) => {
-    await Document.findOneAndDelete({_id: req.user.id, fieldName: "cv"})
-    .then((result) => {
-        if(!result){
-            console.log("No cv found");
-        }else{
-            console.log("old cv deleted");
-        }
-    });
+    await filesController.deleteCV(req, res);
 
     await uploadSingle(req, res);
     console.log("new cv uploaded");
-
 }
 
 // Allows the upload of multiple files
@@ -67,7 +67,7 @@ const saveFileReference = async (file, userID) => {
         user_id: userID,
         fieldName: file.fieldname,
         fileLink: file.location,
-        s3_key: file.originalname
+        s3_key: `user-${userID}/${file.originalname}`
     }
 
     console.log(newFile);

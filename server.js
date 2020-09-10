@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const passport = require('passport');
+const authenticate = require("./server/Middleware/authenticate");
 // const cors = require("cors");
 require('dotenv').config();
 
@@ -29,6 +30,8 @@ server.use('/api/user', userRoute);
 server.use('/api/upload', uploadRoute);
 server.use('/api/files', filesRoute);
 server.use('/api/profile', profileRoute);
+
+
 
 // Database connection
 mongoose.connect(

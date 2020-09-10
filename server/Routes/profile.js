@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const profileController = require("../Controllers/profileController");
-const authenticate = require("../Middleware/autheticate")
+const authenticate = require("../Middleware/authenticate")
+
+router.use(authenticate.authenticateToken);
 
 // Gets everything needed for the user's profile display
 router.get("/", profileController.getAllInfo);

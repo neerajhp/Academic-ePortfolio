@@ -8,7 +8,7 @@ require('dotenv').config();
 const uploadSingle = async (req, res) => {
     try{
         if(req.file){
-            await saveFileReference(req.file, req.query.userID)
+            await saveFileReference(req.file, req.user.id)
             
             res.status(200).send("file saved");
         }else{
@@ -19,6 +19,21 @@ const uploadSingle = async (req, res) => {
         console.log(err);
     }
 };
+
+const uploadCV = async (req, res) => {
+    await Document.findOneAndDelete({_id: req.user.id, fieldName: "cv"})
+    .then((result) => {
+        if(!result){
+            console.log("No cv found");
+        }else{
+            console.log("old cv deleted");
+        }
+    });
+
+    await uploadSingle(req, res);
+    console.log("new cv uploaded");
+
+}
 
 // Allows the upload of multiple files
 const uploadMultiple = async (req, res) => {
@@ -79,5 +94,6 @@ const saveFileReference = async (file, userID) => {
 
 module.exports = {
     uploadSingle,
-    uploadMultiple
+    uploadMultiple,
+    uploadCV
 };

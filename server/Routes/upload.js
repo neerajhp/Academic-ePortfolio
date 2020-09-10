@@ -5,7 +5,11 @@ const path = require("path");
 const AWS = require("aws-sdk");
 
 const parse = require("../Middleware/upload");
+const authenticate = require("../Middleware/authenticate");
 const uploadController = require("../Controllers/uploadController");
+
+// Use authentication
+router.use(authenticate.authenticateToken);
 
 // Sends a form for testing purposes
 router.get("/", (req, res) => {
@@ -21,7 +25,7 @@ router.post("/files", parse.fileUpload.array("document", 5), uploadController.up
 
 // Handles the upload of a single document
 // Probably best for cv?
-router.post("/cv", parse.documentUpload.single("cv"), uploadController.uploadSingle);
+router.post("/cv", parse.documentUpload.single("cv"), uploadController.uploadCV);
 
 // Handles the upload of a single image
 // Can be used for profile picture uploads maybe?

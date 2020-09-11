@@ -21,18 +21,59 @@ router.get("/", (req, res) => {
 // The userID is added to the function so that the userID can be attached to the document object in mongoDB
 // This isn't final. It depends on how the user upload will work.
 // Maybe get the userID from the request?
-router.post("/files", parse.fileUpload.array("document", 5), uploadController.uploadMultiple);
+const multipleFiles = parse.fileUpload.array("document", 5);
+router.post("/files", (req, res) => {
+    multipleFiles(req, res, (err) => {
+        if (err) {
+            console.log(err);
+            res.status(400).json(err);
+            // A Multer error occurred when uploading.
+        }else{
+            uploadController.uploadMultiple(req, res);
+        }
+    });
 
-// Handles the upload of a single document
-// Probably best for cv?
-router.post("/cv", parse.documentUpload.single("cv"), uploadController.uploadCV);
+});
 
-// Handles the upload of a single image
-// Can be used for profile picture uploads maybe?
-router.post("/profile-pic", parse.imageUpload.single("profile-pic"), uploadController.uploadSingle);
+// Handles the cv upload
+const cvUpload = parse.documentUpload.single("cv");
+router.post("/cv", (req, res) => {
+    cvUpload(req, res, (err) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }else{
+            uploadController.uploadCV(req, res);
+        }
+    })
+});
+
+
+// Handles the profile picture upload
+const profilePicUpload = parse.imageUpload.single("profile-pic");
+router.post("/profile-pic", (req, res) => {
+    profilePicUpload(req, res, (err) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }else{
+            uploadController.uploadProfilePic(req, res);
+        }
+    })
+});
 
 // Handles the upload of multiple images
-router.post("/images", parse.imageUpload.array("image", 5), uploadController.uploadMultiple);
+const multipleImages = parse.imageUpload.array("image", 5);
+router.post("/images", (req, res) => {
+    multipleImages(req, res, (err) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }else{
+            uploadController.uploadMultiple(req, res);
+        }
+    })
+});
 
 
 module.exports = router;

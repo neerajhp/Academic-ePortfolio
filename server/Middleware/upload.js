@@ -18,6 +18,8 @@ require('dotenv').config();
 //     }
 // });
 
+const maxFileSize = 3 * 1000 * 1000;
+
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -33,7 +35,8 @@ const createStorage = multerS3({
         key: (req, file, cb) => {
             var fullPath = "user-" + req.user.id + "/" + file.originalname;
             cb(null, fullPath);
-        }
+        },
+        limits: {fileSize: maxFileSize}
     });
 
 
@@ -47,7 +50,8 @@ const imageUpload = multer({
             cb(null, false);
             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
         }
-    }
+    },
+    limits: {fileSize: maxFileSize}
 });
 
 
@@ -66,7 +70,8 @@ const fileUpload = multer({
             cb(null, false);
             return cb(new Error("Only .pdf, .docx, .png and .jpg are allowed"));
         }
-    }
+    },
+    limits: {fileSize: maxFileSize}
 })
 
 // Allows the upload of pdf or jpeg
@@ -80,7 +85,8 @@ const documentUpload = multer({
             cb(null, false);
             return cb(new Error("Only .pdf, .docx, .png and .jpg are allowed"));
         }
-    }
+    },
+    limits: {fileSize: maxFileSize}
 })
 
 

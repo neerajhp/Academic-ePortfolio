@@ -22,13 +22,7 @@ exports.postSignup = async (req, res) => {
       biography: req.body.biography,
     });
 
-    // console.log(newUser.firstName);
-    // console.log(newUser.lastName);
-    // console.log(newUser.email);
-    // console.log(newUser.password);
-    // console.log("User added");
-
-    //see if the email is already registered
+    //Check if the email is already registered
     await User.findOne({
       email: newUser.email,
     }).then(async (profile) => {
@@ -47,7 +41,6 @@ exports.postLogin = async (req, res) => {
   var newUser = {};
   newUser.email = req.body.email;
   newUser.password = req.body.password;
-  console.log(newUser.email);
   //Check if user exists
   await User.findOne({
     email: newUser.email,
@@ -68,7 +61,6 @@ exports.postLogin = async (req, res) => {
               id: profile._id,
               name: profile.firstName,
             };
-            console.log(payload);
 
             // Sign token
             jwt.sign(

@@ -9,12 +9,12 @@ import SignUpPage from '../pages/SignUpPage';
 
 function App() {
   //Check login tokens
-  const existingTokens = JSON.parse(localStorage.getItem('tokens'));
+  const existingTokens = JSON.parse(localStorage.getItem('token'));
   const [authTokens, setAuthTokens] = useState(existingTokens);
 
   //Set local storage
   const setTokens = (data) => {
-    localStorage.setItem('tokens', JSON.stringify(data));
+    localStorage.setItem('token', JSON.stringify(data));
     setAuthTokens(data);
   };
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const passport = require('passport');
+const authenticate = require('./server/Middleware/authenticate');
 // const cors = require("cors");
 require('dotenv').config();
 
@@ -9,12 +9,12 @@ const server = express();
 
 // Middlewares
 server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
-server.use(passport.initialize());
+server.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 // server.use(cors);
-
-// Passport config
-require('./server/Middleware/passport')(passport);
 
 // Import routes
 const userRoute = require('./server/Routes/user');
@@ -31,7 +31,11 @@ server.use('/api/profile', profileRoute);
 // Database connection
 mongoose.connect(
   process.env.DB_CONNECTION,
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  },
   function (err) {
     if (!err) {
       console.log('Connected to mongoDB.');

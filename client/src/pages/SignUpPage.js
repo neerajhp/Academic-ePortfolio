@@ -253,10 +253,6 @@ class SignUpPage extends React.Component {
                     : ' '
                 }
               />
-              <FormControlLabel
-                control={<Checkbox value='remember' />}
-                label='Remember me'
-              />
               <Button
                 type='submit'
                 fullWidth

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const profileController = require("../Controllers/profileController");
+const authenticate = require("../Middleware/authenticate")
+
+router.use(authenticate.authenticateToken);
 
 // Gets everything needed for the user's profile display
 router.get("/", profileController.getAllInfo);
@@ -13,32 +16,17 @@ router.get("/profile-pic", profileController.getProfilePic);
 
 // Education Section //
 
-router.get("/education", (req, res) => {
-    res.send("User's education history");
-});
-
-// Highschool education history
 // Create
-router.post("/education/highschool", profileController.postEduHigh);
+router.post("/education", profileController.postEdu);
+// Get
+router.get("/education", profileController.getEdu);
 // Update
-router.put("/education/highschool", profileController.putEduHigh);
+router.put("/education", profileController.putEdu);
 // Delete
-router.delete("/education/highschool", profileController.deleteEduHigh);
+router.delete("/education", profileController.deleteEdu);
 
 
-// University education history
-// Create
-router.post("/education/university", profileController.postEduUni);
-// Update
-router.put("/education/university", profileController.putEduUni);
-// Delete
-router.delete("/education/university", profileController.deleteEduUni);
-
-
-
-router.get("/bio", (req, res) => {
-    res.send("User's bio");
-});
+router.get("/bio", profileController.getBio);
 
 router.put("/bio", profileController.updateBio);
 

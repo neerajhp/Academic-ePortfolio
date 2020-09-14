@@ -11,7 +11,7 @@ router.get("/signup", (req, res) => {
     res.send("You are in the signup page");
 });
 
-router.post("/signup", async(req,res)=>{
+router.post("/signup", async (req, res) => {
     userController.postSignup(req, res);
 });
 
@@ -20,7 +20,7 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  userController.postLogin(req, res);
+    userController.postLogin(req, res);
 });
 
 

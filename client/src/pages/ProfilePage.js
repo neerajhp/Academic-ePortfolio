@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import API from '../utils/API';
 import { useAuth } from '../context/auth';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  CircularProgress,
   Paper,
   Avatar,
   List,
@@ -108,11 +110,31 @@ const useStyles = makeStyles(() => ({
 const ProfilePage = () => {
   // Styling
   const styles = useStyles();
+  const [isLoading, setLoading] = useState(true);
 
+  //Authentication Context
   const { setAuthTokens } = useAuth();
 
+  //Log Out
   function logOut() {
+    //Clears browser storage
     setAuthTokens(null);
+  }
+
+  //Profile Information
+  //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    API.getUserProfile().then(({ data }) => {
+      setUser(data);
+      setLoading(false);
+    });
+  }, []);
+
+  //If profile hasn't been fetched yet
+  if (isLoading) {
+    return <CircularProgress />;
   }
 
   return (
@@ -159,7 +181,7 @@ const ProfilePage = () => {
         <Paper className={styles.characterCard}>
           <Avatar className={styles.profilePicture} />
           <div className={styles.bio}>
-            <p>This is my bio</p>
+            <p>This is {user.firstName}'s bio</p>
           </div>
         </Paper>
         <Paper className={styles.showcaseCard}>
@@ -168,7 +190,7 @@ const ProfilePage = () => {
           </Avatar>
           <div className={styles.showcaseDescription}>
             <h3>Showcase</h3>
-            <p>Project description goes here</p>
+            <p>{user.bio}</p>
           </div>
         </Paper>
         <Paper className={styles.fileExplorerCard}>

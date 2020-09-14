@@ -3,12 +3,14 @@ const multer = require("multer");
 const AWS = require("aws-sdk");
 require('dotenv').config();
 
+const filesController = require("../Controllers/filesController");
+
 
 // Allows the upload of a single file
 const uploadSingle = async (req, res) => {
     try{
         if(req.file){
-            await saveFileReference(req.file, req.query.userID)
+            await saveFileReference(req.file, req.user.id)
             
             res.status(200).send("file saved");
         }else{
@@ -19,6 +21,26 @@ const uploadSingle = async (req, res) => {
         console.log(err);
     }
 };
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+});
+
+
+const uploadCV = async (req, res) => {
+    await filesController.deleteCV(req, res);
+
+    await uploadSingle(req, res);
+    console.log("new cv uploaded");
+}
+
+const uploadProfilePic = async (req, res) => {
+    await filesController.deleteProfilePic(req, res);
+
+    await uploadSingle(req, res);
+    console.log("new profile pic uploaded");
+}
 
 // Allows the upload of multiple files
 const uploadMultiple = async (req, res) => {
@@ -36,7 +58,7 @@ const uploadMultiple = async (req, res) => {
         for(var i = 0; i < req.files.length; i++){
             // Maybe make this function return boolean values
             // If its false, then we have to somehow notify the user that this file already exists
-            saveFileReference(req.files[i], req.query.userID);
+            saveFileReference(req.files[i], req.user.id);
         }
 
     }catch(err){
@@ -79,5 +101,7 @@ const saveFileReference = async (file, userID) => {
 
 module.exports = {
     uploadSingle,
-    uploadMultiple
+    uploadMultiple,
+    uploadCV,
+    uploadProfilePic
 };

@@ -9,11 +9,13 @@ import {
   Button,
   Grid,
   Link,
+  Typography,
 } from '@material-ui/core';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
-// Styling
-const useStyles = makeStyles(() => ({
+/* ================ Styling ================ */
+
+const useStyles = makeStyles((theme) => ({
   //Page container
   root: {
     height: '100vh',
@@ -24,8 +26,7 @@ const useStyles = makeStyles(() => ({
     position: 'sticky',
     width: '100%',
     height: '20%',
-    background: '#333B55',
-    color: '#FFFFFF',
+    background: theme.palette.primary.main,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -46,8 +47,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: '5%',
-    background: '#333B55',
-    color: '#FFFFFF ',
+    background: theme.palette.primary.main,
   },
   avatar: {
     height: '70px',
@@ -55,36 +55,36 @@ const useStyles = makeStyles(() => ({
     background: '#FFFFFF',
     margin: '5%',
   },
-  icon: { fontSize: 40, color: '#333B55' },
+  icon: { fontSize: 40, color: theme.palette.primary.main },
   submit: {
-    backgroundColor: '#F8C736',
-  },
-  options: {
-    '& .MuiTypography-colorPrimary': {
-      color: '#f0f2f6 !important',
-    },
+    backgroundColor: theme.palette.secondary.main,
   },
 }));
 
-const CssTextField = withStyles({
+// Input Fields
+const CssTextField = withStyles((theme) => ({
   root: {
-    '& .MuiInputBase-input': {
-      color: 'white',
-    },
     '& label.Mui-focused': {
       color: 'white',
     },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'white',
+    },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        color: 'white',
-        borderColor: '#8894b6',
+        borderColor: theme.palette.primary.light,
       },
       '&:hover fieldset': {
         borderColor: 'white',
       },
+      '&.Mui-focused fieldset': {
+        borderColor: 'white',
+      },
     },
   },
-})(TextField);
+}))(TextField);
+
+/* ================ Component ================ */
 
 const ResetPage = () => {
   // Styling
@@ -93,14 +93,14 @@ const ResetPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.banner}>
-        <h1>Welcome to ePortfolio</h1>
+        <Typography variant='h1'>Welcome to ePortfolio</Typography>
       </div>
       <div className={styles.formContainer}>
         <Paper elevation={1} className={styles.formPaper}>
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Reset Your Password</h2>
+          <Typography variant='h2'>Reset Password</Typography>
           <form className={styles.form} noValidate>
             <CssTextField
               variant='outlined'
@@ -124,11 +124,11 @@ const ResetPage = () => {
               color='primary'
               className={styles.submit}
             >
-              Confirm
+              <Typography>Confirm</Typography>
             </Button>
-            <Grid container className={styles.options}>
+            <Grid container>
               <Grid item xs>
-                <Link href='./' variant='body2'>
+                <Link href='./' variant='body2' color='inherit'>
                   Login
                 </Link>
               </Grid>

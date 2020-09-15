@@ -12,11 +12,12 @@ import {
   Button,
   Grid,
   Link,
+  Typography,
 } from '@material-ui/core';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 /* ================ Styling ================ */
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   //Page container
   root: {
     height: '100vh',
@@ -27,8 +28,7 @@ const useStyles = makeStyles(() => ({
     position: 'sticky',
     width: '100%',
     height: '20%',
-    background: '#333B55',
-    color: '#FFFFFF',
+    background: theme.palette.primary.main,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -42,47 +42,42 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   formPaper: {
-    height: '80%',
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '5%',
-    background: '#333B55',
-    color: '#FFFFFF ',
+    padding: '2em',
+    background: theme.palette.primary.main,
   },
   avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
-  icon: { fontSize: 40, color: '#333B55' },
+  icon: { fontSize: 40, color: theme.palette.primary.main },
   submit: {
-    backgroundColor: '#F8C736',
-  },
-  options: {
-    '& .MuiTypography-colorPrimary': {
-      color: '#f0f2f6 !important',
-    },
+    backgroundColor: theme.palette.secondary.main,
   },
 }));
 
-const CssTextField = withStyles({
+const CssTextField = withStyles((theme) => ({
   root: {
-    '& .MuiInputBase-input': {
-      color: 'white',
-    },
     '& label.Mui-focused': {
       color: 'white',
     },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'white',
+    },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        color: 'white',
-        borderColor: '#8894b6',
+        borderColor: theme.palette.primary.light,
       },
       '&:hover fieldset': {
         borderColor: 'white',
       },
+      '&.Mui-focused fieldset': {
+        borderColor: 'white',
+      },
     },
   },
-})(TextField);
+}))(TextField);
 
 /* ================ Component ================ */
 
@@ -128,14 +123,14 @@ const LoginPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.banner}>
-        <h1>Welcome to ePortfolio</h1>
+        <Typography variant='h1'>Welcome to ePortfolio</Typography>
       </div>
       <div className={styles.formContainer}>
         <Paper elevation={1} className={styles.formPaper}>
           <Avatar className={styles.avatar}>
             <MenuBookIcon className={styles.icon} />
           </Avatar>
-          <h2> Sign In</h2>
+          <Typography variant='h2'>Sign In</Typography>
           <form className={styles.form} noValidate onSubmit={onSubmit}>
             <CssTextField
               variant='outlined'
@@ -180,16 +175,16 @@ const LoginPage = () => {
               color='primary'
               className={styles.submit}
             >
-              Sign In
+              <Typography>Sign In</Typography>
             </Button>
             <Grid container className={styles.options}>
               <Grid item xs>
-                <Link href='./reset' variant='body2'>
+                <Link href='./reset' variant='body2' color='inherit'>
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href='./signup' variant='body2'>
+                <Link href='./signup' variant='body2' color='inherit'>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

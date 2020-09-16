@@ -11,15 +11,14 @@ const saltRounds = 10;
 exports.postSignup = async (req, res) => {
   //hash the password
   bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-    //const User = models.User;
 
     const newUser = new User({
-      //dummyID: req.body.dummyID,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       password: hash,
       biography: req.body.biography,
+      skills: req.body.skills
     });
 
     //Check if the email is already registered

@@ -24,6 +24,10 @@ const userSchema = mongoose.Schema({
     biography: {
         type: String,
         default: ""
+    },
+    skills: {
+        type: [String],
+        default: [""]
     }
 });
 

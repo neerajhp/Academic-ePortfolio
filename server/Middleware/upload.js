@@ -5,7 +5,6 @@ const Document = require("../Models/Document");
 const AWS = require("aws-sdk");
 AWS.config.update({ region:'ap-southeast-2' });
 // Allows storage of files in MongoDB
-const GridFsStorage = require("multer-gridfs-storage");
 require('dotenv').config();
 
 // The mongoDB database
@@ -18,7 +17,7 @@ require('dotenv').config();
 //     }
 // });
 
-const maxFileSize = 3 * 1000 * 1000;
+const maxFileSize = 3 * 1024 * 1024;
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,

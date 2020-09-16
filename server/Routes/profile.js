@@ -27,8 +27,11 @@ router.delete("/education", profileController.deleteEdu);
 
 
 router.get("/bio", profileController.getBio);
-
 router.put("/bio", profileController.updateBio);
+
+router.get("/skills", profileController.getSkills);
+router.put("/skills", profileController.addSkills);
+router.delete("/skills", profileController.removeSkills);
 
 
 

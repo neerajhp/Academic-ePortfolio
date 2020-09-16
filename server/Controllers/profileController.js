@@ -40,6 +40,7 @@ const getAllInfo = async (req, res) => {
             email: userRecord.email,
             bio: userRecord.biography,
             cv: cv,
+            skills: userRecord.skills,
             profilePic: profilePic
         }
 
@@ -231,17 +232,51 @@ const updateBio = async (req, res) => {
             res.status(404).json(err);
         } else {
             console.log("successfully updated");
-            User.findOne({
-                _id: req.user.id
-            }, (err, result) => {
-                if (err) {
-                    res.status(500).json(err);
-                } else {
-                    res.json(result.biography);
-                }
-                //res.json(result);
-            })
+            getBio(req, res);
             //res.json(result);
+        }
+    })
+}
+
+// Add an array of skills to the user's skills array
+const addSkills = async (req, res) => {
+    await User.updateOne({
+        _id: req.user.id
+    }, {
+        $addToSet: {skills: req.body.skills}
+    }, (err, result) => {
+        if(err){
+            res.status(404).json(err);
+        }else{
+            console.log("successfully updated");
+            getSkills(req, res);
+        }
+    })
+}
+
+const removeSkills = async (req, res) => {
+   await User.updateOne({
+       _id: req.user.id
+   }, {
+       $pull: {skills: {$in: req.body.skills}}
+   }, (err, result) => {
+       if(err){
+           res.status(404).json(err);
+       }else{
+           console.log("successfully updated");
+           getSkills(req, res);
+       }
+   })
+}
+
+const getSkills = async (req, res) => {
+    User.findOne({
+        _id: req.user.id
+    }, (err, result) => {
+        if(err){
+            res.status(400).json(err);
+        }else{
+            res.json(result.skills);
         }
     })
 }
@@ -255,5 +290,8 @@ module.exports = {
     putEdu,
     deleteEdu,
     getBio,
-    updateBio
+    updateBio,
+    getSkills,
+    addSkills,
+    removeSkills
 }

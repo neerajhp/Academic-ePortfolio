@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { withStyles } from '@material-ui/core/styles';
+import { useFormik } from 'formik';
 import {
   Avatar,
   TextField,
@@ -82,12 +82,8 @@ const CssTextField = withStyles((theme) => ({
 
 /* ================ Constants ================ */
 
-/* ================ Constants ================ */
-
 const validEmailRegex = RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 const validNameRegex = RegExp(/^[a-zA-Z]+ [a-zA-Z]+$/g);
-
-/* ================ Component ================ */
 
 /* ================ Component ================ */
 

@@ -248,8 +248,12 @@ const addSkills = async (req, res) => {
         if(err){
             res.status(404).json(err);
         }else{
-            console.log("successfully updated");
-            getSkills(req, res);
+            if(result.nModified === 0){
+                res.json("Attempted to add nothing to the skills array");
+            }else{
+                console.log("successfully updated");
+                getSkills(req, res);
+            }
         }
     })
 }
@@ -263,8 +267,11 @@ const removeSkills = async (req, res) => {
        if(err){
            res.status(404).json(err);
        }else{
-           console.log("successfully updated");
-           getSkills(req, res);
+           if(result.nModified === 0){
+               res.json("Skills is already empty")
+           }else{
+               getSkills(req, res);
+           }
        }
    })
 }

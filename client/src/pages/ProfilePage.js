@@ -11,6 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
+  Typography,
 } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -20,7 +21,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FileExplorer from '../components/FileExplorer';
 
 /* ================ Styling ================ */
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   //Page container
   root: {
     height: '100vh',
@@ -32,8 +33,7 @@ const useStyles = makeStyles(() => ({
     left: 0,
     height: '100%',
     width: '20%',
-    background: '#333B55',
-    color: '#FFFFFF',
+    background: theme.palette.primary.main,
   },
   navBarIcon: {
     fontSize: 30,
@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
     margin: '0.5%',
     flexGrow: 1,
     height: '20%',
-    background: '#536684',
+    background: theme.palette.primary.light,
     padding: '5%',
     display: 'flex',
     alignItems: 'center',
@@ -101,7 +101,7 @@ const useStyles = makeStyles(() => ({
     padding: '2%',
   },
   submit: {
-    backgroundColor: '#F8C736',
+    backgroundColor: theme.palette.secondary.main,
   },
 }));
 
@@ -181,7 +181,7 @@ const ProfilePage = () => {
         <Paper className={styles.characterCard}>
           <Avatar className={styles.profilePicture} />
           <div className={styles.bio}>
-            <p>This is {user.firstName}'s bio</p>
+            <Typography>This is {user.firstName}'s bio</Typography>
           </div>
         </Paper>
         <Paper className={styles.showcaseCard}>
@@ -189,7 +189,7 @@ const ProfilePage = () => {
             <AssignmentIcon />
           </Avatar>
           <div className={styles.showcaseDescription}>
-            <h3>Showcase</h3>
+            <Typography variant='h3'>Showcase</Typography>
             <p>{user.bio}</p>
           </div>
         </Paper>

@@ -9,12 +9,15 @@ import {
   Button,
   Grid,
   Link,
+  Typography,
 } from '@material-ui/core';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import API from '../utils/API';
+import theme from '../components/theme';
 
-// Styling
-const styles = () => ({
+/* ================ Styling ================ */
+
+const styles = (theme) => ({
   //Page container
   root: {
     height: '100vh',
@@ -25,8 +28,7 @@ const styles = () => ({
     position: 'sticky',
     width: '100%',
     height: '20%',
-    background: '#333B55',
-    color: '#FFFFFF',
+    background: theme.palette.primary.main,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -46,47 +48,43 @@ const styles = () => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: '2%',
-    background: '#333B55',
-    color: '#FFFFFF ',
+    background: theme.palette.primary.main,
   },
   avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
-  icon: { fontSize: 40, color: '#333B55' },
+  icon: { fontSize: 40, color: theme.palette.primary.main },
   submit: {
-    backgroundColor: '#F8C736',
-  },
-  options: {
-    '& .MuiTypography-colorPrimary': {
-      color: '#f0f2f6 !important',
-    },
+    backgroundColor: theme.palette.secondary.main,
   },
 });
 
 // Input Fields
-const CssTextField = withStyles({
+const CssTextField = withStyles((theme) => ({
   root: {
-    '& .MuiInputBase-input': {
-      color: 'white',
-    },
     '& label.Mui-focused': {
       color: 'white',
     },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'white',
+    },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        color: 'white',
-        borderColor: '#8894b6',
+        borderColor: theme.palette.primary.light,
       },
       '&:hover fieldset': {
         borderColor: 'white',
       },
-    },
-    '& input:+ fieldset': {
-      borderColor: '#FFFFFF',
-      borderWidth: 2,
+      '&.Mui-focused fieldset': {
+        borderColor: 'white',
+      },
     },
   },
-})(TextField);
+}))(TextField);
+
+/* ================ Constants ================ */
 
 const validEmailRegex = RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+
+/* ================ Component ================ */
 
 class SignUpPage extends React.Component {
   constructor() {
@@ -166,14 +164,14 @@ class SignUpPage extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.banner}>
-          <h1>Welcome to ePortfolio</h1>
+          <Typography variant='h1'>Welcome to ePortfolio</Typography>
         </div>
         <div className={classes.formContainer}>
           <div className={classes.formPaper}>
             <Avatar className={classes.avatar}>
               <MenuBookIcon className={classes.icon} />
             </Avatar>
-            <h2> Sign Up</h2>
+            <Typography variant='h2'>Sign Up</Typography>
             <form className={classes.form} noValidate onSubmit={this.onSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -260,11 +258,11 @@ class SignUpPage extends React.Component {
                 color='primary'
                 className={classes.submit}
               >
-                Sign Up
+                <Typography>Sign Up</Typography>
               </Button>
-              <Grid container className={classes.options}>
+              <Grid container>
                 <Grid item xs>
-                  <Link href='./' variant='body2'>
+                  <Link href='./' variant='body2' color='inherit'>
                     Login
                   </Link>
                 </Grid>

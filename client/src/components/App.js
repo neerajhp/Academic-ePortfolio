@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import theme from './theme';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { AuthContext } from '../context/auth';
@@ -21,14 +24,18 @@ function App() {
   return (
     <div>
       <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
-        <Router>
-          <Switch>
-            <Route exact path='/' component={LoginPage} />
-            <Route path='/reset' component={ResetPage} />
-            <Route path='/signup' component={SignUpPage} />
-            <PrivateRoute path='/profile' component={ProfilePage} />
-          </Switch>
-        </Router>
+        <ThemeProvider theme={theme}>
+          <CssBaseline>
+            <Router>
+              <Switch>
+                <Route exact path='/' component={LoginPage} />
+                <Route path='/reset' component={ResetPage} />
+                <Route path='/signup' component={SignUpPage} />
+                <PrivateRoute path='/profile' component={ProfilePage} />
+              </Switch>
+            </Router>
+          </CssBaseline>
+        </ThemeProvider>
       </AuthContext.Provider>
     </div>
   );

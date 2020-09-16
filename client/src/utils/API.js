@@ -16,8 +16,9 @@ export default {
       password: user.password,
     });
   },
-  // This gets all the information to be displayed in the profile page (firstName, lastName, email,  bio, cv, profilepic, education history) (At the moment this is it)
-  // I'm not sure if this is right
+
+  /* ================ Authorised Calls ================ */
+
   getUserProfile: () => {
     return axios.get('/api/profile/', {
       headers: {
@@ -64,38 +65,61 @@ export default {
   updateBio: function (body) {
     return axios.put('/api/profile/bio', {
       biography: body.bio,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   uploadFiles: function (body) {
     return axios.post('/api/upload/files', {
       // The files key must be "document"
       files: body.files, // This is an array of files (current limit: 5 files)
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   uploadCV: function (body) {
     return axios.post('/api/upload/cv', {
       // The file key must be "cv"
       file: body.file, // This is a single file
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   uploadProfilePic: function (body) {
     return axios.post('/api/upload/profile-pic', {
       // The file key is "profile-pic"
       file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   uploadImages: function (body) {
     return axios.post('/api/upload/images', {
       // The file key is "image"
       files: body.files, // This is an array of images (current limit: 5 files)
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   // Gets a file based on its objectID (objectID is in the params)
   getFile: function () {
-    return axios.get('/api/files/:id');
+    return axios.get('/api/files/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   },
   // Deletes the file by objectID (objectID is in the params)
   deleteFile: function () {
-    return axios.delete('/api/files/:id');
+    return axios.delete('/api/files/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   },
 };

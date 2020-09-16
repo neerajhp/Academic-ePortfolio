@@ -13,7 +13,8 @@ import {
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import API from '../utils/API';
 
-// Styling
+/* ================ Styling ================ */
+
 const styles = () => ({
   //Page container
   root: {
@@ -86,7 +87,12 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+/* ================ Constants ================ */
+
 const validEmailRegex = RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+const validNameRegex = RegExp(/^[a-zA-Z]+ [a-zA-Z]+$/g);
+
+/* ================ Component ================ */
 
 class SignUpPage extends React.Component {
   constructor() {
@@ -98,7 +104,7 @@ class SignUpPage extends React.Component {
       password: '',
       confirmpassword: '',
       errors: {
-        firstName: false,
+        firstName: '',
         lastName: false,
         email: false,
         password: false,
@@ -120,7 +126,7 @@ class SignUpPage extends React.Component {
 
     switch (name) {
       case 'firstName':
-        errors.firstName = value.length < 5 ? true : false;
+        errors.firstName = validNameRegex.test(value) ? true : false;
         break;
       case 'email':
         errors.email = validEmailRegex.test(value) ? true : false;
@@ -130,7 +136,7 @@ class SignUpPage extends React.Component {
         break;
       case 'confirmpassword':
         errors.confirmpassword =
-          this.state.password === this.state.confirmpassword ? true : false;
+          this.state.password !== this.state.confirmpassword ? true : false;
         break;
       default:
         break;
@@ -187,11 +193,7 @@ class SignUpPage extends React.Component {
                     autoComplete=''
                     onChange={this.onChange}
                     error={this.state.errors.firstName}
-                    helperText={
-                      this.state.errors.firstName
-                        ? 'Name must be longer than 5 characters'
-                        : ' '
-                    }
+                    helperText={this.state.errors.firstName}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>

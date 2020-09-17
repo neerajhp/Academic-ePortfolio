@@ -1,3 +1,4 @@
+import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { TextField, Typography } from '@material-ui/core';
 
@@ -26,7 +27,7 @@ const CssTextField = withStyles((theme) => ({
 
 /* ================ Components ================ */
 
-const TextField = ({ label, formikProps, formikKey, ...rest }) => {
+const FormikField = ({ label, formikProps, formikKey, ...rest }) => {
   return (
     <CssTextField
       variant='outlined'
@@ -34,7 +35,9 @@ const TextField = ({ label, formikProps, formikKey, ...rest }) => {
       fullWidth
       label={label}
       helperText={
-        formikProps.touched[formikKey] ? formikProps.errors[formikKey] : ''
+        formikProps.touched[formikKey] && formikProps.errors[formikKey]
+          ? formikProps.errors[formikKey]
+          : ' '
       }
       onChange={formikProps.handleChange(formikKey)}
       onBlur={formikProps.handleBlur(formikKey)}
@@ -45,5 +48,4 @@ const TextField = ({ label, formikProps, formikKey, ...rest }) => {
     />
   );
 };
-
-export default TextField;
+export default FormikField;

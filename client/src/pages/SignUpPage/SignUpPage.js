@@ -1,11 +1,12 @@
-import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Typography } from '@material-ui/core';
+import { Typography, Avatar, Grid, Link } from '@material-ui/core';
+
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import API from '../../utils/API';
 import SignUpForm from './SignUpForm';
-
 /* ================ Styling ================ */
 
 const useStyles = makeStyles((theme) => ({
@@ -32,30 +33,18 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-}));
-
-// Input Fields
-const CssTextField = withStyles((theme) => ({
-  root: {
-    '& label.Mui-focused': {
-      color: 'white',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'white',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: theme.palette.primary.light,
-      },
-      '&:hover fieldset': {
-        borderColor: 'white',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: 'white',
-      },
-    },
+  formPaper: {
+    width: '40%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '2%',
+    background: theme.palette.primary.main,
   },
-}))(TextField);
+  avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
+  icon: { fontSize: 40, color: theme.palette.primary.main },
+}));
 
 /* ================ Validation ================ */
 
@@ -80,18 +69,10 @@ const validationSchema = yup.object().shape({
 
 /* ================ Component ================ */
 
-const signUp = ({ email }) =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email === 'a@a.com') {
-        reject(new Error("You playin' with that fake email address."));
-      }
-      resolve(true);
-    }, 1000);
-  });
-
 const SignUpPage = () => {
   const classes = useStyles();
+
+  const [Submitted, setSubmitted] = useState(false);
 
   return (
     <div className={classes.root}>
@@ -99,30 +80,44 @@ const SignUpPage = () => {
         <Typography variant='h1'>Welcome to ePortfolio</Typography>
       </div>
       <div className={classes.formContainer}>
-        <Formik
-          initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-          }}
-          onSubmit={(values, actions) => {
-            signUp({ email: values.email })
-              .then(() => {
-                alert(JSON.stringify(values));
-              })
-              .catch((error) => {
-                actions.setFieldError('general', error.message);
-              })
-              .finally(() => {
-                actions.setSubmitting(false);
-              });
-          }}
-          validationSchema={validationSchema}
-        >
-          {(formikProps) => <SignUpForm formikProps={formikProps} />}
-        </Formik>
+        <div className={classes.formPaper}>
+          <Avatar className={classes.avatar}>
+            <MenuBookIcon className={classes.icon} />
+          </Avatar>
+
+          <Typography variant='h2'>Sign Up</Typography>
+
+          {Submitted && <div> Submitted!</div>}
+          {!Submitted && (
+            <Formik
+              initialValues={{
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+              }}
+              onSubmit={(values, actions) => {
+                API.userSignup({
+                  firstName: values.firstName,
+                  lastName: values.lastName,
+                  email: values.email,
+                  password: values.password,
+                })
+                  .then((res) => {
+                    setSubmitted(true);
+                  })
+                  .catch((err) => {
+                    actions.setFieldError('email', err.response.data);
+                    actions.setSubmitting(false);
+                  });
+              }}
+              validationSchema={validationSchema}
+            >
+              {(formikProps) => <SignUpForm formikProps={formikProps} />}
+            </Formik>
+          )}
+        </div>
       </div>
     </div>
   );

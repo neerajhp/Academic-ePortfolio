@@ -30,7 +30,7 @@ exports.postSignup = async (req, res) => {
         newUser.save();
         res.send('User added');
       } else {
-        res.send('User already exists...');
+        res.status(409).send('Email already linked to account');
       }
     });
   });

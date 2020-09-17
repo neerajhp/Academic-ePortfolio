@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import API from '../utils/API';
-import { useAuth } from '../context/auth';
+import API from '../../utils/API';
+import { useAuth } from '../../context/auth';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
@@ -18,7 +18,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import FileExplorer from '../components/FileExplorer';
+import FileExplorer from './FileExplorer';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { useAuth } from '../context/auth';
-import API from '../utils/API';
+import { useAuth } from '../../context/auth';
+import API from '../../utils/API';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Paper,

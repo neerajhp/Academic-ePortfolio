@@ -5,10 +5,10 @@ import theme from './theme';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { AuthContext } from '../context/auth';
-import ProfilePage from '../pages/ProfilePage';
-import LoginPage from '../pages/LoginPage';
-import ResetPage from '../pages/ResetPage';
-import SignUpPage from '../pages/SignUpPage/SignUpPage';
+import ProfilePage from './ProfilePage/ProfilePage';
+import LoginPage from './LoginPage/LoginPage';
+import ResetPage from './ResetPage/ResetPage';
+import SignUpPage from './SignUpPage/SignUpPage';
 
 function App() {
   //Check login tokens

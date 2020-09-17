@@ -8,7 +8,7 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
-
+// Returns all of the user's documents
 const getAllDocs = async (req, res) => {
     try{
         // ideally, its probbaly better if the user_id is not from the query

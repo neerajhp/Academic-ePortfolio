@@ -36,7 +36,16 @@ router.put("/skills", profileController.addSkills);
 router.delete("/skills", profileController.removeSkills);
 
 // Showcase tab
+
 router.post("/featured-work", showcaseController.createFeaturedWork);
+// Edits a specific featured work
+router.put("/featured-work/:id", showcaseController.editFeaturedWork);
+// Gets a specific featured work by its object id
+router.get("/featured-work/:id", showcaseController.getFeaturedWork);
+// Gets all of the users' featured works
+router.get("/featured-work", showcaseController.getAllFeaturedWorks);
+// Removes a specific featured work by its object id
+router.delete("/featured-work/:id", showcaseController.removeFeaturedWork);
 
 
 

@@ -10,9 +10,14 @@ const filesController = require("../Controllers/filesController");
 const uploadSingle = async (req, res) => {
     try{
         if(req.file){
-            await saveFileReference(req.file, req.user.id)
+            await saveFileReference(req.file, req.user.id).then(result => {
+                if(!result){
+                    res.status(400).json("Failed to save a file reference");
+                }else{
+                    res.status(200).json(result);
+                }
+            });
             
-            res.status(200).send("file saved");
         }else{
             throw Error();
         }
@@ -51,16 +56,23 @@ const uploadMultiple = async (req, res) => {
             res.send("You must select at least 1 file");
         }
 
-        res.send(req.files.length + " files have been uploaded");
+        //res.send(req.files.length + " files have been uploaded");
 
         // Creates a document reference for each file 
         // These references are then saved to mongoDB
+        let newFiles = [];
         for(var i = 0; i < req.files.length; i++){
             // Maybe make this function return boolean values
             // If its false, then we have to somehow notify the user that this file already exists
-            saveFileReference(req.files[i], req.user.id);
+            await saveFileReference(req.files[i], req.user.id).then(result => {
+                if(!result){
+                    console.log("Unabled to upload file");
+                }else{
+                    newFiles.push(result);
+                }
+            });
         }
-
+        res.status(200).json(newFiles);
     }catch(err){
         res.status(400).send({error: "Unable to upload files."});
         console.log(err);
@@ -76,27 +88,44 @@ const saveFileReference = async (file, userID) => {
         fileLink: file.location,
         s3_key: `user-${userID}/${file.originalname}`
     }
-
-    console.log(newFile);
+    let savedFile;
     
-    await Document.findOne({s3_key: newFile.s3_key, user_id: userID})
-    .then(async searchedFile => {
-        if(!searchedFile){
-            var document = new Document(newFile);
-            document.save((err, file) => {
-                if(err){
-                    throw err;
-                }else{
-                    console.log("File to be saved");
-                }
-            });
-          
-        } else{
+    // Looks for the existence of a file with the same key
+    await Document.findOne({s3_key: newFile.s3_key, user_id: userID}, (err, result) => {
+        if(!result){
+            savedFile = new Document(newFile);
+            console.log("This is a new file");
+        }else{
             console.log("File already exists");
-            // Make the user upload again?
-            // Rename the file?
+            savedFile = null;
         }
     });
+    
+    // Saves the file reference to the database
+    // If savedFile is null
+    await saveInDB(savedFile);
+
+    return savedFile;
+}
+
+
+// Saves the given record in the db
+const saveInDB = async (savedFile) => {
+    if(savedFile != null){
+        await savedFile.save((err, file) => {
+            if(err){
+                console.log("Attempting to save a file that already exists");
+                throw err;
+            }else{
+                if(!file){
+                    console.log("file is null");
+                    
+                }else{
+                    console.log("File saved");
+                }
+            }
+        });
+    }
 }
 
 module.exports = {

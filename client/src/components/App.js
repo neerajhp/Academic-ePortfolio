@@ -8,7 +8,7 @@ import { AuthContext } from '../context/auth';
 import ProfilePage from '../pages/ProfilePage';
 import LoginPage from '../pages/LoginPage';
 import ResetPage from '../pages/ResetPage';
-import SignUpPage from '../pages/SignUpPage';
+import SignUpPage from '../pages/SignUpPage/SignUpPage';
 
 function App() {
   //Check login tokens

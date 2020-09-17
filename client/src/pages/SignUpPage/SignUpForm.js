@@ -1,11 +1,8 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-
 import {
   Avatar,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Button,
   Grid,
   Link,
@@ -40,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   formPaper: {
-    width: '30%',
+    width: '40%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -78,9 +75,29 @@ const CssTextField = withStyles((theme) => ({
   },
 }))(TextField);
 
-/* ================ Component ================ */
+/* ================ Components ================ */
 
-const SignUpForm = () => {
+const FormikField = ({ label, formikProps, formikKey, ...rest }) => {
+  return (
+    <CssTextField
+      variant='outlined'
+      margin='dense'
+      fullWidth
+      label={label}
+      helperText={
+        formikProps.touched[formikKey] ? formikProps.errors[formikKey] : ''
+      }
+      onChange={formikProps.handleChange(formikKey)}
+      onBlur={formikProps.handleBlur(formikKey)}
+      error={
+        formikProps.touched[formikKey] && Boolean(formikProps.errors[formikKey])
+      }
+      {...rest}
+    />
+  );
+};
+
+const SignUpForm = ({ formikProps }) => {
   const classes = useStyles();
 
   return (
@@ -89,85 +106,52 @@ const SignUpForm = () => {
         <MenuBookIcon className={classes.icon} />
       </Avatar>
       <Typography variant='h2'>Sign Up</Typography>
-      <form className={classes.form} noValidate onSubmit={this.onSubmit}>
+      <form className={classes.form}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              label='First Name'
-              name='firstName'
-              autoComplete=''
-              onChange={this.onChange}
-              error={this.state.errors.firstName}
-              helperText={this.state.errors.firstName}
+            <FormikField
+              label='FirstName'
+              formikProps={formikProps}
+              formikKey='firstName'
+              autoFocus
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CssTextField
-              variant='outlined'
-              margin='dense'
-              required
-              fullWidth
-              label='Last Name'
-              name='lastName'
-              onChange={this.onChange}
+            <FormikField
+              label='LastName'
+              formikProps={formikProps}
+              formikKey='lastName'
+              autoFocus
             />
           </Grid>
         </Grid>
-        <CssTextField
-          variant='outlined'
-          margin='dense'
-          required
-          fullWidth
-          label='Email Address'
-          name='email'
-          onChange={this.onChange}
-          error={this.state.errors.email}
-          helperText={
-            this.state.errors.email ? 'Please enter a valid email' : ' '
-          }
+        <FormikField
+          label='Email'
+          formikProps={formikProps}
+          formikKey='email'
+          autoFocus
         />
-        <CssTextField
-          variant='outlined'
-          margin='dense'
-          required
-          fullWidth
-          name='password'
+        <FormikField
           label='Password'
-          type='password'
-          id='password'
-          onChange={this.onChange}
-          error={this.state.errors.password}
-          helperText={
-            this.state.errors.password
-              ? 'Password must be 8 characters long!'
-              : ' '
-          }
+          formikProps={formikProps}
+          formikKey='password'
+          autoFocus
         />
-        <CssTextField
-          variant='outlined'
-          margin='dense'
-          required
-          fullWidth
-          name='confirmpassword'
+        <FormikField
           label='Confirm Password'
-          type='password'
-          id='confirmpassword'
-          onChange={this.onChange}
-          error={this.state.errors.confirmpassword}
-          helperText={
-            this.state.errors.confirmpassword ? 'Passwords do not match' : ' '
-          }
+          formikProps={formikProps}
+          formikKey='confirmPassword'
+          autoFocus
         />
+
         <Button
           type='submit'
           fullWidth
           variant='contained'
           color='primary'
           className={classes.submit}
+          disabled={!formikProps.isValid}
+          onSubmit={formikProps.handleSubmit}
         >
           <Typography>Sign Up</Typography>
         </Button>

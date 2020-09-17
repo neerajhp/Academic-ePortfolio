@@ -1,9 +1,9 @@
 import React from 'react';
-import { withStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Typography } from '@material-ui/core';
-import API from '../utils/API';
+import API from '../../utils/API';
 import SignUpForm from './SignUpForm';
 
 /* ================ Styling ================ */
@@ -60,6 +60,8 @@ const CssTextField = withStyles((theme) => ({
 /* ================ Validation ================ */
 
 const validationSchema = yup.object().shape({
+  firstName: yup.string().required().label('First Name'),
+  lastName: yup.string().required().label('Last Name'),
   email: yup.string().label('Email').email().required(),
   password: yup
     .string()
@@ -78,6 +80,16 @@ const validationSchema = yup.object().shape({
 
 /* ================ Component ================ */
 
+const signUp = ({ email }) =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (email === 'a@a.com') {
+        reject(new Error("You playin' with that fake email address."));
+      }
+      resolve(true);
+    }, 1000);
+  });
+
 const SignUpPage = () => {
   const classes = useStyles();
 
@@ -89,8 +101,8 @@ const SignUpPage = () => {
       <div className={classes.formContainer}>
         <Formik
           initialValues={{
-            firstName: ''
-            lastName: ''
+            firstName: '',
+            lastName: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -109,7 +121,7 @@ const SignUpPage = () => {
           }}
           validationSchema={validationSchema}
         >
-          {(formikProps) => <SignUpForm />}
+          {(formikProps) => <SignUpForm formikProps={formikProps} />}
         </Formik>
       </div>
     </div>

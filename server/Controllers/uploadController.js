@@ -50,8 +50,7 @@ const uploadProfilePic = async (req, res) => {
 // Allows the upload of multiple files
 const uploadMultiple = async (req, res) => {
     try{
-        console.log(req.files);
-
+        
         if(req.files.length <= 0){
             res.send("You must select at least 1 file");
         }

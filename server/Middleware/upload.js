@@ -7,17 +7,8 @@ AWS.config.update({ region:'ap-southeast-2' });
 // Allows storage of files in MongoDB
 require('dotenv').config();
 
-// The mongoDB database
-// const storage = new GridFsStorage({
-//     url: process.env.DB_CONNECTION,
-//     file: (req, file) => {
-//         return{
-//             filename: file.originalname.toLowerCase()// This is dependent on the case
-//         };
-//     }
-// });
-
-const maxFileSize = 3 * 1024 * 1024;
+const maxFileSize = 8 * 1024 * 1024;
+const maxImageSize = 3 * 1024 * 1024;
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -50,7 +41,7 @@ const imageUpload = multer({
             return cb(new Error("Only .png, .jpg, and .jpeg are allowed"));
         }
     },
-    limits: {fileSize: maxFileSize}
+    limits: {fileSize: maxImageSize}
 });
 
 

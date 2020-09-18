@@ -72,7 +72,7 @@ const LoginPage = () => {
               <MenuBookIcon className={classes.icon} />
             </Avatar>
 
-            <Typography variant='h2'>Sign Up</Typography>
+            <Typography variant='h2'>Log In</Typography>
             <Formik
               initialValues={{
                 email: '',
@@ -126,7 +126,7 @@ const LoginPage = () => {
                     className={classes.submit}
                     disabled={!formikProps.isValid}
                   >
-                    <Typography>Sign Up</Typography>
+                    <Typography>Log In</Typography>
                   </Button>
                   <Grid container className={classes.options}>
                     <Grid item xs>

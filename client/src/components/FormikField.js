@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { TextField, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { TextField } from '@material-ui/core';
 
 // Input Fields
 const CssTextField = withStyles((theme) => ({

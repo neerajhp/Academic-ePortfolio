@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import { Formik } from 'formik';
+import { makeStyles } from '@material-ui/core/styles';
+import { Avatar, Button, Grid, Link, Typography } from '@material-ui/core';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useAuth } from '../../context/auth';
 import API from '../../utils/API';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Paper,
-  Avatar,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  Grid,
-  Link,
-  Typography,
-} from '@material-ui/core';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
+import FormikField from '../FormikField';
+import validationSchema from './Validation';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -57,140 +50,101 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CssTextField = withStyles((theme) => ({
-  root: {
-    '& label.Mui-focused': {
-      color: 'white',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'white',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: theme.palette.primary.light,
-      },
-      '&:hover fieldset': {
-        borderColor: 'white',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: 'white',
-      },
-    },
-  },
-}))(TextField);
-
 /* ================ Component ================ */
 
 const LoginPage = () => {
-  // Styling
-  const styles = useStyles();
+  const classes = useStyles();
 
-  //Authentication
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [userEmail, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const { setAuthTokens } = useAuth();
 
-  function onSubmit(e) {
-    e.preventDefault();
-
-    // Submit login information
-    API.userLogin({
-      email: userEmail,
-      password: password,
-    })
-      .then((result) => {
-        if (result.status === 200) {
-          //Login information matches records
-          setAuthTokens(result.data.token);
-          setLoggedIn(true);
-        } else {
-          //Login information does not match record
-          setIsError(true);
-        }
-      })
-      .catch((e) => {
-        setIsError(true);
-      });
-  }
-
-  //If logged in redirect to profile page
-  if (isLoggedIn) {
-    return <Redirect to='/profile' />;
-  }
-
   return (
-    <div className={styles.root}>
-      <div className={styles.banner}>
+    <div className={classes.root}>
+      <div className={classes.banner}>
         <Typography variant='h1'>Welcome to ePortfolio</Typography>
       </div>
-      <div className={styles.formContainer}>
-        <Paper elevation={1} className={styles.formPaper}>
-          <Avatar className={styles.avatar}>
-            <MenuBookIcon className={styles.icon} />
-          </Avatar>
-          <Typography variant='h2'>Sign In</Typography>
-          <form className={styles.form} noValidate onSubmit={onSubmit}>
-            <CssTextField
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              id='userEmail'
-              label='Email Address'
-              name='userEmail'
-              autoComplete='email'
-              onChange={(e) => {
-                setEmail(e.target.value);
+      <div className={classes.formContainer}>
+        {isLoggedIn && <Redirect to='/profile' />}
+
+        {!isLoggedIn && (
+          <div className={classes.formPaper}>
+            <Avatar className={classes.avatar}>
+              <MenuBookIcon className={classes.icon} />
+            </Avatar>
+
+            <Typography variant='h2'>Sign Up</Typography>
+            <Formik
+              initialValues={{
+                email: '',
+                password: '',
               }}
-              error={isError}
-            />
-            <CssTextField
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              name='password'
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
-              onChange={(e) => {
-                setPassword(e.target.value);
+              onSubmit={(values, actions) => {
+                // Submit login information
+                API.userLogin({
+                  email: values.email,
+                  password: values.password,
+                })
+                  .then((result) => {
+                    if (result.status === 200) {
+                      //Login information matches records
+                      setAuthTokens(result.data.token);
+                      setLoggedIn(true);
+                    }
+                  })
+                  .catch((err) => {
+                    actions.setErrors({
+                      email: err.response.data,
+                      password: err.response.data,
+                    });
+                  });
               }}
-              error={isError}
-              helperText={
-                isError ? 'Password or email does not match our records' : ' '
-              }
-            />
-            <FormControlLabel
-              control={<Checkbox value='remember' />}
-              label='Remember me'
-            />
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={styles.submit}
+              validationSchema={validationSchema}
             >
-              <Typography>Sign In</Typography>
-            </Button>
-            <Grid container className={styles.options}>
-              <Grid item xs>
-                <Link href='./reset' variant='body2' color='inherit'>
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href='./signup' variant='body2' color='inherit'>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-        </Paper>
+              {(formikProps) => (
+                <form
+                  className={classes.form}
+                  onSubmit={formikProps.handleSubmit}
+                >
+                  <FormikField
+                    label='Email'
+                    formikProps={formikProps}
+                    formikKey='email'
+                    required
+                  />
+                  <FormikField
+                    label='Password'
+                    formikProps={formikProps}
+                    formikKey='password'
+                    type='password'
+                    required
+                  />
+
+                  <Button
+                    type='Submit'
+                    fullWidth
+                    variant='contained'
+                    className={classes.submit}
+                    disabled={!formikProps.isValid}
+                  >
+                    <Typography>Sign Up</Typography>
+                  </Button>
+                  <Grid container className={classes.options}>
+                    <Grid item xs>
+                      <Link href='./reset' variant='body2' color='inherit'>
+                        Forgot password?
+                      </Link>
+                    </Grid>
+                    <Grid item>
+                      <Link href='./signup' variant='body2' color='inherit'>
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </form>
+              )}
+            </Formik>
+          </div>
+        )}
       </div>
     </div>
   );

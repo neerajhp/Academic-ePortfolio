@@ -3,23 +3,24 @@ import API from '../../utils/API';
 import { useAuth } from '../../context/auth';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  AppBar,
+  Toolbar,
   CircularProgress,
   Paper,
-  Avatar,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Button,
   Typography,
-  Divider,
 } from '@material-ui/core';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import FileExplorer from './FileExplorer';
+import CharacterCard from './CharacterCard';
+import EducationCard from './EducationCard';
+import SkillsCard from './SkillsCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -28,12 +29,23 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     width: '100vw',
     position: 'fixed',
+  },
+  title: {
+    marginLeft: '5%',
+    flexGrow: 1,
+  },
+
+  banner: theme.mixins.toolbar,
+  container: {
+    marginTop: '1%',
     display: 'flex',
   },
-  navBar: {
+  navSection: {
     left: 0,
-    height: '100%',
-    width: '20%',
+    width: '25%',
+  },
+  navBar: {
+    marginLeft: '5%',
     background: theme.palette.primary.main,
   },
   navBarIcon: {
@@ -72,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '0.5%',
     flexGrow: 5,
     height: '20%',
-    background: '#F7F5E7',
+    background: theme.palette.neutral.main,
     padding: '5%',
     display: 'flex',
     alignItems: 'center',
@@ -95,14 +107,20 @@ const useStyles = makeStyles((theme) => ({
     margin: '0.5%',
     flexGrow: 5,
     height: '20%',
-    background: '#F7F5E7',
+    background: theme.palette.neutral.main,
     display: 'flex',
     alignItems: 'stretch',
     justifyContent: 'space-evenly',
     padding: '2%',
   },
-  submit: {
-    backgroundColor: theme.palette.secondary.main,
+  cardsContainer: {
+    display: 'flex',
+    alignItems: 'stretch',
+    justifyContent: 'space-evenly',
+    padding: '2%',
+  },
+  infoCard: {
+    flexGrow: 1,
   },
 }));
 
@@ -110,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfilePage = () => {
   // Styling
-  const styles = useStyles();
+  const classes = useStyles();
   const [isLoading, setLoading] = useState(true);
 
   //Authentication Context
@@ -125,11 +143,21 @@ const ProfilePage = () => {
   //Profile Information
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
+  const [userEducation, setEducation] = useState(null);
+  const [userSkills, setSkills] = useState(null);
 
   useEffect(() => {
     API.getUserProfile().then(({ data }) => {
       setUser(data);
       setLoading(false);
+    });
+
+    API.getEducation().then(({ data }) => {
+      setEducation(data);
+    });
+
+    API.getSkills().then(({ data }) => {
+      setSkills(data);
     });
   }, []);
 
@@ -139,58 +167,54 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className={styles.root}>
-      <div className={styles.navBar}>
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <FaceIcon className={styles.navBarIcon} />
-            </ListItemIcon>
-            <ListItemText primary='My Profile'></ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <CreateIcon className={styles.navBarIcon} />
-            </ListItemIcon>
-            <ListItemText primary='My Blog'></ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <MenuBookIcon className={styles.navBarIcon} />
-            </ListItemIcon>
-            <ListItemText primary='My Projects'></ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <AccountBoxIcon className={styles.navBarIcon} />
-            </ListItemIcon>
-            <ListItemText primary='My CV'></ListItemText>
-          </ListItem>
-        </List>
-        <Divider light />
-        <ListItem button onClick={logOut}>
-          Logout
-        </ListItem>
-      </div>
-      <div className={styles.profileContainer}>
-        <Paper className={styles.characterCard}>
-          <Avatar className={styles.profilePicture} />
-          <div className={styles.bio}>
-            <Typography>This is {user.firstName}'s bio</Typography>
-          </div>
-        </Paper>
-        <Paper className={styles.showcaseCard}>
-          <Avatar variant='rounded' className={styles.fileCard}>
-            <AssignmentIcon />
-          </Avatar>
-          <div className={styles.showcaseDescription}>
-            <Typography variant='h3'>Showcase</Typography>
-            <p>{user.bio}</p>
-          </div>
-        </Paper>
-        <Paper className={styles.fileExplorerCard}>
-          <FileExplorer />
-        </Paper>
+    <div className={classes.root}>
+      <AppBar position='fixed'>
+        <Toolbar>
+          <Typography variant='h3' className={classes.title}>
+            ePortfolio
+          </Typography>
+          <Button color='inherit' onClick={logOut}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <div className={classes.banner} />
+      <div className={classes.container}>
+        <div className={classes.navSection}>
+          <Paper className={classes.navBar}>
+            <List>
+              <ListItem button>
+                <ListItemIcon>
+                  <FaceIcon className={classes.navBarIcon} />
+                </ListItemIcon>
+                <ListItemText primary='My Profile'></ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateIcon className={classes.navBarIcon} />
+                </ListItemIcon>
+                <ListItemText primary='My Blog'></ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <MenuBookIcon className={classes.navBarIcon} />
+                </ListItemIcon>
+                <ListItemText primary='My Projects'></ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <AccountBoxIcon className={classes.navBarIcon} />
+                </ListItemIcon>
+                <ListItemText primary='My CV'></ListItemText>
+              </ListItem>
+            </List>
+          </Paper>
+        </div>
+        <div className={classes.profileContainer}>
+          <CharacterCard user={user} />
+          <EducationCard education={userEducation} />
+          <SkillsCard skills={userSkills} />
+        </div>
       </div>
     </div>
   );

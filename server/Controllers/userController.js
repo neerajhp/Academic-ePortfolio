@@ -29,7 +29,7 @@ exports.postSignup = async (req, res) => {
         newUser.save();
         res.send('User added');
       } else {
-        res.send('User already exists...');
+        res.status(409).send('Email already linked to account');
       }
     });
   });
@@ -47,7 +47,7 @@ exports.postLogin = async (req, res) => {
     .then((profile) => {
       //Email does not exist
       if (!profile) {
-        return res.status(400).send('User does not exist');
+        res.status(409).send('Email does not match our records');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -76,7 +76,7 @@ exports.postLogin = async (req, res) => {
               }
             );
           } else {
-            return res.status(400).send('Password is incorrect');
+            res.status(409).send('Email and Password do not match our records');
           }
         });
       }

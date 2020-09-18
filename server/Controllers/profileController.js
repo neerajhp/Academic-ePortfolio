@@ -4,6 +4,7 @@ const router = express.Router();
 const Document = require("../Models/Document");
 const User = require("../Models/User").User;
 const Edu = require("../Models/User").Edu;
+const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 
 const AWS = require("aws-sdk");
 require('dotenv').config();
@@ -34,26 +35,48 @@ const getAllInfo = async (req, res) => {
             console.log("profile pic found");
         }
 
+        let featuredWorks = await searchFeaturedWorks(req.user.id);
+        if(featuredWorks.length === 0 || !featuredWorks){
+            featuredWorks = [];
+        }else{
+            console.log("featured works found");
+        }
+
+
+
         const profile = {
             firstName: userRecord.firstName,
             lastName: userRecord.lastName,
             email: userRecord.email,
             bio: userRecord.biography,
             cv: cv,
-            profilePic: profilePic
+            skills: userRecord.skills,
+            profilePic: profilePic,
+            showcase: featuredWorks
         }
 
         res.json(profile);
     } catch (err) {
         console.log(err);
         console.log("user not found");
-        res.status(404).json(err);
+        res.status(404).send(err);
     }
 
 }
 
+// Looks for the user's featured works
+const searchFeaturedWorks = async (userID) => {
+    try{
+        const works = await FeaturedWork.find({
+            user_id: userID
+        });
+        return works;
+    }catch(error){
+        console.log(error);
+    }
+}
 
-
+// Looks for the user's cv
 const searchCV = async (userID) => {
     try {
         const cv = await Document.findOne({
@@ -67,6 +90,7 @@ const searchCV = async (userID) => {
     }
 }
 
+// Looks for the user's profile picture
 const searchProfilePic = async (userID) => {
     try {
         const profilePic = await Document.findOne({
@@ -80,7 +104,7 @@ const searchProfilePic = async (userID) => {
 }
 
 
-
+// API call to get the cv
 const getCV = async (req, res) => {
     try {
         const cv = await searchCV(req.user.id);
@@ -100,6 +124,7 @@ const getCV = async (req, res) => {
     }
 }
 
+// API call to get the profile picture
 const getProfilePic = async (req, res) => {
     try {
         const profilePic = await searchProfilePic(req.user.id);
@@ -231,17 +256,60 @@ const updateBio = async (req, res) => {
             res.status(404).json(err);
         } else {
             console.log("successfully updated");
-            User.findOne({
-                _id: req.user.id
-            }, (err, result) => {
-                if (err) {
-                    res.status(500).json(err);
-                } else {
-                    res.json(result.biography);
-                }
-                //res.json(result);
-            })
+            getBio(req, res);
             //res.json(result);
+        }
+    })
+}
+
+// Add an array of skills to the user's skills array
+const addSkills = async (req, res) => {
+    await User.updateOne({
+        _id: req.user.id
+    }, {
+        $addToSet: {skills: req.body.skills}
+    }, (err, result) => {
+        if(err){
+            res.status(404).json(err);
+        }else{
+            if(result.nModified === 0){
+                res.json("Attempted to add nothing to the skills array");
+            }else{
+                console.log("successfully updated");
+                getSkills(req, res);
+            }
+        }
+    })
+}
+
+// Removes the skills specified in the body from the user's skills array
+const removeSkills = async (req, res) => {
+   await User.updateOne({
+       _id: req.user.id
+   }, {
+       $pull: {skills: {$in: req.body.skills}}
+   }, (err, result) => {
+       if(err){
+           res.status(404).json(err);
+       }else{
+           if(result.nModified === 0){
+               res.status(400).json("Skills is already empty");
+           }else{
+               getSkills(req, res);
+           }
+       }
+   })
+}
+
+// API call to get the user's skills array
+const getSkills = async (req, res) => {
+    User.findOne({
+        _id: req.user.id
+    }, (err, result) => {
+        if(err){
+            res.status(400).json(err);
+        }else{
+            res.json(result.skills);
         }
     })
 }
@@ -255,5 +323,8 @@ module.exports = {
     putEdu,
     deleteEdu,
     getBio,
-    updateBio
+    updateBio,
+    getSkills,
+    addSkills,
+    removeSkills
 }

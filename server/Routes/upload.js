@@ -35,6 +35,18 @@ router.post("/files", (req, res) => {
 
 });
 
+const singleFile = parse.fileUpload.single("document");
+router.post("/file", (req, res) => {
+    singleFile(req, res, (err) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }else{
+            uploadController.uploadSingle(req, res);
+        }
+    })
+})
+
 // Handles the cv upload
 const cvUpload = parse.documentUpload.single("cv");
 router.post("/cv", (req, res) => {

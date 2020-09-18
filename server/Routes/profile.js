@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const profileController = require("../Controllers/profileController");
+const showcaseController = require("../Controllers/showcaseController");
 const authenticate = require("../Middleware/authenticate")
 
 router.use(authenticate.authenticateToken);
@@ -25,10 +26,28 @@ router.put("/education", profileController.putEdu);
 // Delete
 router.delete("/education", profileController.deleteEdu);
 
-
+// Bio manipulation
 router.get("/bio", profileController.getBio);
-
 router.put("/bio", profileController.updateBio);
+
+// Skills tab
+router.get("/skills", profileController.getSkills);
+router.put("/skills", profileController.addSkills);
+router.delete("/skills", profileController.removeSkills);
+
+// Showcase tab
+
+router.post("/featured-work", showcaseController.createFeaturedWork);
+// Edits a specific featured work
+router.put("/featured-work/:id", showcaseController.editFeaturedWork);
+// Gets a specific featured work by its object id
+router.get("/featured-work/:id", showcaseController.getFeaturedWork);
+// Gets all of the users' featured works
+router.get("/featured-work", showcaseController.getAllFeaturedWorks);
+// Removes a specific featured work by its object id
+router.delete("/featured-work/:id", showcaseController.removeFeaturedWork);
+// Removes all of the user's featured works
+router.delete("/featured-work", showcaseController.removeAllFeaturedWorks);
 
 
 

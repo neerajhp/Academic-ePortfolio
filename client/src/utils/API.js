@@ -54,6 +54,7 @@ export default {
       },
     });
   },
+
   getAllFiles: function () {
     return axios.get('api/files/', {
       headers: {

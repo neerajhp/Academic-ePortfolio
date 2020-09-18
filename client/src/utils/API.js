@@ -54,13 +54,7 @@ export default {
       },
     });
   },
-  getSkills: function () {
-    return axios.get('/api/profile/skills', {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
-  },
+
   getAllFiles: function () {
     return axios.get('api/files/', {
       headers: {

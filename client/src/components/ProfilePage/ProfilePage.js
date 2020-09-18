@@ -26,9 +26,7 @@ import SkillsCard from './SkillsCard';
 const useStyles = makeStyles((theme) => ({
   //Page container
   root: {
-    height: '100vh',
     width: '100vw',
-    position: 'fixed',
   },
   title: {
     marginLeft: '5%',
@@ -61,66 +59,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     justifyContent: 'space-between',
   },
-  characterCard: {
-    margin: '0.5%',
-    flexGrow: 1,
-    height: '20%',
-    background: theme.palette.primary.light,
-    padding: '5%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  profilePicture: {
-    height: '5em',
-    width: '5em',
-  },
-  bio: {
-    marginLeft: '5%',
-    flexGrow: 1,
-    color: 'white !important ',
-  },
-  showcaseCard: {
-    margin: '0.5%',
-    flexGrow: 5,
-    height: '20%',
-    background: theme.palette.neutral.main,
-    padding: '5%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  fileCard: {
-    height: '8em',
-    width: '8em',
-  },
-  showcaseDescription: {
-    margin: '2%',
-    height: '100%',
-    marginLeft: '5%',
-    flexGrow: 1,
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    alignItems: 'flex-start',
-  },
-  fileExplorerCard: {
-    margin: '0.5%',
-    flexGrow: 5,
-    height: '20%',
-    background: theme.palette.neutral.main,
-    display: 'flex',
-    alignItems: 'stretch',
-    justifyContent: 'space-evenly',
-    padding: '2%',
-  },
+
   cardsContainer: {
     display: 'flex',
     alignItems: 'stretch',
     justifyContent: 'space-evenly',
     padding: '2%',
-  },
-  infoCard: {
-    flexGrow: 1,
   },
 }));
 

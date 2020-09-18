@@ -12,6 +12,7 @@ import {
   ListItemText,
   Button,
   Typography,
+  Divider,
 } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -166,16 +167,10 @@ const ProfilePage = () => {
             <ListItemText primary='My CV'></ListItemText>
           </ListItem>
         </List>
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          color='primary'
-          className={styles.submit}
-          onClick={logOut}
-        >
+        <Divider light />
+        <ListItem button onClick={logOut}>
           Logout
-        </Button>
+        </ListItem>
       </div>
       <div className={styles.profileContainer}>
         <Paper className={styles.characterCard}>

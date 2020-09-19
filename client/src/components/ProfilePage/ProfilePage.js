@@ -88,7 +88,6 @@ const ProfilePage = () => {
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
   const [userEducation, setEducation] = useState(null);
-  const [userSkills, setSkills] = useState(null);
 
   useEffect(() => {
     API.getUserProfile().then(({ data }) => {
@@ -98,10 +97,6 @@ const ProfilePage = () => {
 
     API.getEducation().then(({ data }) => {
       setEducation(data);
-    });
-
-    API.getSkills().then(({ data }) => {
-      setSkills(data);
     });
   }, []);
 
@@ -157,7 +152,7 @@ const ProfilePage = () => {
         <div className={classes.profileContainer}>
           <CharacterCard user={user} />
           <EducationCard education={userEducation} />
-          <SkillsCard skills={userSkills} />
+          <SkillsCard skills={user.skills} />
         </div>
       </div>
     </div>

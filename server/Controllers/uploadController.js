@@ -58,21 +58,43 @@ const uploadMultiple = async (req, res) => {
         // These references are then saved to mongoDB
             let newFiles = [];
             for(var i = 0; i < req.files.length; i++){
-                // Maybe make this function return boolean values
-                // If its false, then we have to somehow notify the user that this file already exists
-                await saveFileReference(req.files[i], req.user.id).then(result => {
-                    if(!result){
-                        console.log("Unabled to upload file");
+                var newFile = new Document({
+                    user_id: req.user.id,
+                    fieldName: req.files[i].fieldName,
+                    fileLink: req.files[i].location,
+                    s3_key: `user-${req.user.id}/${req.files[i].originalname}`
+                })
+                
+                await Document.findOne({user_id: newFile.user_id, s3_key: newFile.s3_key}, (err, result) => {
+                    if(err){
+                        res.status(400).send(err);
                     }else{
-                        newFiles.push(result);
+                        if(result){
+                            res.status(400).json(`${req.files[i].originalname} already exists`);
+                        }else{
+                            newFiles.push(newFile);
+                        }
                     }
                 });
+
+
             }
+
             // Checks whether or not files have been uploaded
             if(newFiles.length === 0){
                 res.status(400).json("Failed to upload files");
             }else{
-                res.status(200).json(newFiles);
+                await Document.insertMany(newFiles, (err, result) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }else{
+                        if(result){
+                            res.status(200).json(result);
+                        }else{
+                            res.status(400).json("Failed to upload files");
+                        }
+                    }
+                });
             }
         }
 
@@ -83,8 +105,11 @@ const uploadMultiple = async (req, res) => {
     }
 };
 
+
+
 // Saves a reference to the uploaded file in mongoDB
 const saveFileReference = async (file, userID) => {
+    console.log("Time to save a reference");
     // Check for file in mongoDB
     var newFile = {
         user_id: userID,
@@ -95,26 +120,36 @@ const saveFileReference = async (file, userID) => {
     let savedFile;
     
     // Looks for the existence of a file with the same key
-    await Document.findOne({s3_key: newFile.s3_key, user_id: userID}, (err, result) => {
-        if(!result){
-            savedFile = new Document(newFile);
-            console.log("This is a new file");
-        }else{
-            console.log("File already exists");
+    await Document.findOne({s3_key: newFile.s3_key, user_id: userID})
+    .then(async searchedFile => {
+        if(!searchedFile){
+            //savedFile = newFile;
+            var document = new Document(newFile);
+            await document.save((err, file) => {
+                //console.log("Time to wait for document save");
+                if(err){
+                    throw err;
+                }else{
+                    console.log("File to be saved");
+                    savedFile = file;
+                }
+            });
+          
+        } else{
             savedFile = null;
+            //console.log("File already exists");
+            // Make the user upload again?
+            // Rename the file?
         }
     });
-    
-    // Saves the file reference to the database
-    // If savedFile is null
-    await saveInDB(savedFile);
-
+    //console.log(savedFile);
     return savedFile;
 }
 
 
 // Saves the given record in the db
 const saveInDB = async (savedFile) => {
+    console.log("First step to saving");
     if(savedFile != null){
         await savedFile.save((err, file) => {
             if(err){
@@ -129,6 +164,8 @@ const saveInDB = async (savedFile) => {
                 }
             }
         });
+    }else{
+        console.log("File is null");
     }
 }
 

@@ -85,7 +85,7 @@ const deleteMultiple = async (req, res, next) => {
         if(!docs){
             console.log("Documents not found");
         }else{
-            deleteS3Multiple(docs);
+            deleteS3Multiple(docs, res);
         }
     });
 
@@ -106,7 +106,7 @@ const deleteMultiple = async (req, res, next) => {
 const deleteAllFiles = async (req, res) => {
     try{
         let result = await clearFiles(req.user.id);
-
+        console.log(result);
         if(result){
             console.log("Files have been deleted");
             res.status(200).json("All files have been deleted");
@@ -121,6 +121,7 @@ const deleteAllFiles = async (req, res) => {
 // Deletes all of the user's files and images
 // If successfull it will return true
 const clearFiles = async (userID) => {
+    let deleteStatus;
     await Document.find({user_id: userID}, (err, docs) => {
         if(err){
             console.log("Error found");
@@ -128,26 +129,29 @@ const clearFiles = async (userID) => {
         }else{
             if(docs.length === 0 || !docs){
                 console.log("Files are not found");
-                return false;
+                deleteStatus = false;
             }else{
                 console.log("Files abt to be deleted");
                 deleteS3Multiple(docs);
             }
         }
     });
-    
 
     await Document.deleteMany({user_id: userID}, (err, result) => {
         if(err){
             throw err;
         }else{
+            console.log(result.deletedCount);
             if(result.deletedCount === 0){
-                return false;
+                console.log("No delete");
+                deleteStatus = false;
             }else{
-                return true;
+                console.log("Yes delete");
+                deleteStatus = true;
             }
         }
     });
+    return deleteStatus;
 }
 
 
@@ -164,7 +168,7 @@ const deleteCV = async (req, res) => {
         }else{
             console.log("Old CV about to be deleted")
             //console.log(doc);
-            deleteS3Instance(doc, res);
+            deleteS3Instance(doc);
             
         }
     });
@@ -227,7 +231,7 @@ const deleteS3Instance = (doc) => {
     });
 }
 
-const deleteS3Multiple = (docs, res) => {
+const deleteS3Multiple = (docs) => {
     var doc;
     var keys = [];
     // Add the s3 keys of the documents to the params
@@ -248,7 +252,7 @@ const deleteS3Multiple = (docs, res) => {
     s3.deleteObjects(params, (err, data) => {
         if(err){
             console.log(err);
-            res.status(400).json(err);
+            //res.status(400).json(err);
         }else{
             console.log("file removed from s3");
         }

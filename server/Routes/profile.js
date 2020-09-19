@@ -47,7 +47,7 @@ router.get("/featured-work", showcaseController.getAllFeaturedWorks);
 // Removes a specific featured work by its object id
 router.delete("/featured-work/:id", showcaseController.removeFeaturedWork);
 // Removes all of the user's featured works
-router.delete("/featured-work", showcaseController.removeAllFeaturedWorks);
+router.delete("/featured-work", showcaseController.clearShowcase);
 
 
 

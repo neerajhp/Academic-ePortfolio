@@ -50,11 +50,10 @@ const deleteDocument = async (req, res, next) => {
 
         if(!doc){
             console.log("File not found");
+            res.status(404).json("File not found");
+            return(next());
         }else{
             deleteS3Instance(doc);
-            //res.status(200).json("Object has been deleted");
-            //res.json(doc.s3_key);
-            //console.log("File found");
         }
     });
     
@@ -69,7 +68,7 @@ const deleteDocument = async (req, res, next) => {
     });
 }
 
-
+// Deletes multiple files based on their ids
 const deleteMultiple = async (req, res, next) => {
     console.log("In search of docs");
     await Document.find({

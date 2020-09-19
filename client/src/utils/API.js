@@ -143,9 +143,71 @@ export default {
   // Removes specified skills from the user's skills array
   removeSkills: function (body) {
     return axios.delete('api/profile/skills', {
+      skills: body.skills,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
   },
+  // Creates a featured work
+  createFeaturedWork: function(body) {
+    return axios.post('api/profile/featured-work', {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        fileLink: body.fileLink,
+        image: body.image,
+        url: body.url,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+  // Gets all of the user's featured works
+  getAllFeaturedWorks: function() {
+    return axios.get('api/profile/featured-work', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets a specific featured work
+  getFeaturedWork: function() {
+    return axios.get('api/profile/featured-work/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Edit a specific featured work
+  editFeaturedWork: function(body) {
+    return axios.put('api/profile/featured-work/:id', {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        fileLink: body.fileLink,
+        image: body.image,
+        url: body.url,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    })
+  },
+  // Removes a specific featured work
+  removeFeaturedWork: function() {
+    return axios.delete('api/profile/featured-work/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Removes all of the user's featured works
+  clearShowCase: function() {
+    return axios.delete('api/profile/featured-work', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  }
+
 };

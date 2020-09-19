@@ -6,6 +6,7 @@ const User = require("../Models/User").User;
 const Edu = require("../Models/User").Edu;
 const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 const filesController = require("../Controllers/filesController");
+const showcaseController = require("../Controllers/showcaseController");
 
 const AWS = require("aws-sdk");
 require('dotenv').config();
@@ -72,11 +73,17 @@ const deleteProfile = async (req, res) => {
         let filesDeleted = await filesController.clearFiles(req.user.id);
         if(!filesDeleted){
             console.log("Failed to delete files");
-            throw new Error();
+            //throw new Error();
         }else{
             console.log("All files deleted");
         }
         // Delete all showcase
+        let showcase = await showcaseController.removeAllFeaturedWorks(req.user.id);
+        if(!showcase){
+            console.log("Failed to clear showcase");
+        }else{
+            console.log("showcase cleared");
+        }
         // Delete all Education
         // Delete all Employment
         // Delete all Reflections

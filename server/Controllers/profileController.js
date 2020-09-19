@@ -5,6 +5,7 @@ const Document = require("../Models/Document");
 const User = require("../Models/User").User;
 const Edu = require("../Models/User").Edu;
 const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
+const filesController = require("../Controllers/filesController");
 
 const AWS = require("aws-sdk");
 require('dotenv').config();
@@ -21,6 +22,7 @@ const getAllInfo = async (req, res) => {
             _id: req.user.id
         });
         console.log("user found");
+        
         let cv = await searchCV(req.user.id);
         if(!cv){
             cv = "";
@@ -62,6 +64,44 @@ const getAllInfo = async (req, res) => {
         res.status(404).send(err);
     }
 
+}
+
+const deleteProfile = async (req, res) => {
+    try{
+        // Delete all files
+        let filesDeleted = await filesController.clearFiles(req.user.id);
+        if(!filesDeleted){
+            console.log("Failed to delete files");
+            throw new Error();
+        }else{
+            console.log("All files deleted");
+        }
+        // Delete all showcase
+        // Delete all Education
+        // Delete all Employment
+        // Delete all Reflections
+        // Delete userProfile
+        await User.deleteOne({
+            _id: req.user.id
+        }, (err, result) => {
+            if(err){
+                throw err;
+            }else{
+                if(result.deletedCount === 0){
+                    throw err;
+                }else{
+                    console.log("User record deleted");
+                }
+            }
+        });
+
+        console.log("user deleted");
+
+    }catch (err){
+        console.log(err);
+        res.status(400).send(err);
+    }
+  
 }
 
 // Looks for the user's featured works

@@ -102,6 +102,54 @@ const deleteMultiple = async (req, res, next) => {
     })
 }
 
+// API for deleting all of a user's files
+const deleteAllFiles = async (req, res) => {
+    try{
+        let result = await clearFiles(req.user.id);
+
+        if(result){
+            console.log("Files have been deleted");
+            res.status(200).json("All files have been deleted");
+        }else{
+            res.status(400).json("No files were found");
+        }
+    }catch(err){
+        res.status(400).json("Files were not deleted");
+    }
+}
+
+// Deletes all of the user's files and images
+// If successfull it will return true
+const clearFiles = async (userID) => {
+    await Document.find({user_id: userID}, (err, docs) => {
+        if(err){
+            console.log("Error found");
+            throw err;
+        }else{
+            if(docs.length === 0 || !docs){
+                console.log("Files are not found");
+                return false;
+            }else{
+                console.log("Files abt to be deleted");
+                deleteS3Multiple(docs);
+            }
+        }
+    });
+    
+
+    await Document.deleteMany({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }else{
+            if(result.deletedCount === 0){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    });
+}
+
 
 // Deletes the cv of the user
 const deleteCV = async (req, res) => {
@@ -215,5 +263,7 @@ module.exports = {
     deleteDocument,
     deleteMultiple,
     deleteCV,
-    deleteProfilePic
+    deleteProfilePic,
+    clearFiles,
+    deleteAllFiles
 }

@@ -52,26 +52,31 @@ const uploadMultiple = async (req, res) => {
     try{
         
         if(req.files.length <= 0){
-            res.send("You must select at least 1 file");
-        }
-
-        //res.send(req.files.length + " files have been uploaded");
-
-        // Creates a document reference for each file 
+            res.status(400).send("You must select at least 1 file");
+        }else{
+            // Creates a document reference for each file 
         // These references are then saved to mongoDB
-        let newFiles = [];
-        for(var i = 0; i < req.files.length; i++){
-            // Maybe make this function return boolean values
-            // If its false, then we have to somehow notify the user that this file already exists
-            await saveFileReference(req.files[i], req.user.id).then(result => {
-                if(!result){
-                    console.log("Unabled to upload file");
-                }else{
-                    newFiles.push(result);
-                }
-            });
+            let newFiles = [];
+            for(var i = 0; i < req.files.length; i++){
+                // Maybe make this function return boolean values
+                // If its false, then we have to somehow notify the user that this file already exists
+                await saveFileReference(req.files[i], req.user.id).then(result => {
+                    if(!result){
+                        console.log("Unabled to upload file");
+                    }else{
+                        newFiles.push(result);
+                    }
+                });
+            }
+            // Checks whether or not files have been uploaded
+            if(newFiles.length === 0){
+                res.status(400).json("Failed to upload files");
+            }else{
+                res.status(200).json(newFiles);
+            }
         }
-        res.status(200).json(newFiles);
+
+        
     }catch(err){
         res.status(400).send({error: "Unable to upload files."});
         console.log(err);

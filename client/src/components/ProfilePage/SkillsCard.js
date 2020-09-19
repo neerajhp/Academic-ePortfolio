@@ -5,7 +5,7 @@ import { Paper, Chip, Typography } from '@material-ui/core';
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   card: {
-    margin: '0.5%',
+    margin: '0 0 1% 1%',
     flexGrow: 1,
     height: '20%',
     background: theme.palette.primary.light,
@@ -34,7 +34,6 @@ const COLOURS = ['primary', 'secondary'];
 /* ================ Component ================ */
 const SkillsCard = ({ skills }) => {
   const classes = useStyles();
-  console.log(skills);
 
   const getSkills = (skills) => {
     if (!(Array.isArray(skills) && skills.length)) {
@@ -45,8 +44,9 @@ const SkillsCard = ({ skills }) => {
           className={classes.skillsContainer}
           style={{ height: 10 * skills.length }}
         >
-          {skills.map((skill) => (
+          {skills.map((skill, i) => (
             <Chip
+              key={i}
               label={skill}
               color={COLOURS[Math.floor(Math.random() * COLOURS.length)]}
             />

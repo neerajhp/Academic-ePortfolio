@@ -25,46 +25,47 @@ import SkillsCard from './SkillsCard';
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   //Page container
-  root: {
-    width: '100vw',
-  },
   title: {
     marginLeft: '5%',
     flexGrow: 1,
   },
-
   banner: theme.mixins.toolbar,
-  container: {
-    marginTop: '1%',
-    display: 'flex',
-  },
   navSection: {
-    left: 0,
-    width: '25%',
+    position: 'fixed',
+    width: '25vw',
+    marginTop: '1%',
+    zIndex: '100',
+  },
+  container: {
+    maxWidth: '100%',
+    overflowX: 'hidden',
   },
   navBar: {
-    marginLeft: '5%',
+    marginLeft: '0.5em',
     background: theme.palette.primary.main,
   },
   navBarIcon: {
     fontSize: 30,
     color: '#FFFFFF',
   },
-  profileContainer: {
-    marginLeft: '2%',
-    height: '100%',
+  sectionContainer: {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'row',
+    zIndex: '-1',
+    marginTop: '1%',
+  },
+  section: {
+    width: '100vw',
+    minHeight: '100vh',
     display: 'flex',
     flexGrow: 1,
+    paddingLeft: '25vw',
+    paddingRight: '0.5em',
     flexFlow: 'column nowrap',
     alignItems: 'stretch',
     justifyContent: 'space-between',
-  },
-
-  cardsContainer: {
-    display: 'flex',
-    alignItems: 'stretch',
-    justifyContent: 'space-evenly',
-    padding: '2%',
+    transition: 'all 700ms',
   },
 }));
 
@@ -74,6 +75,7 @@ const ProfilePage = () => {
   // Styling
   const classes = useStyles();
   const [isLoading, setLoading] = useState(true);
+  const [section, setSection] = useState(1);
 
   //Authentication Context
   const { setAuthTokens } = useAuth();
@@ -106,7 +108,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position='fixed'>
         <Toolbar>
           <Typography variant='h3' className={classes.title}>
@@ -117,7 +119,7 @@ const ProfilePage = () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <div className={classes.banner} />
+      <div className={classes.banner}> </div>
       <div className={classes.container}>
         <div className={classes.navSection}>
           <Paper className={classes.navBar}>
@@ -126,19 +128,28 @@ const ProfilePage = () => {
                 <ListItemIcon>
                   <FaceIcon className={classes.navBarIcon} />
                 </ListItemIcon>
-                <ListItemText primary='My Profile'></ListItemText>
+                <ListItemText
+                  primary='My Profile'
+                  onClick={() => setSection(1)}
+                ></ListItemText>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <CreateIcon className={classes.navBarIcon} />
                 </ListItemIcon>
-                <ListItemText primary='My Blog'></ListItemText>
+                <ListItemText
+                  primary='My Blog'
+                  onClick={() => setSection(2)}
+                ></ListItemText>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <MenuBookIcon className={classes.navBarIcon} />
                 </ListItemIcon>
-                <ListItemText primary='My Projects'></ListItemText>
+                <ListItemText
+                  primary='My Projects'
+                  onClick={() => setSection(3)}
+                ></ListItemText>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
@@ -149,10 +160,29 @@ const ProfilePage = () => {
             </List>
           </Paper>
         </div>
-        <div className={classes.profileContainer}>
-          <CharacterCard user={user} />
-          <EducationCard education={userEducation} />
-          <SkillsCard skills={user.skills} />
+
+        <div className={classes.sectionContainer}>
+          <div
+            className={classes.section}
+            style={{ marginLeft: section * -100 + 'vw' }}
+          ></div>
+          <div className={classes.section}>
+            <CharacterCard user={user} />
+            <EducationCard education={userEducation} />
+            <SkillsCard skills={user.skills} />
+          </div>
+          <div
+            className={classes.section}
+            style={{ color: 'black', backgroundColor: '#F7F5E7' }}
+          >
+            <Typography variant='h1'>Blog Section</Typography>
+          </div>
+          <div
+            className={classes.section}
+            style={{ color: 'black', backgroundColor: '#F7F5E7' }}
+          >
+            <Typography variant='h1'>Projects Section</Typography>
+          </div>
         </div>
       </div>
     </div>

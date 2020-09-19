@@ -5,7 +5,7 @@ import { Paper, Avatar, Typography } from '@material-ui/core';
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   characterCard: {
-    margin: '0.5%',
+    margin: '0 0 1% 1%',
     flexGrow: 1,
     height: '20%',
     background: theme.palette.primary.light,

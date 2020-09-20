@@ -7,10 +7,10 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "env-cmd -f ./Config/test.env jest --coverage",
     "server": "nodemon server.js",
     "client": "cd client && npm start",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "env-cmd -f ./Config/dev.env/ concurrently \"npm run server\" \"npm run client\"",
     "start": "node server.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
@@ -40,6 +40,7 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
+    "env-cmd": "^10.1.0",
     "jest": "^26.4.2",
     "supertest": "^4.0.2"
   }

@@ -1,6 +1,5 @@
 const Document = require("../Models/Document");
-const multer = require("multer");
-const AWS = require("aws-sdk");
+
 require('dotenv').config();
 
 const filesController = require("../Controllers/filesController");
@@ -77,7 +76,7 @@ const uploadMultiple = async (req, res) => {
             for(var i = 0; i < req.files.length; i++){
                 var newFile = new Document({
                     user_id: req.user.id,
-                    fieldName: req.files[i].fieldName,
+                    fieldName: req.files[i].fieldname,
                     fileLink: req.files[i].location,
                     s3_key: `user-${req.user.id}/${req.files[i].originalname}`
                 })

@@ -34,17 +34,25 @@ const COLOURS = ['primary', 'secondary'];
 /* ================ Component ================ */
 const SkillsCard = ({ skills }) => {
   const classes = useStyles();
+  console.log(skills);
 
   const getSkills = (skills) => {
-    if (skills === null || skills === undefined) {
+    if (!(Array.isArray(skills) && skills.length)) {
       return <Typography> Add Some of your skills!</Typography>;
     } else {
-      return skills.map((skill) => (
-        <Chip
-          label={skill}
-          color={COLOURS[Math.floor(Math.random() * COLOURS.length)]}
-        />
-      ));
+      return (
+        <div
+          className={classes.skillsContainer}
+          style={{ height: 10 * skills.length }}
+        >
+          {skills.map((skill) => (
+            <Chip
+              label={skill}
+              color={COLOURS[Math.floor(Math.random() * COLOURS.length)]}
+            />
+          ))}
+        </div>
+      );
     }
   };
 
@@ -53,12 +61,7 @@ const SkillsCard = ({ skills }) => {
       <Typography className={classes.title} variant='h2'>
         What I'm Good At
       </Typography>
-      <div
-        className={classes.skillsContainer}
-        style={{ height: 10 * skills.length }}
-      >
-        {getSkills(skills)}
-      </div>
+      {getSkills(skills)}
     </Paper>
   );
 };

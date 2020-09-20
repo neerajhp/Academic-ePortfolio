@@ -12,10 +12,12 @@ const uploadSingle = async (req, res) => {
         if(req.file){
             var newFile = new Document({
                 user_id: req.user.id,
-                fieldName: req.file.fieldName,
+                fieldName: req.file.fieldname,
                 fileLink: req.file.location,
                 s3_key: `user-${req.user.id}/${req.file.originalname}`
-            })
+            });
+            console.log(req.file.fieldname);
+            //console.log(newFile);
             await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
                 if(err){
                     res.status(400).json("something's wrong");
@@ -23,6 +25,7 @@ const uploadSingle = async (req, res) => {
                     if(result){
                         res.status(400).json("File already exists");
                     }else{
+                        console.log(newFile);
                         newFile.save((err, result) => {
                             if(err){
                                 throw err;

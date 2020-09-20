@@ -20,7 +20,7 @@ const getAllDocs = async (req, res) => {
     }
 }
 
-// Returns the document's link for download
+// Returns the document for download
 const getDocument = async (req, res, next) => {
     await Document.findById(req.params.id, (err, doc) => {
         if(err){
@@ -32,7 +32,7 @@ const getDocument = async (req, res, next) => {
             console.log("File not found");
             res.status(404).json({error: "File not found"});
         }else{
-            res.json(doc.fileLink);
+            res.json(doc);
             console.log("File found");
         }
         

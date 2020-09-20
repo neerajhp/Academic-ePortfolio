@@ -25,6 +25,7 @@ router.get("/education", profileController.getEdu);
 router.put("/education", profileController.putEdu);
 // Delete
 router.delete("/education", profileController.deleteEdu);
+router.delete("/education/all", profileController.deleteAllEdu);
 
 // Bio manipulation
 router.get("/bio", profileController.getBio);

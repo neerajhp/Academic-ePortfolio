@@ -21,6 +21,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import CharacterCard from './CharacterCard';
 import EducationCard from './EducationCard';
 import SkillsCard from './SkillsCard';
+import ReflectionCard from './ReflectionCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -64,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '0.5em',
     flexFlow: 'column nowrap',
     alignItems: 'stretch',
-    justifyContent: 'space-between',
     transition: 'all 700ms',
   },
 }));
@@ -138,7 +138,7 @@ const ProfilePage = () => {
                   <CreateIcon className={classes.navBarIcon} />
                 </ListItemIcon>
                 <ListItemText
-                  primary='My Blog'
+                  primary='My Reflections'
                   onClick={() => setSection(2)}
                 ></ListItemText>
               </ListItem>
@@ -165,22 +165,20 @@ const ProfilePage = () => {
           <div
             className={classes.section}
             style={{ marginLeft: section * -100 + 'vw' }}
-          ></div>
+          >
+            Placeholder section
+          </div>
           <div className={classes.section}>
             <CharacterCard user={user} />
             <EducationCard education={userEducation} />
             <SkillsCard skills={user.skills} />
           </div>
-          <div
-            className={classes.section}
-            style={{ color: 'black', backgroundColor: '#F7F5E7' }}
-          >
-            <Typography variant='h1'>Blog Section</Typography>
+          <div className={classes.section}>
+            <ReflectionCard />
+            <ReflectionCard />
+            <ReflectionCard />
           </div>
-          <div
-            className={classes.section}
-            style={{ color: 'black', backgroundColor: '#F7F5E7' }}
-          >
+          <div className={classes.section}>
             <Typography variant='h1'>Projects Section</Typography>
           </div>
         </div>

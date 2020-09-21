@@ -6,7 +6,7 @@ import { Paper, Chip, Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
-    flexGrow: 1,
+    width: '100%',
     height: '20%',
     background: theme.palette.primary.light,
     padding: '5%',

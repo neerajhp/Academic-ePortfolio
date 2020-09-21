@@ -6,8 +6,7 @@ import { Paper, Avatar, Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   characterCard: {
     margin: '0 0 1% 1%',
-    flexGrow: 1,
-    height: '20%',
+    width: '100%',
     background: theme.palette.primary.light,
     padding: '5%',
     display: 'flex',

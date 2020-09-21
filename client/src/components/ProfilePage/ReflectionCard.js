@@ -6,6 +6,7 @@ import { Paper, Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
+    width: '100%',
     background: theme.palette.primary.light,
     padding: '5%',
     display: 'flex',

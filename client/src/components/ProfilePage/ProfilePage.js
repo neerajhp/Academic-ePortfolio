@@ -22,6 +22,7 @@ import CharacterCard from './CharacterCard';
 import EducationCard from './EducationCard';
 import SkillsCard from './SkillsCard';
 import ReflectionCard from './ReflectionCard';
+import ProjectCard from './ProjectCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     paddingLeft: '25vw',
     paddingRight: '0.5em',
-    flexFlow: 'column nowrap',
+    flexFlow: 'row wrap',
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
@@ -179,7 +180,10 @@ const ProfilePage = () => {
             <ReflectionCard />
           </div>
           <div className={classes.section}>
-            <Typography variant='h1'>Projects Section</Typography>
+            <ProjectCard type={'large'} />
+            <ProjectCard type={'small'} />
+            <ProjectCard type={'small'} />
+            <ProjectCard type={'medium'} />
           </div>
         </div>
       </div>

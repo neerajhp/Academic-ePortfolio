@@ -13,8 +13,7 @@ import {
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
-    flexGrow: 1,
-    height: '20%',
+    width: '100%',
     background: theme.palette.secondary.light,
     padding: '5%',
     display: 'flex',

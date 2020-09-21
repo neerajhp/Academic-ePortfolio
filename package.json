@@ -7,7 +7,7 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "test": "env-cmd -f ./Config/test.env jest --coverage",
+    "test": "env-cmd -f ./Config/test.env jest --coverage --detectOpenHandles",
     "server": "nodemon server.js",
     "client": "cd client && npm start",
     "dev": "env-cmd -f ./Config/dev.env/ concurrently \"npm run server\" \"npm run client\"",

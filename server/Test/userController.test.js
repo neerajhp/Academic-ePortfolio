@@ -1,22 +1,15 @@
 const server = require('../../server') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(server)
-const {removeAllCollections, dropAllCollections} = require("./database")
+const mongoose = require('mongoose');
 
-// Clear Database
-afterAll(async () => {
-    await removeAllCollections()
-})
-
-// Disconnect Mongoose
-afterAll(async () => {
-await dropAllCollections()
-})
-
+const { setupDB } = require('./setup')
+setupDB();
 
 test("Should return signup page", async () =>{
     await request.get("/api/user/signup")
     .expect(200)
+    
 
 })
 
@@ -29,6 +22,7 @@ test("Should sign up a user", async () =>{
         password: "test123"
     })
     .expect(201)
+    
 
 })
 
@@ -41,6 +35,7 @@ test("Should not sign up a user with the same email", async () =>{
         password: "test2"
     })
     .expect(400)
+    
 
 })
 
@@ -51,6 +46,7 @@ test("Should login the user", async () =>{
         password: "test123"
     })
     .expect(200)
+    
 
 })
 

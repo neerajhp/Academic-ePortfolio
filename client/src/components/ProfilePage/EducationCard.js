@@ -54,6 +54,18 @@ const MONTHS = {
 const EducationCard = ({ education }) => {
   const classes = useStyles();
 
+  const checkRecord = (education) => {
+    if (!(Array.isArray(education) && education.length)) {
+      return <Typography> Add your education!</Typography>;
+    } else {
+      return (
+        <Table>
+          <TableBody>{education.map((edu) => getSchool(edu))}</TableBody>
+        </Table>
+      );
+    }
+  };
+
   const getSchool = (edu) => {
     if (edu.edu_type === 'Highschool') {
       return (
@@ -72,7 +84,7 @@ const EducationCard = ({ education }) => {
     } else {
       return (
         <TableRow key={edu.uniName}>
-          <TableCell className={classes.period} align='top'>
+          <TableCell className={classes.period}>
             <Typography>
               {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
               {edu.yearEnd}
@@ -88,14 +100,13 @@ const EducationCard = ({ education }) => {
       );
     }
   };
+
   return (
     <Paper className={classes.card}>
       <Typography className={classes.title} variant='h2'>
         Education{' '}
       </Typography>
-      <Table>
-        <TableBody>{education.map((edu) => getSchool(edu))}</TableBody>
-      </Table>
+      {checkRecord(education)}
     </Paper>
   );
 };

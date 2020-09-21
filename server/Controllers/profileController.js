@@ -21,12 +21,6 @@ const s3 = new AWS.S3({
 const getAllInfo = async (req, res) => {
     // Get cv, profile picture, first name, last name, email, bio
     try {
-
-        // function getEverything() {
-        //      const userRecord = await User.findOne({
-        //     _id: req.user.id
-        // });
-        // }
         let userRecord = await User.findOne({
             _id: req.user.id
         });

@@ -133,69 +133,6 @@ const uploadMultiple = async (req, res) => {
 };
 
 
-
-// // Saves a reference to the uploaded file in mongoDB
-// const saveFileReference = async (file, userID) => {
-//     console.log("Time to save a reference");
-//     // Check for file in mongoDB
-//     var newFile = {
-//         user_id: userID,
-//         fieldName: file.fieldname,
-//         fileLink: file.location,
-//         s3_key: `user-${userID}/${file.originalname}`
-//     }
-//     let savedFile;
-    
-//     // Looks for the existence of a file with the same key
-//     await Document.findOne({s3_key: newFile.s3_key, user_id: userID})
-//     .then(async searchedFile => {
-//         if(!searchedFile){
-//             //savedFile = newFile;
-//             var document = new Document(newFile);
-//             await document.save((err, file) => {
-//                 //console.log("Time to wait for document save");
-//                 if(err){
-//                     throw err;
-//                 }else{
-//                     console.log("File to be saved");
-//                     savedFile = file;
-//                 }
-//             });
-          
-//         } else{
-//             savedFile = null;
-//             //console.log("File already exists");
-//             // Make the user upload again?
-//             // Rename the file?
-//         }
-//     });
-//     //console.log(savedFile);
-//     return savedFile;
-// }
-
-
-// // Saves the given record in the db
-// const saveInDB = async (savedFile) => {
-//     console.log("First step to saving");
-//     if(savedFile != null){
-//         await savedFile.save((err, file) => {
-//             if(err){
-//                 console.log("Attempting to save a file that already exists");
-//                 throw err;
-//             }else{
-//                 if(!file){
-//                     console.log("file is null");
-                    
-//                 }else{
-//                     console.log("File saved");
-//                 }
-//             }
-//         });
-//     }else{
-//         console.log("File is null");
-//     }
-// }
-
 module.exports = {
     uploadSingle,
     uploadMultiple,

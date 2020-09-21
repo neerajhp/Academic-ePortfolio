@@ -47,11 +47,69 @@ export default {
       },
     });
   },
+  // Gets all education records
   getEducation: function () {
     return axios.get('/api/profile/education', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
+    });
+  },
+  // Creates an education record
+  postEducation: function (body) {
+    return axios.get('/api/profile/education', {
+        edu_type: body.edu_type,
+        highName: body.highName,
+        uniName: body.uniName,
+        unicourseName: body.unicourseName,
+        unimajorName: body.unimajorName,
+        country: body.country,
+        city: body.city,
+        monthStart: body.monthStart,
+        yearStart: body.yearStart,
+        monthEnd: body.monthEnd,
+        yearEnd: body.yearEnd,
+        graduated: body.graduated,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+  // Updates a specific education record
+  updateEducation: function (body) {
+    return axios.put('/api/profile/education/:id', {
+        edu_type: body.edu_type,
+        highName: body.highName,
+        uniName: body.uniName,
+        unicourseName: body.unicourseName,
+        unimajorName: body.unimajorName,
+        country: body.country,
+        city: body.city,
+        monthStart: body.monthStart,
+        yearStart: body.yearStart,
+        monthEnd: body.monthEnd,
+        yearEnd: body.yearEnd,
+        graduated: body.graduated,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+
+  },
+  // Deletes a specific education record
+  deleteEducation: function () {
+    return axios.delete('/api/profile/education/:id', {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+  // Delete all user education records
+  clearEducation: function () {
+    return axios.delete('/api/profile/education', {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
     });
   },
 
@@ -118,6 +176,14 @@ export default {
   // Deletes the file by objectID
   deleteFile: function () {
     return axios.delete('/api/files/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Deletes all of the user's files
+  clearFiles: function () {
+    return axios.delete('/api/files', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },

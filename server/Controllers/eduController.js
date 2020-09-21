@@ -32,6 +32,7 @@ const postEdu = async (req, res) => {
     }
 };
 
+// Gets all education
 const getEdu = async (req, res) => {
     await Edu.find({
         user_id: req.user.id
@@ -72,7 +73,7 @@ const putEdu = async (req, res) => {
 const deleteEdu = async (req, res) => {
 
     await Edu.findOneAndDelete({
-        _id: req.body._id,
+        _id: req.params.id,
         user_id: req.user.id
     }, function (err, result) {
         if (!result) {
@@ -93,12 +94,12 @@ const deleteAllEdu = async (req, res) => {
         console.log(result);
         if(result){
             console.log("Files have been deleted");
-            res.status(200).json("All files have been deleted");
+            res.status(200).json("All records have been deleted");
         }else{
-            res.status(400).json("No files were found");
+            res.status(400).json("No records were found");
         }
     }catch(err){
-        res.status(400).json("Files were not deleted");
+        res.status(400).json("Records were not deleted");
     }
 }
 

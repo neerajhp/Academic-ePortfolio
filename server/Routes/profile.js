@@ -27,8 +27,8 @@ router.get("/education", eduController.getEdu);
 // Update
 router.put("/education/:id", eduController.putEdu);
 // Delete
-router.delete("/education", eduController.deleteEdu);
-router.delete("/education/all", eduController.deleteAllEdu);
+router.delete("/education/:id", eduController.deleteEdu);
+router.delete("/education", eduController.deleteAllEdu);
 
 // Bio manipulation
 router.get("/bio", profileController.getBio);

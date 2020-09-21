@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const server = require('../../app')
 mongoose.set('useCreateIndex', true)
 mongoose.promise = global.Promise
 
@@ -35,6 +36,7 @@ module.exports = {
       await dropAllCollections()
       await mongoose.connection.close()
     })
+
   }
 }
 

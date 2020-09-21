@@ -1,4 +1,4 @@
-const server = require('../../server') // Link to your server file
+const server = require('../../app') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(server)
 const mongoose = require('mongoose');

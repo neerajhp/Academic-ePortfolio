@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Avatar, Typography } from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
-  characterCard: {
+  card: {
     margin: '0 0 1% 1%',
     width: '100%',
     background: theme.palette.primary.light,
@@ -13,30 +13,24 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  profilePicture: {
-    height: '5em',
-    width: '5em',
-  },
-  bio: {
+  description: {
     marginLeft: '5%',
-    flexGrow: 1,
     color: 'white !important ',
   },
 }));
 /* ================ Component ================ */
-const CharacterCard = ({ user }) => {
+const ReflectionCard = () => {
   const classes = useStyles();
   return (
-    <Paper className={classes.characterCard}>
-      <Avatar className={classes.profilePicture} />
+    <Paper className={classes.card}>
       <div className={classes.bio}>
-        <Typography variant='h2'>
-          {user.firstName} {user.lastName}
+        <Typography className={classes.title} variant='h2'>
+          This is a Reflection
         </Typography>
-        <Typography>{user.bio}</Typography>
+        <Typography>This is the blog introduction</Typography>
       </div>
     </Paper>
   );
 };
 
-export default CharacterCard;
+export default ReflectionCard;

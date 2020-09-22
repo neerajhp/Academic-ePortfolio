@@ -12,9 +12,8 @@ import {
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   card: {
-    margin: '0.5%',
-    flexGrow: 1,
-    height: '20%',
+    margin: '0 0 1% 1%',
+    width: '100%',
     background: theme.palette.secondary.light,
     padding: '5%',
     display: 'flex',
@@ -60,16 +59,16 @@ const EducationCard = ({ education }) => {
     } else {
       return (
         <Table>
-          <TableBody>{education.map((edu) => getSchool(edu))}</TableBody>
+          <TableBody>{education.map((edu, i) => getSchool(edu, i))}</TableBody>
         </Table>
       );
     }
   };
 
-  const getSchool = (edu) => {
+  const getSchool = (edu, i) => {
     if (edu.edu_type === 'Highschool') {
       return (
-        <TableRow key={edu.uniName}>
+        <TableRow key={i}>
           <TableCell className={classes.period}>
             <Typography>
               {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
@@ -83,7 +82,7 @@ const EducationCard = ({ education }) => {
       );
     } else {
       return (
-        <TableRow key={edu.uniName}>
+        <TableRow key={i}>
           <TableCell className={classes.period}>
             <Typography>
               {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}

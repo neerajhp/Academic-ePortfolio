@@ -1,5 +1,3 @@
-const express = require('express');
-
 const Document = require("../Models/Document");
 const User = require("../Models/User");
 const Edu = require("../Models/Education");
@@ -7,16 +5,12 @@ const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 
 const filesController = require("../Controllers/filesController");
 const showcaseController = require("../Controllers/showcaseController");
-//const eduController = require("../Controllers/eduController");
+const eduController = require("../Controllers/eduController");
 
-const AWS = require("aws-sdk");
+
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-});
 
 const getAllInfo = async (req, res) => {
     // Get cv, profile picture, first name, last name, email, bio
@@ -101,7 +95,7 @@ const deleteProfile = async (req, res) => {
             console.log("showcase cleared");
         }
         // Delete all Education
-        let education = await clearEdu(req.user.id);
+        let education = await eduController.clearEdu(req.user.id);
         if(!education){
             console.log("Failed to clear education history");
         }else{
@@ -227,27 +221,6 @@ const getProfilePic = async (req, res) => {
 }
 
 
-
-// Removes all education
-const clearEdu = async (userID) => {
-    let deleteStatus;
-    await Edu.deleteMany({user_id: userID}, (err, result) => {
-        if(err){
-            throw err;
-        }else{
-            if(result.deletedCount === 0){
-                console.log("Nothing to delete");
-                deleteStatus = false;
-            }else{
-                console.log("The user's education has been cleared");
-                deleteStatus = true;
-            }
-        }
-    });
-    return deleteStatus;
-}
-
-
 // Biography
 const getBio = async (req, res) => {
     await User.findById({
@@ -259,6 +232,25 @@ const getBio = async (req, res) => {
             })
         } else {
             res.status(200).json(result.biography)
+        }
+    })
+}
+
+// Biography
+const getAboutMe = async (req, res) => {
+    await User.findById({
+        _id: req.user.id
+    }, function (err, result) {
+        if(err){
+            res.status(404).send(err);
+        }else{
+            if(!result.aboutMe){
+                res.status(404).json({
+                    error: "about me not found"
+                })
+            } else {
+                res.status(200).json(result.aboutMe);
+            }
         }
     })
 }
@@ -275,6 +267,23 @@ const updateBio = async (req, res) => {
         } else {
             console.log("successfully updated");
             getBio(req, res);
+            //res.json(result);
+        }
+    })
+}
+
+const updateAboutMe = async (req, res) => {
+    // update the bio field 
+    await User.updateOne({
+        _id: req.user.id
+    }, {
+        aboutMe: req.body.aboutMe
+    }, (err, result) => {
+        if (err) {
+            res.status(404).send(err);
+        } else {
+            console.log("successfully updated");
+            getAboutMe(req, res);
             //res.json(result);
         }
     })
@@ -338,6 +347,8 @@ module.exports = {
     getProfilePic,
     getBio,
     updateBio,
+    getAboutMe,
+    updateAboutMe,
     getSkills,
     addSkills,
     removeSkills

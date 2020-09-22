@@ -59,6 +59,7 @@ const getAllInfo = async (req, res) => {
             lastName: userRecord.lastName,
             email: userRecord.email,
             bio: userRecord.biography,
+            aboutMe: userRecord.aboutMe,
             cv: cv,
             skills: userRecord.skills,
             profilePic: profilePic,

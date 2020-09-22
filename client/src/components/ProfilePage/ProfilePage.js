@@ -18,11 +18,11 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import CharacterCard from './CharacterCard';
-import EducationCard from './EducationCard';
-import SkillsCard from './SkillsCard';
-import ReflectionCard from './ReflectionCard';
-import ProjectCard from './ProjectCard';
+import CharacterCard from './CharacterInfo/CharacterCard';
+import EducationCard from './EducationInfo/EducationCard';
+import SkillsCard from './SkillsInfo/SkillsCard';
+import ReflectionCard from './ReflectionInfo/ReflectionCard';
+import ProjectCard from './ProjectInfo/ProjectCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({

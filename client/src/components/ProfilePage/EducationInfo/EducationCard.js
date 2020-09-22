@@ -8,6 +8,7 @@ import {
   Typography,
   TableBody,
 } from '@material-ui/core';
+import EducationDialog from './EducationDialog';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 0 1% 1%',
     width: '100%',
     background: theme.palette.secondary.light,
-    padding: '5%',
+    padding: '5% 10% 5% 5%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -106,6 +107,7 @@ const EducationCard = ({ education }) => {
         Education{' '}
       </Typography>
       {checkRecord(education)}
+      <EducationDialog />
     </Paper>
   );
 };

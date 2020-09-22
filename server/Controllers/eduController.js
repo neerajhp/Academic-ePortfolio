@@ -4,8 +4,7 @@ const postEdu = async (req, res) => {
     const newEdu = new Edu({
         edu_type: req.body.edu_type,
         user_id: req.user.id,
-        highName: req.body.highName,
-        uniName: req.body.uniName,
+        schoolName: req.body.schoolName,
         unicourseName: req.body.unicourseName,
         unimajorName: req.body.unimajorName,
         country: req.body.country,

@@ -17,11 +17,9 @@ const eduSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    highName: {
-        type: String
-    },
-    uniName: {
-        type: String
+    schoolName: {
+        type: String,
+        required: true
     },
     unicourseName: {
         type: String

@@ -80,10 +80,15 @@ const editFeaturedWork = async (req, res) => {
             res.status(404).json(err);
         }else{
             if(result.nModified === 0){
-                res.status(400).json("Attempted to add nothing to the skills array");
+                res.status(400).json("Nothing was changed");
             }else{
                 console.log("successfully updated");
-                res.status(200).json("featured work updated");
+                //res.status(200).json("featured work updated");
+                Edu.findById({
+                    _id: req.params.id
+                }, function (err, updated) {
+                    res.status(200).json(updated);
+                });
             }
         }
     });

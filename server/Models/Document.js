@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const documentSchema = mongoose.Schema({
     //document_id: {type: Number, default: 0}, this might have to be the same as the userID maybe?
     //description: {type: String},
-    user_id: {type: String},
+    user_id: {type: mongoose.Types.ObjectId, required: true},
     fieldName: {type: String},
     fileLink: {type: String},
     s3_key: {type: String},

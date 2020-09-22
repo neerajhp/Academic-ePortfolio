@@ -101,7 +101,12 @@ const deleteProfile = async (req, res) => {
             console.log("showcase cleared");
         }
         // Delete all Education
-        await clearEdu(req.user.id);
+        let education = await clearEdu(req.user.id);
+        if(!education){
+            console.log("Failed to clear education history");
+        }else{
+            console.log("Education history cleared");
+        }
         
         // Delete all Employment
         // Delete all Reflections

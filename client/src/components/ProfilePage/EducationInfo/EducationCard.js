@@ -107,7 +107,7 @@ const EducationCard = ({ education }) => {
         Education{' '}
       </Typography>
       {checkRecord(education)}
-      <EducationDialog />
+      <EducationDialog records={education} />
     </Paper>
   );
 };

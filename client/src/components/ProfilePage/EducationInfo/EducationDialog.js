@@ -1,19 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
 import EditIcon from '@material-ui/icons/Edit';
 import {
-  Button,
-  TextField,
-  SimpleModal,
   IconButton,
   Typography,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
+import EducationForm from './EducationForm';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EducationDialog() {
+const EducationDialog = ({records}) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -54,35 +50,24 @@ export default function EducationDialog() {
         <EditIcon />
       </IconButton>
       <Dialog
+        fullWidth={true}
+        maxWidth={'md'}
         open={open}
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
+        <DialogTitle disableTypography>
           <Typography variant='h2' color='textSecondary'>
             Edit Education Information
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText></DialogContentText>
-          <TextField
-            autoFocus
-            margin='dense'
-            id='name'
-            label='Email Address'
-            type='email'
-            fullWidth
-          />
+          <DialogContentText>Add your education here</DialogContentText>
+          <EducationForm handleClose={handleClose} />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color='primary'>
-            Subscribe
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );
 }
+
+export default EducationDialog;

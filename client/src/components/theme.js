@@ -25,5 +25,14 @@ const theme = createMuiTheme({
       fontSize: 16,
     },
   },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        body: {
+          overflowX: 'hidden',
+        },
+      },
+    },
+  },
 });
 export default theme;

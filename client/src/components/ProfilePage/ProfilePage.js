@@ -32,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   banner: theme.mixins.toolbar,
+  loading: {
+    height: '90vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   navSection: {
     position: 'fixed',
     width: '25vw',
@@ -105,7 +112,27 @@ const ProfilePage = () => {
 
   //If profile hasn't been fetched yet
   if (isLoading) {
-    return <CircularProgress />;
+    return (
+      <div>
+        <AppBar position='fixed'>
+          <Toolbar>
+            <Typography variant='h3' className={classes.title}>
+              ePortfolio
+            </Typography>
+            <Button color='inherit' onClick={logOut}>
+              Logout
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.banner}> </div>
+        <div className={classes.loading}>
+          <CircularProgress />
+          <Typography variant='h2' color='textSecondary'>
+            Fetching User Data
+          </Typography>
+        </div>
+      </div>
+    );
   }
 
   return (

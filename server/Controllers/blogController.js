@@ -45,6 +45,7 @@ const getAllBlogs = async (req, res) => {
                 throw err;
             }else{
                 if(result){
+                    console.log(result.length);
                     res.status(200).json(result);
                 }else{
                     res.status(400).json("Failed to find blogs");
@@ -170,7 +171,7 @@ const removeAllBlogs = async (userID) => {
                 throw new Error();
             }else{
                 console.log("The user's blogs have been cleared");
-                deleteCount = result.deleteCount;
+                deleteCount = result.deletedCount;
             }
         }
     });
@@ -192,5 +193,6 @@ module.exports = {
     getBlog,
     deleteBlog,
     clearBlogs,
+    removeAllBlogs,
     updateBlog
 }

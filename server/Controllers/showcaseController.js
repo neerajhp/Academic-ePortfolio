@@ -101,7 +101,6 @@ const getFeaturedWork = async (req, res) => {
             console.log("Featured work not found");
             res.status(404).json(err);
         }else{
-            console.log(result);
             res.status(200).json(result);
         }
     });
@@ -130,10 +129,10 @@ const removeFeaturedWork = async (req, res) => {
 const clearShowcase = async (req, res) => {
     try{
         let result = await removeAllFeaturedWorks(req.user.id);
-        if(!result){
-            res.status(400).json("No featured works to remove");
-        }else{
+        if(result > 0){
             res.status(200).json("All featured works have been removed");
+        }else{
+            res.status(400).json("No featured works to remove");
         }
     }catch(error){
         console.log(error);
@@ -143,24 +142,21 @@ const clearShowcase = async (req, res) => {
 
 // Finds and deletes all the featured works
 const removeAllFeaturedWorks = async (userID) => {
-    let deleteStatus;
+    let deleteCount;
     await FeaturedWork.deleteMany({user_id: userID}, (err, result) => {
         if(err){
             console.log("Failed to delete everything");
             throw err;
         }else{
-            if(result.deletedCount === 0){
-                //console.log(result);
-                console.log("nothing deleted");
-                deleteStatus = false;
+            if(!result){
+               throw new Error();
             }else{
                 console.log("deleted");
-                //console.log(result);
-                deleteStatus = true;
+                deleteCount = result.deletedCount;
             }
         }
     });
-    return deleteStatus;
+    return deleteCount;
 }
 
 // Gets all of the user's featured works
@@ -170,7 +166,6 @@ const getAllFeaturedWorks = async (req, res) => {
             console.log("The user does not have any featured works");
             res.status(404).json(err);
         }else{
-            console.log(results.length);
             res.status(200).json(results);
         }
     })

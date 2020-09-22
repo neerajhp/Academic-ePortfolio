@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // This is a project/achievement/creative works that the user chooses to display
 const featuredWorkSchema = mongoose.Schema({
-    user_id: {type: mongoose.Types.ObjectId, required: true},
+    user_id: {type: String, required: true},
     title: {type: String},
     // e.g. Journal, Photo, Game, App, etc.
     type: {type: String, default: ""},

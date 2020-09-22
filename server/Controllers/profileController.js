@@ -6,7 +6,7 @@ const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 const filesController = require("../Controllers/filesController");
 const showcaseController = require("../Controllers/showcaseController");
 const eduController = require("../Controllers/eduController");
-
+const blogController = require("../Controllers/blogController");
 
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
@@ -89,11 +89,11 @@ const deleteProfile = async (req, res) => {
             console.log("All files deleted");
         }
         // Delete all showcase
-        let showcase = await showcaseController.removeAllFeaturedWorks(req.user.id);
-        if(!showcase){
-            console.log("Failed to clear showcase");
-        }else{
+        let showcaseCount = await showcaseController.removeAllFeaturedWorks(req.user.id);
+        if(showcaseCount > 0){
             console.log("showcase cleared");
+        }else{
+            console.log("Failed to clear showcase");
         }
         // Delete all Education
         let education = await eduController.clearEdu(req.user.id);
@@ -104,7 +104,14 @@ const deleteProfile = async (req, res) => {
         }
         
         // Delete all Employment
+        
         // Delete all Reflections
+        let blogCount = await blogController.removeAllBlogs(req.user.id);
+        if(blogCount > 0){
+            console.log("Blogs deleted");
+        }else{
+            console.log("No blogs to delete");
+        }
         
         // Delete userProfile
         await User.deleteOne({

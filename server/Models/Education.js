@@ -14,7 +14,7 @@ const eduSchema = mongoose.Schema({
         required: true
     },
     user_id: {
-        type: mongoose.Types.ObjectId,
+        type: String,
         required: true
     },
     schoolName: {

@@ -80,7 +80,7 @@ const editFeaturedWork = async (req, res) => {
             res.status(404).json(err);
         }else{
             if(result.nModified === 0){
-                res.json("Attempted to add nothing to the skills array");
+                res.status(400).json("Attempted to add nothing to the skills array");
             }else{
                 console.log("successfully updated");
                 res.status(200).json("featured work updated");
@@ -121,22 +121,41 @@ const removeFeaturedWork = async (req, res) => {
     })
 }
 
-// Deletes all featured works
-const removeAllFeaturedWorks = async (req, res) => {
-    await FeaturedWork.deleteMany({user_id: req.user.id}, (err, result) => {
+// Delete all featured works API
+const clearShowcase = async (req, res) => {
+    try{
+        let result = await removeAllFeaturedWorks(req.user.id);
+        if(!result){
+            res.status(400).json("No featured works to remove");
+        }else{
+            res.status(200).json("All featured works have been removed");
+        }
+    }catch(error){
+        console.log(error);
+        res.status(400).json("An error occured while trying to delete the user's featured works");
+    }
+}
+
+// Finds and deletes all the featured works
+const removeAllFeaturedWorks = async (userID) => {
+    let deleteStatus;
+    await FeaturedWork.deleteMany({user_id: userID}, (err, result) => {
         if(err){
             console.log("Failed to delete everything");
-            res.status(400).send(err);
+            throw err;
         }else{
-            if(result.n === 0){
+            if(result.deletedCount === 0){
+                //console.log(result);
                 console.log("nothing deleted");
-                res.status(400).json("Attempted to delete something that doesn't exist");
+                deleteStatus = false;
             }else{
                 console.log("deleted");
-                res.status(200).json("successfully deleted all featured works");
+                //console.log(result);
+                deleteStatus = true;
             }
         }
     });
+    return deleteStatus;
 }
 
 // Gets all of the user's featured works
@@ -160,5 +179,6 @@ module.exports = {
     getFeaturedWork,
     getAllFeaturedWorks,
     removeFeaturedWork,
+    clearShowcase,
     removeAllFeaturedWorks
 };

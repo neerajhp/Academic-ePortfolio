@@ -1,12 +1,16 @@
 const express = require('express');
-const router = express.Router();
 
 const Document = require("../Models/Document");
-const User = require("../Models/User").User;
-const Edu = require("../Models/User").Edu;
+const User = require("../Models/User");
+const Edu = require("../Models/Education");
 const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 
+const filesController = require("../Controllers/filesController");
+const showcaseController = require("../Controllers/showcaseController");
+//const eduController = require("../Controllers/eduController");
+
 const AWS = require("aws-sdk");
+//const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
 
 const s3 = new AWS.S3({
@@ -17,12 +21,14 @@ const s3 = new AWS.S3({
 const getAllInfo = async (req, res) => {
     // Get cv, profile picture, first name, last name, email, bio
     try {
-        const userRecord = await User.findOne({
+        let userRecord = await User.findOne({
             _id: req.user.id
         });
         console.log("user found");
+        
         let cv = await searchCV(req.user.id);
         if(!cv){
+            console.log("cv not found");
             cv = "";
         }else{
             console.log("cv found");
@@ -30,6 +36,7 @@ const getAllInfo = async (req, res) => {
         
         let profilePic = await searchProfilePic(req.user.id);
         if(!profilePic){
+            console.log("profile picture not found");
             profilePic = "";
         }else{
             console.log("profile pic found");
@@ -37,9 +44,18 @@ const getAllInfo = async (req, res) => {
 
         let featuredWorks = await searchFeaturedWorks(req.user.id);
         if(featuredWorks.length === 0 || !featuredWorks){
+            console.log("featured works not found");
             featuredWorks = [];
         }else{
             console.log("featured works found");
+        }
+
+        let allEducation = await searchAllEdu(req.user.id);
+        if(allEducation.length === 0 || !allEducation){
+            console.log("Education not found");
+            education = [];
+        }else{
+            console.log("Education found");
         }
 
 
@@ -52,16 +68,71 @@ const getAllInfo = async (req, res) => {
             cv: cv,
             skills: userRecord.skills,
             profilePic: profilePic,
-            showcase: featuredWorks
+            showcase: featuredWorks,
+            education: allEducation
         }
 
         res.json(profile);
     } catch (err) {
         console.log(err);
         console.log("user not found");
-        res.status(404).send(err);
+        res.status(404).send("Error while searching");
     }
 
+}
+
+
+
+const deleteProfile = async (req, res) => {
+    try{
+        // Delete all files
+        let filesDeleted = await filesController.clearFiles(req.user.id);
+        if(!filesDeleted){
+            console.log("Failed to delete files");
+            //throw new Error();
+        }else{
+            console.log("All files deleted");
+        }
+        // Delete all showcase
+        let showcase = await showcaseController.removeAllFeaturedWorks(req.user.id);
+        if(!showcase){
+            console.log("Failed to clear showcase");
+        }else{
+            console.log("showcase cleared");
+        }
+        // Delete all Education
+        let education = await clearEdu(req.user.id);
+        if(!education){
+            console.log("Failed to clear education history");
+        }else{
+            console.log("Education history cleared");
+        }
+        
+        // Delete all Employment
+        // Delete all Reflections
+        
+        // Delete userProfile
+        await User.deleteOne({
+            _id: req.user.id
+        }, (err, result) => {
+            if(err){
+                throw err;
+            }else{
+                if(result.deletedCount === 0){
+                    throw err;
+                }else{
+                    console.log("User record deleted");
+                }
+            }
+        });
+
+        console.log("user deleted");
+
+    }catch (err){
+        console.log(err);
+        res.status(400).send(err);
+    }
+  
 }
 
 // Looks for the user's featured works
@@ -99,6 +170,16 @@ const searchProfilePic = async (userID) => {
         });
         return profilePic;
     } catch (error) {
+        console.log(error);
+    }
+}
+
+// Looks for all of the user's education
+const searchAllEdu = async (userID) => {
+    try{
+        const edu = await Edu.find({user_id: userID});
+        return edu;
+    }catch(error){
         console.log(error);
     }
 }
@@ -145,89 +226,26 @@ const getProfilePic = async (req, res) => {
     }
 }
 
-// University 
-const postEdu = async (req, res) => {
-    const newEdu = new Edu({
-        edu_type: req.body.edu_type,
-        user_id: req.user.id,
-        highName: req.body.highName,
-        uniName: req.body.uniName,
-        unicourseName: req.body.unicourseName,
-        unimajorName: req.body.unimajorName,
-        monthStart: req.body.monthStart,
-        yearStart: req.body.yearStart,
-        monthEnd: req.body.monthEnd,
-        yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated
-    });
 
-    try {
-        await newEdu.save((err, file) => {
-            if (err) {
-                console.log("Error found");
-                throw (err)
-            } else {
-                console.log("saved");
-                res.send(file);
+
+// Removes all education
+const clearEdu = async (userID) => {
+    let deleteStatus;
+    await Edu.deleteMany({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }else{
+            if(result.deletedCount === 0){
+                console.log("Nothing to delete");
+                deleteStatus = false;
+            }else{
+                console.log("The user's education has been cleared");
+                deleteStatus = true;
             }
-        });
-    } catch (err) {
-        res.status(400).json("Something's wrong");
-    }
-};
-
-const getEdu = async (req, res) => {
-    await Edu.find({
-        user_id: req.user.id
-    }, function (err, result) {
-        if (!result) {
-            res.status(404).json({
-                error: "education history not found"
-            });
-        } else {
-            res.status(200).json(result);
         }
-    })
-};
-
-const putEdu = async (req, res) => {
-
-    await Edu.findOneAndUpdate({
-        _id: req.body._id,
-        user_id: req.user.id
-    }, req.body, function (err, result) {
-        if (!result) {
-            res.status(404).json({
-                error: "education history not found"
-            });
-        } else {
-            EduUni.findById({
-                _id: req.body._id
-            }, function (err, updated) {
-                res.status(200).json(updated);
-            })
-        }
-    })
-
-
-};
-
-const deleteEdu = async (req, res) => {
-
-    await Edu.findOneAndDelete({
-        _id: req.body._id,
-        user_id: req.user.id
-    }, function (err, result) {
-        if (!result) {
-            res.status(404).json({
-                error: "education history not found"
-            });
-        } else {
-            res.status(200).json("education history deleted");
-        }
-    })
-
-};
+    });
+    return deleteStatus;
+}
 
 
 // Biography
@@ -318,10 +336,6 @@ module.exports = {
     getAllInfo,
     getCV,
     getProfilePic,
-    postEdu,
-    getEdu,
-    putEdu,
-    deleteEdu,
     getBio,
     updateBio,
     getSkills,

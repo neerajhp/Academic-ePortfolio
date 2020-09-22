@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+
 const profileController = require("../Controllers/profileController");
 const showcaseController = require("../Controllers/showcaseController");
+const eduController = require("../Controllers/eduController");
+
 const authenticate = require("../Middleware/authenticate")
 
 router.use(authenticate.authenticateToken);
@@ -18,13 +21,14 @@ router.get("/profile-pic", profileController.getProfilePic);
 // Education Section //
 
 // Create
-router.post("/education", profileController.postEdu);
+router.post("/education", eduController.postEdu);
 // Get
-router.get("/education", profileController.getEdu);
+router.get("/education", eduController.getEdu);
 // Update
-router.put("/education", profileController.putEdu);
+router.put("/education/:id", eduController.putEdu);
 // Delete
-router.delete("/education", profileController.deleteEdu);
+router.delete("/education/:id", eduController.deleteEdu);
+router.delete("/education", eduController.deleteAllEdu);
 
 // Bio manipulation
 router.get("/bio", profileController.getBio);
@@ -47,7 +51,7 @@ router.get("/featured-work", showcaseController.getAllFeaturedWorks);
 // Removes a specific featured work by its object id
 router.delete("/featured-work/:id", showcaseController.removeFeaturedWork);
 // Removes all of the user's featured works
-router.delete("/featured-work", showcaseController.removeAllFeaturedWorks);
+router.delete("/featured-work", showcaseController.clearShowcase);
 
 
 

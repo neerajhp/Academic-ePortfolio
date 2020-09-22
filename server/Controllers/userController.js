@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../Models/User.js').User;
+const User = require('../Models/User.js');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -40,6 +40,7 @@ exports.postLogin = async (req, res) => {
   var newUser = {};
   newUser.email = req.body.email;
   newUser.password = req.body.password;
+  console.log(newUser.email);
   //Check if user exists
   await User.findOne({
     email: newUser.email,

@@ -20,7 +20,7 @@ const getAllDocs = async (req, res) => {
     }
 }
 
-// Returns the document's link for download
+// Returns the document for download
 const getDocument = async (req, res, next) => {
     await Document.findById(req.params.id, (err, doc) => {
         if(err){
@@ -32,7 +32,7 @@ const getDocument = async (req, res, next) => {
             console.log("File not found");
             res.status(404).json({error: "File not found"});
         }else{
-            res.json(doc.fileLink);
+            res.json(doc);
             console.log("File found");
         }
         
@@ -50,11 +50,10 @@ const deleteDocument = async (req, res, next) => {
 
         if(!doc){
             console.log("File not found");
+            res.status(404).json("File not found");
+            return(next());
         }else{
             deleteS3Instance(doc);
-            //res.status(200).json("Object has been deleted");
-            //res.json(doc.s3_key);
-            //console.log("File found");
         }
     });
     
@@ -69,7 +68,7 @@ const deleteDocument = async (req, res, next) => {
     });
 }
 
-
+// Deletes multiple files based on their ids
 const deleteMultiple = async (req, res, next) => {
     console.log("In search of docs");
     await Document.find({
@@ -85,7 +84,7 @@ const deleteMultiple = async (req, res, next) => {
         if(!docs){
             console.log("Documents not found");
         }else{
-            deleteS3Multiple(docs);
+            deleteS3Multiple(docs, res);
         }
     });
 
@@ -102,6 +101,58 @@ const deleteMultiple = async (req, res, next) => {
     })
 }
 
+// API for deleting all of a user's files
+const deleteAllFiles = async (req, res) => {
+    try{
+        let result = await clearFiles(req.user.id);
+        console.log(result);
+        if(result){
+            console.log("Files have been deleted");
+            res.status(200).json("All files have been deleted");
+        }else{
+            res.status(400).json("No files were found");
+        }
+    }catch(err){
+        res.status(400).json("Files were not deleted");
+    }
+}
+
+// Deletes all of the user's files and images
+// If successfull it will return true
+const clearFiles = async (userID) => {
+    let deleteStatus;
+    await Document.find({user_id: userID}, (err, docs) => {
+        if(err){
+            console.log("Error found");
+            throw err;
+        }else{
+            if(docs.length === 0 || !docs){
+                console.log("Files are not found");
+                deleteStatus = false;
+            }else{
+                console.log("Files abt to be deleted");
+                deleteS3Multiple(docs);
+            }
+        }
+    });
+
+    await Document.deleteMany({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }else{
+            console.log(result.deletedCount);
+            if(result.deletedCount === 0){
+                console.log("No delete");
+                deleteStatus = false;
+            }else{
+                console.log("Yes delete");
+                deleteStatus = true;
+            }
+        }
+    });
+    return deleteStatus;
+}
+
 
 // Deletes the cv of the user
 const deleteCV = async (req, res) => {
@@ -116,7 +167,7 @@ const deleteCV = async (req, res) => {
         }else{
             console.log("Old CV about to be deleted")
             //console.log(doc);
-            deleteS3Instance(doc, res);
+            deleteS3Instance(doc);
             
         }
     });
@@ -179,7 +230,7 @@ const deleteS3Instance = (doc) => {
     });
 }
 
-const deleteS3Multiple = (docs, res) => {
+const deleteS3Multiple = (docs) => {
     var doc;
     var keys = [];
     // Add the s3 keys of the documents to the params
@@ -200,7 +251,7 @@ const deleteS3Multiple = (docs, res) => {
     s3.deleteObjects(params, (err, data) => {
         if(err){
             console.log(err);
-            res.status(400).json(err);
+            //res.status(400).json(err);
         }else{
             console.log("file removed from s3");
         }
@@ -215,5 +266,7 @@ module.exports = {
     deleteDocument,
     deleteMultiple,
     deleteCV,
-    deleteProfilePic
+    deleteProfilePic,
+    clearFiles,
+    deleteAllFiles
 }

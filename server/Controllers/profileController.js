@@ -137,6 +137,47 @@ const deleteProfile = async (req, res) => {
   
 }
 
+const getUserInformation = async (req, res) => {
+    try{
+        await User.findById(req.user.id, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                const userInfo = {
+                    firstName: result.firstName,
+                    lastName: result.lastName,
+                    email: result.email,
+                    mobileNumber: result.mobileNumber,
+                    birthDate: result.birthDate
+                }
+                res.status(200).json(userInfo);
+            }else{
+                res.status(404).json("User not found");
+            }
+        })
+    }catch(error){
+        res.status(400).send(error);
+    }
+}
+
+const editUserInformation = async (req, res) => {
+    try{
+        await User.findByIdAndUpdate(req.user.id, req.body, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("User not found");
+            }
+        })
+    }catch(error){
+        res.status(400).send(error);
+    }
+}
+
 // Looks for the user's featured works
 const searchFeaturedWorks = async (userID) => {
     try{
@@ -341,6 +382,7 @@ const getSkills = async (req, res) => {
 
 module.exports = {
     getAllInfo,
+    getUserInformation,
     getCV,
     getProfilePic,
     getBio,

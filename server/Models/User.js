@@ -18,6 +18,13 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    birthDate: {
+        type: Date,
+        //required: true
+    },
+    mobileNumber: {
+        type: String,
+    },
     biography: {
         type: String,
         default: ""

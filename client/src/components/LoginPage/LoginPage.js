@@ -8,6 +8,7 @@ import { useAuth } from '../../context/auth';
 import API from '../../utils/API';
 import FormikField from '../FormikField';
 import validationSchema from './Validation';
+import Background from "../../image/bg.png";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -20,16 +21,14 @@ const useStyles = makeStyles((theme) => ({
   banner: {
     position: 'sticky',
     width: '100%',
-    height: '20%',
-    background: theme.palette.primary.main,
+    height: '40%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    boxShadow: '-1px -9px 15px 10px rgba(0,0,0,0.75);',
   },
   formContainer: {
     width: '100%',
-    height: '80%',
+    height: '30%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -41,7 +40,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: '2em',
-    background: theme.palette.primary.main,
+  },
+  background:{
+    width:'100%',
+    height:'100%',
+    display: 'flex',
+    backgroundSize:"cover",
   },
   avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
   icon: { fontSize: 40, color: theme.palette.primary.main },
@@ -59,20 +63,15 @@ const LoginPage = () => {
   const { setAuthTokens } = useAuth();
 
   return (
-    <div className={classes.root}>
-      <div className={classes.banner}>
-        <Typography variant='h1'>Welcome to ePortfolio</Typography>
-      </div>
+      <div className="background" style={{backgroundImage:`url(${Background})`}}>
+      <div className={classes.root}>
+        <div className={classes.banner}>
+          <Typography variant='h1'>Login to Your Portfolio</Typography>
+        </div>
       <div className={classes.formContainer}>
         {isLoggedIn && <Redirect to='/profile' />}
-
         {!isLoggedIn && (
           <div className={classes.formPaper}>
-            <Avatar className={classes.avatar}>
-              <MenuBookIcon className={classes.icon} />
-            </Avatar>
-
-            <Typography variant='h2'>Log In</Typography>
             <Formik
               initialValues={{
                 email: '',
@@ -125,17 +124,13 @@ const LoginPage = () => {
                     variant='contained'
                     className={classes.submit}
                     disabled={!formikProps.isValid}
+                    color='primary'
                   >
                     <Typography>Log In</Typography>
                   </Button>
                   <Grid container className={classes.options}>
-                    <Grid item xs>
-                      <Link href='./reset' variant='body2' color='inherit'>
-                        Forgot password?
-                      </Link>
-                    </Grid>
                     <Grid item>
-                      <Link href='./signup' variant='body2' color='inherit'>
+                      <Link href='./signup' variant='body2' color='white'>
                         {"Don't have an account? Sign Up"}
                       </Link>
                     </Grid>
@@ -147,6 +142,8 @@ const LoginPage = () => {
         )}
       </div>
     </div>
+        <img src={Background} width='100%' height='100%' />
+   </div>
   );
 };
 

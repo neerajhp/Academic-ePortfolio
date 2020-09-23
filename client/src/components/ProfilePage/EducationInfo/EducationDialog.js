@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EducationDialog = ({records}) => {
+const EducationDialog = ({ records }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -63,11 +63,11 @@ const EducationDialog = ({records}) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>Add your education here</DialogContentText>
-          <EducationForm handleClose={handleClose} />
+          <EducationForm records={records} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>
   );
-}
+};
 
 export default EducationDialog;

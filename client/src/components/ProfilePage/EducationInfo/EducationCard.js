@@ -60,43 +60,29 @@ const EducationCard = ({ education }) => {
     } else {
       return (
         <Table>
-          <TableBody>{education.map((edu, i) => getSchool(edu, i))}</TableBody>
+          <TableBody>
+            {education.map((edu, i) => (
+              <TableRow key={i}>
+                <TableCell className={classes.period}>
+                  <Typography>
+                    {MONTHS[edu.monthStart]}, {edu.yearStart} -
+                    {MONTHS[edu.monthEnd]}, {edu.yearEnd}
+                  </Typography>
+                </TableCell>
+                <TableCell className={classes.education}>
+                  <Typography variant='h4'>{edu.schoolName}</Typography>
+                  {edu.edu_type === 'University' ? (
+                    <Typography>
+                      {edu.unicourseName},{edu.unimajorName}
+                    </Typography>
+                  ) : (
+                    ''
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
-      );
-    }
-  };
-
-  const getSchool = (edu, i) => {
-    if (edu.edu_type === 'Highschool') {
-      return (
-        <TableRow key={i}>
-          <TableCell className={classes.period}>
-            <Typography>
-              {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
-              {edu.yearEnd}
-            </Typography>
-          </TableCell>
-          <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.highName}</Typography>
-          </TableCell>
-        </TableRow>
-      );
-    } else {
-      return (
-        <TableRow key={i}>
-          <TableCell className={classes.period}>
-            <Typography>
-              {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
-              {edu.yearEnd}
-            </Typography>
-          </TableCell>
-          <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.uniName}</Typography>
-            <Typography>
-              {edu.unicourseName},{edu.unimajorName}{' '}
-            </Typography>
-          </TableCell>
-        </TableRow>
       );
     }
   };

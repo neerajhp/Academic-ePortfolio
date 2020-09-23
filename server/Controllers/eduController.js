@@ -138,5 +138,6 @@ module.exports = {
     putEdu,
     deleteEdu,
     deleteAllEdu,
+    searchAllEdu,
     clearEdu,
 }

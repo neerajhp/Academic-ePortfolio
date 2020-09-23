@@ -44,7 +44,7 @@ const getAllInfo = async (req, res) => {
             console.log("featured works found");
         }
 
-        let allEducation = await searchAllEdu(req.user.id);
+        let allEducation = await eduController.searchAllEdu(req.user.id);
         if(allEducation.length === 0 || !allEducation){
             console.log("Education not found");
             education = [];
@@ -175,17 +175,6 @@ const searchProfilePic = async (userID) => {
         console.log(error);
     }
 }
-
-// Looks for all of the user's education
-const searchAllEdu = async (userID) => {
-    try{
-        const edu = await Edu.find({user_id: userID});
-        return edu;
-    }catch(error){
-        console.log(error);
-    }
-}
-
 
 // API call to get the cv
 const getCV = async (req, res) => {

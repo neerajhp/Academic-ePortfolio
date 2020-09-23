@@ -221,7 +221,11 @@ export default {
         title: body.title,
         type: body.type,
         description: body.description,
-        fileLink: body.fileLink,
+        // attachedFile: {
+        //      documentID: "5f10kjipmd"
+        //      fileLink: "http/:www.random.com/"
+        //  }
+        attachedFile: body.attachedFile,
         image: body.image,
         url: body.url,
         headers: {
@@ -251,7 +255,7 @@ export default {
         title: body.title,
         type: body.type,
         description: body.description,
-        fileLink: body.fileLink,
+        attachedFile: body.attachedFile,
         image: body.image,
         url: body.url,
         headers: {
@@ -274,6 +278,60 @@ export default {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     })
-  }
+  },
+  // Gets all of the user's blog posts
+  getAllBlogs: function(){
+    return axios.get('api/blog', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Gets a specific blog post
+  getBlog: function() {
+    return axios.get('api/blog/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Create a new blog post
+  createBlog: function(body){
+    return axios.post('api/blog', {
+      title: body.title,
+      dateCreated: body.dateCreated,
+      content: body.content,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    })
+  },
+  // Edit a specific blog post
+  editBlog: function(body) {
+    return axios.put('api/blog/:id', {
+        title: body.title,
+        dateCreated: body.dateCreated,
+        content: body.content,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    })
+  },
+  // Removes a specific blog
+  removeBlog: function() {
+    return axios.delete('api/blog/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Removes all of the user's blogs
+  clearBlogs: function() {
+    return axios.delete('api/blog', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
 
 };

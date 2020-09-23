@@ -34,7 +34,7 @@ const createFeaturedWork = async (req, res) => {
         title: req.body.title,
         type: req.body.type,
         description: req.body.description,
-        fileLink: req.body.fileLink,
+        attachedFile: req.body.attachedFile,
         image: req.body.image,
         url: req.body.url
     });
@@ -64,27 +64,18 @@ const editFeaturedWork = async (req, res) => {
     await FeaturedWork.updateOne({
         user_id: req.user.id,
         _id: req.params.id
-    }, {
-        // Edits all the properties included in the $set
-        $set: {
-            title: req.body.title,
-            type: req.body.type,
-            description: req.body.description,
-            fileLink: req.body.fileLink,
-            image: req.body.image,
-            url: req.body.url
-        }
-    }, (err, result) => {
+    }, req.body, (err, result) => {
         if(err){
             console.log("something's up");
             res.status(404).json(err);
         }else{
+            console.log(result);
             if(result.nModified === 0){
                 res.status(400).json("Nothing was changed");
             }else{
                 console.log("successfully updated");
                 //res.status(200).json("featured work updated");
-                Edu.findById({
+                FeaturedWork.findById({
                     _id: req.params.id
                 }, function (err, updated) {
                     res.status(200).json(updated);
@@ -102,27 +93,46 @@ const getFeaturedWork = async (req, res) => {
             res.status(404).json(err);
         }else{
             res.status(200).json(result);
+            if(result.fileLink){
+                console.log(result.fileLink);
+            }
         }
     });
 
 }
 
 // Deletes a single featured work
+// If we're gonna delete the attached file, we can:
+// - Have the frontend check if the featuredWork has an attachedFile, and if they do call the delete file api (Attach the file's id to the request params).
+// - Have the backend check if the featuredWork has an attachedFile, and if they do look for the document, then delete its s3 instance and record
 const removeFeaturedWork = async (req, res) => {
-    await FeaturedWork.deleteOne({_id: req.params.id}, (err, result) => {
-        if(err){
-            console.log("failed to delete");
-            res.status(400).send(err);
-        }else{
-            if(result.n === 0){
-                console.log("nothing deleted");
-                res.status(400).json("Attempted to delete something that doesn't exist");
+    try{
+        // await FeaturedWork.findById({_id: req.params.id}, (err, result) => {
+        //     if(err){
+        //         console.log("Error");
+        //     }else{
+        //         if(result.attachedFile){
+                    
+        //         }
+        //     }
+        // })
+        await FeaturedWork.deleteOne({_id: req.params.id}, (err, result) => {
+            if(err){
+                console.log("failed to delete");
+                res.status(400).send(err);
             }else{
-                console.log("deleted");
-                res.status(200).json("successfully deleted featured work");
+                if(result.n === 0){
+                    console.log("nothing deleted");
+                    res.status(400).json("Attempted to delete something that doesn't exist");
+                }else{
+                    console.log("deleted");
+                    res.status(200).json("successfully deleted featured work");
+                }
             }
-        }
-    })
+        })
+    }catch(error){
+        res.status(400).send(error);
+    }
 }
 
 // Delete all featured works API

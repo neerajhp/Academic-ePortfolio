@@ -24,7 +24,7 @@ const postBlog = async (req, res) => {
                         }else{
                             res.status(200).json(doc);
                             //console.log(doc.dateCreated);
-                            dateFormatter(doc.dateCreated);
+                            //dateFormatter(doc.dateCreated);
                         }
                     });
                 }else{
@@ -95,6 +95,7 @@ const getBlog = async (req, res) => {
     }
 }
 
+// Update the blog specified by params.id
 const updateBlog = async (req, res) => {
     try{
         await Blog.updateOne({_id: req.params.id, user_id: req.user.id}, {
@@ -108,7 +109,7 @@ const updateBlog = async (req, res) => {
                 console.log("something's up");
                 res.status(404).send(err);
             }else{
-                if(result.nModified === 0){
+                if(!result){
                     res.status(400).json("Nothing was changed");
                 }else{
                     console.log("successfully updated");
@@ -127,6 +128,7 @@ const updateBlog = async (req, res) => {
     }
 }
 
+// Deletes the blog specified by params.id
 const deleteBlog = async (req, res) => {
     try{
         await Blog.deleteOne({_id: req.params.id, user_id: req.user.id}, (err, result) => {
@@ -149,8 +151,9 @@ const deleteBlog = async (req, res) => {
 const clearBlogs = async (req, res) => {
     try{
         let deleteCount = await removeAllBlogs(req.user.id);
+        console.log(deleteCount);
         if(deleteCount > 0){
-            res.status(200).json(`${result.deletedCount} entries have been deleted`);
+            res.status(200).json(`${deleteCount} entries have been deleted`);
         }else{
             res.status(400).json("There were no blogs to delete");
         }
@@ -165,9 +168,11 @@ const removeAllBlogs = async (userID) => {
     await Blog.deleteMany({user_id: userID}, (err, result) => {
         console.log("About to delete");
         if(err){
+            console.log("error occured");
             res.status(400).json("Failed to delete blogs")
         }else{
             if(!result){
+                console.log("Somehow there's no result");
                 throw new Error();
             }else{
                 console.log("The user's blogs have been cleared");
@@ -178,14 +183,14 @@ const removeAllBlogs = async (userID) => {
     return deleteCount;
 }
 
-const dateFormatter = (dateStr) => {
-    var date = new Date(dateStr);
-    console.log(date.toString());
-    console.log(date.getDate());
-    console.log(date.getFullYear());
-    console.log(date.getDay());
-    console.log(date.toJSON());
-}
+// const dateFormatter = (dateStr) => {
+//     var date = new Date(dateStr);
+//     console.log(date.toString());
+//     console.log(date.getDate());
+//     console.log(date.getFullYear());
+//     console.log(date.getDay());
+//     console.log(date.toDateString());
+// }
 
 module.exports = {
     postBlog,

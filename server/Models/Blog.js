@@ -6,7 +6,7 @@ const blogSchema = mongoose.Schema({
     title: {type: String, required: true},
     dateCreated: {type: Date, default: Date.now},
     content: {type: String, default: ""},
-    images: [{type: mongoose.Schema.Types.ObjectId, ref: "Document"}]
+    //images: [{type: mongoose.Schema.Types.ObjectId, ref: "Document"}]
 });
 
 const dateFormatter = (dateStr) => {

@@ -13,7 +13,7 @@ require('dotenv').config();
 
 
 const getAllInfo = async (req, res) => {
-    // Get cv, profile picture, first name, last name, email, bio
+    // Get cv, featuredWorks, blogs, education, skills, profile picture
     try {
         let userRecord = await User.findOne({
             _id: req.user.id
@@ -316,11 +316,12 @@ const removeSkills = async (req, res) => {
        if(err){
            res.status(404).json(err);
        }else{
-           if(result.nModified === 0){
-               res.status(400).json("Skills is already empty");
-           }else{
-               getSkills(req, res);
-           }
+           getSkills(req, res);
+        //    if(result.nModified === 0){
+        //        res.status(400).json("Skills is already empty");
+        //    }else{
+        //        getSkills(req, res);
+        //    }
        }
    })
 }

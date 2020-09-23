@@ -27,7 +27,12 @@ const CssTextField = withStyles((theme) => ({
 
 /* ================ Components ================ */
 
-const FormikField = ({ label, formikProps, formikKey, ...rest }) => {
+const FormikField = ({
+  label = null,
+  formikProps = null,
+  formikKey = null,
+  ...rest
+}) => {
   return (
     <CssTextField
       variant='outlined'

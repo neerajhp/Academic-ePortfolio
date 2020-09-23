@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Formik } from 'formik';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { Field, FieldArray, Formik } from 'formik';
 import {
   Typography,
   Button,
   Checkbox,
   FormControlLabel,
   Divider,
+  TextField,
+  Table,
+  TableBody,
+  TableRow,
 } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -41,6 +45,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// Input Fields
+const CssTextField = withStyles((theme) => ({
+  root: {
+    '& .MuiInputBase-root': {
+      color: theme.palette.text.secondary,
+    },
+    '& label.Mui-focused': {
+      color: 'white',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'white',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.primary.light,
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'white',
+      },
+    },
+  },
+}))(TextField);
+
 /* ================ Component ================ */
 
 const EducationForm = ({ handleClose, records }) => {
@@ -51,13 +81,7 @@ const EducationForm = ({ handleClose, records }) => {
   return (
     <Formik
       initialValues={{
-        schoolName: '',
-        courseName: '',
-        monthStart: '',
-        yearStart: '',
-        monthEnd: '',
-        yearEnd: '',
-        graduated: false,
+        schools: records,
       }}
       onSubmit={(values, actions) => {
         API.userSignup({})
@@ -72,51 +96,59 @@ const EducationForm = ({ handleClose, records }) => {
       validationSchema={validationSchema}
     >
       {(formikProps) => (
-        <form className={classes.form} onSubmit={formikProps.handleSubmit}>
-          <FormikField
-            label='School Name'
-            formikProps={formikProps}
-            formikKey='schoolName'
-            required
-          />
-          <FormikField
-            label='Course Name'
-            formikProps={formikProps}
-            formikKey='courseName'
-            required
-          />
-          <div className={classes.periodInfo}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DatePicker
-                variant='inline'
-                openTo='year'
-                views={['year', 'month']}
-                label='Start Month and Year'
+        <form>
+          <Table>
+            <TableBody>
+              <FieldArray
+                name='schools'
+                render={(fieldArrayProps) => (
+                  <React.Fragment>
+                    {formikProps.values.schools.map((school, i) => (
+                      <TableRow>
+                        <Field name={`schools[${i}].edu_type`}>
+                          {({ field, form, meta }) => (
+                            <CssTextField
+                              variant='outlined'
+                              margin='dense'
+                              fullWidth
+                              label={'Education Type'}
+                              value={school.edu_type}
+                              helperText={
+                                meta.touched && meta.errors ? meta.errors : ' '
+                              }
+                            />
+                          )}
+                        </Field>
+                        <Field name={`schools[${i}].schoolName`}>
+                          {({ field, form, meta }) => (
+                            <CssTextField
+                              variant='outlined'
+                              margin='dense'
+                              fullWidth
+                              label={'School Name'}
+                              value={school.schoolName}
+                              helperText={
+                                meta.touched && meta.errors ? meta.errors : ' '
+                              }
+                            />
+                          )}
+                        </Field>
+                      </TableRow>
+                    ))}
+                    <Button
+                      className={classes.button}
+                      onClick={() =>
+                        fieldArrayProps.push({ edu_type: '', schoolName: '' })
+                      }
+                      color='primary'
+                    >
+                      Add another School{' '}
+                    </Button>
+                  </React.Fragment>
+                )}
               />
-              <DatePicker
-                variant='inline'
-                openTo='year'
-                views={['year', 'month']}
-                label='End Month and year'
-              />
-            </MuiPickersUtilsProvider>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  icon={<SchoolIcon />}
-                  checkedIcon={<SchoolIcon color='secondary' />}
-                  size='small'
-                  inputProps={{ 'aria-label': 'checkbox with small size' }}
-                />
-              }
-              label='Graduated'
-              className={classes.graduatedButton}
-            />
-          </div>
-          <Divider />
-          <Button className={classes.addButton} fullWidth variant='contained'>
-            Add another school
-          </Button>
+            </TableBody>
+          </Table>
 
           <div className={classes.buttonContainer}>
             <Button

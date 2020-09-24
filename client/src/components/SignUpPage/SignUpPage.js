@@ -7,6 +7,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import FormikField from '../FormikField';
 import validationSchema from './Validation';
 import API from '../../utils/API';
+import Background from "../../image/bg.png";
 
 /* ================ Styling ================ */
 
@@ -20,16 +21,14 @@ const useStyles = makeStyles((theme) => ({
   banner: {
     position: 'sticky',
     width: '100%',
-    height: '20%',
-    background: theme.palette.primary.main,
+    height: '40%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    boxShadow: '-1px -9px 15px 10px rgba(0,0,0,0.75);',
   },
   formContainer: {
     width: '100%',
-    height: '80%',
+    height: '30%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -41,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: '2%',
-    background: theme.palette.primary.main,
   },
   successBoard: {
     width: '25%',
@@ -53,10 +51,14 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
     '& >*': { margin: '1em' },
   },
-  avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
-  icon: { fontSize: 40, color: theme.palette.primary.main },
   submit: {
     backgroundColor: theme.palette.secondary.main,
+  },
+  background:{
+    width:'100%',
+    height:'100%',
+    display: 'flex',
+    backgroundSize:"cover",
   },
 }));
 
@@ -68,10 +70,11 @@ const SignUpPage = () => {
   const [Submitted, setSubmitted] = useState(false);
 
   return (
-    <div className={classes.root}>
-      <div className={classes.banner}>
-        <Typography variant='h1'>Welcome to ePortfolio</Typography>
-      </div>
+      <div className="background" style={{backgroundImage:`url(${Background})`}}>
+        <div className={classes.root}>
+          <div className={classes.banner}>
+            <Typography variant='h1' display='flex'>Creat Your New Portfolio</Typography>
+          </div>
       <div className={classes.formContainer}>
         {Submitted && (
           <div className={classes.successBoard}>
@@ -97,11 +100,6 @@ const SignUpPage = () => {
 
         {!Submitted && (
           <div className={classes.formPaper}>
-            <Avatar className={classes.avatar}>
-              <MenuBookIcon className={classes.icon} />
-            </Avatar>
-
-            <Typography variant='h2'>Sign Up</Typography>
             <Formik
               initialValues={{
                 firstName: '',
@@ -177,6 +175,7 @@ const SignUpPage = () => {
                     variant='contained'
                     className={classes.submit}
                     disabled={!formikProps.isValid}
+                    color='primary'
                   >
                     <Typography>Sign Up</Typography>
                   </Button>
@@ -194,6 +193,8 @@ const SignUpPage = () => {
         )}
       </div>
     </div>
+        <img src={Background} width='100%' height='100%' />
+      </div>
   );
 };
 

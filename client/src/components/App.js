@@ -7,8 +7,9 @@ import PrivateRoute from './PrivateRoute';
 import { AuthContext } from '../context/auth';
 import ProfilePage from './ProfilePage/ProfilePage';
 import LoginPage from './LoginPage/LoginPage';
-import ResetPage from './ResetPage/ResetPage';
 import SignUpPage from './SignUpPage/SignUpPage';
+import EditPage from "./EditPage/EditPage";
+import LaddingPage from "./LaddingPage/LaddingPage";
 
 function App() {
   //Check login tokens
@@ -29,9 +30,10 @@ function App() {
             <Router>
               <Switch>
                 <Route exact path='/' component={LoginPage} />
-                <Route path='/reset' component={ResetPage} />
                 <Route path='/signup' component={SignUpPage} />
                 <PrivateRoute path='/profile' component={ProfilePage} />
+                <PrivateRoute path='/edit' component={EditPage} />
+                <Route path='/ladding' component={LaddingPage} />
               </Switch>
             </Router>
           </CssBaseline>

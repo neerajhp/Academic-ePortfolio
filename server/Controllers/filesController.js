@@ -136,7 +136,7 @@ const deleteAllFiles = async (req, res) => {
     }
 }
 
-// Deletes all of the user's files and images
+// Deletes all of the user's files (documents, images, profile picture, cv)
 // If successfull it will return true
 const clearFiles = async (userID) => {
     let deleteStatus;

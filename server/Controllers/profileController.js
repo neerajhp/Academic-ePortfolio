@@ -1,6 +1,5 @@
 const Document = require("../Models/Document");
 const User = require("../Models/User");
-const Edu = require("../Models/Education");
 const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 
 const filesController = require("../Controllers/filesController");
@@ -161,6 +160,7 @@ const getUserInformation = async (req, res) => {
     }
 }
 
+// Edit the name, mobile number and birthDate of the user
 const editUserInformation = async (req, res) => {
     try{
         await User.findByIdAndUpdate(req.user.id, req.body, (err, result) => {

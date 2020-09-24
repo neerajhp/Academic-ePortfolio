@@ -3,9 +3,10 @@ const supertest = require('supertest')
 const request = supertest(server)
 const mongoose = require('mongoose');
 
-const { setupDB } = require('./setup');
+const { clearDB } = require('./setup');
 const { response } = require('../../app');
-setupDB();
+
+clearDB();
 
 test("Should return signup page", async () =>{
     await request.get("/api/user/signup")
@@ -35,7 +36,7 @@ test("Should not sign up a user with the same email", async () =>{
         email: "test@gmail.com",
         password: "test2"
     })
-    .expect(400)
+    .expect(409)
 })
 
 test("Should login the user", async () =>{
@@ -48,14 +49,24 @@ test("Should login the user", async () =>{
 
 })
 
-test("Should not login the user", async () =>{
+test("Should not login user with wrong password", async () =>{
     await request.post("/api/user/login")
     .send({
         email: "test@gmail.com",
         password: "testwrongpassword"
     })
-    .expect(400)
+    .expect(409)
 })
+
+test("Should not login user that has not signed up", async () =>{
+    await request.post("/api/user/login")
+    .send({
+        email: "nonexisttest@gmail.com",
+        password: "nonexisttest"
+    })
+    .expect(409)
+})
+
 
 
 test("Should return JWT Token", async () =>{

@@ -10,6 +10,7 @@ const showcaseController = require("../Controllers/showcaseController");
 //const eduController = require("../Controllers/eduController");
 
 const AWS = require("aws-sdk");
+const { findById } = require('../Models/User');
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
 
@@ -265,17 +266,16 @@ const getBio = async (req, res) => {
 
 const updateBio = async (req, res) => {
     // update the bio field 
-    await User.updateOne({
-        _id: req.user.id
-    }, {
+    await User.findByIdAndUpdate(req.user.id, {
         biography: req.body.biography
     }, (err, result) => {
         if (err) {
-            res.status(404).json(err);
+            res.status(403).json(err);
         } else {
-            console.log("successfully updated");
-            getBio(req, res);
-            //res.json(result);
+            User.findById(req.user.id, function (err, updated) {
+                console.log(updated.biography)
+                res.status(200).json(updated.biography);
+            });
         }
     })
 }

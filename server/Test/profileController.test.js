@@ -3,37 +3,32 @@ const supertest = require('supertest')
 const request = supertest(server)
 const mongoose = require('mongoose');
 
-const { setupDB } = require('./setup');
+const { clearDB } = require('./setup');
 const { response } = require('../../app');
-// const loginUser = require('./loginAuth');
-setupDB();
+const loginUser = require('./login')
+
+
+clearDB();
 
 let token;
-
-beforeAll(async () =>{
-    await request.post("/api/user/signup")
-    .send({
-        firstName: "test",
-        lastName: "test",
-        email: "test@gmail.com",
-        password: "test123"
-    })
-    .expect(201)
-
-    await request.post("/api/user/login")
-    .send({
-        email: "test@gmail.com",
-        password: "test123"
-    })
-    .expect(200)
-    .then((response) => {
-        expect(response.body.token).toBeTruthy()
-        token = response.body.token
-    })
-
+beforeAll(async () => {
+    token = await loginUser();
 })
 
-test("Should return a token", () =>{
-    console.log(token)
-    expect(token).toBeTruthy();
+
+
+
+
+test("Should update bio", async () =>{
+    await request.put("/api/profile/bio")
+    .set('Authorization', 'bearer ' + token)
+    .send({
+        biography: "Testing the functionality of the biography 1 2 3"
+    })
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual("Testing the functionality of the biography 1 2 3")
+    })
+    
 })

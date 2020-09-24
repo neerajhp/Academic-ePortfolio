@@ -29,7 +29,7 @@ async function dropAllCollections () {
 }
 
 module.exports = {
-  setupDB () {
+  async clearDB () {
       
     // Disconnect Mongoose
     afterAll(async () => {

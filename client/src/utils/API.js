@@ -60,8 +60,7 @@ export default {
     return axios.get('/api/profile/education', {
         edu_type: body.edu_type,
         highName: body.highName,
-        uniName: body.uniName,
-        unicourseName: body.unicourseName,
+        schoolName: body.schoolName,
         unimajorName: body.unimajorName,
         country: body.country,
         city: body.city,
@@ -79,8 +78,7 @@ export default {
   updateEducation: function (body) {
     return axios.put('/api/profile/education/:id', {
         edu_type: body.edu_type,
-        highName: body.highName,
-        uniName: body.uniName,
+        schoolName: body.schoolName,
         unicourseName: body.unicourseName,
         unimajorName: body.unimajorName,
         country: body.country,
@@ -181,7 +179,17 @@ export default {
       },
     });
   },
-  // Deletes all of the user's files
+  // Deletes multiple files
+  deleteFiles: function (body){
+    return axios.delete('/api/files/delete', {
+      IDs: body.IDs,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Deletes all of the user's files (documents, images, profile picture and cv)
+  // Its probably best if this api is only used for deleting a profile
   clearFiles: function () {
     return axios.delete('/api/files', {
       headers: {
@@ -333,5 +341,43 @@ export default {
       },
     });
   },
+  // Get about me
+  getAboutMe: function() {
+    return axios.get('api/profile/aboutMe', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Edit about me
+  editAboutMe: function(body){
+    return axios.put('api/profile/aboutMe', {
+      aboutMe: body.aboutMe,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Get user information
+  getUserInformation: function(){
+    return axios.get('api/user/userInfo', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Edit User information
+  // At the moment the user cannot change their email and password using this api
+  editUserInformation: function(body){
+    return axios.put('api/user/userInfo', {
+      firstName: body.firstName,
+      lastName: body.lastName,
+      mobileNumber: body.mobileNumber,
+      birthDate: body.birthDate,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  }
 
 };

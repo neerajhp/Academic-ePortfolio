@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../Controllers/userController.js");
 
+const authenticate = require("../Middleware/authenticate");
+
 
 router.get("/", (req, res) => {
     res.send("You are in the users page");
@@ -22,6 +24,11 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
     userController.postLogin(req, res);
 });
+
+
+router.get("/userInfo", authenticate.authenticateToken, userController.getUserInformation);
+
+router.put("/userInfo", authenticate.authenticateToken, userController.editUserInformation);
 
 
 module.exports = router;

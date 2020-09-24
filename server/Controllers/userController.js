@@ -122,12 +122,16 @@ exports.editUserInformation = async (req, res) => {
         res.status(400).json("This function cannot change the password or email");
         return;
       }
-      await User.findByIdAndUpdate(req.user.id, objectModel, (err, result) => {
+      await User.updateOne({_id: req.user.id}, objectModel, (err, result) => {
           if(err){
               throw err;
           }
           if(result){
-              res.status(200).json("userInformation updated");
+              if(result.nModified == 0){
+                res.status(400).json("Attempted to edit a property that doesn't exist in the record");
+              }else{
+                res.status(200).json("Successfully updated user information");
+              }
           }else{
               res.status(404).json("User not found");
           }

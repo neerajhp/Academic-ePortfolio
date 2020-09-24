@@ -25,12 +25,23 @@ const theme = createMuiTheme({
       fontSize: 16,
     },
   },
+
   overrides: {
     MuiCssBaseline: {
       '@global': {
         body: {
           overflowX: 'hidden',
         },
+      },
+    },
+    MuiPickersYear: {
+      root: {
+        color: '#000000',
+      },
+    },
+    MuiPickersMonth: {
+      root: {
+        color: '#000000',
       },
     },
   },

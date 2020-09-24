@@ -8,25 +8,35 @@ import {
   FormControlLabel,
   Divider,
   TextField,
-  Table,
-  TableBody,
-  TableRow,
 } from '@material-ui/core';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import {
+  DatePicker,
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import SchoolIcon from '@material-ui/icons/School';
-import FormikField from '../../FormikField';
 import validationSchema from './Validation';
 import API from '../../../utils/API';
 
 /* ================ Styling ================ */
 
+// Form Styles
 const useStyles = makeStyles((theme) => ({
   periodInfo: {
     display: 'flex',
     justifyContent: 'space-between',
     width: '70%',
     marginBottom: theme.spacing(3),
+  },
+  divider: {
+    backgroundColor: theme.palette.secondary.main,
+    marginBottom: theme.spacing(3),
+  },
+  calendar: {
+    '& .MuiInputBase-root': {
+      color: theme.palette.text.secondary,
+    },
   },
   graduatedButton: {
     color: theme.palette.text.secondary,
@@ -52,20 +62,20 @@ const CssTextField = withStyles((theme) => ({
       color: theme.palette.text.secondary,
     },
     '& label.Mui-focused': {
-      color: 'white',
+      color: theme.palette.secondary.main,
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'white',
+      borderBottomColor: theme.palette.secondary.main,
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
         borderColor: theme.palette.primary.light,
       },
       '&:hover fieldset': {
-        borderColor: 'white',
+        borderColor: theme.palette.secondary.main,
       },
       '&.Mui-focused fieldset': {
-        borderColor: 'white',
+        borderColor: theme.palette.secondary.main,
       },
     },
   },
@@ -73,9 +83,32 @@ const CssTextField = withStyles((theme) => ({
 
 /* ================ Component ================ */
 
+const FormField = ({ type, label, index, record }) => {
+  return (
+    <Field name={`schools[${index}].${type}`}>
+      {({ field, meta }) => {
+        return (
+          <CssTextField
+            variant='outlined'
+            margin='dense'
+            fullWidth
+            label={label}
+            defaultValue={record}
+            helperText={meta.touched && meta.error ? meta.error : ' '}
+            onChange={field.onChange(field.name)}
+            onBlur={field.onBlur(field.name)}
+            error={meta.touched && Boolean(meta.error)}
+          />
+        );
+      }}
+    </Field>
+  );
+};
+
 const EducationForm = ({ handleClose, records }) => {
   const classes = useStyles();
 
+  const [selectedDate, handleDateChange] = useState(new Date());
   const [Submitted, setSubmitted] = useState(false);
 
   return (
@@ -84,71 +117,93 @@ const EducationForm = ({ handleClose, records }) => {
         schools: records,
       }}
       onSubmit={(values, actions) => {
-        API.userSignup({})
-          .then((res) => {
-            setSubmitted(true);
-          })
-          .catch((err) => {
-            actions.setFieldError('email', err.response.data);
-            actions.setSubmitting(false);
-          });
+        // API.userSignup({})
+        //   .then((res) => {
+        //     setSubmitted(true);
+        //   })
+        //   .catch((err) => {
+        //     actions.setFieldError('email', err.response.data);
+        //     actions.setSubmitting(false);
+        //   });
       }}
       validationSchema={validationSchema}
     >
       {(formikProps) => (
         <form>
-          <Table>
-            <TableBody>
-              <FieldArray
-                name='schools'
-                render={(fieldArrayProps) => (
-                  <React.Fragment>
-                    {formikProps.values.schools.map((school, i) => (
-                      <TableRow>
-                        <Field name={`schools[${i}].edu_type`}>
-                          {({ field, form, meta }) => (
-                            <CssTextField
-                              variant='outlined'
-                              margin='dense'
-                              fullWidth
-                              label={'Education Type'}
-                              value={school.edu_type}
-                              helperText={
-                                meta.touched && meta.errors ? meta.errors : ' '
-                              }
-                            />
-                          )}
-                        </Field>
-                        <Field name={`schools[${i}].schoolName`}>
-                          {({ field, form, meta }) => (
-                            <CssTextField
-                              variant='outlined'
-                              margin='dense'
-                              fullWidth
-                              label={'School Name'}
-                              value={school.schoolName}
-                              helperText={
-                                meta.touched && meta.errors ? meta.errors : ' '
-                              }
-                            />
-                          )}
-                        </Field>
-                      </TableRow>
-                    ))}
-                    <Button
-                      className={classes.button}
-                      onClick={() =>
-                        fieldArrayProps.push({ edu_type: '', schoolName: '' })
-                      }
-                      color='primary'
-                    >
-                      Add another School{' '}
-                    </Button>
+          <FieldArray
+            name='schools'
+            render={(fieldArrayProps) => (
+              <React.Fragment>
+                {formikProps.values.schools.map((school, i) => (
+                  <React.Fragment key={i}>
+                    <FormField
+                      type={'edu_type'}
+                      label={'Education Type'}
+                      index={i}
+                      record={school.edu_type}
+                    />
+                    <FormField
+                      type={'schoolName'}
+                      label={'School Name'}
+                      index={i}
+                      record={school.schoolName}
+                    />
+                    <div className={classes.periodInfo}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          className={classes.calendar}
+                          autoOk
+                          variant='inline'
+                          inputVariant='outlined'
+                          label='Start Month & Year'
+                          views={['year', 'month']}
+                          value={selectedDate}
+                          InputAdornmentProps={{ position: 'start' }}
+                          onChange={(date) => handleDateChange(date)}
+                        />
+                        <KeyboardDatePicker
+                          className={classes.calendar}
+                          autoOk
+                          variant='inline'
+                          inputVariant='outlined'
+                          label='End Month & Year'
+                          views={['year', 'month']}
+                          value={selectedDate}
+                          InputAdornmentProps={{ position: 'start' }}
+                          onChange={(date) => handleDateChange(date)}
+                        />
+                      </MuiPickersUtilsProvider>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            icon={<SchoolIcon />}
+                            checkedIcon={<SchoolIcon color='secondary' />}
+                            size='small'
+                            inputProps={{
+                              'aria-label': 'checkbox with small size',
+                            }}
+                          />
+                        }
+                        label='Graduated'
+                        className={classes.graduatedButton}
+                      />
+                    </div>
+
+                    <Divider className={classes.divider} />
                   </React.Fragment>
-                )}
-              />
-            </TableBody>
-          </Table>
+                ))}
+                <Button
+                  className={classes.button}
+                  onClick={() =>
+                    fieldArrayProps.push({ edu_type: '', schoolName: '' })
+                  }
+                  color='primary'
+                >
+                  Add another School{' '}
+                </Button>
+              </React.Fragment>
+            )}
+          />
 
           <div className={classes.buttonContainer}>
             <Button

@@ -59,7 +59,6 @@ export default {
   postEducation: function (body) {
     return axios.get('/api/profile/education', {
         edu_type: body.edu_type,
-        highName: body.highName,
         schoolName: body.schoolName,
         unimajorName: body.unimajorName,
         country: body.country,

@@ -6,7 +6,7 @@ const documentSchema = mongoose.Schema({
     user_id: {type: String},
     fieldName: {type: String},
     fileLink: {type: String},
-    s3_key: {type: String}
+    s3_key: {type: String},
 },
 {
     timestamps: true

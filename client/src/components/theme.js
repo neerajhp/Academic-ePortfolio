@@ -4,7 +4,8 @@ const theme = createMuiTheme({
   palette: {
     primary: { main: '#333B55' },
     secondary: { main: '#F8C736' },
-    text: { primary: '#FFFFFF' },
+    neutral: { main: '#F7F5E7' },
+    text: { primary: '#FFFFFF', secondary: '#000000' },
   },
   typography: {
     fontFamily: 'Roboto',
@@ -18,6 +19,10 @@ const theme = createMuiTheme({
     },
     h3: {
       fontSize: 20,
+    },
+    h4: {
+      fontWeight: 500,
+      fontSize: 16,
     },
   },
 });

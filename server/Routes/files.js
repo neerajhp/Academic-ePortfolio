@@ -16,7 +16,8 @@ router.delete("/delete", filesController.deleteMultiple);
 // Deletes a document based on its mongoDB id
 router.delete("/:id", filesController.deleteDocument);
 
-//router.delete("/delete", filesController.deleteMultiple);
+router.delete("/", filesController.deleteAllFiles);
+
 
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../Models/User.js').User;
+const User = require('../Models/User.js');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -11,15 +11,14 @@ const saltRounds = 10;
 exports.postSignup = async (req, res) => {
   //hash the password
   bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-    //const User = models.User;
 
     const newUser = new User({
-      //dummyID: req.body.dummyID,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       password: hash,
       biography: req.body.biography,
+      skills: req.body.skills
     });
 
     //Check if the email is already registered
@@ -30,7 +29,7 @@ exports.postSignup = async (req, res) => {
         newUser.save();
         res.status(201).json('User added');
       } else {
-        res.status(400).json('User already exists...');
+        res.status(409).send('Email already linked to account');
       }
     });
   });
@@ -41,6 +40,7 @@ exports.postLogin = async (req, res) => {
   var newUser = {};
   newUser.email = req.body.email;
   newUser.password = req.body.password;
+  console.log(newUser.email);
   //Check if user exists
   await User.findOne({
     email: newUser.email,
@@ -48,7 +48,7 @@ exports.postLogin = async (req, res) => {
     .then((profile) => {
       //Email does not exist
       if (!profile) {
-        return res.status(400).send('User does not exist');
+        res.status(409).send('Email does not match our records');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -77,7 +77,7 @@ exports.postLogin = async (req, res) => {
               }
             );
           } else {
-            return res.status(400).send('Password is incorrect');
+            res.status(409).send('Email and Password do not match our records');
           }
         });
       }

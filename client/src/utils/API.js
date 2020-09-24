@@ -47,6 +47,7 @@ export default {
       },
     });
   },
+  // Gets all education records
   getEducation: function () {
     return axios.get('/api/profile/education', {
       headers: {
@@ -54,6 +55,64 @@ export default {
       },
     });
   },
+  // Creates an education record
+  postEducation: function (body) {
+    return axios.get('/api/profile/education', {
+        edu_type: body.edu_type,
+        highName: body.highName,
+        uniName: body.uniName,
+        unicourseName: body.unicourseName,
+        unimajorName: body.unimajorName,
+        country: body.country,
+        city: body.city,
+        monthStart: body.monthStart,
+        yearStart: body.yearStart,
+        monthEnd: body.monthEnd,
+        yearEnd: body.yearEnd,
+        graduated: body.graduated,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+  // Updates a specific education record
+  updateEducation: function (body) {
+    return axios.put('/api/profile/education/:id', {
+        edu_type: body.edu_type,
+        highName: body.highName,
+        uniName: body.uniName,
+        unicourseName: body.unicourseName,
+        unimajorName: body.unimajorName,
+        country: body.country,
+        city: body.city,
+        monthStart: body.monthStart,
+        yearStart: body.yearStart,
+        monthEnd: body.monthEnd,
+        yearEnd: body.yearEnd,
+        graduated: body.graduated,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+
+  },
+  // Deletes a specific education record
+  deleteEducation: function () {
+    return axios.delete('/api/profile/education/:id', {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+  // Delete all user education records
+  clearEducation: function () {
+    return axios.delete('/api/profile/education', {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+
   getAllFiles: function () {
     return axios.get('api/files/', {
       headers: {
@@ -106,7 +165,7 @@ export default {
       },
     });
   },
-  // Gets a file based on its objectID (objectID is in the params)
+  // Gets a file based on its objectID
   getFile: function () {
     return axios.get('/api/files/:id', {
       headers: {
@@ -114,7 +173,7 @@ export default {
       },
     });
   },
-  // Deletes the file by objectID (objectID is in the params)
+  // Deletes the file by objectID
   deleteFile: function () {
     return axios.delete('/api/files/:id', {
       headers: {
@@ -122,4 +181,99 @@ export default {
       },
     });
   },
+  // Deletes all of the user's files
+  clearFiles: function () {
+    return axios.delete('/api/files', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets the user's skills array
+  getSkills: function () {
+    return axios.get('/api/profile/skills', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Add skills to the user's skills array (At the moment there is no limit on the number of skills)
+  addSkills: function (body) {
+    return axios.put('api/profile/skills', {
+      skills: body.skills,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Removes specified skills from the user's skills array
+  removeSkills: function (body) {
+    return axios.delete('api/profile/skills', {
+      skills: body.skills,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Creates a featured work
+  createFeaturedWork: function(body) {
+    return axios.post('api/profile/featured-work', {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        fileLink: body.fileLink,
+        image: body.image,
+        url: body.url,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    });
+  },
+  // Gets all of the user's featured works
+  getAllFeaturedWorks: function() {
+    return axios.get('api/profile/featured-work', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets a specific featured work
+  getFeaturedWork: function() {
+    return axios.get('api/profile/featured-work/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Edit a specific featured work
+  editFeaturedWork: function(body) {
+    return axios.put('api/profile/featured-work/:id', {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        fileLink: body.fileLink,
+        image: body.image,
+        url: body.url,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+    })
+  },
+  // Removes a specific featured work
+  removeFeaturedWork: function() {
+    return axios.delete('api/profile/featured-work/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Removes all of the user's featured works
+  clearShowCase: function() {
+    return axios.delete('api/profile/featured-work', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  }
+
 };

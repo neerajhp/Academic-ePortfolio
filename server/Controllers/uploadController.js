@@ -1,6 +1,5 @@
 const Document = require("../Models/Document");
-const multer = require("multer");
-const AWS = require("aws-sdk");
+
 require('dotenv').config();
 
 const filesController = require("../Controllers/filesController");
@@ -10,9 +9,34 @@ const filesController = require("../Controllers/filesController");
 const uploadSingle = async (req, res) => {
     try{
         if(req.file){
-            await saveFileReference(req.file, req.user.id)
+            var newFile = new Document({
+                user_id: req.user.id,
+                fieldName: req.file.fieldname,
+                fileLink: req.file.location,
+                s3_key: `user-${req.user.id}/${req.file.originalname}`
+            });
+            console.log(req.file.fieldname);
+            //console.log(newFile);
+            await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
+                if(err){
+                    res.status(400).json("something's wrong");
+                }else{
+                    if(result){
+                        res.status(400).json("File already exists");
+                    }else{
+                        console.log(newFile);
+                        newFile.save((err, result) => {
+                            if(err){
+                                throw err;
+                            }else{
+                                console.log("File to be saved");
+                                res.status(200).json(result);
+                            }
+                        });
+                    }
+                }
+            });
             
-            res.status(200).send("file saved");
         }else{
             throw Error();
         }
@@ -22,12 +46,7 @@ const uploadSingle = async (req, res) => {
     }
 };
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-});
-
-
+// Upload cv API
 const uploadCV = async (req, res) => {
     await filesController.deleteCV(req, res);
 
@@ -35,6 +54,7 @@ const uploadCV = async (req, res) => {
     console.log("new cv uploaded");
 }
 
+// Upload profile picture API
 const uploadProfilePic = async (req, res) => {
     await filesController.deleteProfilePic(req, res);
 
@@ -45,59 +65,73 @@ const uploadProfilePic = async (req, res) => {
 // Allows the upload of multiple files
 const uploadMultiple = async (req, res) => {
     try{
-        console.log(req.files);
-
+        
         if(req.files.length <= 0){
-            res.send("You must select at least 1 file");
-        }
-
-        res.send(req.files.length + " files have been uploaded");
-
-        // Creates a document reference for each file 
+            res.status(400).send("You must select at least 1 file");
+        }else{
+            // Creates a document reference for each file 
         // These references are then saved to mongoDB
-        for(var i = 0; i < req.files.length; i++){
-            // Maybe make this function return boolean values
-            // If its false, then we have to somehow notify the user that this file already exists
-            saveFileReference(req.files[i], req.user.id);
+            let newFiles = [];
+            let existingFiles = [];
+            for(var i = 0; i < req.files.length; i++){
+                var newFile = new Document({
+                    user_id: req.user.id,
+                    fieldName: req.files[i].fieldname,
+                    fileLink: req.files[i].location,
+                    s3_key: `user-${req.user.id}/${req.files[i].originalname}`
+                })
+                
+                await Document.findOne({user_id: newFile.user_id, s3_key: newFile.s3_key}, (err, result) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }else{
+                        if(result){
+                            existingFiles.push(req.files[i].originalname);
+                        }else{
+                            newFiles.push(newFile);
+                        }
+                    }
+                });
+
+
+            }
+            
+            if(existingFiles.length === req.files.length){
+                res.status(400).json({
+                    "files": existingFiles,
+                    "error": "These files already exist"
+                });
+                return;
+            }
+
+            // Checks whether or not files have been uploaded
+            if(newFiles.length === 0){
+                res.status(400).json("Failed to upload files");
+            }else{
+                await Document.insertMany(newFiles, (err, result) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }else{
+                        if(result){
+                            res.status(200).json({
+                                uploaded_files: result,
+                                failed_uploads: existingFiles
+                            });
+                        }else{
+                            res.status(400).json("Failed to upload files");
+                        }
+                    }
+                });
+            }
         }
 
+        
     }catch(err){
         res.status(400).send({error: "Unable to upload files."});
         console.log(err);
     }
 };
 
-// Saves a reference to the uploaded file in mongoDB
-const saveFileReference = async (file, userID) => {
-    // Check for file in mongoDB
-    var newFile = {
-        user_id: userID,
-        fieldName: file.fieldname,
-        fileLink: file.location,
-        s3_key: `user-${userID}/${file.originalname}`
-    }
-
-    console.log(newFile);
-    
-    await Document.findOne({s3_key: newFile.s3_key, user_id: userID})
-    .then(async searchedFile => {
-        if(!searchedFile){
-            var document = new Document(newFile);
-            document.save((err, file) => {
-                if(err){
-                    throw err;
-                }else{
-                    console.log("File to be saved");
-                }
-            });
-          
-        } else{
-            console.log("File already exists");
-            // Make the user upload again?
-            // Rename the file?
-        }
-    });
-}
 
 module.exports = {
     uploadSingle,

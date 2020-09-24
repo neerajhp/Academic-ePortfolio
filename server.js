@@ -1,4 +1,3 @@
-
 const server = require('./app');
 
 // Start the server

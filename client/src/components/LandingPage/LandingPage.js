@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, Link, Typography } from '@material-ui/core';
-import { useAuth } from '../../context/auth';
+import { Button, Link, Typography } from '@material-ui/core';
 import Background from '../../image/bg.png';
 
 /* ================ Styling ================ */
@@ -58,8 +57,8 @@ const useStyles = makeStyles((theme) => {
 const LandingPage = () => {
   const classes = useStyles();
 
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const { setAuthTokens } = useAuth();
+  // const [isLoggedIn, setLoggedIn] = useState(false);
+  // const { setAuthTokens } = useAuth();
 
   return (
     <div
@@ -67,10 +66,12 @@ const LandingPage = () => {
       style={{ backgroundImage: `url(${Background})` }}
     >
       <div className={classes.root}>
-        <img src={Background} width='100%' />
+        <img alt='background' src={Background} width='100%' />
       </div>
       <div className={classes.banner}>
-        <Typography variant='h1'>Welcome to ePortfolio</Typography>
+        <Typography variant='h1' color='textSecondary'>
+          Welcome to ePortfolio
+        </Typography>
       </div>
 
       <Link href='./login'>

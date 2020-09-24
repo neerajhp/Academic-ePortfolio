@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 0 1% 1%',
     width: '100%',
     background: theme.palette.secondary.light,
+    color: theme.palette.text.secondary,
     padding: '5% 10% 5% 5%',
     display: 'flex',
     flexDirection: 'column',
@@ -23,7 +24,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   title: { width: '100%' },
-
+  table: {
+    '& .MuiTableCell-body': {
+      color: theme.palette.text.secondary,
+    },
+  },
   period: {
     width: '30%',
     verticalAlign: 'top',
@@ -59,10 +64,10 @@ const EducationCard = ({ education }) => {
       return <Typography> Add your education!</Typography>;
     } else {
       return (
-        <Table>
+        <Table className={classes.table}>
           <TableBody>
             {education.map((edu, i) => (
-              <TableRow key={i}>
+              <TableRow key={i} className={classes.table}>
                 <TableCell className={classes.period}>
                   <Typography>
                     {MONTHS[edu.monthStart]}, {edu.yearStart} -

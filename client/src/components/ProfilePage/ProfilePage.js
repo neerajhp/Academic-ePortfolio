@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
   navBar: {
     marginLeft: '0.5em',
     background: theme.palette.primary.main,
+    color: theme.palette.text.secondary,
   },
   navBarIcon: {
     fontSize: 30,
@@ -127,9 +128,7 @@ const ProfilePage = () => {
         <div className={classes.banner}> </div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2' color='textSecondary'>
-            Fetching User Data
-          </Typography>
+          <Typography variant='h2'>Fetching User Data</Typography>
         </div>
       </div>
     );

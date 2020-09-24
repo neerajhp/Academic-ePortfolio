@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import FormikField from '../FormikField';
 import validationSchema from './Validation';
@@ -76,8 +75,8 @@ const SignUpPage = () => {
     >
       <div className={classes.root}>
         <div className={classes.banner}>
-          <Typography variant='h1' display='flex'>
-            Creat Your New Portfolio
+          <Typography variant='h1' color='textSecondary' display='flex'>
+            Create Your New Portfolio
           </Typography>
         </div>
         <div className={classes.formContainer}>
@@ -186,7 +185,11 @@ const SignUpPage = () => {
                     </Button>
                     <Grid container>
                       <Grid item xs>
-                        <Link href='./login' variant='body2' color='inherit'>
+                        <Link
+                          href='./login'
+                          variant='body2'
+                          color='textSecondary'
+                        >
                           Log In
                         </Link>
                       </Grid>
@@ -198,7 +201,7 @@ const SignUpPage = () => {
           )}
         </div>
       </div>
-      <img src={Background} width='100%' height='100%' />
+      <img alt='background' src={Background} width='100%' height='100%' />
     </div>
   );
 };

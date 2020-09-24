@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    color: theme.palette.text.secondary,
   },
 }));
 
@@ -57,12 +56,9 @@ const EducationDialog = ({ records }) => {
         aria-labelledby='form-dialog-title'
       >
         <DialogTitle disableTypography>
-          <Typography variant='h2' color='textSecondary'>
-            Edit Education Information
-          </Typography>
+          <Typography variant='h2'>Edit Education Information</Typography>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Add your education here</DialogContentText>
           <EducationForm records={records} handleClose={handleClose} />
         </DialogContent>
       </Dialog>

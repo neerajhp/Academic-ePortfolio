@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 0 1% 1%',
     width: '100%',
     background: theme.palette.primary.light,
+    color: theme.palette.text.secondary,
     padding: '5%',
     display: 'flex',
     alignItems: 'center',

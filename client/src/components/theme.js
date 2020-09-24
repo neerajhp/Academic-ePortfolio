@@ -5,7 +5,7 @@ const theme = createMuiTheme({
     primary: { main: '#162d3f' },
     secondary: { main: '#648818' },
     neutral: { main: '#F7F5E7' },
-    text: { primary: '#FFFFFF', secondary: '#000000' },
+    text: { primary: '#000000', secondary: '#FFFFFF' },
   },
   typography: {
     fontFamily: 'Roboto',
@@ -32,16 +32,6 @@ const theme = createMuiTheme({
         body: {
           overflowX: 'hidden',
         },
-      },
-    },
-    MuiPickersYear: {
-      root: {
-        color: '#000000',
-      },
-    },
-    MuiPickersMonth: {
-      root: {
-        color: '#000000',
       },
     },
   },

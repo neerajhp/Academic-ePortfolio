@@ -7,7 +7,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import FormikField from '../FormikField';
 import validationSchema from './Validation';
 import API from '../../utils/API';
-import Background from "../../image/bg.png";
+import Background from '../../image/bg.png';
 
 /* ================ Styling ================ */
 
@@ -54,11 +54,11 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     backgroundColor: theme.palette.secondary.main,
   },
-  background:{
-    width:'100%',
-    height:'100%',
+  background: {
+    width: '100%',
+    height: '100%',
     display: 'flex',
-    backgroundSize:"cover",
+    backgroundSize: 'cover',
   },
 }));
 
@@ -70,131 +70,136 @@ const SignUpPage = () => {
   const [Submitted, setSubmitted] = useState(false);
 
   return (
-      <div className="background" style={{backgroundImage:`url(${Background})`}}>
-        <div className={classes.root}>
-          <div className={classes.banner}>
-            <Typography variant='h1' display='flex'>Creat Your New Portfolio</Typography>
-          </div>
-      <div className={classes.formContainer}>
-        {Submitted && (
-          <div className={classes.successBoard}>
-            <Avatar className={classes.avatar}>
-              <ThumbUpIcon className={classes.icon} />
-            </Avatar>
-            <Typography variant='h2'>Congratulations!</Typography>
-            <Typography>
-              You now have an academic ePorfolio, login and start editing!
-            </Typography>
-            <Button
-              type='Submit'
-              fullWidth
-              variant='contained'
-              className={classes.submit}
-            >
-              <Link href='./' variant='body2' color='inherit'>
-                Click here to login
-              </Link>
-            </Button>
-          </div>
-        )}
+    <div
+      className='background'
+      style={{ backgroundImage: `url(${Background})` }}
+    >
+      <div className={classes.root}>
+        <div className={classes.banner}>
+          <Typography variant='h1' display='flex'>
+            Creat Your New Portfolio
+          </Typography>
+        </div>
+        <div className={classes.formContainer}>
+          {Submitted && (
+            <div className={classes.successBoard}>
+              <Avatar className={classes.avatar}>
+                <ThumbUpIcon className={classes.icon} />
+              </Avatar>
+              <Typography variant='h2'>Congratulations!</Typography>
+              <Typography>
+                You now have an academic ePorfolio, login and start editing!
+              </Typography>
+              <Button
+                type='Submit'
+                fullWidth
+                variant='contained'
+                className={classes.submit}
+              >
+                <Link href='./' variant='body2' color='inherit'>
+                  Click here to login
+                </Link>
+              </Button>
+            </div>
+          )}
 
-        {!Submitted && (
-          <div className={classes.formPaper}>
-            <Formik
-              initialValues={{
-                firstName: '',
-                lastName: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-              }}
-              onSubmit={(values, actions) => {
-                API.userSignup({
-                  firstName: values.firstName,
-                  lastName: values.lastName,
-                  email: values.email,
-                  password: values.password,
-                })
-                  .then((res) => {
-                    setSubmitted(true);
+          {!Submitted && (
+            <div className={classes.formPaper}>
+              <Formik
+                initialValues={{
+                  firstName: '',
+                  lastName: '',
+                  email: '',
+                  password: '',
+                  confirmPassword: '',
+                }}
+                onSubmit={(values, actions) => {
+                  API.userSignup({
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    email: values.email,
+                    password: values.password,
                   })
-                  .catch((err) => {
-                    actions.setFieldError('email', err.response.data);
-                    actions.setSubmitting(false);
-                  });
-              }}
-              validationSchema={validationSchema}
-            >
-              {(formikProps) => (
-                <form
-                  className={classes.form}
-                  onSubmit={formikProps.handleSubmit}
-                >
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <FormikField
-                        label='FirstName'
-                        formikProps={formikProps}
-                        formikKey='firstName'
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormikField
-                        label='LastName'
-                        formikProps={formikProps}
-                        formikKey='lastName'
-                        required
-                      />
-                    </Grid>
-                  </Grid>
-                  <FormikField
-                    label='Email'
-                    formikProps={formikProps}
-                    formikKey='email'
-                    required
-                  />
-                  <FormikField
-                    label='Password'
-                    formikProps={formikProps}
-                    formikKey='password'
-                    type='password'
-                    required
-                  />
-                  <FormikField
-                    label='Confirm Password'
-                    formikProps={formikProps}
-                    formikKey='confirmPassword'
-                    type='password'
-                    required
-                  />
-
-                  <Button
-                    type='Submit'
-                    fullWidth
-                    variant='contained'
-                    className={classes.submit}
-                    disabled={!formikProps.isValid}
-                    color='primary'
+                    .then((res) => {
+                      setSubmitted(true);
+                    })
+                    .catch((err) => {
+                      actions.setFieldError('email', err.response.data);
+                      actions.setSubmitting(false);
+                    });
+                }}
+                validationSchema={validationSchema}
+              >
+                {(formikProps) => (
+                  <form
+                    className={classes.form}
+                    onSubmit={formikProps.handleSubmit}
                   >
-                    <Typography>Sign Up</Typography>
-                  </Button>
-                  <Grid container>
-                    <Grid item xs>
-                      <Link href='./' variant='body2' color='inherit'>
-                        Log In
-                      </Link>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <FormikField
+                          label='FirstName'
+                          formikProps={formikProps}
+                          formikKey='firstName'
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <FormikField
+                          label='LastName'
+                          formikProps={formikProps}
+                          formikKey='lastName'
+                          required
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </form>
-              )}
-            </Formik>
-          </div>
-        )}
+                    <FormikField
+                      label='Email'
+                      formikProps={formikProps}
+                      formikKey='email'
+                      required
+                    />
+                    <FormikField
+                      label='Password'
+                      formikProps={formikProps}
+                      formikKey='password'
+                      type='password'
+                      required
+                    />
+                    <FormikField
+                      label='Confirm Password'
+                      formikProps={formikProps}
+                      formikKey='confirmPassword'
+                      type='password'
+                      required
+                    />
+
+                    <Button
+                      type='Submit'
+                      fullWidth
+                      variant='contained'
+                      className={classes.submit}
+                      disabled={!formikProps.isValid}
+                      color='primary'
+                    >
+                      <Typography>Sign Up</Typography>
+                    </Button>
+                    <Grid container>
+                      <Grid item xs>
+                        <Link href='./login' variant='body2' color='inherit'>
+                          Log In
+                        </Link>
+                      </Grid>
+                    </Grid>
+                  </form>
+                )}
+              </Formik>
+            </div>
+          )}
+        </div>
       </div>
+      <img src={Background} width='100%' height='100%' />
     </div>
-        <img src={Background} width='100%' height='100%' />
-      </div>
   );
 };
 

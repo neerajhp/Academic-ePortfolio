@@ -8,8 +8,7 @@ import { AuthContext } from '../context/auth';
 import ProfilePage from './ProfilePage/ProfilePage';
 import LoginPage from './LoginPage/LoginPage';
 import SignUpPage from './SignUpPage/SignUpPage';
-import EditPage from "./EditPage/EditPage";
-import LaddingPage from "./LaddingPage/LaddingPage";
+import LandingPage from './LandingPage/LandingPage';
 
 function App() {
   //Check login tokens
@@ -29,11 +28,10 @@ function App() {
           <CssBaseline>
             <Router>
               <Switch>
-                <Route exact path='/' component={LoginPage} />
+                <Route exact path='/' component={LandingPage} />
+                <Route exact path='/login' component={LoginPage} />
                 <Route path='/signup' component={SignUpPage} />
                 <PrivateRoute path='/profile' component={ProfilePage} />
-                <PrivateRoute path='/edit' component={EditPage} />
-                <Route path='/ladding' component={LaddingPage} />
               </Switch>
             </Router>
           </CssBaseline>

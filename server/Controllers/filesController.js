@@ -8,11 +8,11 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
-// Returns all of the user's documents
+// Returns all of the user's uploaded files (except profile picture and cv)
 const getAllDocs = async (req, res) => {
     try{
         // ideally, its probbaly better if the user_id is not from the query
-        const documents = await Document.find({user_id: req.user.id});
+        const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
         res.json(documents);
     }catch(err){
         console.log(err);
@@ -24,7 +24,7 @@ const getAllDocs = async (req, res) => {
 const getDocument = async (req, res, next) => {
     await Document.findById(req.params.id, (err, doc) => {
         if(err){
-            console.log("File not found");
+            console.log(err);
             return next(err);
         }
 
@@ -41,29 +41,19 @@ const getDocument = async (req, res, next) => {
 
 // Deletes a document based on its objectID
 const deleteDocument = async (req, res, next) => {
-    await Document.findById(req.params.id, (err, doc) => {
+    await Document.findByIdAndDelete(req.params.id, (err, doc) => {
         if(err){
             console.log("File not found");
             res.status(400).json("Document not found");
-            return(next(err));
+            //return(next(err));
         }
 
         if(!doc){
             console.log("File not found");
             res.status(404).json("File not found");
-            return(next());
         }else{
-            deleteS3Instance(doc);
-        }
-    });
-    
-    // Delete its reference in mongoDB 
-    await Document.deleteOne({_id: req.params.id}, (err) => {
-        if(err){
-            res.status(400).json(err);
-        }else{
-            console.log("file reference deleted");
-            res.json({message: "Both the file and its reference have been deleted"});
+            console.log("File record deleted");
+            deleteS3Instance(doc, res);
         }
     });
 }
@@ -79,29 +69,58 @@ const deleteMultiple = async (req, res, next) => {
         if(err){
             console.log("Not found");
             res.status(400).json("Something's up");
+            return next(err);
         }
 
-        if(!docs){
+        if(!docs || docs.length === 0){
             console.log("Documents not found");
+            res.status(404).json("Files are not found");
         }else{
+            console.log(docs);
             deleteS3Multiple(docs, res);
+            Document.deleteMany({
+                _id: {
+                    $in: req.body.IDs
+                }
+            }, (err, result) => {
+                if(err){
+                    res.status(400).json(err);
+                }else{
+                    if(result){
+                        console.log(result);
+                        res.json({message: "Files have been deleted"});
+                    }else{
+                        console.log("Failed to delete");
+                        res.status(400).json("Failed to delete files");
+                    }
+                    
+                }
+            });
         }
     });
 
-    await Document.deleteMany({
-        _id: {
-            $in: req.body.IDs
-        }
-    }, (err, result) => {
-        if(err){
-            res.status(400).json(err);
-        }else{
-            res.json({message: "Files have been deleted"});
-        }
-    })
+    // await Document.deleteMany({
+    //     _id: {
+    //         $in: req.body.IDs
+    //     }
+    // }, (err, result) => {
+    //     if(err){
+    //         res.status(400).json(err);
+    //     }else{
+    //         if(result){
+    //             console.log(result);
+    //             res.json({message: "Files have been deleted"});
+    //         }else{
+    //             console.log("Failed to delete");
+    //             res.status(400).json("Failed to delete files");
+    //         }
+            
+    //     }
+    // });
 }
 
 // API for deleting all of a user's files
+// I don't think users should be able to access this unless they want to delete their profile
 const deleteAllFiles = async (req, res) => {
     try{
         let result = await clearFiles(req.user.id);
@@ -117,7 +136,7 @@ const deleteAllFiles = async (req, res) => {
     }
 }
 
-// Deletes all of the user's files and images
+// Deletes all of the user's files (documents, images, profile picture, cv)
 // If successfull it will return true
 const clearFiles = async (userID) => {
     let deleteStatus;
@@ -213,18 +232,19 @@ const deleteProfilePic = async (req, res) => {
 }
 
 // Deletes the file in the s3 server
-const deleteS3Instance = (doc) => {
+const deleteS3Instance = (doc, res) => {
     var params = {
         Bucket: "documents-eportfolio",
         Key: doc.s3_key
     }
-    console.log(doc.s3_key);
     // Delete document in the s3 server
     s3.deleteObject(params, (err, data) => {
         if(err){
             console.log(err);
             console.log("error in callback");
+            res.status(400).json("Error while trying to delete the s3 instance of the record");
         }else{
+            res.status(200).json("File record and s3 instance removed");
             console.log("file removed from s3");
         }
     });

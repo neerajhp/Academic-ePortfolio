@@ -33,6 +33,8 @@ router.delete("/education", eduController.deleteAllEdu);
 // Bio manipulation
 router.get("/bio", profileController.getBio);
 router.put("/bio", profileController.updateBio);
+router.get("/aboutMe", profileController.getAboutMe);
+router.put("/aboutMe", profileController.updateAboutMe);
 
 // Skills tab
 router.get("/skills", profileController.getSkills);

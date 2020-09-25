@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
     background: theme.palette.primary.light,
+    color: theme.palette.text.secondary,
     padding: '5%',
     display: 'flex',
     alignItems: 'center',

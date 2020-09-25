@@ -34,7 +34,7 @@ const createStorage = multerS3({
 const imageUpload = multer({
     storage: createStorage,
     fileFilter: (req, file, cb) => {
-        if(file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
+        if(file.mimetype == "image/png" || file.mimetype == "image/jpeg" || file.mimetype == "video/mp4"){
             cb(null, true);
         } else{
             cb(null, false);
@@ -46,7 +46,7 @@ const imageUpload = multer({
 
 
 // Allowed file formats
-var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/png", "image/jpeg", "video/mp4"];
+var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "video/mp4", "image/png", "image/jpeg"];
 
 // This function uploads files to aws s3 server
 // Every user will get their own folder in the bucket
@@ -58,7 +58,7 @@ const fileUpload = multer({
             cb(null, true);
         }else{
             cb(null, false);
-            return cb(new Error("Only .pdf, .docx, .png and .jpg are allowed"));
+            return cb(new Error("Only .pdf, .docx, .mp4 are allowed"));
         }
     },
     limits: {fileSize: maxFileSize}

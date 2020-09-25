@@ -17,11 +17,8 @@ router.get("/", (req, res) => {
 });
 
 
-// Handles the document uploads (pdf, docx, png, jpg, mp4)
-// The userID is added to the function so that the userID can be attached to the document object in mongoDB
-// This isn't final. It depends on how the user upload will work.
-// Maybe get the userID from the request?
-const multipleFiles = parse.fileUpload.array("document", 5);
+// Handles the document uploads (pdf, docx)
+const multipleFiles = parse.documentUpload.array("document", 5);
 router.post("/files", (req, res) => {
     multipleFiles(req, res, (err) => {
         if (err) {
@@ -35,7 +32,7 @@ router.post("/files", (req, res) => {
 
 });
 
-const singleFile = parse.fileUpload.single("document");
+const singleFile = parse.documentUpload.single("document");
 router.post("/file", (req, res) => {
     singleFile(req, res, (err) => {
         if(err){

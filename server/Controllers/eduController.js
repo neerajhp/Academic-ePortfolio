@@ -69,6 +69,7 @@ const putEdu = async (req, res) => {
 
 };
 
+// Deletes a specific education record
 const deleteEdu = async (req, res) => {
 
     await Edu.findOneAndDelete({
@@ -137,5 +138,6 @@ module.exports = {
     putEdu,
     deleteEdu,
     deleteAllEdu,
+    searchAllEdu,
     clearEdu,
 }

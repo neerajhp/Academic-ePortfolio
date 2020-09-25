@@ -230,10 +230,10 @@ const EducationForm = ({ handleClose, records }) => {
           API.postEducation(schoolRecord)
             .then((res) => {
               setSubmitted(true);
+              handleClose();
             })
             .catch((err) => {
               console.log(err.response.data);
-              // actions.setFieldError('email', err.response.data);
               actions.setSubmitting(false);
             });
         });

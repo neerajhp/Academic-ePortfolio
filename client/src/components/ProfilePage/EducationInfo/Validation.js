@@ -9,12 +9,23 @@ const validationSchema = yup.object().shape({
           return /^[A-Za-z ]+$/.test(value);
         })
         .required('Required'),
-      edu_type: yup
+      unicourseName: yup
         .string()
         .test('alphabets', 'Name must only contain alphabets', (value) => {
           return /^[A-Za-z ]+$/.test(value);
-        })
-        .required('Required'),
+        }),
+      monthEnd: yup
+        .number()
+        .test('continuity', 'Invalid month', function (value) {
+          if (
+            this.parent.yearStart &&
+            this.parent.yearStart === this.parent.yearEnd
+          ) {
+            return this.parent.monthStart < value;
+          } else {
+            return true;
+          }
+        }),
     })
   ),
 });

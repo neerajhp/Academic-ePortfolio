@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
 import {
   Typography,
@@ -10,12 +10,8 @@ import {
   TextField,
   IconButton,
   MenuItem,
+  Grid,
 } from '@material-ui/core';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AddBoxIcon from '@material-ui/icons/AddBox';
@@ -40,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
   },
   periodInfo: {
     display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(3),
   },
   divider: {
     width: '100%',
@@ -60,7 +54,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  graduatedButton: {
+    marginBottom: theme.spacing(3),
+  },
 }));
+
+/* ================ Constants ================ */
+var YEAR = new Date().getFullYear();
 
 /* ================ Component ================ */
 
@@ -98,7 +98,7 @@ const FormEduSelect = ({ record, index }) => {
             variant='outlined'
             margin='dense'
             label='Education Type'
-            defaultValue={record}
+            value={record}
             helperText={meta.touched && meta.error ? meta.error : ' '}
             onChange={field.onChange(field.name)}
             error={meta.touched && Boolean(meta.error)}
@@ -112,58 +112,113 @@ const FormEduSelect = ({ record, index }) => {
   );
 };
 
-const FormDatePicker = ({ field, form, label, index, ...other }) => {
-  const classes = useStyles();
-
-  const currentError = form.errors[field.name];
+const FormMonthSelect = ({ record, index, milestone }) => {
+  const MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
   return (
-    <KeyboardDatePicker
-      className={classes.calendar}
-      autoOk
-      variant='inline'
-      inputVariant='outlined'
-      label={label}
-      views={['year', 'month']}
-      InputAdornmentProps={{ position: 'start' }}
-      helperText={currentError}
-      error={Boolean(currentError)}
-      onError={(error) => {
-        // handle as a side effect
-        if (error !== currentError) {
-          form.setFieldError(field.name, error);
-        }
+    <Field name={`schools[${index}].${milestone}`}>
+      {({ field, meta }) => {
+        return (
+          <TextField
+            fullWidth
+            select
+            variant='outlined'
+            margin='dense'
+            label='Month'
+            value={record}
+            helperText={meta.error ? meta.error : ' '}
+            onChange={field.onChange(field.name)}
+            error={Boolean(meta.error)}
+          >
+            {MONTHS.map((month, i) => (
+              <MenuItem key={i} value={i + 1}>
+                {month}
+              </MenuItem>
+            ))}
+          </TextField>
+        );
       }}
-      // if you are using custom validation schema you probably want to pass `true` as third argument
-      onChange={(date) => form.setFieldValue(field.name, date, false)}
-      {...other}
-    />
-    // <KeyboardDatePicker
-    //   clearable
-    //   disablePast
-    //   name={field.name}
-    //   value={field.value}
-    //   format="dd/MM/yyyy"
-    //   helperText={currentError}
-    //   error={Boolean(currentError)}
-    //   onError={error => {
-    //     // handle as a side effect
-    //     if (error !== currentError) {
-    //       form.setFieldError(field.name, error);
-    //     }
-    //   }}
-    //   // if you are using custom validation schema you probably want to pass `true` as third argument
-    //   onChange={date => form.setFieldValue(field.name, date, false)}
-    //   {...other}
-    // />
+    </Field>
+  );
+};
+
+const FormYearSelect = ({ record, index, milestone }) => {
+  var years = Array.from(new Array(20), (val, index) => YEAR - index);
+
+  if (milestone === 'yearEnd') {
+    const year = record.yearStart;
+    years = Array.from(new Array(20), (val, index) => year + index);
+  }
+
+  return (
+    <Field name={`schools[${index}].${milestone}`}>
+      {({ field, meta }) => {
+        return (
+          <TextField
+            fullWidth
+            select
+            variant='outlined'
+            margin='dense'
+            label='Year'
+            value={
+              milestone === 'yearStart' ? record.yearStart : record.yearEnd
+            }
+            onChange={field.onChange(field.name)}
+          >
+            {years.map((year, i) => (
+              <MenuItem key={i} value={year}>
+                {year}
+              </MenuItem>
+            ))}
+          </TextField>
+        );
+      }}
+    </Field>
+  );
+};
+
+const FormGraduatedCheckBox = ({ index }) => {
+  const classes = useStyles();
+  return (
+    <Field name={`schools[${index}].graduated`}>
+      {({ field, meta }) => {
+        return (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={field.value}
+                icon={<SchoolIcon color='disabled' />}
+                checkedIcon={<SchoolIcon color='secondary' />}
+                size='medium'
+                {...field}
+              />
+            }
+            label='Graduated'
+            className={classes.graduatedButton}
+          />
+        );
+      }}
+    </Field>
   );
 };
 
 const EducationForm = ({ handleClose, records }) => {
   const classes = useStyles();
 
-  const [selectedDate, handleDateChange] = useState(new Date());
-  const [Submitted, setSubmitted] = useState(false);
+  // const [Submitted, setSubmitted] = useState(false);
 
   return (
     <Formik
@@ -205,7 +260,7 @@ const EducationForm = ({ handleClose, records }) => {
                         />
                         {school.edu_type === 'University' ? (
                           <FormField
-                            type={'courseName'}
+                            type={'unicourseName'}
                             label={'Course Name'}
                             index={i}
                             record={school.unicourseName}
@@ -214,45 +269,53 @@ const EducationForm = ({ handleClose, records }) => {
                           ''
                         )}
                         <div className={classes.periodInfo}>
-                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                              className={classes.calendar}
-                              autoOk
-                              variant='inline'
-                              inputVariant='outlined'
-                              label='Start Month & Year'
-                              views={['year', 'month']}
-                              value={school.startDate}
-                              InputAdornmentProps={{ position: 'start' }}
-                              onChange={(date) => handleDateChange(date)}
-                            />
-                            <KeyboardDatePicker
-                              className={classes.calendar}
-                              autoOk
-                              variant='inline'
-                              inputVariant='outlined'
-                              label='End Month & Year'
-                              views={['year', 'month']}
-                              value={school.endDate}
-                              InputAdornmentProps={{ position: 'start' }}
-                              onChange={(date) => handleDateChange(date)}
-                            />
-                          </MuiPickersUtilsProvider>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={school.graduated}
-                                icon={<SchoolIcon color='disabled' />}
-                                checkedIcon={<SchoolIcon color='secondary' />}
-                                size='small'
-                                inputProps={{
-                                  'aria-label': 'checkbox with small size',
-                                }}
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} sm={2}>
+                              <Typography>From: </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                              <FormMonthSelect
+                                record={school.monthStart}
+                                index={i}
+                                milestone={'monthStart'}
                               />
-                            }
-                            label='Graduated'
-                            className={classes.graduatedButton}
-                          />
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                              <FormYearSelect
+                                record={school}
+                                index={i}
+                                milestone={'yearStart'}
+                              />
+                            </Grid>
+                          </Grid>
+                        </div>
+                        <div className={classes.periodInfo}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} sm={2}>
+                              <Typography>To: </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                              <FormMonthSelect
+                                record={school.monthEnd}
+                                index={i}
+                                milestone={'monthEnd'}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                              <FormYearSelect
+                                record={school}
+                                index={i}
+                                milestone={'yearEnd'}
+                              />
+                            </Grid>
+                          </Grid>
+                        </div>
+                        <div className={classes.periodInfo}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} sm={2} align='center'>
+                              <FormGraduatedCheckBox index={i} />
+                            </Grid>
+                          </Grid>
                         </div>
                       </div>
                     </div>
@@ -264,7 +327,14 @@ const EducationForm = ({ handleClose, records }) => {
                   <IconButton
                     className={classes.button}
                     onClick={() =>
-                      fieldArrayProps.push({ edu_type: '', schoolName: '' })
+                      fieldArrayProps.push({
+                        edu_type: '',
+                        schoolName: '',
+                        monthStart: 1,
+                        yearStart: YEAR,
+                        monthEnd: 12,
+                        yearEnd: YEAR,
+                      })
                     }
                     color='primary'
                   >

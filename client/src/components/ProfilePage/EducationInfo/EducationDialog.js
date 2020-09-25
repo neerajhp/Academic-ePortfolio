@@ -6,7 +6,6 @@ import {
   Typography,
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
 import EducationForm from './EducationForm';

@@ -102,7 +102,7 @@ const deleteProfile = async (req, res) => {
             console.log("Education history cleared");
         }
         
-        // Delete all Employment
+        // Delete all Experiences
         
         // Delete all Reflections
         let blogCount = await blogController.removeAllBlogs(req.user.id);

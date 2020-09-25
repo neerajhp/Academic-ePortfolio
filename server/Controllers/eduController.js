@@ -7,8 +7,6 @@ const postEdu = async (req, res) => {
     schoolName: req.body.schoolName,
     unicourseName: req.body.unicourseName,
     unimajorName: req.body.unimajorName,
-    country: req.body.country,
-    city: req.body.city,
     monthStart: req.body.monthStart,
     yearStart: req.body.yearStart,
     monthEnd: req.body.monthEnd,

@@ -227,7 +227,7 @@ const EducationForm = ({ handleClose, records }) => {
       }}
       onSubmit={(values, actions) => {
         values.schools.forEach((schoolRecord) => {
-          API.postEducation({ schoolRecord })
+          API.postEducation(schoolRecord)
             .then((res) => {
               setSubmitted(true);
             })

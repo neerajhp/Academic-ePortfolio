@@ -57,21 +57,25 @@ export default {
   },
   // Creates an education record
   postEducation: function (body) {
-    return axios.post('/api/profile/education', {
-      edu_type: body.edu_type,
-      schoolName: body.schoolName,
-      unimajorName: body.unimajorName,
-      country: body.country,
-      city: body.city,
-      monthStart: body.monthStart,
-      yearStart: body.yearStart,
-      monthEnd: body.monthEnd,
-      yearEnd: body.yearEnd,
-      graduated: body.graduated,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    console.log(body.edu_type);
+    return axios.post(
+      '/api/profile/education',
+      {
+        edu_type: body.edu_type,
+        schoolName: body.schoolName,
+        unicourseName: body.unicourseName,
+        monthStart: body.monthStart,
+        yearStart: body.yearStart,
+        monthEnd: body.monthEnd,
+        yearEnd: body.yearEnd,
+        graduated: body.graduated,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Updates a specific education record
   updateEducation: function (body) {

@@ -16,6 +16,8 @@ const postEdu = async (req, res) => {
         graduated: req.body.graduated
     });
 
+    
+
     try {
         await newEdu.save((err, file) => {
             if (err) {
@@ -33,17 +35,24 @@ const postEdu = async (req, res) => {
 
 // Gets all education
 const getEdu = async (req, res) => {
-    await Edu.find({
-        user_id: req.user.id
-    }, function (err, result) {
-        if (!result) {
-            res.status(404).json({
-                error: "education history not found"
-            });
-        } else {
-            res.status(200).json(result);
-        }
-    })
+    try{
+        await Edu.find({
+            user_id: req.user.id
+        }, function (err, result) {
+            if(err){
+                throw err;
+            }
+            if (!result) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
+    }catch(error){
+        res.status(400).json("Error");
+    }
 };
 
 

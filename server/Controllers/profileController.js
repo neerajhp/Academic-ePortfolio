@@ -1,25 +1,18 @@
-const express = require('express');
-
 const Document = require("../Models/Document");
 const User = require("../Models/User");
-const Edu = require("../Models/Education");
 const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 
 const filesController = require("../Controllers/filesController");
 const showcaseController = require("../Controllers/showcaseController");
-//const eduController = require("../Controllers/eduController");
+const eduController = require("../Controllers/eduController");
+const blogController = require("../Controllers/blogController");
 
-const AWS = require("aws-sdk");
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-});
 
 const getAllInfo = async (req, res) => {
-    // Get cv, profile picture, first name, last name, email, bio
+    // Get cv, featuredWorks, blogs, education, skills, profile picture
     try {
         let userRecord = await User.findOne({
             _id: req.user.id
@@ -50,7 +43,7 @@ const getAllInfo = async (req, res) => {
             console.log("featured works found");
         }
 
-        let allEducation = await searchAllEdu(req.user.id);
+        let allEducation = await eduController.searchAllEdu(req.user.id);
         if(allEducation.length === 0 || !allEducation){
             console.log("Education not found");
             education = [];
@@ -65,6 +58,7 @@ const getAllInfo = async (req, res) => {
             lastName: userRecord.lastName,
             email: userRecord.email,
             bio: userRecord.biography,
+            aboutMe: userRecord.aboutMe,
             cv: cv,
             skills: userRecord.skills,
             profilePic: profilePic,
@@ -94,14 +88,14 @@ const deleteProfile = async (req, res) => {
             console.log("All files deleted");
         }
         // Delete all showcase
-        let showcase = await showcaseController.removeAllFeaturedWorks(req.user.id);
-        if(!showcase){
-            console.log("Failed to clear showcase");
-        }else{
+        let showcaseCount = await showcaseController.removeAllFeaturedWorks(req.user.id);
+        if(showcaseCount > 0){
             console.log("showcase cleared");
+        }else{
+            console.log("Failed to clear showcase");
         }
         // Delete all Education
-        let education = await clearEdu(req.user.id);
+        let education = await eduController.clearEdu(req.user.id);
         if(!education){
             console.log("Failed to clear education history");
         }else{
@@ -109,7 +103,14 @@ const deleteProfile = async (req, res) => {
         }
         
         // Delete all Employment
+        
         // Delete all Reflections
+        let blogCount = await blogController.removeAllBlogs(req.user.id);
+        if(blogCount > 0){
+            console.log("Blogs deleted");
+        }else{
+            console.log("No blogs to delete");
+        }
         
         // Delete userProfile
         await User.deleteOne({
@@ -133,6 +134,48 @@ const deleteProfile = async (req, res) => {
         res.status(400).send(err);
     }
   
+}
+
+const getUserInformation = async (req, res) => {
+    try{
+        await User.findById(req.user.id, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                const userInfo = {
+                    firstName: result.firstName,
+                    lastName: result.lastName,
+                    email: result.email,
+                    mobileNumber: result.mobileNumber,
+                    birthDate: result.birthDate
+                }
+                res.status(200).json(userInfo);
+            }else{
+                res.status(404).json("User not found");
+            }
+        })
+    }catch(error){
+        res.status(400).send(error);
+    }
+}
+
+// Edit the name, mobile number and birthDate of the user
+const editUserInformation = async (req, res) => {
+    try{
+        await User.findByIdAndUpdate(req.user.id, req.body, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("User not found");
+            }
+        })
+    }catch(error){
+        res.status(400).send(error);
+    }
 }
 
 // Looks for the user's featured works
@@ -173,17 +216,6 @@ const searchProfilePic = async (userID) => {
         console.log(error);
     }
 }
-
-// Looks for all of the user's education
-const searchAllEdu = async (userID) => {
-    try{
-        const edu = await Edu.find({user_id: userID});
-        return edu;
-    }catch(error){
-        console.log(error);
-    }
-}
-
 
 // API call to get the cv
 const getCV = async (req, res) => {
@@ -227,27 +259,6 @@ const getProfilePic = async (req, res) => {
 }
 
 
-
-// Removes all education
-const clearEdu = async (userID) => {
-    let deleteStatus;
-    await Edu.deleteMany({user_id: userID}, (err, result) => {
-        if(err){
-            throw err;
-        }else{
-            if(result.deletedCount === 0){
-                console.log("Nothing to delete");
-                deleteStatus = false;
-            }else{
-                console.log("The user's education has been cleared");
-                deleteStatus = true;
-            }
-        }
-    });
-    return deleteStatus;
-}
-
-
 // Biography
 const getBio = async (req, res) => {
     await User.findById({
@@ -259,6 +270,25 @@ const getBio = async (req, res) => {
             })
         } else {
             res.status(200).json(result.biography)
+        }
+    })
+}
+
+// Biography
+const getAboutMe = async (req, res) => {
+    await User.findById({
+        _id: req.user.id
+    }, function (err, result) {
+        if(err){
+            res.status(404).send(err);
+        }else{
+            if(!result.aboutMe){
+                res.status(404).json({
+                    error: "about me not found"
+                })
+            } else {
+                res.status(200).json(result.aboutMe);
+            }
         }
     })
 }
@@ -275,6 +305,23 @@ const updateBio = async (req, res) => {
         } else {
             console.log("successfully updated");
             getBio(req, res);
+            //res.json(result);
+        }
+    })
+}
+
+const updateAboutMe = async (req, res) => {
+    // update the bio field 
+    await User.updateOne({
+        _id: req.user.id
+    }, {
+        aboutMe: req.body.aboutMe
+    }, (err, result) => {
+        if (err) {
+            res.status(404).send(err);
+        } else {
+            console.log("successfully updated");
+            getAboutMe(req, res);
             //res.json(result);
         }
     })
@@ -310,11 +357,12 @@ const removeSkills = async (req, res) => {
        if(err){
            res.status(404).json(err);
        }else{
-           if(result.nModified === 0){
-               res.status(400).json("Skills is already empty");
-           }else{
-               getSkills(req, res);
-           }
+           getSkills(req, res);
+        //    if(result.nModified === 0){
+        //        res.status(400).json("Skills is already empty");
+        //    }else{
+        //        getSkills(req, res);
+        //    }
        }
    })
 }
@@ -334,10 +382,13 @@ const getSkills = async (req, res) => {
 
 module.exports = {
     getAllInfo,
+    getUserInformation,
     getCV,
     getProfilePic,
     getBio,
     updateBio,
+    getAboutMe,
+    updateAboutMe,
     getSkills,
     addSkills,
     removeSkills

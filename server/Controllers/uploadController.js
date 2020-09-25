@@ -83,10 +83,13 @@ const uploadMultiple = async (req, res) => {
                 
                 await Document.findOne({user_id: newFile.user_id, s3_key: newFile.s3_key}, (err, result) => {
                     if(err){
-                        res.status(400).send(err);
+                        console.log("Couldn't find the record");
+                        throw err;
                     }else{
+                        // File already exists 
                         if(result){
                             existingFiles.push(req.files[i].originalname);
+                        // File is newly uploaded
                         }else{
                             newFiles.push(newFile);
                         }
@@ -96,6 +99,7 @@ const uploadMultiple = async (req, res) => {
 
             }
             
+            // Aborts the function if there are no new files to upload
             if(existingFiles.length === req.files.length){
                 res.status(400).json({
                     "files": existingFiles,

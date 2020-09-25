@@ -76,7 +76,7 @@ const EducationCard = ({ education }) => {
             </Typography>
           </TableCell>
           <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.highName}</Typography>
+            <Typography variant='h4'>{edu.schoolName}</Typography>
           </TableCell>
         </TableRow>
       );
@@ -90,7 +90,7 @@ const EducationCard = ({ education }) => {
             </Typography>
           </TableCell>
           <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.uniName}</Typography>
+            <Typography variant='h4'>{edu.schoolName}</Typography>
             <Typography>
               {edu.unicourseName},{edu.unimajorName}{' '}
             </Typography>

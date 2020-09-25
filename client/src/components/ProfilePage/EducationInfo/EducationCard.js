@@ -8,6 +8,7 @@ import {
   Typography,
   TableBody,
 } from '@material-ui/core';
+import EducationDialog from './EducationDialog';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -15,14 +16,19 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 0 1% 1%',
     width: '100%',
     background: theme.palette.secondary.light,
-    padding: '5%',
+    color: theme.palette.text.secondary,
+    padding: '5% 10% 5% 5%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: { width: '100%' },
-
+  table: {
+    '& .MuiTableCell-body': {
+      color: theme.palette.text.secondary,
+    },
+  },
   period: {
     width: '30%',
     verticalAlign: 'top',
@@ -58,44 +64,30 @@ const EducationCard = ({ education }) => {
       return <Typography> Add your education!</Typography>;
     } else {
       return (
-        <Table>
-          <TableBody>{education.map((edu, i) => getSchool(edu, i))}</TableBody>
+        <Table className={classes.table}>
+          <TableBody>
+            {education.map((edu, i) => (
+              <TableRow key={i} className={classes.table}>
+                <TableCell className={classes.period}>
+                  <Typography>
+                    {MONTHS[edu.monthStart]}, {edu.yearStart} -
+                    {MONTHS[edu.monthEnd]}, {edu.yearEnd}
+                  </Typography>
+                </TableCell>
+                <TableCell className={classes.education}>
+                  <Typography variant='h4'>{edu.schoolName}</Typography>
+                  {edu.edu_type === 'University' ? (
+                    <Typography>
+                      {edu.unicourseName},{edu.unimajorName}
+                    </Typography>
+                  ) : (
+                    ''
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
-      );
-    }
-  };
-
-  const getSchool = (edu, i) => {
-    if (edu.edu_type === 'Highschool') {
-      return (
-        <TableRow key={i}>
-          <TableCell className={classes.period}>
-            <Typography>
-              {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
-              {edu.yearEnd}
-            </Typography>
-          </TableCell>
-          <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.schoolName}</Typography>
-          </TableCell>
-        </TableRow>
-      );
-    } else {
-      return (
-        <TableRow key={i}>
-          <TableCell className={classes.period}>
-            <Typography>
-              {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
-              {edu.yearEnd}
-            </Typography>
-          </TableCell>
-          <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.schoolName}</Typography>
-            <Typography>
-              {edu.unicourseName},{edu.unimajorName}{' '}
-            </Typography>
-          </TableCell>
-        </TableRow>
       );
     }
   };
@@ -106,6 +98,7 @@ const EducationCard = ({ education }) => {
         Education{' '}
       </Typography>
       {checkRecord(education)}
+      <EducationDialog records={education} />
     </Paper>
   );
 };

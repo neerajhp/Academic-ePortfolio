@@ -92,41 +92,6 @@ const EducationCard = ({ education }) => {
     }
   };
 
-  const getSchool = (edu, i) => {
-    if (edu.edu_type === 'Highschool') {
-      return (
-        <TableRow key={i}>
-          <TableCell className={classes.period}>
-            <Typography>
-              {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
-              {edu.yearEnd}
-            </Typography>
-          </TableCell>
-          <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.schoolName}</Typography>
-          </TableCell>
-        </TableRow>
-      );
-    } else {
-      return (
-        <TableRow key={i}>
-          <TableCell className={classes.period}>
-            <Typography>
-              {MONTHS[edu.monthStart]}, {edu.yearStart} -{MONTHS[edu.monthEnd]},{' '}
-              {edu.yearEnd}
-            </Typography>
-          </TableCell>
-          <TableCell className={classes.education}>
-            <Typography variant='h4'>{edu.schoolName}</Typography>
-            <Typography>
-              {edu.unicourseName},{edu.unimajorName}{' '}
-            </Typography>
-          </TableCell>
-        </TableRow>
-      );
-    }
-  };
-
   return (
     <Paper className={classes.card}>
       <Typography className={classes.title} variant='h2'>

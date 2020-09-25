@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
 import {
@@ -16,7 +16,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import validationSchema from './Validation';
-// import API from '../../../utils/API';
+import API from '../../../utils/API';
 
 /* ================ Styling ================ */
 
@@ -218,7 +218,7 @@ const FormGraduatedCheckBox = ({ index }) => {
 const EducationForm = ({ handleClose, records }) => {
   const classes = useStyles();
 
-  // const [Submitted, setSubmitted] = useState(false);
+  const [Submitted, setSubmitted] = useState(false);
 
   return (
     <Formik
@@ -226,15 +226,17 @@ const EducationForm = ({ handleClose, records }) => {
         schools: records,
       }}
       onSubmit={(values, actions) => {
-        console.log(values);
-        // API.userSignup({})
-        //   .then((res) => {
-        //     setSubmitted(true);
-        //   })
-        //   .catch((err) => {
-        //     actions.setFieldError('email', err.response.data);
-        //     actions.setSubmitting(false);
-        //   });
+        values.schools.forEach((schoolRecord) => {
+          API.postEducation({ schoolRecord })
+            .then((res) => {
+              setSubmitted(true);
+            })
+            .catch((err) => {
+              console.log(err.response.data);
+              // actions.setFieldError('email', err.response.data);
+              actions.setSubmitting(false);
+            });
+        });
       }}
       validationSchema={validationSchema}
     >
@@ -330,10 +332,13 @@ const EducationForm = ({ handleClose, records }) => {
                       fieldArrayProps.push({
                         edu_type: '',
                         schoolName: '',
+                        unicourseName: '',
+                        unimajorname: '',
                         monthStart: 1,
                         yearStart: YEAR,
                         monthEnd: 12,
                         yearEnd: YEAR,
+                        graduated: false,
                       })
                     }
                     color='primary'

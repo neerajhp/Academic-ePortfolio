@@ -30,7 +30,7 @@ exports.postSignup = async (req, res) => {
     }).then(async (profile) => {
       if (!profile) {
         newUser.save();
-        res.send('User added');
+        res.status(201).json('User added');
       } else {
         res.status(409).send('Email already linked to account');
       }

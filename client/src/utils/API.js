@@ -100,8 +100,8 @@ export default {
     );
   },
   // Deletes a specific education record
-  deleteEducation: function () {
-    return axios.delete('/api/profile/education/:id', {
+  deleteEducation: function (recordID) {
+    return axios.delete(`/api/profile/education/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },

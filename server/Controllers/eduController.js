@@ -75,6 +75,7 @@ const putEdu = async (req, res) => {
 
 // Deletes a specific education record
 const deleteEdu = async (req, res) => {
+  console.log('id: ', req.params.id);
   await Edu.findOneAndDelete(
     {
       _id: req.params.id,

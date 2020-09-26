@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import validationSchema from './Validation';
 import API from '../../../utils/API';
@@ -333,6 +334,21 @@ const EducationForm = ({ handleClose, records }) => {
                             </Grid>
                           </Grid>
                         </div>
+                      </div>
+                      <div>
+                        <IconButton
+                          onClick={() => {
+                            API.deleteEducation(school._id)
+                              .then((res) => {
+                                fieldArrayProps.remove(i);
+                              })
+                              .catch((err) => {
+                                console.log(err.response.data);
+                              });
+                          }}
+                        >
+                          <DeleteIcon style={{ fontSize: 30 }} />
+                        </IconButton>
                       </div>
                     </div>
                     <Divider className={classes.divider} />

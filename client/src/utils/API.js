@@ -144,10 +144,24 @@ export default {
       },
     });
   },
+  deleteCV: function (){
+    return axios.delete('/api/files/cv', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    })
+  },
   uploadProfilePic: function (body) {
     return axios.post('/api/upload/profile-pic', {
       // The file key is "profile-pic"
       file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  deleteProfilePic: function (){
+    return axios.delete('/api/files/profile-pic', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },

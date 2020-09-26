@@ -1,31 +1,38 @@
 const Edu = require("../Models/Education");
 // University 
 const postEdu = async (req, res) => {
-    const newEdu = new Edu({
-        edu_type: req.body.edu_type,
-        user_id: req.user.id,
-        schoolName: req.body.schoolName,
-        unicourseName: req.body.unicourseName,
-        unimajorName: req.body.unimajorName,
-        country: req.body.country,
-        city: req.body.city,
-        monthStart: req.body.monthStart,
-        yearStart: req.body.yearStart,
-        monthEnd: req.body.monthEnd,
-        yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated
-    });
-
-    
-
     try {
-        await newEdu.save((err, file) => {
-            if (err) {
-                console.log("Error found");
-                throw (err)
-            } else {
-                console.log("saved");
-                res.send(file);
+        const newEdu = new Edu({
+            edu_type: req.body.edu_type,
+            user_id: req.user.id,
+            schoolName: req.body.schoolName,
+            unicourseName: req.body.unicourseName,
+            unimajorName: req.body.unimajorName,
+            country: req.body.country,
+            city: req.body.city,
+            monthStart: req.body.monthStart,
+            yearStart: req.body.yearStart,
+            monthEnd: req.body.monthEnd,
+            yearEnd: req.body.yearEnd,
+            graduated: req.body.graduated
+        });
+        await Edu.findOne({user_id: req.user.id, schoolName: newEdu.schoolName, yearStart: newEdu.yearStart, yearEnd: newEdu.yearEnd}, (err, result) => {
+            if(err){
+                conosle.log("Error found");
+                throw err;
+            }
+            if(result){
+                res.status(400).json("Education record already exists");
+            }else{
+                newEdu.save((err, file) => {
+                    if (err) {
+                        console.log("Error found");
+                        throw (err)
+                    } else {
+                        console.log("saved");
+                        res.status(200).json(file);
+                    }
+                })
             }
         });
     } catch (err) {

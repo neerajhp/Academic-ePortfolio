@@ -227,15 +227,29 @@ const EducationForm = ({ handleClose, records }) => {
       }}
       onSubmit={(values, actions) => {
         values.schools.forEach((schoolRecord) => {
-          API.postEducation(schoolRecord)
-            .then((res) => {
-              setSubmitted(true);
-              handleClose();
-            })
-            .catch((err) => {
-              console.log(err.response.data);
-              actions.setSubmitting(false);
-            });
+          if (schoolRecord._id) {
+            //Update existing record
+            API.updateEducation(schoolRecord, schoolRecord._id)
+              .then((res) => {
+                setSubmitted(true);
+                handleClose();
+              })
+              .catch((err) => {
+                console.log(err.response.data);
+                actions.setSubmitting(false);
+              });
+          } else {
+            //Create new record
+            API.postEducation(schoolRecord)
+              .then((res) => {
+                setSubmitted(true);
+                handleClose();
+              })
+              .catch((err) => {
+                console.log(err.response.data);
+                actions.setSubmitting(false);
+              });
+          }
         });
       }}
       validationSchema={validationSchema}

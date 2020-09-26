@@ -78,23 +78,26 @@ export default {
     );
   },
   // Updates a specific education record
-  updateEducation: function (body) {
-    return axios.put('/api/profile/education/:id', {
-      edu_type: body.edu_type,
-      schoolName: body.schoolName,
-      unicourseName: body.unicourseName,
-      unimajorName: body.unimajorName,
-      country: body.country,
-      city: body.city,
-      monthStart: body.monthStart,
-      yearStart: body.yearStart,
-      monthEnd: body.monthEnd,
-      yearEnd: body.yearEnd,
-      graduated: body.graduated,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+  updateEducation: function (body, recordId) {
+    return axios.put(
+      `/api/profile/education/${recordId}`,
+      {
+        edu_type: body.edu_type,
+        schoolName: body.schoolName,
+        unicourseName: body.unicourseName,
+        unimajorName: body.unimajorName,
+        monthStart: body.monthStart,
+        yearStart: body.yearStart,
+        monthEnd: body.monthEnd,
+        yearEnd: body.yearEnd,
+        graduated: body.graduated,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Deletes a specific education record
   deleteEducation: function () {

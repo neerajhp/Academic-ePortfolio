@@ -6,6 +6,7 @@ const filesController = require("../Controllers/filesController");
 const showcaseController = require("../Controllers/showcaseController");
 const eduController = require("../Controllers/eduController");
 const blogController = require("../Controllers/blogController");
+const expController = require("../Controllers/profileController");
 
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
@@ -103,7 +104,12 @@ const deleteProfile = async (req, res) => {
         }
         
         // Delete all Experiences
-        
+        let expDelete = await expController.removeAll(req.user.id);
+        if(!expDelete){
+            console.log("Failed to clear experience");
+        }else{
+            console.log("Experience cleared");
+        }
         // Delete all Reflections
         let blogCount = await blogController.removeAllBlogs(req.user.id);
         if(blogCount > 0){

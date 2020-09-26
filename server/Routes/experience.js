@@ -29,4 +29,7 @@ router.put('/edit/:id', expController.editExperience);
 // Deletes a specific experience
 router.delete('/delete/:id', expController.deleteExperience);
 
+// Deletes all experience
+router.delete('/delete', expController.deleteAllExperience);
+
 module.exports = router;

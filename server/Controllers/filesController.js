@@ -77,7 +77,7 @@ const deleteMultiple = async (req, res, next) => {
             res.status(404).json("Files are not found");
         }else{
             console.log(docs);
-            deleteS3Multiple(docs, res);
+            deleteS3Multiple(docs);
             Document.deleteMany({
                 _id: {
                     $in: req.body.IDs
@@ -175,64 +175,69 @@ const clearFiles = async (userID) => {
 
 // Deletes the cv of the user
 const deleteCV = async (req, res) => {
-    await Document.findOne({user_id: req.user.id, fieldName: "cv"}, (err, doc) => {
+    try{
+        let deleteStatus = await deleteExclusiveFile(req.user.id, "cv");
+        if(deleteStatus){
+            res.status(200).json("CV deleted");
+        }else{
+            res.status(400).json("CV not deleted or there was no CV to delete");
+        }
+    }catch(error){
+        res.status(400).json("Failed to delete cv");
+    }
+}
+
+const deleteExclusiveFile = async(userID, fieldName) => {
+    let deleteStatus;
+    await Document.findOne({user_id: userID, fieldName: fieldName}, (err, doc) => {
         if(err){
             console.log("Error found");
-            res.status(500).json("Something's up");
+            throw err;
         }
 
         if(!doc){
-            console.log("CV not found");
+            console.log("File not found");
         }else{
-            console.log("Old CV about to be deleted")
-            //console.log(doc);
+            console.log("Old file about to be deleted");
             deleteS3Instance(doc);
-            
         }
     });
 
-     // Delete its reference in mongoDB 
-     await Document.deleteOne({user_id: req.user.id, fieldName: "cv"}, (err) => {
+    await Document.deleteOne({user_id: userID, fieldName: fieldName}, (err, doc) => {
         if(err){
-            res.status(400).json(err);
+            throw err;
         }else{
+            if(doc){
+                if(doc.deletedCount == 0){
+                    deleteStatus = false;
+                }else{
+                    deleteStatus = true;
+                }
+            }
             console.log("file reference deleted");
-            //res.json({message: "Both the file and its reference have been deleted"});
         }
     });
+    return deleteStatus;
 }
 
 // Deletes the user's profile picture
 const deleteProfilePic = async (req, res) => {
-    await Document.findOne({user_id: req.user.id, fieldName: "profile-pic"}, (err, doc) => {
-        if(err){
-            console.log("Error found");
-            res.status(500).json("Something's up");
-        }
-
-        if(!doc){
-            console.log("Profile picture not found");
+    try{
+        let deleteStatus = await deleteExclusiveFile(req.user.id, "profile-pic");
+        if(deleteStatus){
+            res.status(200).json("Profile picture deleted");
         }else{
-            console.log("Old profile picture about to be deleted");
-            deleteS3Instance(doc);
+            res.status(400).json("Profile picture not deleted or there was no profile picture to delete");
         }
-    });
-
-    // Delete its reference in mongoDB 
-    await Document.deleteOne({user_id: req.user.id, fieldName: "profile-pic"}, (err) => {
-        if(err){
-            res.status(400).json(err);
-        }else{
-            console.log("file reference deleted");
-            //res.json({message: "Both the file and its reference have been deleted"});
-        }
-    });
+    }catch(error){
+        res.status(400).json("Failed to delete profile picture");
+    }
 
 
 }
 
 // Deletes the file in the s3 server
-const deleteS3Instance = (doc, res) => {
+const deleteS3Instance = (doc) => {
     var params = {
         Bucket: "documents-eportfolio",
         Key: doc.s3_key
@@ -242,9 +247,9 @@ const deleteS3Instance = (doc, res) => {
         if(err){
             console.log(err);
             console.log("error in callback");
-            res.status(400).json("Error while trying to delete the s3 instance of the record");
+            //res.status(400).json("Error while trying to delete the s3 instance of the record");
         }else{
-            res.status(200).json("File record and s3 instance removed");
+            //res.status(200).json("File record and s3 instance removed");
             console.log("file removed from s3");
         }
     });
@@ -288,5 +293,6 @@ module.exports = {
     deleteCV,
     deleteProfilePic,
     clearFiles,
-    deleteAllFiles
+    deleteAllFiles,
+    deleteExclusiveFile
 }

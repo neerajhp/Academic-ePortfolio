@@ -17,7 +17,7 @@ const addExperience = async (req, res) => {
             description: req.body.description
         });
     
-        await Experience.findOne({user_id: req.user.id, organization: req.organization, yearStart: req.yearStart}, (err, result) => {
+        await Experience.findOne({user_id: req.user.id, type: req.body.type, organization: req.organization, yearStart: req.yearStart}, (err, result) => {
             if(err){
                 throw err;
             }
@@ -39,6 +39,7 @@ const addExperience = async (req, res) => {
     }
 }
 
+// Edits an experience object (All types)
 const editExperience = async (req, res, next) => {
     try{
         await Experience.findByIdAndUpdate({_id: req.params.id}, req.body, (err, result) => {
@@ -63,6 +64,7 @@ const editExperience = async (req, res, next) => {
     }
 }
 
+// Gets all of the user's experience history (All types)
 const getAllExperience = async (req, res) => {
     try{
         await Experience.find({user_id: req.user.id}, (err, result) => {
@@ -102,24 +104,36 @@ const getExperience = async (req, res, next) => {
 
 // Deletes all of the user's experiences
 const deleteAllExperience = async (req, res) => {
-    try{    
-        await Experience.deleteMany({user_id: req.user.id}, (err, result) => {
-            if(err){
-                throw err;
-            }
-            if(result){
-                if(result.deletedCount === 0){
-                    res.status(400).json("Nothing was deleted");
-                }else{
-                    res.status(200).json(result);
-                }
-            }else{  
-                res.status(404).json("Failed to delete experiences");
-            }
-        })
+    try{
+        let deleteStatus = await removeAll(req.user.id);
+        if(!deleteStatus){
+            res.status(400).json("Nothing was deleted");
+        }else{
+            res.status(200).json("Experience cleared");
+        }    
     }catch(error){
         res.status(400).send("Error occured while deleting the user's experiences");
     }
+}
+
+// Removes all types of experience
+const removeAll = async (userID) => {
+    let deleteStatus;
+    await Experience.deleteMany({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }
+        if(result){
+            if(result.deletedCount == 0){
+                deleteStatus = false;
+            }else{
+                deleteStatus = true;
+            }
+        }else{
+            deleteStatus = false;
+        }
+    });
+    return deleteStatus;
 }
 
 // Deletes a specific experience
@@ -131,7 +145,11 @@ const deleteExperience = async(req, res, next) => {
                 throw err;
             }
             if(result){
-                res.status(200).json(result);
+                if(result.deleteCount == 0){
+                    res.status(400).json("Nothing was deleted");
+                }else{
+                    res.status(200).json(result);
+                }
             }else{  
                 res.status(404).json("Failed to delete experience");
             }
@@ -206,4 +224,5 @@ module.exports = {
     getExtracurriculars,
     deleteAllExperience,
     deleteExperience,
+    removeAll
 }

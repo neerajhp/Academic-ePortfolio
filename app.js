@@ -20,12 +20,15 @@ const userRoute = require('./server/Routes/user');
 const uploadRoute = require('./server/Routes/upload');
 const filesRoute = require('./server/Routes/files');
 const profileRoute = require('./server/Routes/profile');
+const expRoute = require("./server/Routes/experience");
 
 // Attach the routes
 server.use('/api/user', userRoute);
 server.use('/api/upload', uploadRoute);
 server.use('/api/files', filesRoute);
 server.use('/api/profile', profileRoute);
+server.use('/api/experience', expRoute);
+
 
 // Database connection
 mongoose.connect(

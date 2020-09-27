@@ -12,68 +12,93 @@ const expController = require("../Controllers/profileController");
 require('dotenv').config();
 
 
-const getAllInfo = async (req, res) => {
+const getAllInfo = async (userID) => {
     // Get cv, featuredWorks, blogs, education, skills, profile picture
-    try {
-        let userRecord = await User.findOne({
-            _id: req.user.id
-        });
-        console.log("user found");
-        
-        let cv = await searchCV(req.user.id);
-        if(!cv){
-            console.log("cv not found");
-            cv = "";
-        }else{
-            console.log("cv found");
+    let userRecord = await User.findOne({
+        _id: userID
+    }, (err, result) => {
+        if(err){
+            throw err;
         }
-        
-        let profilePic = await searchProfilePic(req.user.id);
-        if(!profilePic){
-            console.log("profile picture not found");
-            profilePic = "";
-        }else{
-            console.log("profile pic found");
-        }
-
-        let featuredWorks = await searchFeaturedWorks(req.user.id);
-        if(featuredWorks.length === 0 || !featuredWorks){
-            console.log("featured works not found");
-            featuredWorks = [];
-        }else{
-            console.log("featured works found");
-        }
-
-        let allEducation = await eduController.searchAllEdu(req.user.id);
-        if(allEducation.length === 0 || !allEducation){
-            console.log("Education not found");
-            education = [];
-        }else{
-            console.log("Education found");
-        }
-
-
-
-        const profile = {
-            firstName: userRecord.firstName,
-            lastName: userRecord.lastName,
-            email: userRecord.email,
-            bio: userRecord.biography,
-            aboutMe: userRecord.aboutMe,
-            cv: cv,
-            skills: userRecord.skills,
-            profilePic: profilePic,
-            showcase: featuredWorks,
-            education: allEducation
-        }
-
-        res.json(profile);
-    } catch (err) {
-        console.log(err);
-        console.log("user not found");
-        res.status(404).send("Error while searching");
+    });
+    console.log("user found");
+    
+    let cv = await searchCV(userID);
+    if(!cv){
+        console.log("cv not found");
+        cv = "";
+    }else{
+        console.log("cv found");
+    }
+    
+    let profilePic = await searchProfilePic(userID);
+    if(!profilePic){
+        console.log("profile picture not found");
+        profilePic = "";
+    }else{
+        console.log("profile pic found");
     }
 
+    let featuredWorks = await searchFeaturedWorks(userID);
+    if(featuredWorks.length === 0 || !featuredWorks){
+        console.log("featured works not found");
+        featuredWorks = [];
+    }else{
+        console.log("featured works found");
+    }
+
+    let allEducation = await eduController.searchAllEdu(userID);
+    if(allEducation.length === 0 || !allEducation){
+        console.log("Education not found");
+        education = [];
+    }else{
+        console.log("Education found");
+    }
+
+
+
+    const profile = {
+        firstName: userRecord.firstName,
+        lastName: userRecord.lastName,
+        email: userRecord.email,
+        bio: userRecord.biography,
+        aboutMe: userRecord.aboutMe,
+        cv: cv,
+        skills: userRecord.skills,
+        profilePic: profilePic,
+        showcase: featuredWorks,
+        education: allEducation
+    }
+
+    return profile;
+
+}
+
+const viewerGetProfile = async (req, res) => {
+    try{
+        let userID = req.userID;
+        let profile = await getAllInfo(userID);
+        if(profile){
+            res.status(200).json(profile);
+        }else{
+            res.status(400).json("No profile found");
+        }
+    }catch(error){
+        res.status(400).send(error);
+    }
+}
+
+const getProfile = async (req, res) => {
+    try{
+        let profile = await getAllInfo(req.user.id);
+        if(profile){
+            res.status(200).json(profile);
+        }else{
+            res.status(400).json("No profile found");
+        }
+    }catch(error){
+        res.status(400).send(error);
+    }
 }
 
 
@@ -386,8 +411,10 @@ const getSkills = async (req, res) => {
 }
 
 module.exports = {
-    getAllInfo,
+    getProfile,
+    viewerGetProfile,
     getUserInformation,
+    editUserInformation,
     getCV,
     getProfilePic,
     getBio,

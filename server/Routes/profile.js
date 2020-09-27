@@ -10,7 +10,7 @@ const authenticate = require("../Middleware/authenticate")
 router.use(authenticate.authenticateToken);
 
 // Gets everything needed for the user's profile display
-router.get("/", profileController.getAllInfo);
+router.get("/", profileController.getProfile);
 
 // Gets the user's cv
 router.get("/cv", profileController.getCV);

@@ -9,6 +9,9 @@ const expController = require("../Controllers/experienceController");
 
 const authenticate = require("../Middleware/authenticate");
 
+// Gets the viewed user's profile
+router.get('/profile', profileController.viewerGetProfile);
+
 // Gets all of the viewed user's blogs
 router.get('/blog', blogController.viewerGetAllBlogs);
 

@@ -77,7 +77,9 @@ const deleteMultiple = async (req, res, next) => {
             res.status(404).json("Files are not found");
         }else{
             console.log(docs);
+            // Delete s3 instances
             deleteS3Multiple(docs);
+            // Delete document objects
             Document.deleteMany({
                 _id: {
                     $in: req.body.IDs
@@ -98,25 +100,6 @@ const deleteMultiple = async (req, res, next) => {
             });
         }
     });
-
-    // await Document.deleteMany({
-    //     _id: {
-    //         $in: req.body.IDs
-    //     }
-    // }, (err, result) => {
-    //     if(err){
-    //         res.status(400).json(err);
-    //     }else{
-    //         if(result){
-    //             console.log(result);
-    //             res.json({message: "Files have been deleted"});
-    //         }else{
-    //             console.log("Failed to delete");
-    //             res.status(400).json("Failed to delete files");
-    //         }
-            
-    //     }
-    // });
 }
 
 // API for deleting all of a user's files
@@ -187,6 +170,7 @@ const deleteCV = async (req, res) => {
     }
 }
 
+// Deletes a file with an exclusive file type (profile picture and cv)
 const deleteExclusiveFile = async(userID, fieldName) => {
     let deleteStatus;
     await Document.findOne({user_id: userID, fieldName: fieldName}, (err, doc) => {

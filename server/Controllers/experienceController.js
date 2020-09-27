@@ -67,19 +67,64 @@ const editExperience = async (req, res, next) => {
 // Gets all of the user's experience history (All types)
 const getAllExperience = async (req, res) => {
     try{
-        await Experience.find({user_id: req.user.id}, (err, result) => {
-            if(err){
-                throw err;
-            }
-            if(result){
-                res.status(200).json(result);
-            }else{
-                res.status(404).json("The user has not uploaded any experiences");
-            }
-        })
+        let exp = await findAll(req.user.id);
+        if(exp == null){
+            res.status(404).json("The user has not uploaded any experiences");
+        }else{
+            res.status(200).json(exp);
+        }
     }catch(error){
         res.status(400).send("Error occured while looking for the user's experiences");
     }
+}
+
+const viewerGetAllExperience = async (req, res) => {
+    try{
+        let userID = req.body.userID;
+        let exp = await findAll(userID);
+        if(exp == null){
+            res.status(404).json("The user has not uploaded any experiences");
+        }else{
+            res.status(200).json(exp);
+        }
+    }catch(error){
+        res.status(400).send("Error occured while looking for the user's experiences");
+    }
+}
+
+// Finds all experience associated with the userID
+const findAll = async (userID) => {
+    let exp;
+    await Experience.find({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }
+        if(result){
+            exp = result;
+        }else{
+            exp = null;
+        }
+    });
+
+    if(exp == null || exp.length === 0){
+        return null;
+    }
+    let orgExp = {
+        employment: [],
+        volunteering: [],
+        extracurricular: []
+    }
+
+    for(let elem of exp){
+        if(elem.type == "Work"){
+            orgExp.employment.push(elem);
+        }else if(elem.type == "Volunteer"){
+            orgExp.volunteering.push(elem);
+        }else if(elem.type == "Extracurricular"){
+            orgExp.extracurricular.push(elem);
+        }
+    }
+    return orgExp;
 }
 
 // Gets a specific experience
@@ -186,6 +231,21 @@ const getEmploymentHistory = async (req, res) => {
     }
 }
 
+// Gets the viewed profile's employment history
+const viewEmploymentHistory = async (req, res) => {
+    try{
+        let userID = req.body.id;
+        let result = await getTypeExperience(userID, "Work");
+        if(!result || result.length === 0){
+            res.status(404).json("The user has no Employment history found");
+        }else{
+            res.status(200).json(result);
+        }
+    }catch(error){
+        res.status(400).send("Error while trying to find the user's employment history");
+    }
+}
+
 // Gets the user's volunteering history
 const getVolunteeringHistory = async (req, res) => {
     try{
@@ -197,6 +257,21 @@ const getVolunteeringHistory = async (req, res) => {
         }
     }catch(error){
         res.status(400).send("Error while trying to find user's volunteering history");
+    }
+}
+
+// Gets the viewed profile's employment history
+const viewVolunteeringHistory = async (req, res) => {
+    try{
+        let userID = req.body.id;
+        let result = await getTypeExperience(userID, "Volunteer");
+        if(!result || result.length === 0){
+            res.status(404).json("The user has no volunteering history found");
+        }else{
+            res.status(200).json(result);
+        }
+    }catch(error){
+        res.status(400).send("Error while trying to find the user's volunteering history");
     }
 }
 
@@ -214,14 +289,33 @@ const getExtracurriculars = async (req, res) => {
     }
 }
 
+// Gets the viewed profile's employment history
+const viewExtracurriculars = async (req, res) => {
+    try{
+        let userID = req.body.id;
+        let result = await getTypeExperience(userID, "Extracurricular");
+        if(!result || result.length === 0){
+            res.status(404).json("The user has no extracurriculars found");
+        }else{
+            res.status(200).json(result);
+        }
+    }catch(error){
+        res.status(400).send("Error while trying to find the user's extracurriculars");
+    }
+}
+
 module.exports = {
     addExperience,
     editExperience,
     getAllExperience,
+    viewerGetAllExperience,
     getExperience,
     getEmploymentHistory,
+    viewEmploymentHistory,
     getVolunteeringHistory,
+    viewVolunteeringHistory,
     getExtracurriculars,
+    viewExtracurriculars,
     deleteAllExperience,
     deleteExperience,
     removeAll

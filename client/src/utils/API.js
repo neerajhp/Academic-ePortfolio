@@ -308,6 +308,15 @@ export default {
       },
     })
   },
+  // Gets all of the viewed person's blogs
+  viewerGetAllBlogs: function(body){
+    return axios.get('api/view/blog', {
+      id: body.id,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    });
+  },
   // Gets a specific blog post
   getBlog: function() {
     return axios.get('api/blog/:id', {
@@ -391,6 +400,46 @@ export default {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
+  },
+  // Gets all of the user's experience (All types)
+  getAllExperience: function(){
+    return axios.get('api/experience', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets all of the viewed profile's experience
+  viewGetAllExperience: function(body){
+    return axios.get('api/view/experience', {
+      userID: body.userID,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Gets the user's employment history
+  getEmploymentHist: function(){
+    return axios.get('api/experience/employment', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets the user's volunteering history
+  getVolunteeringHist: function(){
+    return axios.get('api/experience/volunteering', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Deletes an experience card
+  deleteExperience: function(){
+    return axios.delete('api/experience/delete/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   }
-
 };

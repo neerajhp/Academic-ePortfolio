@@ -166,3 +166,16 @@ exports.editUserInformation = async (req, res) => {
   }
 }
 
+exports.getUserID = async (req, res) => {
+  try{
+      let userID = await User.findById(req.user.id);
+      if(userID){
+        res.status(200).json(userID._id);
+      }else{
+        res.status(400).json("User not found");
+      }
+  }catch(error){
+      res.status(400).send(error);
+  }
+}
+

@@ -81,7 +81,7 @@ const viewerGetEdu = async (req, res) => {
     let userID = req.body.userID;
     let edu = await searchAllEdu(userID);
     if (!edu || edu.length == 0) {
-      res.status(400).json("User has no education history");
+      res.status(404).json("User has no education history");
     } else {
       res.status(200).json(edu);
     }

@@ -4,14 +4,16 @@ const request = supertest(server);
 const mongoose = require('mongoose');
 
 const { clearDB } = require('./setup');
-const loginUser = require('./login');
+const {loginUser, idUser} = require('./login');
 
 
 clearDB();
 
 let token;
+let ID;
 beforeAll(async () => {
     token = await loginUser();
+    ID = await idUser();
 })
 
 

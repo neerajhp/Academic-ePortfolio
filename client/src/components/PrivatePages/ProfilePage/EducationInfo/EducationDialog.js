@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import EducationForm from './EducationForm';
-import API from '../../../utils/API';
+import API from '../../../../api/API';
 
 const useStyles = makeStyles((theme) => ({
   container: {

@@ -11,7 +11,7 @@ function PrivateRoute({ component: Component, ...rest }) {
         tokens.authTokens !== null ? (
           <Component {...props} />
         ) : (
-          <Redirect to='/' />
+          <Redirect to='/home' />
         )
       }
     />

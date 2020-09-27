@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
 import {
@@ -17,7 +17,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import validationSchema from './Validation';
-import API from '../../../utils/API';
+import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 
@@ -219,8 +219,6 @@ const FormGraduatedCheckBox = ({ index }) => {
 const EducationForm = ({ handleClose, records }) => {
   const classes = useStyles();
 
-  const [Submitted, setSubmitted] = useState(false);
-
   return (
     <Formik
       initialValues={{
@@ -232,7 +230,6 @@ const EducationForm = ({ handleClose, records }) => {
             //Update existing record
             API.updateEducation(schoolRecord, schoolRecord._id)
               .then((res) => {
-                setSubmitted(true);
                 handleClose();
               })
               .catch((err) => {
@@ -243,7 +240,6 @@ const EducationForm = ({ handleClose, records }) => {
             //Create new record
             API.postEducation(schoolRecord)
               .then((res) => {
-                setSubmitted(true);
                 handleClose();
               })
               .catch((err) => {

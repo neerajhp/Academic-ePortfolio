@@ -3,11 +3,11 @@ import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Link, Typography } from '@material-ui/core';
-import { useAuth } from '../../context/auth';
-import API from '../../utils/API';
-import FormikField from '../FormikField';
+import { useAuth } from '../../../context/auth';
+import API from '../../../api/API';
+import FormikField from '../../FormikField';
 import validationSchema from './Validation';
-import Background from '../../image/bg.png';
+import Background from '../../../image/bg.png';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -73,7 +73,7 @@ const LoginPage = () => {
           </Typography>
         </div>
         <div className={classes.formContainer}>
-          {isLoggedIn && <Redirect to='/profile' />}
+          {isLoggedIn && <Redirect to='/' />}
           {!isLoggedIn && (
             <div className={classes.formPaper}>
               <Formik

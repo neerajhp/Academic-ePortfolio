@@ -405,7 +405,7 @@ const getSkills = async (req, res) => {
         if(err){
             res.status(400).json(err);
         }else{
-            res.json(result.skills);
+            res.status(200).json(result.skills);
         }
     })
 }

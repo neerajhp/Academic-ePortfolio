@@ -99,7 +99,7 @@ test("Should get all education ", async () =>{
     .set('Authorization', 'bearer ' + token)
     .expect(200)
     .then(data => {
-        expect(data).toBeDefined()
+        expect(data.body).toBeDefined()
     })
 })
 

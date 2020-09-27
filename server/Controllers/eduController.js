@@ -67,6 +67,28 @@ const getEdu = async (req, res) => {
   }
 };
 
+// const getEdu = async(req, res) => {
+//   try{
+//     await Edu.find({
+//       user_id: req.user.id
+//     }, (err, result) => {
+//       if(err){
+//         throw err;
+//       }
+//       console.log("result found");
+//       if(!result || result.length === 0){
+//         res.status(404).json("User has no education history");
+//       }else{
+//         result.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+//         res.status(200).json(result);
+  
+//       }
+//     });
+//   }catch(error){
+//     res.status(400).json("Error");
+//   }
+// }
+
 const viewerGetEdu = async (req, res) => {
   try {
     let userID = req.body.userID;

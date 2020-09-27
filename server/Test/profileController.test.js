@@ -41,8 +41,34 @@ test("Should add skills", async () => {
     })
     .expect(200)
     .then(data => {
+        console.log(data.body);
         expect(data).toBeDefined()
         expect(data.body).toEqual(
             ["Basketball", "Table tennis", "Volleyball"])
+    })
+});
+
+// Attempt to add duplicate skill
+test("Should only allow one instance of the same skill", async () => {
+    await request.put("/api/profile/skills")
+    .set('Authorization', 'bearer ' + token)
+    .send({
+        skills: ["Basketball"]
+    })
+    .expect(400)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual("Attempted to add nothing or a duplicate skill to the skills array")
+    })
+});
+
+// Get skills
+test("Should get skills", async () => {
+    await request.get("/api/profile/skills")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual(["Basketball", "Table tennis", "Volleyball"])
     })
 });

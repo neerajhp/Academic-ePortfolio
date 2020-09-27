@@ -26,6 +26,14 @@ export default {
       },
     });
   },
+  getViewedProfile: function(body){
+    return axios.get('/api/view/profile', {
+      userID: body.userID,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
   getCV: function () {
     return axios.get('/api/profile/cv', {
       headers: {
@@ -123,6 +131,14 @@ export default {
       },
     }); // Gets an array of all Document objects that belong to the user
   },
+  // Gets all of the viewed user's uploaded files
+  viewerGetAllFiles: function(body){
+    return axios.get('api/view/files', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function (body) {
     return axios.put('/api/profile/bio', {
@@ -150,10 +166,24 @@ export default {
       },
     });
   },
+  deleteCV: function (){
+    return axios.delete('/api/files/cv', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    })
+  },
   uploadProfilePic: function (body) {
     return axios.post('/api/upload/profile-pic', {
       // The file key is "profile-pic"
       file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  deleteProfilePic: function (){
+    return axios.delete('/api/files/profile-pic', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -300,6 +330,15 @@ export default {
       },
     });
   },
+  // Gets all of the viewed person's blogs
+  viewerGetAllBlogs: function(body){
+    return axios.get('api/view/blog', {
+      id: body.id,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    });
+  },
   // Gets a specific blog post
   getBlog: function () {
     return axios.get('api/blog/:id', {
@@ -371,6 +410,15 @@ export default {
       },
     });
   },
+  // Get viewed user's information
+  viewerGetUserInformation: function(body){
+    return axios.get('api/view/userInfo', {
+      userID: body.userID,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    })
+  },
   // Edit User information
   // At the moment the user cannot change their email and password using this api
   editUserInformation: function (body) {
@@ -384,4 +432,79 @@ export default {
       },
     });
   },
+  // Create an experience card
+  createExperience: function(body){
+    return axios.post('api/experience', {
+      type: body.type,
+      organization: body.organization,
+      role: body.role,
+      employeeStatus: body.employeeStatus,
+      yearStart: body.yearStart,
+      yearEnd: body.yearEnd,
+      monthStart: body.monthStart,
+      monthEnd: body.monthEnd,
+      description: body.description,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets all of the user's experience (All types)
+  getAllExperience: function(){
+    return axios.get('api/experience', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets all of the viewed profile's experience
+  viewGetAllExperience: function(body){
+    return axios.get('api/view/experience', {
+      userID: body.userID,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Gets the user's employment history
+  getEmploymentHist: function(){
+    return axios.get('api/experience/employment', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets the user's volunteering history
+  getVolunteeringHist: function(){
+    return axios.get('api/experience/volunteering', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Deletes an experience card
+  deleteExperience: function(){
+    return axios.delete('api/experience/delete/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Edits a specific experience
+  editExperience: function(body){
+    return axios.put('api/experience/edit/:id', {
+      type: body.type,
+      organization: body.organization,
+      role: body.role,
+      employeeStatus: body.employeeStatus,
+      yearStart: body.yearStart,
+      yearEnd: body.yearEnd,
+      monthStart: body.monthStart,
+      monthEnd: body.monthEnd,
+      description: body.description,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  }
 };

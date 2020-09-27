@@ -1,51 +1,81 @@
 const Edu = require('../Models/Education');
 // University
 const postEdu = async (req, res) => {
-  const newEdu = new Edu({
-    edu_type: req.body.edu_type,
-    user_id: req.user.id,
-    schoolName: req.body.schoolName,
-    unicourseName: req.body.unicourseName,
-    unimajorName: req.body.unimajorName,
-    monthStart: req.body.monthStart,
-    yearStart: req.body.yearStart,
-    monthEnd: req.body.monthEnd,
-    yearEnd: req.body.yearEnd,
-    graduated: req.body.graduated,
-  });
-
-  try {
-    await newEdu.save((err, file) => {
-      if (err) {
-        console.log('Error found');
-        throw err;
-      } else {
-        console.log('saved');
-        res.send(file);
-      }
-    });
-  } catch (err) {
-    res.status(400).json("Something's wrong");
-  }
+    try {
+        const newEdu = new Edu({
+            edu_type: req.body.edu_type,
+            user_id: req.user.id,
+            schoolName: req.body.schoolName,
+            unicourseName: req.body.unicourseName,
+            unimajorName: req.body.unimajorName,
+            country: req.body.country,
+            city: req.body.city,
+            monthStart: req.body.monthStart,
+            yearStart: req.body.yearStart,
+            monthEnd: req.body.monthEnd,
+            yearEnd: req.body.yearEnd,
+            graduated: req.body.graduated
+        });
+        await Edu.findOne({user_id: req.user.id, schoolName: newEdu.schoolName, yearStart: newEdu.yearStart, yearEnd: newEdu.yearEnd}, (err, result) => {
+            if(err){
+                conosle.log("Error found");
+                throw err;
+            }
+            if(result){
+                res.status(400).json("Education record already exists");
+            }else{
+                newEdu.save((err, file) => {
+                    if (err) {
+                        console.log("Error found");
+                        throw (err)
+                    } else {
+                        console.log("saved");
+                        res.status(200).json(file);
+                    }
+                })
+            }
+        });
+    } catch (err) {
+        res.status(400).json("Something's wrong");
+    }
 };
 
 // Gets all education
 const getEdu = async (req, res) => {
-  await Edu.find(
-    {
-      user_id: req.user.id,
-    },
-    function (err, result) {
-      if (!result) {
-        res.status(404).json({
-          error: 'education history not found',
-        });
-      } else {
-        res.status(200).json(result);
-      }
+    try{
+        await Edu.find({
+            user_id: req.user.id
+        }, function (err, result) {
+            if(err){
+                throw err;
+            }
+            if (!result) {
+                res.status(404).json({
+                    error: "education history not found"
+                });
+            } else {
+                result.sort((a,b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+                res.status(200).json(result);
+            }
+        })
+    }catch(error){
+        res.status(400).json("Error");
     }
-  );
 };
+
+const viewerGetEdu = async (req, res) => {
+  try{
+    let userID = req.body.userID;
+    let edu = await searchAllEdu(userID);
+    if(!edu || edu.length == 0){
+      res.status(400).json("User has no education history");
+    }else{
+      res.status(200).json(edu);
+    }
+  }catch(error){
+    res.status(400).json("Failed to get user's education");
+  }
+}
 
 const putEdu = async (req, res) => {
   await Edu.findOneAndUpdate(
@@ -132,15 +162,20 @@ const clearEdu = async (userID) => {
 const searchAllEdu = async (userID) => {
   try {
     const edu = await Edu.find({ user_id: userID });
+    if(edu){
+      // sorts the education records by year
+      edu.sort((a,b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+    }
     return edu;
   } catch (error) {
-    console.log(error);
+    throw(error);
   }
 };
 
 module.exports = {
   postEdu,
   getEdu,
+  viewerGetEdu,
   putEdu,
   deleteEdu,
   deleteAllEdu,

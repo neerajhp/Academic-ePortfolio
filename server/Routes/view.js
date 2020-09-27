@@ -23,9 +23,13 @@ router.get('/experience', expController.viewerGetAllExperience);
 // Gets the viewed user's education history
 router.get('/education', eduController.viewerGetEdu);
 
+// Gets the viewed user's featured works
+router.get('/featured-work', showcaseController.viewerGetFeaturedWorks);
+
 // Gets the viewed user's files
 router.get('/files', filesController.viewerGetAllDocs);
 
+// Gets the viewed user's info
 router.get('/userInfo', async (req, res) => {
     userController.viewerGetUserInformation(req, res);
 });

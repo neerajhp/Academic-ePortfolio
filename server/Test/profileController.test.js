@@ -1,11 +1,10 @@
-const server = require('../../app') // Link to your server file
-const supertest = require('supertest')
-const request = supertest(server)
+const server = require('../../app'); // Link to your server file
+const supertest = require('supertest');
+const request = supertest(server);
 const mongoose = require('mongoose');
 
 const { clearDB } = require('./setup');
-const { response } = require('../../app');
-const loginUser = require('./login')
+const loginUser = require('./login');
 
 
 clearDB();

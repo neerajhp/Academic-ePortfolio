@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
 import {
@@ -14,9 +14,10 @@ import {
 } from '@material-ui/core';
 import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import validationSchema from './Validation';
-// import API from '../../../utils/API';
+import API from '../../../utils/API';
 
 /* ================ Styling ================ */
 
@@ -218,7 +219,7 @@ const FormGraduatedCheckBox = ({ index }) => {
 const EducationForm = ({ handleClose, records }) => {
   const classes = useStyles();
 
-  // const [Submitted, setSubmitted] = useState(false);
+  const [Submitted, setSubmitted] = useState(false);
 
   return (
     <Formik
@@ -226,15 +227,31 @@ const EducationForm = ({ handleClose, records }) => {
         schools: records,
       }}
       onSubmit={(values, actions) => {
-        console.log(values);
-        // API.userSignup({})
-        //   .then((res) => {
-        //     setSubmitted(true);
-        //   })
-        //   .catch((err) => {
-        //     actions.setFieldError('email', err.response.data);
-        //     actions.setSubmitting(false);
-        //   });
+        values.schools.forEach((schoolRecord) => {
+          if (schoolRecord._id) {
+            //Update existing record
+            API.updateEducation(schoolRecord, schoolRecord._id)
+              .then((res) => {
+                setSubmitted(true);
+                handleClose();
+              })
+              .catch((err) => {
+                console.log(err.response.data);
+                actions.setSubmitting(false);
+              });
+          } else {
+            //Create new record
+            API.postEducation(schoolRecord)
+              .then((res) => {
+                setSubmitted(true);
+                handleClose();
+              })
+              .catch((err) => {
+                console.log(err.response.data);
+                actions.setSubmitting(false);
+              });
+          }
+        });
       }}
       validationSchema={validationSchema}
     >
@@ -318,6 +335,21 @@ const EducationForm = ({ handleClose, records }) => {
                           </Grid>
                         </div>
                       </div>
+                      <div>
+                        <IconButton
+                          onClick={() => {
+                            API.deleteEducation(school._id)
+                              .then((res) => {
+                                fieldArrayProps.remove(i);
+                              })
+                              .catch((err) => {
+                                console.log(err.response.data);
+                              });
+                          }}
+                        >
+                          <DeleteIcon style={{ fontSize: 30 }} />
+                        </IconButton>
+                      </div>
                     </div>
                     <Divider className={classes.divider} />
                   </React.Fragment>
@@ -330,10 +362,13 @@ const EducationForm = ({ handleClose, records }) => {
                       fieldArrayProps.push({
                         edu_type: '',
                         schoolName: '',
+                        unicourseName: '',
+                        unimajorname: '',
                         monthStart: 1,
                         yearStart: YEAR,
                         monthEnd: 12,
                         yearEnd: YEAR,
+                        graduated: false,
                       })
                     }
                     color='primary'

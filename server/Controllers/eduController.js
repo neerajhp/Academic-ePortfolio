@@ -1,5 +1,5 @@
-const Edu = require("../Models/Education");
-// University 
+const Edu = require('../Models/Education');
+// University
 const postEdu = async (req, res) => {
     try {
         const newEdu = new Edu({
@@ -62,98 +62,103 @@ const getEdu = async (req, res) => {
     }
 };
 
-
 const putEdu = async (req, res) => {
-
-    await Edu.findOneAndUpdate({
-        _id: req.params.id,
-        user_id: req.user.id
-    }, req.body, function (err, result) {
-        if (!result) {
-            res.status(404).json({
-                error: "education history not found"
-            });
-        } else {
-            Edu.findById({
-                _id: req.params.id
-            }, function (err, updated) {
-                res.status(200).json(updated);
-            });
-        }
-    })
-
-
+  await Edu.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      user_id: req.user.id,
+    },
+    req.body,
+    function (err, result) {
+      if (!result) {
+        res.status(404).json({
+          error: 'education history not found',
+        });
+      } else {
+        Edu.findById(
+          {
+            _id: req.params.id,
+          },
+          function (err, updated) {
+            res.status(200).json(updated);
+          }
+        );
+      }
+    }
+  );
 };
 
 // Deletes a specific education record
 const deleteEdu = async (req, res) => {
-
-    await Edu.findOneAndDelete({
-        _id: req.params.id,
-        user_id: req.user.id
-    }, function (err, result) {
-        if (!result) {
-            res.status(404).json({
-                error: "education history not found"
-            });
-        } else {
-            res.status(200).json("education history deleted");
-        }
-    })
-
+  console.log('id: ', req.params.id);
+  await Edu.findOneAndDelete(
+    {
+      _id: req.params.id,
+      user_id: req.user.id,
+    },
+    function (err, result) {
+      if (!result) {
+        res.status(404).json({
+          error: 'education history not found',
+        });
+      } else {
+        res.status(200).json('education history deleted');
+      }
+    }
+  );
 };
 
 // Deletes all education API
 const deleteAllEdu = async (req, res) => {
-    try{
-        let result = await clearEdu(req.user.id);
-        console.log(result);
-        if(result){
-            console.log("Files have been deleted");
-            res.status(200).json("All records have been deleted");
-        }else{
-            res.status(400).json("No records were found");
-        }
-    }catch(err){
-        res.status(400).json("Records were not deleted");
+  try {
+    let result = await clearEdu(req.user.id);
+    console.log(result);
+    if (result) {
+      console.log('Files have been deleted');
+      res.status(200).json('All records have been deleted');
+    } else {
+      res.status(400).json('No records were found');
     }
-}
+  } catch (err) {
+    res.status(400).json('Records were not deleted');
+  }
+};
 
 // Removes all education
 const clearEdu = async (userID) => {
-    let deleteStatus;
-    await Edu.deleteMany({user_id: userID}, (err, result) => {
-        if(err){
-            throw err;
-        }else{
-            if(result.deletedCount === 0){
-                console.log("Nothing to delete");
-                deleteStatus = false;
-            }else{
-                console.log("The user's education has been cleared");
-                deleteStatus = true;
-            }
-        }
-    });
-    return deleteStatus;
-}
+  let deleteStatus;
+  await Edu.deleteMany({ user_id: userID }, (err, result) => {
+    if (err) {
+      throw err;
+    } else {
+      if (result.deletedCount === 0) {
+        console.log('Nothing to delete');
+        deleteStatus = false;
+      } else {
+        console.log("The user's education has been cleared");
+        deleteStatus = true;
+      }
+    }
+  });
+  return deleteStatus;
+};
 
 // Looks for all of the user's education
 const searchAllEdu = async (userID) => {
-    try{
-        const edu = await Edu.find({user_id: userID});
-        return edu;
-    }catch(error){
-        console.log(error);
-    }
-}
+  try {
+    const edu = await Edu.find({ user_id: userID });
+    return edu;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
-    postEdu,
-    getEdu,
-    putEdu,
-    deleteEdu,
-    deleteAllEdu,
-    searchAllEdu,
-    clearEdu,
-}
+  postEdu,
+  getEdu,
+  putEdu,
+  deleteEdu,
+  deleteAllEdu,
+  searchAllEdu,
+  clearEdu,
+};

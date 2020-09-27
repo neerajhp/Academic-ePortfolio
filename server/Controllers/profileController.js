@@ -359,29 +359,43 @@ const updateAboutMe = async (req, res) => {
 
 // Add an array of skills to the user's skills array
 const addSkills = async (req, res) => {
-    await User.updateOne({
-        _id: req.user.id
-    }, {
-        $addToSet: {skills: req.body.skills}
-    }, (err, result) => {
-        if(err){
-            res.status(404).json(err);
+    try{
+        if(req.body.skills.includes("") || req.body.skills.length == 0){
+            res.status(400).json("Attempted to add nothing into skills");
         }else{
-            if(result.nModified === 0){
-                res.status(400).json("Attempted to add nothing or a duplicate skill to the skills array");
-            }else{
-                console.log("successfully updated");
-                // User.findById({_id: req.user.id}, (err, result) => {
-                //     if(result){
-                //         res.status(200).json(result.skills);
-                //     }else{
-                //         res.status(404).json("No user found");
-                //     }
-                // })
-                getSkills(req, res);
-            }
+            await User.updateOne({
+                _id: req.user.id
+            }, {
+                $addToSet: {skills: req.body.skills}
+            }, (err, result) => {
+                if(err){
+                    res.status(404).json(err);
+                }else{
+                    if(!result){
+                        res.status(400).json("Attempted to add nothing");
+                    }else{
+                        getSkills(req, res);
+                    }
+                    // if(!result || result.nModified === 0){
+                    //     res.status(400).json("Attempted to add nothing or a duplicate skill to the skills array");
+                    // }else{
+                    //     console.log("successfully updated");
+                    //     // User.findById({_id: req.user.id}, (err, result) => {
+                    //     //     if(result){
+                    //     //         res.status(200).json(result.skills);
+                    //     //     }else{
+                    //     //         res.status(404).json("No user found");
+                    //     //     }
+                    //     // })
+                    //     getSkills(req, res);
+                    // }
+                }
+            })
         }
-    })
+    }catch(error){
+        res.status(400).json("Error while trying to add skill");
+    }
+    
 }
 
 // Removes the skills specified in the body from the user's skills array

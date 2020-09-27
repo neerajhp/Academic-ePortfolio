@@ -57,10 +57,10 @@ test("Should only allow one instance of the same skill", async () => {
     .send({
         skills: ["Basketball"]
     })
-    .expect(400)
+    .expect(200)
     .then(data => {
         expect(data).toBeDefined()
-        expect(data.body).toEqual("Attempted to add nothing or a duplicate skill to the skills array")
+        expect(data.body).toEqual(["Basketball", "Table tennis", "Volleyball"])
     })
 });
 

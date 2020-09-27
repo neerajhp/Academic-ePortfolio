@@ -32,6 +32,8 @@ const addExperience = async (req, res) => {
                         res.status(400).json("Failed to save experience");
                     }
                 });
+            }else{
+                res.status(400).json("A duplicate exists");
             }
         });
     }catch(error){

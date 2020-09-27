@@ -367,18 +367,19 @@ const addSkills = async (req, res) => {
         if(err){
             res.status(404).json(err);
         }else{
+            console.log(result)
             if(result.nModified === 0){
                 res.status(400).json("Attempted to add nothing or a duplicate skill to the skills array");
             }else{
                 console.log("successfully updated");
-                // User.findById({_id: req.user.id}, (err, result) => {
-                //     if(result){
-                //         res.status(200).json(result.skills);
-                //     }else{
-                //         res.status(404).json("No user found");
-                //     }
-                // })
-                getSkills(req, res);
+                User.findById({_id: req.user.id}, (err, result) => {
+                    if(result){
+                        res.status(200).json(result.skills);
+                    }else{
+                        res.status(404).json("No user found");
+                    }
+                })
+                // getSkills(req, res);
             }
         }
     })

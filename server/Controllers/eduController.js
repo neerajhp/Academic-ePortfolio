@@ -54,40 +54,40 @@ const postEdu = async (req, res) => {
 };
 
 // Gets all education
-const getEdu = async (req, res) => {
-  try {
-    let edu = await searchAllEdu(req.user.id);
-    if (!edu) {
-      res.status(404).json("User has no education history");
-    } else {
-      res.status(200).json(edu);
-    }
-  } catch (error) {
-    res.status(400).json("Error");
-  }
-};
-
-// const getEdu = async(req, res) => {
-//   try{
-//     await Edu.find({
-//       user_id: req.user.id
-//     }, (err, result) => {
-//       if(err){
-//         throw err;
-//       }
-//       console.log("result found");
-//       if(!result || result.length === 0){
-//         res.status(404).json("User has no education history");
-//       }else{
-//         result.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-//         res.status(200).json(result);
-  
-//       }
-//     });
-//   }catch(error){
+// const getEdu = async (req, res) => {
+//   try {
+//     let edu = await searchAllEdu(req.user.id);
+//     if (!edu) {
+//       res.status(404).json("User has no education history");
+//     } else {
+//       res.status(200).json(edu);
+//     }
+//   } catch (error) {
 //     res.status(400).json("Error");
 //   }
-// }
+// };
+
+const getEdu = async(req, res) => {
+  try{
+    await Edu.find({
+      user_id: req.user.id
+    }, (err, result) => {
+      if(err){
+        throw err;
+      }
+      console.log("result found");
+      if(!result || result.length == 0){
+        res.status(404).json("User has no education history");
+      }else{
+        result.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+        res.status(200).json(result);
+  
+      }
+    });
+  }catch(error){
+    res.status(400).json("Error");
+  }
+}
 
 const viewerGetEdu = async (req, res) => {
   try {

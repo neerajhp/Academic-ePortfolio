@@ -4,7 +4,7 @@ const request = supertest(server);
 const mongoose = require('mongoose');
 
 const { clearDB } = require('./setup');
-const {loginUser, idUser} = require('./login');
+const { loginUser, idUser } = require('./login');
 
 
 clearDB();
@@ -36,6 +36,7 @@ test("Should update bio", async () =>{
 
 // Add skills
 test("Should add skills", async () => {
+    console.log(token)
     await request.put("/api/profile/skills")
     .set('Authorization', 'bearer ' + token)
     .send({

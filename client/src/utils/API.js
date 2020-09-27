@@ -396,6 +396,15 @@ export default {
       },
     });
   },
+  // Get viewed user's information
+  viewerGetUserInformation: function(body){
+    return axios.get('api/view/userInfo', {
+      userID: body.userID,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    })
+  },
   // Edit User information
   // At the moment the user cannot change their email and password using this api
   editUserInformation: function(body){

@@ -11,13 +11,52 @@ const s3 = new AWS.S3({
 // Returns all of the user's uploaded files (except profile picture and cv)
 const getAllDocs = async (req, res) => {
     try{
-        // ideally, its probbaly better if the user_id is not from the query
-        const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
-        res.json(documents);
+        let documents = await findDocs(req.user.id);
+        if(!documents || documents.length == 0){
+            res.status(400).json("No documents found");
+        }else{
+            res.status(200).json(documents);
+        }
+        // // ideally, its probbaly better if the user_id is not from the query
+        // const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
+        // res.json(documents);
     }catch(err){
         console.log(err);
         res.json({error: "Something's up"});
     }
+}
+
+// Returns all of the viewed user's uploaded files
+const viewerGetAllDocs = async (req, res) => {
+    try{
+        let userID = req.body.userID;
+        let documents = await findDocs(userID);
+        if(!documents || documents.length == 0){
+            res.status(400).json("No documents found");
+        }else{
+            res.status(200).json(documents);
+        }
+    }catch(err){
+        console.log(err);
+        res.status(400).json("Failed to retrieve");
+    }
+}
+
+// Finds all of the docs belonging to the specified ID
+const findDocs = async (userID) => {
+    let documents;
+    await Document.find({user_id: userID, fieldName: {$in: ["document", "image"]}}, (err, result) => {
+        if(err){
+            throw err;
+        }
+        if(result){
+            documents = result;
+        }else{
+            documents = null;
+        }     
+    });
+    return documents;
+    
 }
 
 // Returns the document for download
@@ -271,6 +310,7 @@ const deleteS3Multiple = (docs) => {
 
 module.exports = {
     getAllDocs,
+    viewerGetAllDocs,
     getDocument,
     deleteDocument,
     deleteMultiple,

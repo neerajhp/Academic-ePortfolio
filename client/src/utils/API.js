@@ -131,6 +131,14 @@ export default {
       },
     }); // Gets an array of all Document objects that belong to the user
   },
+  // Gets all of the viewed user's uploaded files
+  viewerGetAllFiles: function(body){
+    return axios.get('api/view/files', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function (body) {
     return axios.put('/api/profile/bio', {

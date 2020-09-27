@@ -54,6 +54,7 @@ const getEdu = async (req, res) => {
                     error: "education history not found"
                 });
             } else {
+                result.sort((a,b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
                 res.status(200).json(result);
             }
         })
@@ -61,6 +62,20 @@ const getEdu = async (req, res) => {
         res.status(400).json("Error");
     }
 };
+
+const viewerGetEdu = async (req, res) => {
+  try{
+    let userID = req.body.userID;
+    let edu = await searchAllEdu(userID);
+    if(!edu || edu.length == 0){
+      res.status(400).json("User has no education history");
+    }else{
+      res.status(200).json(edu);
+    }
+  }catch(error){
+    res.status(400).json("Failed to get user's education");
+  }
+}
 
 const putEdu = async (req, res) => {
   await Edu.findOneAndUpdate(
@@ -147,15 +162,20 @@ const clearEdu = async (userID) => {
 const searchAllEdu = async (userID) => {
   try {
     const edu = await Edu.find({ user_id: userID });
+    if(edu){
+      // sorts the education records by year
+      edu.sort((a,b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+    }
     return edu;
   } catch (error) {
-    console.log(error);
+    throw(error);
   }
 };
 
 module.exports = {
   postEdu,
   getEdu,
+  viewerGetEdu,
   putEdu,
   deleteEdu,
   deleteAllEdu,

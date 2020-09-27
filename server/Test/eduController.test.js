@@ -23,7 +23,7 @@ test("Should return error because there are no education histories ", async () =
     .set('Authorization', 'bearer ' + token)
     .expect(404)
     .then(data => {
-        expect(data.body.error).toEqual("education history not found")
+        expect(data.body).toEqual("User has no education history")
     })
 })
 

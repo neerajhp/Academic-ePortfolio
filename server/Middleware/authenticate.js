@@ -10,6 +10,7 @@ function authenticateToken(req, res, next) {
   } else {
     jwt.verify(token, process.env.SECRET_OR_KEY, (err, user) => {
       if (err) {
+        console.log(err);
         res.status(403).json(err);
       } else {
         req.user = user;

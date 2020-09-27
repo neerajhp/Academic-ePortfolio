@@ -368,9 +368,16 @@ const addSkills = async (req, res) => {
             res.status(404).json(err);
         }else{
             if(result.nModified === 0){
-                res.json("Attempted to add nothing to the skills array");
+                res.status(400).json("Attempted to add nothing or a duplicate skill to the skills array");
             }else{
                 console.log("successfully updated");
+                // User.findById({_id: req.user.id}, (err, result) => {
+                //     if(result){
+                //         res.status(200).json(result.skills);
+                //     }else{
+                //         res.status(404).json("No user found");
+                //     }
+                // })
                 getSkills(req, res);
             }
         }
@@ -405,7 +412,7 @@ const getSkills = async (req, res) => {
         if(err){
             res.status(400).json(err);
         }else{
-            res.json(result.skills);
+            res.status(200).json(result.skills);
         }
     })
 }

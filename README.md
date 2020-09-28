@@ -65,12 +65,13 @@ A production deployment of this project exists at https://homealone30022.herokua
 - [NPM](https://www.npmjs.com/) - Dependency Management
 - [Express](https://expressjs.com/) - Back End Framework
 - [MongoDB](https://www.mongodb.com/) - Database
+- [MaterialUI](https://material-ui.com/) - React Components
 
 ## Authors
 
-- **Denzel Tano** - [Github] (https://github.com/dtano)
+- **Denzel Tano** - [Github](https://github.com/dtano)
 - **Jinxin Tian** - [Github](https://github.com/JinxinT)
-- **Kai Ying Lim** - [Github]((https://github.com/LKY1999)
+- **Kai Ying Lim** - [Github](https://github.com/LKY1999)
 - **Neeraj Patel** - [Github](https://github.com/neerajhp)
 - **Polo Chiu** - [Github](https://github.com/polopineapple)
 

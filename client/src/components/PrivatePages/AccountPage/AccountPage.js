@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 import AccountForm from './AccountForm';
+import ProfileSettingsForm from './ProfileSettingsForm';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
   sectionContainer: {
     position: 'absolute',
     display: 'flex',
-    flexDirection: 'row',
     zIndex: '-1',
     marginTop: '1%',
   },
@@ -75,7 +75,7 @@ const AccountPage = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    API.getUserProfile().then(({ data }) => {
+    API.getUserInfo().then(({ data }) => {
       setUser(data);
       setLoading(false);
     });
@@ -109,6 +109,7 @@ const AccountPage = () => {
         <div className={classes.sectionContainer}>
           <div className={classes.section}>
             <AccountForm user={user} />
+            <ProfileSettingsForm user={user} />
           </div>
         </div>
       </div>

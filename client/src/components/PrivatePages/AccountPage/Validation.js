@@ -21,6 +21,14 @@ const validationSchema = yup.object().shape({
     .test('alphabets', 'Name must only contain alphabets', (value) => {
       return /^[A-Za-z ]+$/.test(value);
     }),
+  mobileNumber: yup
+    .string()
+    .label('Mobile Number')
+    .test('valid', 'Phone Number is not valid', (value) => {
+      return /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/.test(
+        value
+      );
+    }),
 });
 
 export default validationSchema;

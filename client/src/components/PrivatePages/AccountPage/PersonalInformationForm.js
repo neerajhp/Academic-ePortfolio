@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const AccountForm = ({ user }) => {
+const PersonalInformationForm = ({ user }) => {
   const classes = useStyles();
 
   const [Submitted, setSubmitted] = useState(false);
@@ -191,4 +191,4 @@ const AccountForm = ({ user }) => {
   );
 };
 
-export default AccountForm;
+export default PersonalInformationForm;

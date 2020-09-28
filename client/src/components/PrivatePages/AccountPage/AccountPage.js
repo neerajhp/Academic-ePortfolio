@@ -11,7 +11,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
-import AccountForm from './AccountForm';
+import AccountInformationForm from './AccountInformationForm';
+import PersonalInformationForm from './PersonalInformationForm';
 import ProfileSettingsForm from './ProfileSettingsForm';
 
 /* ================ Styling ================ */
@@ -108,7 +109,8 @@ const AccountPage = () => {
 
         <div className={classes.sectionContainer}>
           <div className={classes.section}>
-            <AccountForm user={user} />
+            <AccountInformationForm user={user} />
+            <PersonalInformationForm user={user} />
             <ProfileSettingsForm user={user} />
           </div>
         </div>

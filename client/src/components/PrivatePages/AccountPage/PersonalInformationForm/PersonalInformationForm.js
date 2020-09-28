@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
-import { Paper, Typography, Button } from '@material-ui/core';
+import { Paper, Typography, Grid, Button, Divider } from '@material-ui/core';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 
-import FormikField from '../../utils/FormikField';
+import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';
-import API from '../../../api/API';
+import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 
@@ -76,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const ProfileSettingsForm = ({ user }) => {
+const PersonalInformationForm = ({ user }) => {
   const classes = useStyles();
 
   const [Submitted, setSubmitted] = useState(false);
@@ -85,17 +90,23 @@ const ProfileSettingsForm = ({ user }) => {
   return (
     <Paper className={classes.card}>
       <div className={classes.title}>
-        <Typography variant='h2'>Profile Settings</Typography>
+        <Typography variant='h2'>Personal information</Typography>
       </div>
       <div className={classes.formContainer}>
         <Formik
           initialValues={{
-            url: user.url,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            mobileNumber: user.mobileNumber,
+            birthDate: user.birthDate,
           }}
           onSubmit={(values, actions) => {
             setSubmitted(false);
             API.editUserInformation({
-              url: values.url,
+              firstName: values.firstName,
+              lastName: values.lastName,
+              mobileNumber: values.mobileNumber,
+              birthDate: values.birthDate,
             })
               .then((res) => {
                 setSubmitted(true);
@@ -103,7 +114,7 @@ const ProfileSettingsForm = ({ user }) => {
               })
               .catch((err) => {
                 console.log(err);
-                actions.setFieldError('url', err.response.data);
+                actions.setFieldError('mobileNumber', err.response.data);
                 actions.setSubmitting(false);
               });
           }}
@@ -111,15 +122,49 @@ const ProfileSettingsForm = ({ user }) => {
         >
           {(formikProps) => (
             <form className={classes.form} onSubmit={formikProps.handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <FormikField
+                    label='FirstName'
+                    formikProps={formikProps}
+                    formikKey='firstName'
+                    required
+                    defaultValue={user.firstName}
+                    className={`${classes.field} ${fieldSubmitted}`}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormikField
+                    label='LastName'
+                    formikProps={formikProps}
+                    formikKey='lastName'
+                    required
+                    defaultValue={user.lastName}
+                    className={`${classes.field} ${fieldSubmitted}`}
+                  />
+                </Grid>
+              </Grid>
               <FormikField
-                label='Custom URL'
+                label='Mobile Number'
                 formikProps={formikProps}
-                formikKey='url'
+                formikKey='mobileNumber'
                 required
-                value={user.url}
+                defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
-
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  inputVariant='outlined'
+                  format='dd/MM/yyyy'
+                  clearable
+                  value={formikProps.values.birthDate}
+                  label={'Date of Birth'}
+                  className={`${classes.field} ${fieldSubmitted}`}
+                  onChange={(value) =>
+                    formikProps.setFieldValue('birthDate', value)
+                  }
+                />
+              </MuiPickersUtilsProvider>
               <div className={classes.buttonWrapper}>
                 <Button
                   type='Submit'
@@ -146,4 +191,4 @@ const ProfileSettingsForm = ({ user }) => {
   );
 };
 
-export default ProfileSettingsForm;
+export default PersonalInformationForm;

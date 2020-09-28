@@ -11,9 +11,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
-import AccountInformationForm from './AccountInformationForm';
-import PersonalInformationForm from './PersonalInformationForm';
-import ProfileSettingsForm from './ProfileSettingsForm';
+import AccountInformationForm from './AccountInformationForm/AccountInformationForm';
+import PersonalInformationForm from './PersonalInformationForm/PersonalInformationForm';
+import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({

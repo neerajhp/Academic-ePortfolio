@@ -158,7 +158,7 @@ const PersonalInformationForm = ({ user }) => {
                 formikKey='birthDate'
                 type='date'
                 required
-                defaultValue={user.birthDate}
+                defaultValue={user.birthDate.substring(0, 10)}
                 className={`${classes.field} ${fieldSubmitted}`}
                 InputLabelProps={{
                   shrink: true,

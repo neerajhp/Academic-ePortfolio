@@ -8,10 +8,10 @@
   },
   "scripts": {
     "test": "env-cmd -f ./Config/test.env jest --coverage --detectOpenHandles",
-    "server": "nodemon app.js",
+    "server": "nodemon server.js",
     "client": "cd client && npm start",
     "dev": "env-cmd -f ./Config/dev.env/ concurrently \"npm run server\" \"npm run client\"",
-    "start": "node server.js",
+    "start": "node app.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Denzel Joaquin Tano",
@@ -25,6 +25,7 @@
     "aws-sdk": "^2.757.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "bl": ">=2.2.1",
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
     "date-fns": "^2.16.1",

@@ -152,19 +152,19 @@ const PersonalInformationForm = ({ user }) => {
                 className={`${classes.field} ${fieldSubmitted}`}
               />
 
-              <KeyboardDatePicker
-                inputVariant='outlined'
-                disableToolbar
-                variant='inline'
-                format='dd/MM/yyyy'
-                clearable
-                value={formikProps.values.birthDate}
-                label={'Date of Birth'}
+              <FormikField
+                label='Date of Birth'
+                formikProps={formikProps}
+                formikKey='birthDate'
+                type='date'
+                required
+                defaultValue={user.birthDate}
                 className={`${classes.field} ${fieldSubmitted}`}
-                onChange={(value) =>
-                  formikProps.setFieldValue('birthDate', value)
-                }
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
+
               <div className={classes.buttonWrapper}>
                 <Button
                   type='Submit'

@@ -8,7 +8,6 @@ import {
 } from '@material-ui/pickers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 
 import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';

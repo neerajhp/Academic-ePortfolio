@@ -10,11 +10,6 @@ import {
   ListItemText,
   Typography,
 } from '@material-ui/core';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 import FaceIcon from '@material-ui/icons/Face';
 import AccountInformationForm from './AccountInformationForm/AccountInformationForm';
 import PersonalInformationForm from './PersonalInformationForm/PersonalInformationForm';
@@ -98,30 +93,28 @@ const AccountPage = () => {
     );
   } else {
     pageContent = (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <div className={classes.container}>
-          <div className={classes.navSection}>
-            <Paper className={classes.navBar}>
-              <List>
-                <ListItem button>
-                  <ListItemIcon>
-                    <FaceIcon className={classes.navBarIcon} />
-                  </ListItemIcon>
-                  <ListItemText primary='My Information'></ListItemText>
-                </ListItem>
-              </List>
-            </Paper>
-          </div>
+      <div className={classes.container}>
+        <div className={classes.navSection}>
+          <Paper className={classes.navBar}>
+            <List>
+              <ListItem button>
+                <ListItemIcon>
+                  <FaceIcon className={classes.navBarIcon} />
+                </ListItemIcon>
+                <ListItemText primary='My Information'></ListItemText>
+              </ListItem>
+            </List>
+          </Paper>
+        </div>
 
-          <div className={classes.sectionContainer}>
-            <div className={classes.section}>
-              <AccountInformationForm user={user} />
-              <PersonalInformationForm user={user} />
-              <ProfileSettingsForm user={user} />
-            </div>
+        <div className={classes.sectionContainer}>
+          <div className={classes.section}>
+            <AccountInformationForm user={user} />
+            <PersonalInformationForm user={user} />
+            <ProfileSettingsForm user={user} />
           </div>
         </div>
-      </MuiPickersUtilsProvider>
+      </div>
     );
   }
 

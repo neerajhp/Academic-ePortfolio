@@ -29,8 +29,8 @@ function App() {
   return (
     <div>
       <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <CssBaseline>
               <Router>
                 <Switch>
@@ -41,8 +41,8 @@ function App() {
                 </Switch>
               </Router>
             </CssBaseline>
-          </ThemeProvider>
-        </MuiPickersUtilsProvider>
+          </MuiPickersUtilsProvider>
+        </ThemeProvider>
       </AuthContext.Provider>
     </div>
   );

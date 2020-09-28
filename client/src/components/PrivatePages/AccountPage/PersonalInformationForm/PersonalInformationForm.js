@@ -154,6 +154,8 @@ const PersonalInformationForm = ({ user }) => {
 
               <KeyboardDatePicker
                 inputVariant='outlined'
+                disableToolbar
+                variant='inline'
                 format='dd/MM/yyyy'
                 clearable
                 value={formikProps.values.birthDate}

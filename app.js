@@ -31,7 +31,7 @@ server.use('/api/files', filesRoute);
 server.use('/api/profile', profileRoute);
 server.use('/api/blog', blogRoute);
 server.use('/api/experience', expRoute);
-server.use('/api/view/', viewRoute);
+server.use('/api/view', viewRoute);
 
 // Database connection
 mongoose.connect(

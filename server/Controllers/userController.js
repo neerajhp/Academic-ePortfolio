@@ -90,6 +90,7 @@ exports.postLogin = async (req, res) => {
     });
 };
 
+// Function to find the info associated with the given id
 const findInfo = async (userID) => {
   let userInfo;
   await User.findById(userID, (err, result) => {

@@ -2,6 +2,7 @@ const {
   arrayIncludes
 } = require('@material-ui/pickers/_helpers/utils');
 const Edu = require('../Models/Education');
+const { editUserInformation } = require('./profileController');
 // University
 const postEdu = async (req, res) => {
   try {
@@ -183,25 +184,22 @@ const clearEdu = async (userID) => {
   return deleteStatus;
 };
 
-// Looks for all of the user's education
+// Searches for all of the user's education records
 const searchAllEdu = async (userID) => {
   let edu;
-  await Edu.find({
-    user_id: userID
-  }, (err, result) => {
-    if(err){
-      throw err;
-    }
-    if(!result || result.length === 0){
-      edu = null;
-    }else{
-      edu = result;
-      edu.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-
-    }
+  await Edu.find({user_id: userID}, (err, result) => {
+      if(err){
+          throw err;
+      }
+      if(result){
+          edu = result;
+          edu.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+      }else{
+          edu = null;
+      }
   });
   return edu;
-};
+}
 
 module.exports = {
   postEdu,

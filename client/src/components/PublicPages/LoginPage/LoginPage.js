@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Link, Typography } from '@material-ui/core';
 import { useAuth } from '../../../context/auth';
 import API from '../../../api/API';
-import FormikField from '../../FormikField';
+import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
 import Background from '../../../image/bg.png';
 

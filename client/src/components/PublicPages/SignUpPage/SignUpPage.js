@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import FormikField from '../../FormikField';
+import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
 import API from '../../../api/API';
 import Background from '../../../image/bg.png';

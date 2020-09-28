@@ -3,7 +3,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import PrivateRoute from './PrivateRoute';
+import PrivateRoute from './utils/PrivateRoute';
 import { AuthContext } from '../context/auth';
 import PrivateLayout from './PrivatePages/PrivateLayout';
 import LoginPage from './PublicPages/LoginPage/LoginPage';

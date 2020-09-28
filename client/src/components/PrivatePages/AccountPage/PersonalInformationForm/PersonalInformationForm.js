@@ -152,19 +152,18 @@ const PersonalInformationForm = ({ user }) => {
                 defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  inputVariant='outlined'
-                  format='dd/MM/yyyy'
-                  clearable
-                  value={formikProps.values.birthDate}
-                  label={'Date of Birth'}
-                  className={`${classes.field} ${fieldSubmitted}`}
-                  onChange={(value) =>
-                    formikProps.setFieldValue('birthDate', value)
-                  }
-                />
-              </MuiPickersUtilsProvider>
+
+              <KeyboardDatePicker
+                inputVariant='outlined'
+                format='dd/MM/yyyy'
+                clearable
+                value={formikProps.values.birthDate}
+                label={'Date of Birth'}
+                className={`${classes.field} ${fieldSubmitted}`}
+                onChange={(value) =>
+                  formikProps.setFieldValue('birthDate', value)
+                }
+              />
               <div className={classes.buttonWrapper}>
                 <Button
                   type='Submit'

@@ -90,28 +90,53 @@ exports.postLogin = async (req, res) => {
     });
 };
 
+const findInfo = async (userID) => {
+  let userInfo;
+  await User.findById(userID, (err, result) => {
+    if(err){
+        throw err;
+    }
+    if(result){
+        userInfo = {
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            mobileNumber: result.mobileNumber,
+            birthDate: result.birthDate
+        }
+    }else{
+        userInfo = null;
+    }
+  });
+  return userInfo;
+
+}
+
 exports.getUserInformation = async (req, res) => {
   try{
-      await User.findById(req.user.id, (err, result) => {
-          if(err){
-              throw err;
-          }
-          if(result){
-              const userInfo = {
-                  firstName: result.firstName,
-                  lastName: result.lastName,
-                  email: result.email,
-                  mobileNumber: result.mobileNumber,
-                  birthDate: result.birthDate
-              }
-              res.status(200).json(userInfo);
-          }else{
-              res.status(404).json("User not found");
-          }
-      })
+      let userInfo = await findInfo(req.user.id);
+      if(userInfo){
+        res.status(200).json(userInfo);
+      }else{
+        res.status(400).json("User not found");
+      }
   }catch(error){
       res.status(400).send(error);
   }
+}
+
+exports.viewerGetUserInformation = async (req, res) => {
+  try{
+    let userID = req.body.userID;
+    let userInfo = await findInfo(userID);
+      if(userInfo){
+        res.status(200).json(userInfo);
+      }else{
+        res.status(400).json("User not found");
+      }
+    }catch(error){
+      res.status(400).send(error);
+    }
 }
 
 // Edits the user's personal information (except email and password)

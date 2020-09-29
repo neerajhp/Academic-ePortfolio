@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import EducationForm from './EducationForm';
+import API from '../../../../api/API';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -16,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     position: 'relative',
-    bottom: '-10%',
-    right: '-10%',
   },
   paper: {
     position: 'absolute',
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EducationDialog = ({ records }) => {
+const EducationDialog = ({ records, setRecords }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -39,7 +38,10 @@ const EducationDialog = ({ records }) => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    API.getEducation().then(({ data }) => {
+      setRecords(data);
+      setOpen(false);
+    });
   };
 
   return (

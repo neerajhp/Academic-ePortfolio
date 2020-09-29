@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -17,13 +17,18 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     background: theme.palette.secondary.light,
     color: theme.palette.text.secondary,
-    padding: '5% 10% 5% 5%',
+    padding: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: { width: '100%' },
+  tableContainer: {
+    width: '90%',
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(3),
+  },
   table: {
     '& .MuiTableCell-body': {
       color: theme.palette.text.secondary,
@@ -59,7 +64,9 @@ const MONTHS = {
 const EducationCard = ({ education }) => {
   const classes = useStyles();
 
-  const checkRecord = (education) => {
+  const [records, setRecords] = useState(education);
+
+  const getRecord = (education) => {
     if (!(Array.isArray(education) && education.length)) {
       return <Typography> Add your education!</Typography>;
     } else {
@@ -78,7 +85,7 @@ const EducationCard = ({ education }) => {
                   <Typography variant='h4'>{edu.schoolName}</Typography>
                   {edu.edu_type === 'University' ? (
                     <Typography>
-                      {edu.unicourseName},{edu.unimajorName}
+                      {edu.unicourseName} {edu.unimajorName}
                     </Typography>
                   ) : (
                     ''
@@ -97,8 +104,8 @@ const EducationCard = ({ education }) => {
       <Typography className={classes.title} variant='h2'>
         Education{' '}
       </Typography>
-      {checkRecord(education)}
-      <EducationDialog records={education} />
+      <div className={classes.tableContainer}>{getRecord(records)}</div>
+      <EducationDialog records={records} setRecords={setRecords} />
     </Paper>
   );
 };

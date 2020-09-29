@@ -18,9 +18,24 @@ export default {
   },
 
   /* ================ Authorised Calls ================ */
+  getUserInfo: () => {
+    return axios.get('/api/user/userInfo', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
 
   getUserProfile: () => {
     return axios.get('/api/profile/', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  getViewedProfile: function (body) {
+    return axios.get('/api/view/profile', {
+      userID: body.userID,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -57,56 +72,62 @@ export default {
   },
   // Creates an education record
   postEducation: function (body) {
-    return axios.get('/api/profile/education', {
+    console.log(body.edu_type);
+    return axios.post(
+      '/api/profile/education',
+      {
         edu_type: body.edu_type,
         schoolName: body.schoolName,
-        unimajorName: body.unimajorName,
-        country: body.country,
-        city: body.city,
+        unicourseName: body.unicourseName,
         monthStart: body.monthStart,
         yearStart: body.yearStart,
         monthEnd: body.monthEnd,
         yearEnd: body.yearEnd,
         graduated: body.graduated,
+      },
+      {
         headers: {
           Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-    });
+      }
+    );
   },
   // Updates a specific education record
-  updateEducation: function (body) {
-    return axios.put('/api/profile/education/:id', {
+  updateEducation: function (body, recordId) {
+    return axios.put(
+      `/api/profile/education/${recordId}`,
+      {
         edu_type: body.edu_type,
         schoolName: body.schoolName,
         unicourseName: body.unicourseName,
         unimajorName: body.unimajorName,
-        country: body.country,
-        city: body.city,
         monthStart: body.monthStart,
         yearStart: body.yearStart,
         monthEnd: body.monthEnd,
         yearEnd: body.yearEnd,
         graduated: body.graduated,
+      },
+      {
         headers: {
           Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-    });
-
+      }
+    );
   },
   // Deletes a specific education record
-  deleteEducation: function () {
-    return axios.delete('/api/profile/education/:id', {
-        headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        },
+  deleteEducation: function (recordID) {
+    return axios.delete(`/api/profile/education/${recordID}`, {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   // Delete all user education records
   clearEducation: function () {
     return axios.delete('/api/profile/education', {
-        headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        },
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   // Gets all of the user's uploaded files (except profile picture and cv)
@@ -116,6 +137,14 @@ export default {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     }); // Gets an array of all Document objects that belong to the user
+  },
+  // Gets all of the viewed user's uploaded files
+  viewerGetAllFiles: function (body) {
+    return axios.get('api/view/files', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   },
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function (body) {
@@ -144,10 +173,24 @@ export default {
       },
     });
   },
+  deleteCV: function () {
+    return axios.delete('/api/files/cv', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   uploadProfilePic: function (body) {
     return axios.post('/api/upload/profile-pic', {
       // The file key is "profile-pic"
       file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  deleteProfilePic: function () {
+    return axios.delete('/api/files/profile-pic', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -179,13 +222,13 @@ export default {
     });
   },
   // Deletes multiple files
-  deleteFiles: function (body){
+  deleteFiles: function (body) {
     return axios.delete('/api/files/delete', {
       IDs: body.IDs,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
-    })
+    });
   },
   // Deletes all of the user's files (documents, images, profile picture and cv)
   // Its probably best if this api is only used for deleting a profile
@@ -223,25 +266,25 @@ export default {
     });
   },
   // Creates a featured work
-  createFeaturedWork: function(body) {
+  createFeaturedWork: function (body) {
     return axios.post('api/profile/featured-work', {
-        title: body.title,
-        type: body.type,
-        description: body.description,
-        // attachedFile: {
-        //      documentID: "5f10kjipmd"
-        //      fileLink: "http/:www.random.com/"
-        //  }
-        attachedFile: body.attachedFile,
-        image: body.image,
-        url: body.url,
-        headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        },
+      title: body.title,
+      type: body.type,
+      description: body.description,
+      // attachedFile: {
+      //      documentID: "5f10kjipmd"
+      //      fileLink: "http/:www.random.com/"
+      //  }
+      attachedFile: body.attachedFile,
+      image: body.image,
+      url: body.url,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
     });
   },
   // Gets all of the user's featured works
-  getAllFeaturedWorks: function() {
+  getAllFeaturedWorks: function () {
     return axios.get('api/profile/featured-work', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -249,7 +292,7 @@ export default {
     });
   },
   // Gets a specific featured work
-  getFeaturedWork: function() {
+  getFeaturedWork: function () {
     return axios.get('api/profile/featured-work/:id', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -257,21 +300,21 @@ export default {
     });
   },
   // Edit a specific featured work
-  editFeaturedWork: function(body) {
+  editFeaturedWork: function (body) {
     return axios.put('api/profile/featured-work/:id', {
-        title: body.title,
-        type: body.type,
-        description: body.description,
-        attachedFile: body.attachedFile,
-        image: body.image,
-        url: body.url,
-        headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        },
-    })
+      title: body.title,
+      type: body.type,
+      description: body.description,
+      attachedFile: body.attachedFile,
+      image: body.image,
+      url: body.url,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   },
   // Removes a specific featured work
-  removeFeaturedWork: function() {
+  removeFeaturedWork: function () {
     return axios.delete('api/profile/featured-work/:id', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -279,23 +322,32 @@ export default {
     });
   },
   // Removes all of the user's featured works
-  clearShowCase: function() {
+  clearShowCase: function () {
     return axios.delete('api/profile/featured-work', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
-    })
+    });
   },
   // Gets all of the user's blog posts
-  getAllBlogs: function(){
+  getAllBlogs: function () {
     return axios.get('api/blog', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
-    })
+    });
+  },
+  // Gets all of the viewed person's blogs
+  viewerGetAllBlogs: function (body) {
+    return axios.get('api/view/blog', {
+      id: body.id,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   },
   // Gets a specific blog post
-  getBlog: function() {
+  getBlog: function () {
     return axios.get('api/blog/:id', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -303,29 +355,29 @@ export default {
     });
   },
   // Create a new blog post
-  createBlog: function(body){
+  createBlog: function (body) {
     return axios.post('api/blog', {
       title: body.title,
       dateCreated: body.dateCreated,
       content: body.content,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      }
-    })
+      },
+    });
   },
   // Edit a specific blog post
-  editBlog: function(body) {
+  editBlog: function (body) {
     return axios.put('api/blog/:id', {
-        title: body.title,
-        dateCreated: body.dateCreated,
-        content: body.content,
-        headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        },
-    })
+      title: body.title,
+      dateCreated: body.dateCreated,
+      content: body.content,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
   },
   // Removes a specific blog
-  removeBlog: function() {
+  removeBlog: function () {
     return axios.delete('api/blog/:id', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -333,7 +385,7 @@ export default {
     });
   },
   // Removes all of the user's blogs
-  clearBlogs: function() {
+  clearBlogs: function () {
     return axios.delete('api/blog', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -341,7 +393,7 @@ export default {
     });
   },
   // Get about me
-  getAboutMe: function() {
+  getAboutMe: function () {
     return axios.get('api/profile/aboutMe', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
@@ -349,17 +401,26 @@ export default {
     });
   },
   // Edit about me
-  editAboutMe: function(body){
+  editAboutMe: function (body) {
     return axios.put('api/profile/aboutMe', {
       aboutMe: body.aboutMe,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
-    })
+    });
   },
   // Get user information
-  getUserInformation: function(){
+  getUserInformation: function () {
     return axios.get('api/user/userInfo', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Get viewed user's information
+  viewerGetUserInformation: function (body) {
+    return axios.get('api/view/userInfo', {
+      userID: body.userID,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -367,16 +428,95 @@ export default {
   },
   // Edit User information
   // At the moment the user cannot change their email and password using this api
-  editUserInformation: function(body){
-    return axios.put('api/user/userInfo', {
-      firstName: body.firstName,
-      lastName: body.lastName,
-      mobileNumber: body.mobileNumber,
-      birthDate: body.birthDate,
+  editUserInformation: function (body) {
+    return axios.put(
+      'api/user/userInfo',
+      {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        mobileNumber: body.mobileNumber,
+        birthDate: body.birthDate,
+      },
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
+  },
+  // Create an experience card
+  createExperience: function (body) {
+    return axios.post('api/experience', {
+      type: body.type,
+      organization: body.organization,
+      role: body.role,
+      employeeStatus: body.employeeStatus,
+      yearStart: body.yearStart,
+      yearEnd: body.yearEnd,
+      monthStart: body.monthStart,
+      monthEnd: body.monthEnd,
+      description: body.description,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
-  }
-
+  },
+  // Gets all of the user's experience (All types)
+  getAllExperience: function () {
+    return axios.get('api/experience', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets all of the viewed profile's experience
+  viewGetAllExperience: function (body) {
+    return axios.get('api/view/experience', {
+      userID: body.userID,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets the user's employment history
+  getEmploymentHist: function () {
+    return axios.get('api/experience/employment', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Gets the user's volunteering history
+  getVolunteeringHist: function () {
+    return axios.get('api/experience/volunteering', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Deletes an experience card
+  deleteExperience: function () {
+    return axios.delete('api/experience/delete/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Edits a specific experience
+  editExperience: function (body) {
+    return axios.put('api/experience/edit/:id', {
+      type: body.type,
+      organization: body.organization,
+      role: body.role,
+      employeeStatus: body.employeeStatus,
+      yearStart: body.yearStart,
+      yearEnd: body.yearEnd,
+      monthStart: body.monthStart,
+      monthEnd: body.monthEnd,
+      description: body.description,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
 };

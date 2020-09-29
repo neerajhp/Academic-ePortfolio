@@ -7,7 +7,7 @@ const postBlog = async (req, res) => {
         title: req.body.title,
         date_created: req.body.date_created,
         content: req.body.content,
-        images: req.body.images
+        //images: req.body.images
     });
 
 
@@ -23,8 +23,6 @@ const postBlog = async (req, res) => {
                             res.status(400).json(err);
                         }else{
                             res.status(200).json(doc);
-                            //console.log(doc.dateCreated);
-                            //dateFormatter(doc.dateCreated);
                         }
                     });
                 }else{
@@ -40,41 +38,44 @@ const postBlog = async (req, res) => {
 // Gets all of the user's blogs (API)
 const getAllBlogs = async (req, res) => {
     try{
-        await Blog.find({user_id: req.user.id}, (err, result) => {
-            if(err){
-                throw err;
-            }else{
-                if(result){
-                    console.log(result.length);
-                    res.status(200).json(result);
-                }else{
-                    res.status(400).json("Failed to find blogs");
-                }
-            }
-        });
+        let blogs = await findBlogs(req.user.id);
+        if(!blogs || blogs.length === 0){
+            res.status(400).json("No blogs found");
+        }else{
+            res.status(200).json(blogs);
+        }
     }catch(error){
         res.status(400).json("Error occured while looking for blogs");
     }
 }
 
-// Function that looks for all of the user's blogs
-// const searchBlogs = async (userID) => {
-//     let blogs;
-//     await Blog.find({user_id: userID}, (err, result) => {
-//         console.log("Time to look for blogs");
-//         if(err){
-//             throw err;
-//         }else{
-//             if(result){
-//                 console.log("Blogs found");
-//                 blogs = result;
-//             }else{
-//                 blogs = null;
-//             }
-//         }
-//     });
-//     return blogs;
-// }
+// Gets all of the blogs pf the user that's being viewed
+const viewerGetAllBlogs = async (req, res) => {
+    try{
+        const userID = req.body.id;
+        let blogs = await findBlogs(userID);
+        if(!blogs || blogs.length === 0){
+            res.status(400).json("No blogs found");
+        }else{
+            res.status(200).json(blogs);
+        }
+    }catch(error){
+        res.status(400).json("Error occured while looking for blogs");
+    }
+}
+
+// function that looks for all of the user's blogs
+const findBlogs = async (userID) => {
+    let blogs;
+    await Blog.find({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }else{
+            blogs = result;
+        }
+    });
+    return blogs;
+}
 
 // Gets a specific blog
 const getBlog = async (req, res) => {
@@ -195,6 +196,7 @@ const removeAllBlogs = async (userID) => {
 module.exports = {
     postBlog,
     getAllBlogs,
+    viewerGetAllBlogs,
     getBlog,
     deleteBlog,
     clearBlogs,

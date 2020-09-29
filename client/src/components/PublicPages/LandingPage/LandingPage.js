@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Link, Typography } from '@material-ui/core';
-import Background from '../../image/bg.png';
+import Background from '../../../image/bg.png';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => {

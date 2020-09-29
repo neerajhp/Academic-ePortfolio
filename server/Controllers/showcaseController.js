@@ -171,14 +171,55 @@ const removeAllFeaturedWorks = async (userID) => {
 
 // Gets all of the user's featured works
 const getAllFeaturedWorks = async (req, res) => {
-    await FeaturedWork.find({user_id: req.user.id}, (err, results) => {
-        if(err){
-            console.log("The user does not have any featured works");
-            res.status(404).json(err);
+    try{
+        let showcase = await findShowcase(req.user.id);
+        if(showcase){
+            res.status(200).json(showcase);
         }else{
-            res.status(200).json(results);
+            res.status(400).json("No featured works");
         }
-    })
+    }catch(error){
+        res.status(400).json("Error while looking for showcase");
+    }
+    // await FeaturedWork.find({user_id: req.user.id}, (err, results) => {
+    //     if(err){
+    //         console.log("The user does not have any featured works");
+    //         res.status(404).json(err);
+    //     }else{
+    //         res.status(200).json(results);
+    //     }
+    // })
+}
+
+const viewerGetFeaturedWorks = async (req, res) => {
+    try{
+        const userID = req.body.userID;
+        let showcase = await findShowcase(userID);
+        if(showcase){
+            res.status(200).json(showcase);
+        }else{
+            res.status(400).json("The user has not featured any works");
+        }
+    }catch(error){
+        res.status(400).json("Error while looking for viewer's showcase");
+    }
+}
+
+// search all featured works
+const findShowcase = async (userID) => {
+    let showcase;
+    await FeaturedWork.find({user_id: userID}, (err, result) => {
+        if(err){
+            throw err;
+        }else{
+            if(!result || result.length == 0){
+                showcase = null
+            }else{
+                showcase = result;
+            }
+        }
+    });
+    return showcase;
 }
 
 //const getShowcase = 
@@ -188,6 +229,7 @@ module.exports = {
     editFeaturedWork,
     getFeaturedWork,
     getAllFeaturedWorks,
+    viewerGetFeaturedWorks,
     removeFeaturedWork,
     clearShowcase,
     removeAllFeaturedWorks

@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 // const cors = require("cors");
-require('dotenv').config();
+require('dotenv').config({ path: './Config/dev.env' });
 
 const server = express();
 
@@ -20,12 +20,18 @@ const userRoute = require('./server/Routes/user');
 const uploadRoute = require('./server/Routes/upload');
 const filesRoute = require('./server/Routes/files');
 const profileRoute = require('./server/Routes/profile');
+const blogRoute = require('./server/Routes/blog');
+const expRoute = require('./server/Routes/experience');
+const viewRoute = require('./server/Routes/view');
 
 // Attach the routes
 server.use('/api/user', userRoute);
 server.use('/api/upload', uploadRoute);
 server.use('/api/files', filesRoute);
 server.use('/api/profile', profileRoute);
+server.use('/api/blog', blogRoute);
+server.use('/api/experience', expRoute);
+server.use('/api/view/', viewRoute);
 
 // Database connection
 mongoose.connect(

@@ -11,13 +11,52 @@ const s3 = new AWS.S3({
 // Returns all of the user's uploaded files (except profile picture and cv)
 const getAllDocs = async (req, res) => {
     try{
-        // ideally, its probbaly better if the user_id is not from the query
-        const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
-        res.json(documents);
+        let documents = await findDocs(req.user.id);
+        if(!documents || documents.length == 0){
+            res.status(400).json("No documents found");
+        }else{
+            res.status(200).json(documents);
+        }
+        // // ideally, its probbaly better if the user_id is not from the query
+        // const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
+        // res.json(documents);
     }catch(err){
         console.log(err);
         res.json({error: "Something's up"});
     }
+}
+
+// Returns all of the viewed user's uploaded files
+const viewerGetAllDocs = async (req, res) => {
+    try{
+        let userID = req.body.userID;
+        let documents = await findDocs(userID);
+        if(!documents || documents.length == 0){
+            res.status(400).json("No documents found");
+        }else{
+            res.status(200).json(documents);
+        }
+    }catch(err){
+        console.log(err);
+        res.status(400).json("Failed to retrieve");
+    }
+}
+
+// Finds all of the docs belonging to the specified ID
+const findDocs = async (userID) => {
+    let documents;
+    await Document.find({user_id: userID, fieldName: {$in: ["document", "image"]}}, (err, result) => {
+        if(err){
+            throw err;
+        }
+        if(result){
+            documents = result;
+        }else{
+            documents = null;
+        }     
+    });
+    return documents;
+    
 }
 
 // Returns the document for download
@@ -77,7 +116,9 @@ const deleteMultiple = async (req, res, next) => {
             res.status(404).json("Files are not found");
         }else{
             console.log(docs);
-            deleteS3Multiple(docs, res);
+            // Delete s3 instances
+            deleteS3Multiple(docs);
+            // Delete document objects
             Document.deleteMany({
                 _id: {
                     $in: req.body.IDs
@@ -98,25 +139,6 @@ const deleteMultiple = async (req, res, next) => {
             });
         }
     });
-
-    // await Document.deleteMany({
-    //     _id: {
-    //         $in: req.body.IDs
-    //     }
-    // }, (err, result) => {
-    //     if(err){
-    //         res.status(400).json(err);
-    //     }else{
-    //         if(result){
-    //             console.log(result);
-    //             res.json({message: "Files have been deleted"});
-    //         }else{
-    //             console.log("Failed to delete");
-    //             res.status(400).json("Failed to delete files");
-    //         }
-            
-    //     }
-    // });
 }
 
 // API for deleting all of a user's files
@@ -175,64 +197,70 @@ const clearFiles = async (userID) => {
 
 // Deletes the cv of the user
 const deleteCV = async (req, res) => {
-    await Document.findOne({user_id: req.user.id, fieldName: "cv"}, (err, doc) => {
+    try{
+        let deleteStatus = await deleteExclusiveFile(req.user.id, "cv");
+        if(deleteStatus){
+            res.status(200).json("CV deleted");
+        }else{
+            res.status(400).json("CV not deleted or there was no CV to delete");
+        }
+    }catch(error){
+        res.status(400).json("Failed to delete cv");
+    }
+}
+
+// Deletes a file with an exclusive file type (profile picture and cv)
+const deleteExclusiveFile = async(userID, fieldName) => {
+    let deleteStatus;
+    await Document.findOne({user_id: userID, fieldName: fieldName}, (err, doc) => {
         if(err){
             console.log("Error found");
-            res.status(500).json("Something's up");
+            throw err;
         }
 
         if(!doc){
-            console.log("CV not found");
+            console.log("File not found");
         }else{
-            console.log("Old CV about to be deleted")
-            //console.log(doc);
+            console.log("Old file about to be deleted");
             deleteS3Instance(doc);
-            
         }
     });
 
-     // Delete its reference in mongoDB 
-     await Document.deleteOne({user_id: req.user.id, fieldName: "cv"}, (err) => {
+    await Document.deleteOne({user_id: userID, fieldName: fieldName}, (err, doc) => {
         if(err){
-            res.status(400).json(err);
+            throw err;
         }else{
+            if(doc){
+                if(doc.deletedCount == 0){
+                    deleteStatus = false;
+                }else{
+                    deleteStatus = true;
+                }
+            }
             console.log("file reference deleted");
-            //res.json({message: "Both the file and its reference have been deleted"});
         }
     });
+    return deleteStatus;
 }
 
 // Deletes the user's profile picture
 const deleteProfilePic = async (req, res) => {
-    await Document.findOne({user_id: req.user.id, fieldName: "profile-pic"}, (err, doc) => {
-        if(err){
-            console.log("Error found");
-            res.status(500).json("Something's up");
-        }
-
-        if(!doc){
-            console.log("Profile picture not found");
+    try{
+        let deleteStatus = await deleteExclusiveFile(req.user.id, "profile-pic");
+        if(deleteStatus){
+            res.status(200).json("Profile picture deleted");
         }else{
-            console.log("Old profile picture about to be deleted");
-            deleteS3Instance(doc);
+            res.status(400).json("Profile picture not deleted or there was no profile picture to delete");
         }
-    });
-
-    // Delete its reference in mongoDB 
-    await Document.deleteOne({user_id: req.user.id, fieldName: "profile-pic"}, (err) => {
-        if(err){
-            res.status(400).json(err);
-        }else{
-            console.log("file reference deleted");
-            //res.json({message: "Both the file and its reference have been deleted"});
-        }
-    });
+    }catch(error){
+        res.status(400).json("Failed to delete profile picture");
+    }
 
 
 }
 
 // Deletes the file in the s3 server
-const deleteS3Instance = (doc, res) => {
+const deleteS3Instance = (doc) => {
     var params = {
         Bucket: "documents-eportfolio",
         Key: doc.s3_key
@@ -242,9 +270,9 @@ const deleteS3Instance = (doc, res) => {
         if(err){
             console.log(err);
             console.log("error in callback");
-            res.status(400).json("Error while trying to delete the s3 instance of the record");
+            //res.status(400).json("Error while trying to delete the s3 instance of the record");
         }else{
-            res.status(200).json("File record and s3 instance removed");
+            //res.status(200).json("File record and s3 instance removed");
             console.log("file removed from s3");
         }
     });
@@ -282,11 +310,13 @@ const deleteS3Multiple = (docs) => {
 
 module.exports = {
     getAllDocs,
+    viewerGetAllDocs,
     getDocument,
     deleteDocument,
     deleteMultiple,
     deleteCV,
     deleteProfilePic,
     clearFiles,
-    deleteAllFiles
+    deleteAllFiles,
+    deleteExclusiveFile
 }

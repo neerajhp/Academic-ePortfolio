@@ -26,9 +26,13 @@ router.post("/login", async (req, res) => {
 });
 
 
-router.get("/userInfo", authenticate.authenticateToken, userController.getUserInformation);
+router.get("/userInfo", authenticate.authenticateToken, async (req, res) => {
+    userController.getUserInformation(req, res);
+});
 
-router.put("/userInfo", authenticate.authenticateToken, userController.editUserInformation);
+router.put("/userInfo", authenticate.authenticateToken,async (req, res) => {
+    userController.editUserInformation(req, res);
+});
 
 
 module.exports = router;

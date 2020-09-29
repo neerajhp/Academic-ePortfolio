@@ -48,7 +48,7 @@ const uploadSingle = async (req, res) => {
 
 // Upload cv API
 const uploadCV = async (req, res) => {
-    await filesController.deleteCV(req, res);
+    await filesController.deleteExclusiveFile(req.user.id, "cv");
 
     await uploadSingle(req, res);
     console.log("new cv uploaded");
@@ -56,7 +56,7 @@ const uploadCV = async (req, res) => {
 
 // Upload profile picture API
 const uploadProfilePic = async (req, res) => {
-    await filesController.deleteProfilePic(req, res);
+    await filesController.deleteExclusiveFile(req.user.id, "profile-pic");
 
     await uploadSingle(req, res);
     console.log("new profile pic uploaded");

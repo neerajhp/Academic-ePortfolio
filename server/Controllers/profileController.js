@@ -175,6 +175,7 @@ const deleteProfile = async (req, res) => {
   
 }
 
+// Gets the user's general information (Contact details, name, birth date)
 const getUserInformation = async (req, res) => {
     try{
         await User.findById(req.user.id, (err, result) => {

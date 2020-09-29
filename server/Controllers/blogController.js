@@ -2,16 +2,14 @@ const Blog = require("../Models/Blog");
 
 // Post a new blog
 const postBlog = async (req, res) => {
-    const newBlog = new Blog({
-        user_id: req.user.id,
-        title: req.body.title,
-        date_created: req.body.date_created,
-        content: req.body.content,
-        //images: req.body.images
-    });
-
-
-    try{
+   try{
+        const newBlog = new Blog({
+            user_id: req.user.id,
+            title: req.body.title,
+            date_created: req.body.date_created,
+            content: req.body.content,
+            //images: req.body.images
+        });
         await Blog.find({user_id: req.user.id, title: newBlog.title}, (err, result) => {
             if(err){
                 console.log("Error found");

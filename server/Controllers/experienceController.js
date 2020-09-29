@@ -33,10 +33,19 @@ const addExperience = async (req, res) => {
             if (err) {
               throw err;
             }
-            if (result) {
-              res.status(200).json(result);
-            } else {
-              res.status(400).json('Failed to save experience');
+            if(!result){
+                newExperience.save((err, result) => {
+                    if(err){
+                        throw err;
+                    }
+                    if(result){
+                        res.status(200).json(result);
+                    }else{
+                        res.status(400).json("Failed to save experience");
+                    }
+                });
+            }else{
+                res.status(400).json("A duplicate exists");
             }
           });
         }
@@ -80,18 +89,18 @@ const editExperience = async (req, res, next) => {
 
 // Gets all of the user's experience history (All types)
 const getAllExperience = async (req, res) => {
-  try {
-    let exp = await findAll(req.user.id);
-    if (exp == null) {
-      res.send([]);
-    } else {
-      res.status(200).json(exp);
+    try{
+        let exp = await findAll(req.user.id);
+        if(exp == null){
+            res.status(404).json("The user has not uploaded any experiences");
+        }else{
+            //exp.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+            sortExp(exp);
+            res.status(200).json(exp);
+        }
+    }catch(error){
+        res.status(400).send("Error occured while looking for the user's experiences");
     }
-  } catch (error) {
-    res
-      .status(400)
-      .send("Error occured while looking for the user's experiences");
-  }
 };
 
 const viewerGetAllExperience = async (req, res) => {
@@ -109,6 +118,15 @@ const viewerGetAllExperience = async (req, res) => {
       .send("Error occured while looking for the user's experiences");
   }
 };
+
+const sortExp = (obj) => {
+    for(var exp in obj){
+        console.log(exp);
+        obj[exp].sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+    }
+    console.log(obj);
+    return obj;
+}
 
 // Finds all experience associated with the userID
 const findAll = async (userID) => {

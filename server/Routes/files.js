@@ -7,6 +7,10 @@ router.use(authenticate.authenticateToken);
 // Get all documents that belong to the user
 router.get("/", filesController.getAllDocs);
 
+router.get("/image/:id", filesController.displayPicture);
+
+//router.get("/download/:id", filesController.downloadFile);
+
 router.delete("/cv", filesController.deleteCV);
 
 router.delete("/profile-pic", filesController.deleteProfilePic);

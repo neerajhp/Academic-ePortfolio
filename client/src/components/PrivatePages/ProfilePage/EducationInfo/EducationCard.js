@@ -85,7 +85,7 @@ const EducationCard = ({ education }) => {
                   <Typography variant='h4'>{edu.schoolName}</Typography>
                   {edu.edu_type === 'University' ? (
                     <Typography>
-                      {edu.unicourseName},{edu.unimajorName}
+                      {edu.unicourseName} {edu.unimajorName}
                     </Typography>
                   ) : (
                     ''

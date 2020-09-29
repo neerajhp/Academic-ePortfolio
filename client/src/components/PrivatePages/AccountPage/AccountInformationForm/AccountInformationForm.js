@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
-import { Paper, Typography, Grid, Button, Divider } from '@material-ui/core';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-
+import { Paper, Typography, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DateFnsUtils from '@date-io/date-fns'; // choose your lib
-
-import FormikField from '../../utils/FormikField';
+import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';
-import API from '../../../api/API';
+import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 
@@ -81,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const PersonalInformationForm = ({ user }) => {
+const AccountInformationForm = ({ user }) => {
   const classes = useStyles();
 
   const [Submitted, setSubmitted] = useState(false);
@@ -90,81 +83,59 @@ const PersonalInformationForm = ({ user }) => {
   return (
     <Paper className={classes.card}>
       <div className={classes.title}>
-        <Typography variant='h2'>Personal information</Typography>
+        <Typography variant='h2'>Account information</Typography>
       </div>
       <div className={classes.formContainer}>
         <Formik
           initialValues={{
-            firstName: user.firstName,
-            lastName: user.lastName,
-            mobileNumber: user.mobileNumber,
-            birthDate: user.birthDate,
+            email: user.email,
+            password: '',
+            confirmpassword: '',
           }}
           onSubmit={(values, actions) => {
             setSubmitted(false);
-            API.editUserInformation({
-              firstName: values.firstName,
-              lastName: values.lastName,
-              mobileNumber: values.mobileNumber,
-              birthDate: values.birthDate,
-            })
-              .then((res) => {
-                setSubmitted(true);
-                actions.setSubmitting(false);
-              })
-              .catch((err) => {
-                console.log(err);
-                actions.setFieldError('mobileNumber', err.response.data);
-                actions.setSubmitting(false);
-              });
+            // API.editUserInformation({
+            //   email: values.email,
+            //   password: values.password,
+            //   confirmpassword: values.confirmpassword,
+            // })
+            //   .then((res) => {
+            //     setSubmitted(true);
+            //     actions.setSubmitting(false);
+            //   })
+            //   .catch((err) => {
+            //     console.log(err);
+            //     actions.setFieldError('mobileNumber', err.response.data);
+            //     actions.setSubmitting(false);
+            //   });
           }}
           validationSchema={validationSchema}
         >
           {(formikProps) => (
             <form className={classes.form} onSubmit={formikProps.handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <FormikField
-                    label='FirstName'
-                    formikProps={formikProps}
-                    formikKey='firstName'
-                    required
-                    defaultValue={user.firstName}
-                    className={`${classes.field} ${fieldSubmitted}`}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <FormikField
-                    label='LastName'
-                    formikProps={formikProps}
-                    formikKey='lastName'
-                    required
-                    defaultValue={user.lastName}
-                    className={`${classes.field} ${fieldSubmitted}`}
-                  />
-                </Grid>
-              </Grid>
               <FormikField
-                label='Mobile Number'
+                label='Email'
                 formikProps={formikProps}
-                formikKey='mobileNumber'
+                formikKey='email'
                 required
-                defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  inputVariant='outlined'
-                  format='dd/MM/yyyy'
-                  clearable
-                  value={formikProps.values.birthDate}
-                  label={'Date of Birth'}
-                  className={`${classes.field} ${fieldSubmitted}`}
-                  onChange={(value) =>
-                    formikProps.setFieldValue('birthDate', value)
-                  }
-                />
-              </MuiPickersUtilsProvider>
+              <FormikField
+                label='Password'
+                formikProps={formikProps}
+                formikKey='password'
+                type='password'
+                required
+                className={`${classes.field} ${fieldSubmitted}`}
+              />
+              <FormikField
+                label='Confirm Password'
+                formikProps={formikProps}
+                formikKey='confirmPassword'
+                type='password'
+                required
+                className={`${classes.field} ${fieldSubmitted}`}
+              />
               <div className={classes.buttonWrapper}>
                 <Button
                   type='Submit'
@@ -191,4 +162,4 @@ const PersonalInformationForm = ({ user }) => {
   );
 };
 
-export default PersonalInformationForm;
+export default AccountInformationForm;

@@ -5,6 +5,11 @@ import theme from './theme';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
 import { AuthContext } from '../context/auth';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import PrivateLayout from './PrivatePages/PrivateLayout';
 import LoginPage from './PublicPages/LoginPage/LoginPage';
 import SignUpPage from './PublicPages/SignUpPage/SignUpPage';
@@ -25,16 +30,18 @@ function App() {
     <div>
       <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
         <ThemeProvider theme={theme}>
-          <CssBaseline>
-            <Router>
-              <Switch>
-                <Route exact path='/home' component={LandingPage} />
-                <Route exact path='/login' component={LoginPage} />
-                <Route exact path='/signup' component={SignUpPage} />
-                <PrivateRoute path='/' component={PrivateLayout} />
-              </Switch>
-            </Router>
-          </CssBaseline>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <CssBaseline>
+              <Router>
+                <Switch>
+                  <Route exact path='/home' component={LandingPage} />
+                  <Route exact path='/login' component={LoginPage} />
+                  <Route exact path='/signup' component={SignUpPage} />
+                  <PrivateRoute path='/' component={PrivateLayout} />
+                </Switch>
+              </Router>
+            </CssBaseline>
+          </MuiPickersUtilsProvider>
         </ThemeProvider>
       </AuthContext.Provider>
     </div>

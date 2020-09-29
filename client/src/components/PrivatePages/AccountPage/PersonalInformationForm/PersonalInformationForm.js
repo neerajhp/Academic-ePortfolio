@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
-import { Paper, Typography, Button } from '@material-ui/core';
+import { Paper, Typography, Grid, Button, Divider } from '@material-ui/core';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormikField from '../../utils/FormikField';
+
+import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';
-import API from '../../../api/API';
+import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 
@@ -74,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const AccountInformationForm = ({ user }) => {
+const PersonalInformationForm = ({ user }) => {
   const classes = useStyles();
 
   const [Submitted, setSubmitted] = useState(false);
@@ -83,59 +89,82 @@ const AccountInformationForm = ({ user }) => {
   return (
     <Paper className={classes.card}>
       <div className={classes.title}>
-        <Typography variant='h2'>Account information</Typography>
+        <Typography variant='h2'>Personal information</Typography>
       </div>
       <div className={classes.formContainer}>
         <Formik
           initialValues={{
-            email: user.email,
-            password: '',
-            confirmpassword: '',
+            firstName: user.firstName,
+            lastName: user.lastName,
+            mobileNumber: user.mobileNumber,
+            birthDate: user.birthDate,
           }}
           onSubmit={(values, actions) => {
             setSubmitted(false);
-            // API.editUserInformation({
-            //   email: values.email,
-            //   password: values.password,
-            //   confirmpassword: values.confirmpassword,
-            // })
-            //   .then((res) => {
-            //     setSubmitted(true);
-            //     actions.setSubmitting(false);
-            //   })
-            //   .catch((err) => {
-            //     console.log(err);
-            //     actions.setFieldError('mobileNumber', err.response.data);
-            //     actions.setSubmitting(false);
-            //   });
+            API.editUserInformation({
+              firstName: values.firstName,
+              lastName: values.lastName,
+              mobileNumber: values.mobileNumber,
+              birthDate: values.birthDate,
+            })
+              .then((res) => {
+                setSubmitted(true);
+                actions.setSubmitting(false);
+              })
+              .catch((err) => {
+                console.log(err);
+                actions.setFieldError('mobileNumber', err.response.data);
+                actions.setSubmitting(false);
+              });
           }}
           validationSchema={validationSchema}
         >
           {(formikProps) => (
             <form className={classes.form} onSubmit={formikProps.handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <FormikField
+                    label='FirstName'
+                    formikProps={formikProps}
+                    formikKey='firstName'
+                    required
+                    defaultValue={user.firstName}
+                    className={`${classes.field} ${fieldSubmitted}`}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormikField
+                    label='LastName'
+                    formikProps={formikProps}
+                    formikKey='lastName'
+                    required
+                    defaultValue={user.lastName}
+                    className={`${classes.field} ${fieldSubmitted}`}
+                  />
+                </Grid>
+              </Grid>
               <FormikField
-                label='Email'
+                label='Mobile Number'
                 formikProps={formikProps}
-                formikKey='email'
+                formikKey='mobileNumber'
                 required
+                defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
+
               <FormikField
-                label='Password'
+                label='Date of Birth'
                 formikProps={formikProps}
-                formikKey='password'
-                type='password'
+                formikKey='birthDate'
+                type='date'
                 required
+                defaultValue={user.birthDate.substring(0, 10)}
                 className={`${classes.field} ${fieldSubmitted}`}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
-              <FormikField
-                label='Confirm Password'
-                formikProps={formikProps}
-                formikKey='confirmPassword'
-                type='password'
-                required
-                className={`${classes.field} ${fieldSubmitted}`}
-              />
+
               <div className={classes.buttonWrapper}>
                 <Button
                   type='Submit'
@@ -162,4 +191,4 @@ const AccountInformationForm = ({ user }) => {
   );
 };
 
-export default AccountInformationForm;
+export default PersonalInformationForm;

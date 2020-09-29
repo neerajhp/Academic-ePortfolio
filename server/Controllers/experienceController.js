@@ -101,11 +101,6 @@ const getAllExperience = async (req, res) => {
     }catch(error){
         res.status(400).send("Error occured while looking for the user's experiences");
     }
-  } catch (error) {
-    res
-      .status(400)
-      .send("Error occured while looking for the user's experiences");
-  }
 };
 
 const viewerGetAllExperience = async (req, res) => {

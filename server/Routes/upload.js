@@ -71,6 +71,19 @@ router.post("/profile-pic", (req, res) => {
     })
 });
 
+// Handles the upload of a single image
+const singleImage = parse.imageUpload.single("image");
+router.post("/image", (req, res) => {
+    singleImage(req, res, (err) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }else{
+            uploadController.uploadSingle(req, res);
+        }
+    });
+});
+
 // Handles the upload of multiple images
 const multipleImages = parse.imageUpload.array("image", 5);
 router.post("/images", (req, res) => {

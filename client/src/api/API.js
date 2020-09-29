@@ -196,6 +196,16 @@ export default {
       },
     });
   },
+  // Single upload of image
+  uploadImage: function (body) {
+    return axios.post('/api/upload/image', {
+      file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    });
+  },
+  // Multiple uploads of images
   uploadImages: function (body) {
     return axios.post('/api/upload/images', {
       // The file key is "image"
@@ -208,6 +218,14 @@ export default {
   // Gets a file based on its objectID
   getFile: function () {
     return axios.get('/api/files/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Displays an image based on the id in the params
+  displayImage: function () {
+    return axios.get('/api/files/image/:id', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },

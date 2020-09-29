@@ -1,5 +1,6 @@
 const Document = require("../Models/Document");
 const AWS = require("aws-sdk");
+const stream = require('stream')
 require('dotenv').config();
 
 
@@ -75,6 +76,26 @@ const getDocument = async (req, res, next) => {
             console.log("File found");
         }
         
+    })
+}
+
+// Downloads a file
+const downloadFile = async (req, res,next) => {
+    await Document.findById(req.params.id, (err, doc) => {
+        if(err){
+            throw err
+        }
+        if(doc){
+            var params = {
+                Bucket: "documents-eportfolio",
+                Key: doc.s3_key
+            }
+            s3.getObject(params)
+                .createReadStream()
+                    .on('error', function(err){
+                        res.status(500).json({error:"Error -> " + err});
+                }).pipe(res);
+        }
     })
 }
 
@@ -312,6 +333,7 @@ module.exports = {
     getAllDocs,
     viewerGetAllDocs,
     getDocument,
+    downloadFile,
     deleteDocument,
     deleteMultiple,
     deleteCV,

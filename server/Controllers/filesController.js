@@ -86,29 +86,64 @@ const getDocument = async (req, res, next) => {
 
 // Displays a picture
 const displayPicture = async (req, res, next) => {
-    await Document.findOne({_id: req.params.id, fieldName: "image"}, (err, doc) => {
-        if(err){
-            throw err
-        }
-        if(doc){
-            var params = {
-                Bucket: "documents-eportfolio",
-                Key: doc.s3_key
+    try{
+        await Document.findOne({_id: req.params.id, fieldName: "image"}, (err, doc) => {
+        
+            if(err){
+                throw err
             }
-            s3.getObject(params, (err, data) => {
-                res.writeHead(200, {'Content-Type': doc.fileType});
-                res.write(data.Body, 'binary');
-                res.end(null, 'binary');
-            })
-            // s3.getObject(params)
-            //     .createReadStream()
-            //         .on('error', function(err){
-            //             res.status(500).json({error:"Error -> " + err});
-            //     }).pipe(res);
-        }else{
-            res.status(404).json("File not found");
-        }
-    });
+            if(doc){
+                var params = {
+                    Bucket: "documents-eportfolio",
+                    Key: doc.s3_key
+                }
+                s3.getObject(params, (err, data) => {
+                    res.writeHead(200, {'Content-Type': doc.fileType});
+                    res.write(data.Body, 'binary');
+                    res.end(null, 'binary');
+                })
+                // s3.getObject(params)
+                //     .createReadStream()
+                //         .on('error', function(err){
+                //             res.status(500).json({error:"Error -> " + err});
+                //     }).pipe(res);
+            }else{
+                res.status(404).json("File not found");
+            }
+        });
+    }catch(error){
+        res.status(400).send("Error while trying to display picture");
+    }
+  
+}
+
+// Display profile picture
+const displayProfilePic = async (req, res) => {
+    try{
+        await Document.findOne({fieldName: "profile-pic"}, (err, doc) => {
+        
+            if(err){
+                throw err
+            }
+            if(doc){
+                var params = {
+                    Bucket: "documents-eportfolio",
+                    Key: doc.s3_key
+                }
+                s3.getObject(params, (err, data) => {
+                    res.writeHead(200, {'Content-Type': doc.fileType});
+                    res.write(data.Body, 'binary');
+                    res.end(null, 'binary');
+                })
+                
+            }else{
+                res.status(404).json("File not found");
+            }
+        });
+    }catch(error){
+        res.status(400).send("Error while trying to display picture");
+    }
+   
 }
 
 const downloadFile = async (req, res) => {
@@ -386,6 +421,7 @@ module.exports = {
     viewerGetAllDocs,
     getDocument,
     displayPicture,
+    displayProfilePic,
     downloadFile,
     deleteDocument,
     deleteMultiple,

@@ -15,6 +15,8 @@ router.delete("/cv", filesController.deleteCV);
 
 router.delete("/profile-pic", filesController.deleteProfilePic);
 
+router.get("/image/profile-pic", filesController.displayProfilePic);
+
 router.delete("/", filesController.deleteAllFiles);
 
 router.delete("/delete", filesController.deleteMultiple);

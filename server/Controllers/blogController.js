@@ -50,7 +50,7 @@ const getAllBlogs = async (req, res) => {
 // Gets all of the blogs pf the user that's being viewed
 const viewerGetAllBlogs = async (req, res) => {
     try{
-        const userID = req.body.id;
+        const userID = req.viewID;
         let blogs = await findBlogs(userID);
         if(!blogs || blogs.length === 0){
             res.status(400).json("No blogs found");

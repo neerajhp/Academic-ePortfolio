@@ -63,6 +63,7 @@ const getAllInfo = async (userID) => {
     const profile = {
         firstName: userRecord.firstName,
         lastName: userRecord.lastName,
+        userName: userRecord.userName,
         email: userRecord.email,
         bio: userRecord.biography,
         aboutMe: userRecord.aboutMe,
@@ -80,7 +81,7 @@ const getAllInfo = async (userID) => {
 // Gets the viewed user's profile
 const viewerGetProfile = async (req, res) => {
     try{
-        let userID = req.userID;
+        let userID = req.viewID;
         let profile = await getAllInfo(userID);
         if(profile){
             res.status(200).json(profile);

@@ -186,7 +186,7 @@ exports.getUserInformation = async (req, res) => {
 
 exports.viewerGetUserInformation = async (req, res) => {
   try{
-    let userID = req.body.userID;
+    let userID = req.viewID;
     let userInfo = await findInfo(userID);
       if(userInfo){
         res.status(200).json(userInfo);

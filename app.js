@@ -24,6 +24,7 @@ const blogRoute = require('./server/Routes/blog');
 const expRoute = require('./server/Routes/experience');
 const viewRoute = require('./server/Routes/view');
 
+
 // Attach the routes
 server.use('/api/user', userRoute);
 server.use('/api/upload', uploadRoute);

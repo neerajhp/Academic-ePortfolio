@@ -66,7 +66,18 @@ const LoginPage = () => {
       className='background'
       style={{ backgroundImage: `url(${Background})` }}
     >
+
       <div className={classes.root}>
+        <div className={classes.login}>
+          <Link href='./login'>
+            <Button
+                type='Submit'
+                color='textSecondary'
+            >
+              <Typography>Login</Typography>
+            </Button>
+          </Link>
+        </div>
         <div className={classes.banner}>
           <Typography variant='h1' color='textSecondary'>
             Login to Your Portfolio

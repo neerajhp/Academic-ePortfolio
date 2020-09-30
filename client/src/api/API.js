@@ -196,6 +196,16 @@ export default {
       },
     });
   },
+  // Single upload of image
+  uploadImage: function (body) {
+    return axios.post('/api/upload/image', {
+      file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      }
+    });
+  },
+  // Multiple uploads of images
   uploadImages: function (body) {
     return axios.post('/api/upload/images', {
       // The file key is "image"
@@ -208,6 +218,14 @@ export default {
   // Gets a file based on its objectID
   getFile: function () {
     return axios.get('/api/files/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Displays an image based on the id in the params
+  displayImage: function () {
+    return axios.get('/api/files/image/:id', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -446,20 +464,25 @@ export default {
   },
   // Create an experience card
   createExperience: function (body) {
-    return axios.post('api/experience', {
-      type: body.type,
-      organization: body.organization,
-      role: body.role,
-      employeeStatus: body.employeeStatus,
-      yearStart: body.yearStart,
-      yearEnd: body.yearEnd,
-      monthStart: body.monthStart,
-      monthEnd: body.monthEnd,
-      description: body.description,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      'api/experience',
+      {
+        type: body.type,
+        organization: body.organization,
+        role: body.role,
+        employeeStatus: body.employeeStatus,
+        yearStart: body.yearStart,
+        yearEnd: body.yearEnd,
+        monthStart: body.monthStart,
+        monthEnd: body.monthEnd,
+        description: body.description,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Gets all of the user's experience (All types)
   getAllExperience: function () {
@@ -495,28 +518,33 @@ export default {
     });
   },
   // Deletes an experience card
-  deleteExperience: function () {
-    return axios.delete('api/experience/delete/:id', {
+  deleteExperience: function (recordID) {
+    return axios.delete(`api/experience/delete/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
   },
   // Edits a specific experience
-  editExperience: function (body) {
-    return axios.put('api/experience/edit/:id', {
-      type: body.type,
-      organization: body.organization,
-      role: body.role,
-      employeeStatus: body.employeeStatus,
-      yearStart: body.yearStart,
-      yearEnd: body.yearEnd,
-      monthStart: body.monthStart,
-      monthEnd: body.monthEnd,
-      description: body.description,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+  editExperience: function (body, recordID) {
+    return axios.put(
+      `api/experience/edit/${recordID}`,
+      {
+        type: body.type,
+        organization: body.organization,
+        role: body.role,
+        employeeStatus: body.employeeStatus,
+        yearStart: body.yearStart,
+        yearEnd: body.yearEnd,
+        monthStart: body.monthStart,
+        monthEnd: body.monthEnd,
+        description: body.description,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
 };

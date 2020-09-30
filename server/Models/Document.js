@@ -5,6 +5,7 @@ const documentSchema = mongoose.Schema({
     //description: {type: String},
     user_id: {type: String, required: true},
     fieldName: {type: String},
+    fileType: {type: String},
     fileLink: {type: String},
     s3_key: {type: String},
 },

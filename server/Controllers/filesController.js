@@ -1,5 +1,6 @@
 const Document = require("../Models/Document");
 const AWS = require("aws-sdk");
+const stream = require('stream')
 require('dotenv').config();
 
 
@@ -71,12 +72,84 @@ const getDocument = async (req, res, next) => {
             console.log("File not found");
             res.status(404).json({error: "File not found"});
         }else{
-            res.json(doc);
+            // res.setHeader('Content-Type', 'image/png');
+            // res.setHeader('Content-Disposition', "inline");
+            res.send(doc.fileLink);
             console.log("File found");
         }
         
     })
 }
+
+// Displays a picture
+const displayPicture = async (req, res, next) => {
+    await Document.findOne({_id: req.params.id, fieldName: "image"}, (err, doc) => {
+        if(err){
+            throw err
+        }
+        if(doc){
+            var params = {
+                Bucket: "documents-eportfolio",
+                Key: doc.s3_key
+            }
+            s3.getObject(params, (err, data) => {
+                res.writeHead(200, {'Content-Type': doc.fileType});
+                res.write(data.Body, 'binary');
+                res.end(null, 'binary');
+            })
+            // s3.getObject(params)
+            //     .createReadStream()
+            //         .on('error', function(err){
+            //             res.status(500).json({error:"Error -> " + err});
+            //     }).pipe(res);
+        }else{
+            res.status(404).json("File not found");
+        }
+    });
+}
+
+// const downloadFile = async (req, res) => {
+//     try{
+//         await Document.findById(req.params.id, (err, doc) => {
+//             if(err){
+//                 throw err;
+//             }
+//             if(doc){
+//                 var params = {
+//                     Bucket: "documents-eportfolio",
+//                     Key: doc.s3_key
+//                 }
+//                 s3.getObject(params, (err, data) => {
+//                     if(err){
+//                         throw err;
+//                     }
+//                     let objectData = data.Body.toString('utf-8');
+//                     res.status(200).json(objectData);
+//                 })
+//             }
+//         })
+//     }catch(error){
+//         res.status(400).json("File failed to download");
+//     }
+    // await Document.findById(req.params.id, (err, doc) => {
+    //     if(err){
+    //         throw err;
+    //     }
+    //     if(doc){
+    //         var params = {
+    //             Bucket: "documents-eportfolio",
+    //             Key: doc.s3_key
+    //         }
+    //         s3.getObject(params, (err, data) => {
+    //             if(err){
+    //                 throw err;
+    //             }
+    //             let objectData = data.Body.toString('utf-8');
+    //             res.status(200).json(objectData);
+    //         })
+    //     }
+    // })
+//}
 
 // Deletes a document based on its objectID
 const deleteDocument = async (req, res, next) => {
@@ -312,6 +385,8 @@ module.exports = {
     getAllDocs,
     viewerGetAllDocs,
     getDocument,
+    displayPicture,
+    //downloadFile,
     deleteDocument,
     deleteMultiple,
     deleteCV,

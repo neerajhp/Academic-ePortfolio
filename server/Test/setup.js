@@ -30,9 +30,11 @@ async function dropAllCollections () {
 
 module.exports = {
   async clearDB () {
-      
+
+
     // Disconnect Mongoose
     afterAll(async () => {
+      await removeAllCollections()
       await dropAllCollections()
       await mongoose.connection.close()
     })

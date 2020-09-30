@@ -524,7 +524,7 @@ export default {
     );
   },
 
-  
+  // Viewer
   // Gets all the profile of the viewed person
   viewerGetProfile: function (body) {
     return axios.get('api/view/profile/:userName', {

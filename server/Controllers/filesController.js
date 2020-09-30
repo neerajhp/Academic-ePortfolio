@@ -120,7 +120,7 @@ const displayPicture = async (req, res, next) => {
 // Display profile picture
 const displayProfilePic = async (req, res) => {
     try{
-        await Document.findOne({fieldName: "profile-pic"}, (err, doc) => {
+        await Document.findOne({_id: req.user.id, fieldName: "profile-pic"}, (err, doc) => {
         
             if(err){
                 throw err

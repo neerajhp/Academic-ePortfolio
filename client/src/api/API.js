@@ -239,6 +239,15 @@ export default {
       },
     });
   },
+  // Use this if the link doesn't work (Not sure if this will work)
+  // At the moment this only works for displaying the logged in user's profile picture
+  displayProfilePic: function() {
+    return axios.get('/api/files/image/profile-pic', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
   // Deletes the file by objectID
   deleteFile: function () {
     return axios.delete('/api/files/:id', {

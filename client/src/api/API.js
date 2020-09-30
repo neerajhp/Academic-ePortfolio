@@ -223,6 +223,14 @@ export default {
       },
     });
   },
+  // Downloads a file
+  downloadFile: function () {
+    return axios.get('/api/files/download/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // Displays an image based on the id in the params
   displayImage: function () {
     return axios.get('/api/files/image/:id', {

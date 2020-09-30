@@ -128,7 +128,7 @@ exports.postLogin = async (req, res) => {
               payload,
               process.env.SECRET_OR_KEY,
               {
-                expiresIn: 31556926, // 1 year in seconds
+                expiresIn: 3600, // 1 year in seconds
               },
               (err, token) => {
                 res.json({

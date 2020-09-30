@@ -4,7 +4,7 @@ const request = supertest(server)
 const mongoose = require('mongoose');
 
 const { clearDB } = require('./setup');
-const { response } = require('../../app');
+
 
 clearDB();
 

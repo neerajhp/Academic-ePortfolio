@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -16,6 +17,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import CharacterCard from './CharacterInfo/CharacterCard';
 import EducationCard from './EducationInfo/EducationCard';
+import ExperienceCard from './ExperienceInfo/ExperienceCard';
 import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
@@ -80,21 +82,34 @@ const ProfilePage = () => {
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
   const [userEducation, setEducation] = useState(null);
+  const [userExperience, setExperience] = useState(null);
+
+  //Load user data
 
   useEffect(() => {
-    API.getUserProfile().then(({ data }) => {
-      setUser(data);
-      setLoading(false);
-    });
+    API.getUserProfile()
+      .then(({ data }) => {
+        setUser(data);
+      })
+      .catch();
 
-    API.getEducation().then(({ data }) => {
-      setEducation(data);
-    });
+    API.getEducation()
+      .then(({ data }) => {
+        setEducation(data);
+      })
+      .catch();
+
+    API.getAllExperience()
+      .then(({ data }) => {
+        setExperience(data);
+        console.log(data);
+      })
+      .catch();
   }, []);
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (isLoading) {
+  if (!(user && userEducation && userExperience)) {
     pageContent = (
       <div>
         <div className={classes.loading}>
@@ -156,6 +171,7 @@ const ProfilePage = () => {
             </div>
             <div className={classes.section}>
               <CharacterCard user={user} />
+              <ExperienceCard experience={userExperience} />
               <EducationCard education={userEducation} />
               <SkillsCard skills={user.skills} />
             </div>

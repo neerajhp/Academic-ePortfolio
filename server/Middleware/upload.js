@@ -8,7 +8,7 @@ AWS.config.update({ region:'ap-southeast-2' });
 require('dotenv').config();
 
 const maxFileSize = 8 * 1024 * 1024;
-const maxImageSize = 3 * 1024 * 1024;
+const maxImageSize = 10 * 1024 * 1024;
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,

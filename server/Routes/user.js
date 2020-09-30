@@ -34,5 +34,8 @@ router.put("/userInfo", authenticate.authenticateToken,async (req, res) => {
     userController.editUserInformation(req, res);
 });
 
+router.get("/getID", authenticate.authenticateToken, async (req, res) => {
+    userController.getUserID(req, res);
+});
 
 module.exports = router;

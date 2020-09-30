@@ -16,6 +16,7 @@ exports.postSignup = async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      userName: req.body.userName,
       password: hash,
       //Format: YYYY-MM-DD
       birthDate: req.body.birthDate,
@@ -23,20 +24,77 @@ exports.postSignup = async (req, res) => {
       biography: req.body.biography,
       skills: req.body.skills
     });
+    // Look for duplicate email
+    await User.findOne({email: newUser.email}, (err, account) => {
+      if(err){
+        console.log(err);
+        throw err;
+      }
+      // If its a new email, check the username's uniqueness
+      if(!account){
+        console.log("email is unique");
+        User.findOne({userName: newUser.userName}, (err, result) => {
+          // If the username doesn't exist in the db, then the user can be saved
+          if(!result){
+            console.log("username is unique");
+            newUser.save();
+            res.status(200).json("New user saved");
+          }else{
+            // Suggest a username that is unique to the user
+            console.log("userName not unique");
+            let suggestedUserName = suggestUserName(newUser.userName);
+            console.log("suggested: " + suggestedUserName);
+            res.status(400).json({
+              message: "Username not unique",
+              suggestion: suggestedUserName
+            });
+          }
+        });
+
+      }else{
+        res.status(400).json("An account with this email already exists");
+      }
+    })
 
     //Check if the email is already registered
-    await User.findOne({
-      email: newUser.email,
-    }).then(async (profile) => {
-      if (!profile) {
-        newUser.save();
-        res.status(201).json('User added');
-      } else {
-        res.status(409).send('Email already linked to account');
-      }
-    });
+    // await User.findOne({
+    //   email: newUser.email,
+    // }).then(async (profile) => {
+    //   if (!profile) {
+    //     newUser.save();
+    //     res.status(201).json('User added');
+    //   } else {
+    //     res.status(409).send('Email already linked to account');
+    //   }
+    // });
   });
 };
+
+// Suggest a new user name (Doesn't check the db)
+const suggestUserName = (userName) => {
+  let proposedName = userName;
+  proposedName += Math.floor((Math.random() * 100) + 1);
+  return proposedName;
+}
+
+// Suggests a definitely unique username (Checks the db)
+// Unfortunately I can't get it to work
+const generateUniqueUserName = async (proposedName) => {
+  return await User.findOne({userName: proposedName})
+  .then(function(account) {
+    if(account){
+      console.log(`${proposedName} already exists`);
+      proposedName += Math.floor((Math.random() * 100) + 1);
+      return generateUniqueUserName(proposedName);
+    }
+    console.log("proposed name is unique " + proposedName);
+    return proposedName;
+  })
+  .catch(function(err){
+    console.log(err);
+    throw err;
+  })
+}
 
 //LOGIN
 exports.postLogin = async (req, res) => {
@@ -90,6 +148,7 @@ exports.postLogin = async (req, res) => {
     });
 };
 
+// Function to find the info associated with the given id
 const findInfo = async (userID) => {
   let userInfo;
   await User.findById(userID, (err, result) => {
@@ -161,6 +220,19 @@ exports.editUserInformation = async (req, res) => {
               res.status(404).json("User not found");
           }
       })
+  }catch(error){
+      res.status(400).send(error);
+  }
+}
+
+exports.getUserID = async (req, res) => {
+  try{
+      let userID = await User.findById(req.user.id);
+      if(userID){
+        res.status(200).json(userID._id);
+      }else{
+        res.status(400).json("User not found");
+      }
   }catch(error){
       res.status(400).send(error);
   }

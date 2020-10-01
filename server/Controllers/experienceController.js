@@ -130,42 +130,48 @@ const sortExp = (obj) => {
 
 // Finds all experience associated with the userID
 const findAll = async (userID) => {
-  let exp;
-  await Experience.find({ user_id: userID }, (err, result) => {
-    if (err) {
-      throw err;
+  try{
+    let exp;
+    await Experience.find({ user_id: userID }, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        exp = result;
+      } else {
+        exp = null;
+      }
+    });
+  
+    if (exp == null) {
+      return null;
     }
-    if (result) {
-      exp = result;
-    } else {
-      exp = null;
+    let orgExp = {
+      employment: [],
+      volunteering: [],
+      extracurricular: [],
+    };
+  
+    for (let elem of exp) {
+      if (elem.type == 'Work') {
+        orgExp.employment.push(elem);
+      } else if (elem.type == 'Volunteer') {
+        orgExp.volunteering.push(elem);
+      } else if (elem.type == 'Extracurricular') {
+        orgExp.extracurricular.push(elem);
+      }
     }
-  });
-
-  if (exp == null || exp.length === 0) {
-    return null;
+    return orgExp;
+  }catch(error){
+    console.log(error);
   }
-  let orgExp = {
-    employment: [],
-    volunteering: [],
-    extracurricular: [],
-  };
-
-  for (let elem of exp) {
-    if (elem.type == 'Work') {
-      orgExp.employment.push(elem);
-    } else if (elem.type == 'Volunteer') {
-      orgExp.volunteering.push(elem);
-    } else if (elem.type == 'Extracurricular') {
-      orgExp.extracurricular.push(elem);
-    }
-  }
-  return orgExp;
+  
 };
 
 // Gets a specific experience
 const getExperience = async (req, res, next) => {
   try {
+
     await Experience.findById({ _id: req.params.id }, (err, result) => {
       if (err) {
         //next(err);

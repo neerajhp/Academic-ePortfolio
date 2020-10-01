@@ -32,6 +32,7 @@ router.post("/files", (req, res) => {
 
 });
 
+// Handles a single document upload (pdf, docx)
 const singleFile = parse.documentUpload.single("document");
 router.post("/file", (req, res) => {
     singleFile(req, res, (err) => {

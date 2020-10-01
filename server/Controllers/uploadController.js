@@ -109,25 +109,40 @@ const uploadMultiple = async (req, res) => {
                 return;
             }
 
-            // Checks whether or not files have been uploaded
-            if(newFiles.length === 0){
-                res.status(400).json("Failed to upload files");
-            }else{
-                await Document.insertMany(newFiles, (err, result) => {
-                    if(err){
-                        res.status(400).send(err);
+            await Document.insertMany(newFiles, (err, result) => {
+                if(err){
+                    res.status(400).send(err);
+                }else{
+                    if(result){
+                        res.status(200).json({
+                            uploaded_files: result,
+                            failed_uploads: existingFiles
+                        });
                     }else{
-                        if(result){
-                            res.status(200).json({
-                                uploaded_files: result,
-                                failed_uploads: existingFiles
-                            });
-                        }else{
-                            res.status(400).json("Failed to upload files");
-                        }
+                        res.status(400).json("Failed to upload files");
                     }
-                });
-            }
+                }
+            });
+
+            // // Checks whether or not files have been uploaded
+            // if(newFiles.length === 0){
+            //     res.status(400).json("Failed to upload files");
+            // }else{
+            //     await Document.insertMany(newFiles, (err, result) => {
+            //         if(err){
+            //             res.status(400).send(err);
+            //         }else{
+            //             if(result){
+            //                 res.status(200).json({
+            //                     uploaded_files: result,
+            //                     failed_uploads: existingFiles
+            //                 });
+            //             }else{
+            //                 res.status(400).json("Failed to upload files");
+            //             }
+            //         }
+            //     });
+            // }
         }
 
         

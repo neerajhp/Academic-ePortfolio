@@ -17,8 +17,6 @@ const addExperience = async (req, res) => {
       description: req.body.description,
     });
 
-    console.log(req.organization),
-
 
     await Experience.findOne(
       {
@@ -41,6 +39,7 @@ const addExperience = async (req, res) => {
                 res.status(400).json("Failed to save experience")
             }else{
                res.status(200).json(result);
+               console.log("Saved");
             }
           });
         }else{
@@ -86,20 +85,48 @@ const editExperience = async (req, res, next) => {
 };
 
 // Gets all of the user's experience history (All types)
+// const getAllExperience = async (req, res) => {
+//     try{
+//         console.log("Start of getAllExperience");
+//         let exp = await findAll(req.user.id);
+//         console.log("exp retrieved");
+//         if(exp == null){
+//             res.status(404).json("The user has not uploaded any experiences");
+//         }else{
+//             sortExp(exp);
+//             res.status(200).json(exp);
+//         }
+//     }catch(error){
+//         res.status(400).send("Error occured while looking for the user's experiences");
+//     }
+// };
+
+// A better get all experience api
 const getAllExperience = async (req, res) => {
-    try{
-        let exp = await findAll(req.user.id);
-        if(exp == null){
-            res.status(404).json("The user has not uploaded any experiences");
-        }else{
-            //exp.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-            sortExp(exp);
-            res.status(200).json(exp);
-        }
-    }catch(error){
-        res.status(400).send("Error occured while looking for the user's experiences");
-    }
-};
+  try{
+    await Experience.find({ user_id: req.user.id }, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log("Found experiences");
+
+        const orgExp = sortExp(result);
+
+        res.status(200).send(orgExp);
+
+      } else {
+        console.log("Not found");
+        res.status(404).json("No experience found");
+      }
+    });
+    
+    // Check for empty list too later
+  }catch(error){
+    console.log(error);
+    res.status(400).send("Error while looking for experience");
+  }
+}
 
 const viewerGetAllExperience = async (req, res) => {
   try {
@@ -117,13 +144,33 @@ const viewerGetAllExperience = async (req, res) => {
   }
 };
 
+// Organizes the experiences into separate arrays in a json object
 const sortExp = (obj) => {
-    for(var exp in obj){
-        console.log(exp);
-        obj[exp].sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+  let orgExp = {
+    employment: [],
+    volunteering: [],
+    extracurricular: [],
+  };
+  
+  if(obj != null){
+  
+    for (let elem of obj) {
+      if (elem.type == 'Work') {
+        orgExp.employment.push(elem);
+      } else if (elem.type == 'Volunteer') {
+        orgExp.volunteering.push(elem);
+      } else if (elem.type == 'Extracurricular') {
+        orgExp.extracurricular.push(elem);
+      }
     }
-    console.log(obj);
-    return obj;
+      
+    for(var exp in orgExp){
+        console.log(orgExp[exp]);
+        orgExp[exp].sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+    }
+  }
+  
+  return orgExp;
 }
 
 // Finds all experience associated with the userID
@@ -135,8 +182,10 @@ const findAll = async (userID) => {
         throw err;
       }
       if (result) {
+        console.log("Found experiences");
         exp = result;
       } else {
+        console.log("Not found");
         exp = null;
       }
     });

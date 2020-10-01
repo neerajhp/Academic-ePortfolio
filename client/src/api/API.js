@@ -223,6 +223,14 @@ export default {
       },
     });
   },
+  // Downloads a file
+  downloadFile: function () {
+    return axios.get('/api/files/download/:id', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // Displays an image based on the id in the params
   displayImage: function () {
     return axios.get('/api/files/image/:id', {
@@ -230,6 +238,15 @@ export default {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
+  },
+  // Use this if the link doesn't work (Not sure if this will work)
+  // At the moment this only works for displaying the logged in user's profile picture
+  displayProfilePic: function() {
+    return axios.get('/api/files/image/profile-pic', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
   },
   // Deletes the file by objectID
   deleteFile: function () {

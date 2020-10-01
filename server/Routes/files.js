@@ -9,11 +9,13 @@ router.get("/", filesController.getAllDocs);
 
 router.get("/image/:id", filesController.displayPicture);
 
-//router.get("/download/:id", filesController.downloadFile);
+router.get("/download/:id", filesController.downloadFile);
 
 router.delete("/cv", filesController.deleteCV);
 
 router.delete("/profile-pic", filesController.deleteProfilePic);
+
+router.get("/image/profile-pic", filesController.displayProfilePic);
 
 router.delete("/", filesController.deleteAllFiles);
 

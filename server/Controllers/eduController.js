@@ -92,7 +92,7 @@ const getEdu = async(req, res) => {
 
 const viewerGetEdu = async (req, res) => {
   try {
-    let userID = req.body.userID;
+    let userID = req.viewID;
     let edu = await searchAllEdu(userID);
     if (!edu || edu.length == 0) {
       res.status(404).json("User has no education history");

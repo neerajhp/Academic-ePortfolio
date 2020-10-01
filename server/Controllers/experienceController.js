@@ -105,7 +105,7 @@ const getAllExperience = async (req, res) => {
 
 const viewerGetAllExperience = async (req, res) => {
   try {
-    let userID = req.body.userID;
+    let userID = req.viewID;
     let exp = await findAll(userID);
     if (exp == null) {
       res.send([]);

@@ -33,7 +33,7 @@ const getAllDocs = async (req, res) => {
 // Returns all of the viewed user's uploaded files
 const viewerGetAllDocs = async (req, res) => {
     try{
-        let userID = req.body.userID;
+        let userID = req.viewID;
         let documents = await findDocs(userID);
         if(!documents || documents.length == 0){
             res.status(400).json("No documents found");

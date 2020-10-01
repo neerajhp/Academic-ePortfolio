@@ -1,6 +1,8 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
+import ReflectionDialog from './ReflectionDialog';
+import React, { useState } from 'react';
+
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -20,8 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const ReflectionCard = () => {
+const ReflectionCard = (reflection) => {
   const classes = useStyles();
+
+  const [records, setRecords] = useState(reflection);
+
+  const getRecord = () => {
+      return <Typography> Add your reflection!</Typography>;
+    };
+
   return (
     <Paper className={classes.card}>
       <div className={classes.bio}>
@@ -29,6 +38,8 @@ const ReflectionCard = () => {
           This is a Reflection
         </Typography>
         <Typography>This is the blog introduction</Typography>
+        <div className={classes.tableContainer}>{getRecord(records)}</div>
+        <ReflectionDialog records={records} setRecords={setRecords} />
       </div>
     </Paper>
   );

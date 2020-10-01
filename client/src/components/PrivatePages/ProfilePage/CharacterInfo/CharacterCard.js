@@ -35,7 +35,7 @@ const CharacterCard = ({ user }) => {
 
   const classes = useStyles();
   const {profileImg} = API.getProfilePic();
-  console.log(profileImg[0]);  
+  // console.log(profileImg[0]);  
 
   const onBeforeFileLoad = (elem) => {
     if(elem.target.files[0].size > 71680){

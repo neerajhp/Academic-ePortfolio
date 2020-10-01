@@ -17,37 +17,35 @@ const addExperience = async (req, res) => {
       description: req.body.description,
     });
 
+    console.log(req.organization),
+
+
     await Experience.findOne(
       {
         user_id: req.user.id,
         type: req.body.type,
-        organization: req.organization,
-        yearStart: req.yearStart,
+        organization: req.body.organization,
+        yearStart: req.body.yearStart,
       },
       (err, result) => {
         if (err) {
           throw err;
         }
         if (!result) {
+          console.log("New experience");
           newExperience.save((err, result) => {
             if (err) {
               throw err;
             }
             if(!result){
-                newExperience.save((err, result) => {
-                    if(err){
-                        throw err;
-                    }
-                    if(result){
-                        res.status(200).json(result);
-                    }else{
-                        res.status(400).json("Failed to save experience");
-                    }
-                });
+                res.status(400).json("Failed to save experience")
             }else{
-                res.status(400).json("A duplicate exists");
+               res.status(200).json(result);
             }
           });
+        }else{
+          console.log("Duplicate");
+          res.status(400).json("A duplicate exists");
         }
       }
     );
@@ -142,7 +140,8 @@ const findAll = async (userID) => {
         exp = null;
       }
     });
-  
+    
+    // Check for empty list too later
     if (exp == null) {
       return null;
     }
@@ -234,11 +233,12 @@ const deleteExperience = async (req, res, next) => {
           throw err;
         }
         if (result) {
-          if (result.deleteCount == 0) {
-            res.status(400).json('Nothing was deleted');
-          } else {
-            res.status(200).json(result);
-          }
+          res.status(200).json(result);
+          // if (result.deleteCount == 0) {
+          //   res.status(400).json('Nothing was deleted');
+          // } else {
+          //   res.status(200).json(result);
+          // }
         } else {
           res.status(404).json('Failed to delete experience');
         }

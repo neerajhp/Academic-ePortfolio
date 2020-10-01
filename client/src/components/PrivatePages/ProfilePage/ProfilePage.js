@@ -80,8 +80,13 @@ const ProfilePage = () => {
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
   const [userEducation, setEducation] = useState(null);
+  const [userProfilePic, setUserProfilePic] = useState(null);
 
   useEffect(() => {
+    API.getProfilePic().then(({ data }) => {
+      setUserProfilePic(data)
+    });
+
     API.getUserProfile().then(({ data }) => {
       setUser(data);
       setLoading(false);
@@ -155,7 +160,7 @@ const ProfilePage = () => {
               Placeholder section
             </div>
             <div className={classes.section}>
-              <CharacterCard user={user} />
+              <CharacterCard user={user}/>
               <EducationCard education={userEducation} />
               <SkillsCard skills={user.skills} />
             </div>

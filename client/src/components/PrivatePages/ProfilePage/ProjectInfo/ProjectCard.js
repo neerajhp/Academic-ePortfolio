@@ -65,7 +65,7 @@ const ProjectCard = ({ type }) => {
       cardSize = classes.large;
   }
 
-  const handleChoseImg = (e) => {
+  const handleChoseFile = (e) => {
     e.preventDefault();
     const file = e.target.files;
     if (!file.length) {
@@ -82,7 +82,7 @@ const ProjectCard = ({ type }) => {
       }
       axios({
         method: "post",
-        url: "/api/upload/images",
+        url: "/api/upload/files",
         data: param,
         headers: {
           Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
@@ -109,9 +109,9 @@ const ProjectCard = ({ type }) => {
                     className={classes.hidden}
                     type="file"
                     ref={inputEl}
-                    accept="image/*"
+                    accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
                     multiple
-                    onChange={handleChoseImg}
+                    onChange={handleChoseFile}
                 />
                 <div className={classes.upload}>
                   <Button loading={loading} onClick={() => inputEl.current.click()}>

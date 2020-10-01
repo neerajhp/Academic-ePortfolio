@@ -17,37 +17,34 @@ const addExperience = async (req, res) => {
       description: req.body.description,
     });
 
+
     await Experience.findOne(
       {
         user_id: req.user.id,
         type: req.body.type,
-        organization: req.organization,
-        yearStart: req.yearStart,
+        organization: req.body.organization,
+        yearStart: req.body.yearStart,
       },
       (err, result) => {
         if (err) {
           throw err;
         }
         if (!result) {
+          console.log("New experience");
           newExperience.save((err, result) => {
             if (err) {
               throw err;
             }
             if(!result){
-                newExperience.save((err, result) => {
-                    if(err){
-                        throw err;
-                    }
-                    if(result){
-                        res.status(200).json(result);
-                    }else{
-                        res.status(400).json("Failed to save experience");
-                    }
-                });
+                res.status(400).json("Failed to save experience")
             }else{
-                res.status(400).json("A duplicate exists");
+               res.status(200).json(result);
+               console.log("Saved");
             }
           });
+        }else{
+          console.log("Duplicate");
+          res.status(400).json("A duplicate exists");
         }
       }
     );
@@ -88,20 +85,48 @@ const editExperience = async (req, res, next) => {
 };
 
 // Gets all of the user's experience history (All types)
+// const getAllExperience = async (req, res) => {
+//     try{
+//         console.log("Start of getAllExperience");
+//         let exp = await findAll(req.user.id);
+//         console.log("exp retrieved");
+//         if(exp == null){
+//             res.status(404).json("The user has not uploaded any experiences");
+//         }else{
+//             sortExp(exp);
+//             res.status(200).json(exp);
+//         }
+//     }catch(error){
+//         res.status(400).send("Error occured while looking for the user's experiences");
+//     }
+// };
+
+// A better get all experience api
 const getAllExperience = async (req, res) => {
-    try{
-        let exp = await findAll(req.user.id);
-        if(exp == null){
-            res.status(404).json("The user has not uploaded any experiences");
-        }else{
-            //exp.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-            sortExp(exp);
-            res.status(200).json(exp);
-        }
-    }catch(error){
-        res.status(400).send("Error occured while looking for the user's experiences");
-    }
-};
+  try{
+    await Experience.find({ user_id: req.user.id }, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log("Found experiences");
+
+        const orgExp = sortExp(result);
+
+        res.status(200).send(orgExp);
+
+      } else {
+        console.log("Not found");
+        res.status(404).json("No experience found");
+      }
+    });
+    
+    // Check for empty list too later
+  }catch(error){
+    console.log(error);
+    res.status(400).send("Error while looking for experience");
+  }
+}
 
 const viewerGetAllExperience = async (req, res) => {
   try {
@@ -119,53 +144,82 @@ const viewerGetAllExperience = async (req, res) => {
   }
 };
 
+// Organizes the experiences into separate arrays in a json object
 const sortExp = (obj) => {
-    for(var exp in obj){
-        console.log(exp);
-        obj[exp].sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-    }
-    console.log(obj);
-    return obj;
-}
-
-// Finds all experience associated with the userID
-const findAll = async (userID) => {
-  let exp;
-  await Experience.find({ user_id: userID }, (err, result) => {
-    if (err) {
-      throw err;
-    }
-    if (result) {
-      exp = result;
-    } else {
-      exp = null;
-    }
-  });
-
-  if (exp == null || exp.length === 0) {
-    return null;
-  }
   let orgExp = {
     employment: [],
     volunteering: [],
     extracurricular: [],
   };
-
-  for (let elem of exp) {
-    if (elem.type == 'Work') {
-      orgExp.employment.push(elem);
-    } else if (elem.type == 'Volunteer') {
-      orgExp.volunteering.push(elem);
-    } else if (elem.type == 'Extracurricular') {
-      orgExp.extracurricular.push(elem);
+  
+  if(obj != null){
+  
+    for (let elem of obj) {
+      if (elem.type == 'Work') {
+        orgExp.employment.push(elem);
+      } else if (elem.type == 'Volunteer') {
+        orgExp.volunteering.push(elem);
+      } else if (elem.type == 'Extracurricular') {
+        orgExp.extracurricular.push(elem);
+      }
+    }
+      
+    for(var exp in orgExp){
+        console.log(orgExp[exp]);
+        orgExp[exp].sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
     }
   }
+  
   return orgExp;
+}
+
+// Finds all experience associated with the userID
+const findAll = async (userID) => {
+  try{
+    let exp;
+    await Experience.find({ user_id: userID }, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log("Found experiences");
+        exp = result;
+      } else {
+        console.log("Not found");
+        exp = null;
+      }
+    });
+    
+    // Check for empty list too later
+    if (exp == null) {
+      return null;
+    }
+    let orgExp = {
+      employment: [],
+      volunteering: [],
+      extracurricular: [],
+    };
+  
+    for (let elem of exp) {
+      if (elem.type == 'Work') {
+        orgExp.employment.push(elem);
+      } else if (elem.type == 'Volunteer') {
+        orgExp.volunteering.push(elem);
+      } else if (elem.type == 'Extracurricular') {
+        orgExp.extracurricular.push(elem);
+      }
+    }
+    return orgExp;
+  }catch(error){
+    console.log(error);
+  }
+  
 };
 
 // Gets a specific experience
 const getExperience = async (req, res, next) => {
   try {
+
     await Experience.findById({ _id: req.params.id }, (err, result) => {
       if (err) {
         //next(err);
@@ -228,11 +282,12 @@ const deleteExperience = async (req, res, next) => {
           throw err;
         }
         if (result) {
-          if (result.deleteCount == 0) {
-            res.status(400).json('Nothing was deleted');
-          } else {
-            res.status(200).json(result);
-          }
+          res.status(200).json(result);
+          // if (result.deleteCount == 0) {
+          //   res.status(400).json('Nothing was deleted');
+          // } else {
+          //   res.status(200).json(result);
+          // }
         } else {
           res.status(404).json('Failed to delete experience');
         }

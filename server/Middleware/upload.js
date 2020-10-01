@@ -1,7 +1,5 @@
-const express = require("express");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const Document = require("../Models/Document");
 const AWS = require("aws-sdk");
 AWS.config.update({ region:'ap-southeast-2' });
 // Allows storage of files in MongoDB
@@ -46,7 +44,7 @@ const imageUpload = multer({
 
 
 // Allowed file formats
-var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "video/mp4", "image/png", "image/jpeg"];
+var allowedFiles = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "video/mp4", "image/png", "image/jpeg", "application/octet-stream"];
 
 // This function uploads files to aws s3 server
 // Every user will get their own folder in the bucket
@@ -69,11 +67,11 @@ const documentUpload = multer({
     // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
     storage: createStorage,
     fileFilter: (req, file, cb) => {
-        if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+        if(file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.mimetype == "application/octet-stream"){
             cb(null, true);
         }else{
             cb(null, false);
-            return cb(new Error("Only .pdf, .docx, .png and .jpg are allowed"));
+            return cb(new Error("Only .pdf and .docx are allowed"));
         }
     },
     limits: {fileSize: maxFileSize}

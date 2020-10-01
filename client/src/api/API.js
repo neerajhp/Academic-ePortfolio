@@ -148,6 +148,15 @@ export default {
       },
     });
   },
+  // Single upload of file
+  uploadFile: function (body) {
+    return axios.post('/api/upload/file', {
+      file: body.file,
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   uploadFiles: function (body) {
     return axios.post('/api/upload/files', {
       // The files key must be "document"

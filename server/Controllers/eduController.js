@@ -54,7 +54,7 @@ const postEdu = async (req, res) => {
   }
 };
 
-// Gets all education
+// //Gets all education
 // const getEdu = async (req, res) => {
 //   try {
 //     let edu = await searchAllEdu(req.user.id);
@@ -74,12 +74,15 @@ const getEdu = async(req, res) => {
       user_id: req.user.id
     }, (err, result) => {
       if(err){
+        console.log(err);
         throw err;
       }
       console.log("result found");
-      if(!result || result.length == 0){
+      if(!result){
+        console.log("User has no education history");
         res.status(404).json("User has no education history");
       }else{
+        console.log("Education found");
         result.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
         res.status(200).json(result);
   
@@ -186,9 +189,11 @@ const clearEdu = async (userID) => {
 
 // Searches for all of the user's education records
 const searchAllEdu = async (userID) => {
-  let edu;
-  await Edu.find({user_id: userID}, (err, result) => {
+  try{
+    let edu;
+    await Edu.find({user_id: userID}, (err, result) => {
       if(err){
+          console.log(err);
           throw err;
       }
       if(result){
@@ -197,8 +202,12 @@ const searchAllEdu = async (userID) => {
       }else{
           edu = null;
       }
-  });
-  return edu;
+    });
+    return edu;
+  }catch(error){
+    console.log(error);
+  }
+
 }
 
 module.exports = {

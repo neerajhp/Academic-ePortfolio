@@ -33,23 +33,29 @@ exports.postSignup = async (req, res) => {
       // If its a new email, check the username's uniqueness
       if(!account){
         console.log("email is unique");
-        User.findOne({userName: newUser.userName}, (err, result) => {
-          // If the username doesn't exist in the db, then the user can be saved
-          if(!result){
-            console.log("username is unique");
-            newUser.save();
-            res.status(200).json("New user saved");
-          }else{
-            // Suggest a username that is unique to the user
-            console.log("userName not unique");
-            let suggestedUserName = suggestUserName(newUser.userName);
-            console.log("suggested: " + suggestedUserName);
-            res.status(400).json({
-              message: "Username not unique",
-              suggestion: suggestedUserName
-            });
-          }
-        });
+        if(newUser.userName){
+          User.findOne({userName: newUser.userName}, (err, result) => {
+            // If the username doesn't exist in the db, then the user can be saved
+            if(!result){
+              console.log("username is unique");
+              newUser.save();
+              res.status(200).json("New user saved");
+            }else{
+              // Suggest a username that is unique to the user
+              console.log("userName not unique");
+              let suggestedUserName = suggestUserName(newUser.userName);
+              console.log("suggested: " + suggestedUserName);
+              res.status(400).json({
+                message: "Username not unique",
+                suggestion: suggestedUserName
+              });
+            }
+          });
+        }else{
+          newUser.save();
+          res.status(200).json("New user saved");
+        }
+        
 
       }else{
         res.status(400).json("An account with this email already exists");

@@ -49,6 +49,10 @@ const useStyles = makeStyles((theme) => {
       marginLeft: '10%',
       width: '30%',
     },
+    login:{
+      right:'2%',
+
+    },
   };
 });
 
@@ -68,9 +72,19 @@ const LandingPage = () => {
       <div className={classes.root}>
         <img alt='background' src={Background} width='100%' />
       </div>
+      <div className={classes.login}>
+      <Link href='./login'>
+        <Button
+            type='Submit'
+            color='textSecondary'
+        >
+          <Typography>Login</Typography>
+        </Button>
+      </Link>
+      </div>
       <div className={classes.banner}>
         <Typography variant='h1' color='textSecondary'>
-          Welcome to ePortfolio
+         <strong> Welcome to ePortfolio </strong>
         </Typography>
       </div>
 
@@ -81,7 +95,7 @@ const LandingPage = () => {
           className={classes.submit}
           color='primary'
         >
-          <Typography>Login to Your Portfolio</Typography>
+          <Typography>Get Start with your own portfolio</Typography>
         </Button>
       </Link>
 

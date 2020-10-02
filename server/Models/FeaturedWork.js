@@ -13,6 +13,7 @@ const featuredWorkSchema = mongoose.Schema({
         documentID: {type: String},
         fileLink: {type: String}
     },
+    // Holds the id of the image
     image: {type: String},
     // Could be a link to another site or a reflection
     url: {type: String}

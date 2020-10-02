@@ -193,7 +193,7 @@ const getAllFeaturedWorks = async (req, res) => {
 
 const viewerGetFeaturedWorks = async (req, res) => {
     try{
-        const userID = req.body.userID;
+        const userID = req.viewID;
         let showcase = await findShowcase(userID);
         if(showcase){
             res.status(200).json(showcase);

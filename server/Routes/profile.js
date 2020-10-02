@@ -12,6 +12,8 @@ router.use(authenticate.authenticateToken);
 // Gets everything needed for the user's profile display
 router.get("/", profileController.getProfile);
 
+router.delete("/deleteProfile", profileController.deleteProfile);
+
 // Gets the user's cv
 router.get("/cv", profileController.getCV);
 
@@ -44,16 +46,19 @@ router.delete("/skills", profileController.removeSkills);
 // Showcase tab
 
 router.post("/featured-work", showcaseController.createFeaturedWork);
+
+// Gets all of the users' featured works
+router.get("/featured-work", showcaseController.getAllFeaturedWorks);
+// Removes all of the user's featured works
+router.delete("/featured-work", showcaseController.clearShowcase);
+
 // Edits a specific featured work
 router.put("/featured-work/:id", showcaseController.editFeaturedWork);
 // Gets a specific featured work by its object id
 router.get("/featured-work/:id", showcaseController.getFeaturedWork);
-// Gets all of the users' featured works
-router.get("/featured-work", showcaseController.getAllFeaturedWorks);
 // Removes a specific featured work by its object id
 router.delete("/featured-work/:id", showcaseController.removeFeaturedWork);
-// Removes all of the user's featured works
-router.delete("/featured-work", showcaseController.clearShowcase);
+
 
 
 

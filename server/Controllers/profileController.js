@@ -6,7 +6,7 @@ const filesController = require("../Controllers/filesController");
 const showcaseController = require("../Controllers/showcaseController");
 const eduController = require("../Controllers/eduController");
 const blogController = require("../Controllers/blogController");
-const expController = require("../Controllers/profileController");
+const expController = require("../Controllers/experienceController");
 
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
@@ -14,14 +14,17 @@ require('dotenv').config();
 
 const getAllInfo = async (userID) => {
     // Get cv, featuredWorks, blogs, education, skills, profile picture
-    let userRecord = await User.findOne({
+    try{
+        let userRecord
+    await User.findOne({
         _id: userID
     }, (err, result) => {
         if(err){
             throw err;
+        }else{
+            userRecord = result;
         }
     });
-    console.log("user found");
     
     let cv = await searchCV(userID);
     if(!cv){
@@ -39,27 +42,29 @@ const getAllInfo = async (userID) => {
         console.log("profile pic found");
     }
 
+    let allEducation = await eduController.searchAllEdu(userID);
+    if(!allEducation || allEducation.length === 0){
+        console.log("Education not found");
+        allEducation = [];
+    }else{
+        console.log("Education found");
+    }
+
     let featuredWorks = await searchFeaturedWorks(userID);
-    if(featuredWorks.length === 0 || !featuredWorks){
+    if(!featuredWorks || featuredWorks.length === 0){
         console.log("featured works not found");
         featuredWorks = [];
     }else{
         console.log("featured works found");
     }
 
-    let allEducation = await eduController.searchAllEdu(userID);
-    if(allEducation.length === 0 || !allEducation){
-        console.log("Education not found");
-        education = [];
-    }else{
-        console.log("Education found");
-    }
 
 
 
     const profile = {
         firstName: userRecord.firstName,
         lastName: userRecord.lastName,
+        userName: userRecord.userName,
         email: userRecord.email,
         bio: userRecord.biography,
         aboutMe: userRecord.aboutMe,
@@ -71,12 +76,16 @@ const getAllInfo = async (userID) => {
     }
 
     return profile;
+    }catch(error){
+        console.log(error);
+    }
 
 }
 
+// Gets the viewed user's profile
 const viewerGetProfile = async (req, res) => {
     try{
-        let userID = req.userID;
+        let userID = req.viewID;
         let profile = await getAllInfo(userID);
         if(profile){
             res.status(200).json(profile);
@@ -88,10 +97,12 @@ const viewerGetProfile = async (req, res) => {
     }
 }
 
+// Gets the user's profile
 const getProfile = async (req, res) => {
     try{
         let profile = await getAllInfo(req.user.id);
         if(profile){
+            //console.log(profile);
             res.status(200).json(profile);
         }else{
             res.status(400).json("No profile found");
@@ -102,17 +113,10 @@ const getProfile = async (req, res) => {
 }
 
 
-
+// Deletes all of the user's uploaded files and created records
+// Also deletes the user record at the end
 const deleteProfile = async (req, res) => {
     try{
-        // Delete all files
-        let filesDeleted = await filesController.clearFiles(req.user.id);
-        if(!filesDeleted){
-            console.log("Failed to delete files");
-            //throw new Error();
-        }else{
-            console.log("All files deleted");
-        }
         // Delete all showcase
         let showcaseCount = await showcaseController.removeAllFeaturedWorks(req.user.id);
         if(showcaseCount > 0){
@@ -142,6 +146,15 @@ const deleteProfile = async (req, res) => {
         }else{
             console.log("No blogs to delete");
         }
+
+        // Delete all files
+        let filesDeleted = await filesController.clearFiles(req.user.id);
+        if(!filesDeleted){
+            console.log("Failed to delete files");
+            //throw new Error();
+        }else{
+            console.log("All files deleted");
+        }
         
         // Delete userProfile
         await User.deleteOne({
@@ -158,7 +171,7 @@ const deleteProfile = async (req, res) => {
             }
         });
 
-        console.log("user deleted");
+        res.status(200).json("User deleted");
 
     }catch (err){
         console.log(err);
@@ -167,6 +180,7 @@ const deleteProfile = async (req, res) => {
   
 }
 
+// Gets the user's general information (Contact details, name, birth date)
 const getUserInformation = async (req, res) => {
     try{
         await User.findById(req.user.id, (err, result) => {
@@ -324,57 +338,90 @@ const getAboutMe = async (req, res) => {
     })
 }
 
+// Update the user's bio (The short sentence under the user's name)
 const updateBio = async (req, res) => {
     // update the bio field 
-    await User.findByIdAndUpdate(req.user.id, {
-        biography: req.body.biography
-    }, (err, result) => {
-        if (err) {
-            res.status(403).json(err);
-        } else {
-            User.findById(req.user.id, function (err, updated) {
-                console.log(updated.biography)
-                res.status(200).json(updated.biography);
-            });
-        }
-    })
+    try{
+        await User.findByIdAndUpdate(req.user.id, {
+            biography: req.body.biography
+        }, (err, result) => {
+            if (err) {
+                res.status(403).json(err);
+            }else {
+                if(!result){
+                    res.status(404).json("User not found");
+                }else{
+                    User.findById(req.user.id, function (err, updated) {
+                        console.log(updated.biography)
+                        res.status(200).json(updated.biography);
+                    });
+                }
+            }
+        });
+    }catch(error){
+        res.status(400).json("Error while trying to update the user's bio");
+    }
 }
 
 const updateAboutMe = async (req, res) => {
-    // update the bio field 
-    await User.updateOne({
-        _id: req.user.id
-    }, {
-        aboutMe: req.body.aboutMe
-    }, (err, result) => {
-        if (err) {
-            res.status(404).send(err);
-        } else {
-            console.log("successfully updated");
-            getAboutMe(req, res);
-            //res.json(result);
-        }
-    })
+    try{
+        await User.updateOne({
+            _id: req.user.id
+        }, {
+            aboutMe: req.body.aboutMe
+        }, (err, result) => {
+            if (err) {
+                res.status(404).send(err);
+            } else {
+                console.log("successfully updated");
+                getAboutMe(req, res);
+                //res.json(result);
+            }
+        });
+    }catch(error){
+        res.status(400).json("Failed to update about me");
+    }
 }
 
 // Add an array of skills to the user's skills array
 const addSkills = async (req, res) => {
-    await User.updateOne({
-        _id: req.user.id
-    }, {
-        $addToSet: {skills: req.body.skills}
-    }, (err, result) => {
-        if(err){
-            res.status(404).json(err);
+    try{
+        if(req.body.skills.includes("") || req.body.skills.length == 0){
+            res.status(400).json("Attempted to add nothing into skills");
         }else{
-            if(result.nModified === 0){
-                res.json("Attempted to add nothing to the skills array");
-            }else{
-                console.log("successfully updated");
-                getSkills(req, res);
-            }
+            await User.updateOne({
+                _id: req.user.id
+            }, {
+                $addToSet: {skills: req.body.skills}
+            }, (err, result) => {
+                if(err){
+                    res.status(404).json(err);
+                }else{
+                    if(!result){
+                        res.status(400).json("Attempted to add nothing");
+                    }else{
+                        getSkills(req, res);
+                    }
+                    // if(!result || result.nModified === 0){
+                    //     res.status(400).json("Attempted to add nothing or a duplicate skill to the skills array");
+                    // }else{
+                    //     console.log("successfully updated");
+                    //     // User.findById({_id: req.user.id}, (err, result) => {
+                    //     //     if(result){
+                    //     //         res.status(200).json(result.skills);
+                    //     //     }else{
+                    //     //         res.status(404).json("No user found");
+                    //     //     }
+                    //     // })
+                    //     getSkills(req, res);
+                    // }
+                }
+            })
         }
-    })
+    }catch(error){
+        res.status(400).json("Error while trying to add skill");
+    }
+    
 }
 
 // Removes the skills specified in the body from the user's skills array
@@ -405,7 +452,7 @@ const getSkills = async (req, res) => {
         if(err){
             res.status(400).json(err);
         }else{
-            res.json(result.skills);
+            res.status(200).json(result.skills);
         }
     })
 }
@@ -423,5 +470,6 @@ module.exports = {
     updateAboutMe,
     getSkills,
     addSkills,
-    removeSkills
+    removeSkills,
+    deleteProfile
 }

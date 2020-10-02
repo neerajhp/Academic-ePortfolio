@@ -1,5 +1,9 @@
 const Document = require("../Models/Document");
 const AWS = require("aws-sdk");
+const stream = require('stream')
+const path = require('path');
+const fs = require('fs');
+const https = require('https');
 require('dotenv').config();
 
 
@@ -29,7 +33,7 @@ const getAllDocs = async (req, res) => {
 // Returns all of the viewed user's uploaded files
 const viewerGetAllDocs = async (req, res) => {
     try{
-        let userID = req.body.userID;
+        let userID = req.viewID;
         let documents = await findDocs(userID);
         if(!documents || documents.length == 0){
             res.status(400).json("No documents found");
@@ -71,11 +75,115 @@ const getDocument = async (req, res, next) => {
             console.log("File not found");
             res.status(404).json({error: "File not found"});
         }else{
-            res.json(doc);
+            // res.setHeader('Content-Type', 'image/png');
+            // res.setHeader('Content-Disposition', "inline");
+            res.send(doc.fileLink);
             console.log("File found");
         }
         
     })
+}
+
+// Displays a picture
+const displayPicture = async (req, res, next) => {
+    try{
+        await Document.findOne({_id: req.params.id, fieldName: "image"}, (err, doc) => {
+        
+            if(err){
+                throw err
+            }
+            if(doc){
+                var params = {
+                    Bucket: "documents-eportfolio",
+                    Key: doc.s3_key
+                }
+                s3.getObject(params, (err, data) => {
+                    res.writeHead(200, {'Content-Type': doc.fileType});
+                    res.write(data.Body, 'binary');
+                    res.end(null, 'binary');
+                })
+                // s3.getObject(params)
+                //     .createReadStream()
+                //         .on('error', function(err){
+                //             res.status(500).json({error:"Error -> " + err});
+                //     }).pipe(res);
+            }else{
+                res.status(404).json("File not found");
+            }
+        });
+    }catch(error){
+        res.status(400).send("Error while trying to display picture");
+    }
+  
+}
+
+// Display profile picture
+const displayProfilePic = async (req, res) => {
+    try{
+        await Document.findOne({_id: req.user.id, fieldName: "profile-pic"}, (err, doc) => {
+        
+            if(err){
+                throw err
+            }
+            if(doc){
+                var params = {
+                    Bucket: "documents-eportfolio",
+                    Key: doc.s3_key
+                }
+                s3.getObject(params, (err, data) => {
+                    res.writeHead(200, {'Content-Type': doc.fileType});
+                    res.write(data.Body, 'binary');
+                    res.end(null, 'binary');
+                })
+                
+            }else{
+                res.status(404).json("File not found");
+            }
+        });
+    }catch(error){
+        res.status(400).send("Error while trying to display picture");
+    }
+   
+}
+
+const downloadFile = async (req, res) => {
+    try{
+        await Document.findById(req.params.id, (err, doc) => {
+            if(err){
+                throw err;
+            }
+            if(doc){
+                var params = {
+                    Bucket: "documents-eportfolio",
+                    Key: doc.s3_key
+                }
+                res.attachment(params.Key);
+                        
+                let fileName = params.Key.split("/")[1];
+                let fileStream = s3.getObject(params).createReadStream();
+                let writeStream = fs.createWriteStream(path.join(__dirname, fileName));
+                        
+                // https.get(doc.fileLink, function(file) {
+                //     file.pipe(res);
+                // });
+                // fileStream.pipe(writeStream).on("error", function(err){
+                //     console.log("File Stream:", err);
+                // }).on('close', function() {
+                //     console.log("Done");
+                //     res.status(200).send("File downloaded");
+                // });
+                //res.redirect(doc.fileLink);
+
+                fileStream.pipe(res).on("error", function(err){
+                    console.log("File Stream:", err);
+                }).on('close', function() {
+                    console.log("Done");
+                });
+                }
+            })
+            }catch(error){
+                res.status(400).json("File failed to download");
+            }
 }
 
 // Deletes a document based on its objectID
@@ -312,6 +420,9 @@ module.exports = {
     getAllDocs,
     viewerGetAllDocs,
     getDocument,
+    displayPicture,
+    displayProfilePic,
+    downloadFile,
     deleteDocument,
     deleteMultiple,
     deleteCV,

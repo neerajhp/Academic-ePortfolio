@@ -34,8 +34,28 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 const ReflectionCard = (reflection) => {
   const classes = useStyles();
+
+  // const [records, setRecords] = useState(reflection);
+
+  const getRecord = () => {
+      return <Typography> Add your reflection!</Typography>;
+    };
+
+  // return (
+  //   <Paper className={classes.card}>
+  //     <div className={classes.bio}>
+  //       <Typography className={classes.title} variant='h2'>
+  //         This is a Reflection
+  //       </Typography>
+  //       <Typography>{getRecord(records)}</Typography>
+  //       {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+  //       <ReflectionDialog records={records} setRecords={setRecords} />
+  //     </div>
+  //   </Paper>
   const inputEl = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [records, setRecords] = useState(reflection);
+
 
   const handleChoseImg = (e) => {
     e.preventDefault();

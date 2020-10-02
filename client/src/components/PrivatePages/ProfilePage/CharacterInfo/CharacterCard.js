@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Avatar, Typography } from "@material-ui/core";
 import { Upload } from "antd";
 
+
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   characterCard: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const CharacterCard = ({ user }) => {
 
   const classes = useStyles();
-  const {profileImg} = API.getProfilePic();
+  // const {profileImg} = API.getProfilePic();
   // console.log(profileImg[0]);  
 
   const onBeforeFileLoad = (elem) => {

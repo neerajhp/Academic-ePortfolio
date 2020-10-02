@@ -57,10 +57,10 @@ const ReflectionDialog = ({ records, setRecords }) => {
             aria-labelledby='form-dialog-title'
           >
             <DialogTitle disableTypography>
-              <Typography variant='h2'>Edit Education Information</Typography>
+              <Typography variant='h2'>Edit Reflection</Typography>
             </DialogTitle>
             <DialogContent>
-              {/* <EducationForm records={records} handleClose={handleClose} /> */}
+              <ReflectionForm records={records} handleClose={handleClose} />
             </DialogContent>
           </Dialog>
         </div>

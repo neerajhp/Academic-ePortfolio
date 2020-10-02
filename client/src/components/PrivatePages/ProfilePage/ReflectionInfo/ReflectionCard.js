@@ -37,8 +37,8 @@ const ReflectionCard = (reflection) => {
         <Typography className={classes.title} variant='h2'>
           This is a Reflection
         </Typography>
-        <Typography>This is the blog introduction</Typography>
-        <div className={classes.tableContainer}>{getRecord(records)}</div>
+        <Typography>{getRecord(records)}</Typography>
+        {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
         <ReflectionDialog records={records} setRecords={setRecords} />
       </div>
     </Paper>

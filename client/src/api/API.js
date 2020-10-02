@@ -207,15 +207,6 @@ export default {
       }
     });
   },
-  // Single upload of files
-  uploadImage: function (body) {
-    return axios.post('/api/upload/files', {
-      file: body.file,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      }
-    });
-  },
   // Multiple uploads of images
   uploadImages: function (body) {
     return axios.post('/api/upload/images', {

@@ -146,7 +146,7 @@ const PersonalInformationForm = ({ user }) => {
                 defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
-
+              // There's an error here if the user does not have a mobile number or birthDate in their account
               <FormikField
                 label='Date of Birth'
                 formikProps={formikProps}

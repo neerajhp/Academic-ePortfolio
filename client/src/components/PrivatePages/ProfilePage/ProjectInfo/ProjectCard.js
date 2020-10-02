@@ -77,7 +77,7 @@ const ProjectCard = ({ type }) => {
       for (const key in file) {
         if (file.hasOwnProperty(key)) {
           const item = file[key];
-          param.append("image", item);
+          param.append("document", item);
         }
       }
       axios({

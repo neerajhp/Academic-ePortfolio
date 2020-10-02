@@ -277,6 +277,7 @@ const deleteExperience = async (req, res, next) => {
     await Experience.findByIdAndDelete(
       { _id: req.params.id },
       (err, result) => {
+        console.log(req.params.id);
         if (err) {
           //next();
           throw err;

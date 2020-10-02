@@ -179,12 +179,30 @@ const findInfo = async (userID) => {
 
 exports.getUserInformation = async (req, res) => {
   try{
-      let userInfo = await findInfo(req.user.id);
-      if(userInfo){
-        res.status(200).json(userInfo);
-      }else{
-        res.status(400).json("User not found");
+    await User.findById(req.user.id, (err, result) => {
+      if(err){
+          throw err;
       }
+      if(result){
+          userInfo = {
+              firstName: result.firstName,
+              lastName: result.lastName,
+              email: result.email,
+              mobileNumber: result.mobileNumber,
+              birthDate: result.birthDate
+          }
+          res.status(200).json(userInfo);
+      }else{
+          res.status(404).json("User not found");
+          //userInfo = null;
+      }
+    });
+      // let userInfo = await findInfo(req.user.id);
+      // if(userInfo){
+      //   res.status(200).json(userInfo);
+      // }else{
+      //   res.status(400).json("User not found");
+      // }
   }catch(error){
       res.status(400).send(error);
   }

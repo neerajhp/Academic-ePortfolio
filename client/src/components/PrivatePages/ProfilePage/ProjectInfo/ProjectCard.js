@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
-import { Button, message } from "antd";
+import { Button, message, Form, Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import axios from "axios";
+import API from "../../../../api/API";
 
 /* ================ Styling ================ */
 
@@ -48,6 +50,8 @@ const ProjectCard = ({ type }) => {
   const classes = useStyles();
   const inputEl = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [allFiles, setAllFiles] = useState([]);
+  const [file, setFile] = useState("");
   //Default  card size is large
   var cardSize;
 
@@ -96,6 +100,22 @@ const ProjectCard = ({ type }) => {
     }
   };
 
+  const onFinish = (values) => {
+    API.getAllFiles(values).then((result) => {
+      if (result.status === 200) {
+        setAllFiles(result.data);
+      }
+    });
+  };
+
+  const onIdFinish = (values) => {
+    API.getFile(values).then((result) => {
+      if (result.status === 200) {
+        setFile(result.data);
+      }
+    });
+  };
+
   return (
       <Paper className={`${classes.card}  ${cardSize}`}>
         <div className={classes.bio}>
@@ -117,6 +137,64 @@ const ProjectCard = ({ type }) => {
                   <Button loading={loading} onClick={() => inputEl.current.click()}>
                     Upload
                   </Button>
+                </div>
+              </>
+          )}
+          {type === "large" && (
+              <>
+                <div style={{ marginTop: 20 }}>
+                  <Form layout="inline" onFinish={onFinish}>
+                    <Form.Item>search by name:</Form.Item>
+                    <Form.Item
+                        name="document"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your document id!",
+                          },
+                        ]}
+                    >
+                      <Input placeholder="document id" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button
+                          htmlType="submit"
+                          type="primary"
+                          shape="circle"
+                          icon={<SearchOutlined />}
+                      />
+                    </Form.Item>
+                  </Form>
+                  <div>
+                    {allFiles.map((item) => (
+                        <div key={item.id}>{item.fieldName}</div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ marginTop: 20 }}>
+                  <Form layout="inline" onFinish={onIdFinish}>
+                    <Form.Item style={{ marginLeft: 24 }}>search by id:</Form.Item>
+                    <Form.Item
+                        name="id"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your document id!",
+                          },
+                        ]}
+                    >
+                      <Input placeholder="document id" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button
+                          htmlType="submit"
+                          type="primary"
+                          shape="circle"
+                          icon={<SearchOutlined />}
+                      />
+                    </Form.Item>
+                  </Form>
+                  <div>{file}</div>
                 </div>
               </>
           )}

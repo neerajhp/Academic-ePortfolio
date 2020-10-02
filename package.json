@@ -44,6 +44,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
+    "react-avatar-edit": "^0.8.3",
     "react-router-dom": "^5.2.0",
     "yup": "^0.29.3"
   },

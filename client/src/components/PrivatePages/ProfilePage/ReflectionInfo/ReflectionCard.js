@@ -1,3 +1,4 @@
+import ReflectionDialog from './ReflectionDialog';
 import React, { useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
@@ -31,10 +32,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const ReflectionCard = () => {
+const ReflectionCard = (reflection) => {
   const classes = useStyles();
+
+  // const [records, setRecords] = useState(reflection);
+
+  const getRecord = () => {
+      return <Typography> Add your reflection!</Typography>;
+    };
+
+  // return (
+  //   <Paper className={classes.card}>
+  //     <div className={classes.bio}>
+  //       <Typography className={classes.title} variant='h2'>
+  //         This is a Reflection
+  //       </Typography>
+  //       <Typography>{getRecord(records)}</Typography>
+  //       {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+  //       <ReflectionDialog records={records} setRecords={setRecords} />
+  //     </div>
+  //   </Paper>
   const inputEl = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [records, setRecords] = useState(reflection);
+
 
   const handleChoseImg = (e) => {
     e.preventDefault();
@@ -82,6 +103,9 @@ const ReflectionCard = () => {
               multiple
               onChange={handleChoseImg}
           />
+          <Typography>{getRecord(records)}</Typography>
+        {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+          <ReflectionDialog records={records} setRecords={setRecords} />
           <div className={classes.upload}>
             <Button loading={loading} onClick={() => inputEl.current.click()}>
               Upload

@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Avatar, Typography } from "@material-ui/core";
 import { Upload } from "antd";
 
+
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   characterCard: {
@@ -26,8 +27,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
+
 const CharacterCard = ({ user }) => {
+
   const classes = useStyles();
+  // const {profileImg} = API.getProfilePic();
+  // console.log(profileImg[0]);  
+
+  const onBeforeFileLoad = (elem) => {
+    if(elem.target.files[0].size > 71680){
+      alert("File is too big!");
+      elem.target.value = "";
+    };
+  }
+  
+
+
+
   return (
       <Paper className={classes.characterCard}>
         <Upload

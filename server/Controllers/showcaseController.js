@@ -119,16 +119,24 @@ const removeFeaturedWork = async (req, res) => {
         await FeaturedWork.deleteOne({_id: req.params.id}, (err, result) => {
             if(err){
                 console.log("failed to delete");
-                res.status(400).send(err);
-            }else{
-                if(result.n === 0){
-                    console.log("nothing deleted");
-                    res.status(400).json("Attempted to delete something that doesn't exist");
-                }else{
-                    console.log("deleted");
-                    res.status(200).json("successfully deleted featured work");
-                }
+                throw err;
             }
+            if(result){
+                res.status(200).json("Successfully deleted featured work");
+            }else{
+                res.status(404).json("Failed to find featured work");
+            }
+            
+            
+            // else{
+            //     if(result.n === 0){
+            //         console.log("nothing deleted");
+            //         res.status(400).json("Attempted to delete something that doesn't exist");
+            //     }else{
+            //         console.log("deleted");
+            //         res.status(200).json("successfully deleted featured work");
+            //     }
+            // }
         })
     }catch(error){
         res.status(400).send(error);
@@ -172,23 +180,23 @@ const removeAllFeaturedWorks = async (userID) => {
 // Gets all of the user's featured works
 const getAllFeaturedWorks = async (req, res) => {
     try{
-        let showcase = await findShowcase(req.user.id);
-        if(showcase){
-            res.status(200).json(showcase);
-        }else{
-            res.status(400).json("No featured works");
-        }
+        await FeaturedWork.find({user_id: req.user.id}, (err, results) => {
+            if(err){
+                console.log("The user does not have any featured works");
+                res.status(404).json(err);
+            }else{
+                res.status(200).json(results);
+            }
+        });
+        // let showcase = await findShowcase(req.user.id);
+        // if(showcase){
+        //     res.status(200).json(showcase);
+        // }else{
+        //     res.status(400).json("No featured works");
+        // }
     }catch(error){
         res.status(400).json("Error while looking for showcase");
     }
-    // await FeaturedWork.find({user_id: req.user.id}, (err, results) => {
-    //     if(err){
-    //         console.log("The user does not have any featured works");
-    //         res.status(404).json(err);
-    //     }else{
-    //         res.status(200).json(results);
-    //     }
-    // })
 }
 
 const viewerGetFeaturedWorks = async (req, res) => {

@@ -69,7 +69,7 @@ const ReflectionCard = (reflection) => {
       for (const key in file) {
         if (file.hasOwnProperty(key)) {
           const item = file[key];
-          param.append("image[]", item);
+          param.append("image", item);
         }
       }
       axios({

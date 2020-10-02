@@ -265,41 +265,61 @@ const searchProfilePic = async (userID) => {
 // API call to get the cv
 const getCV = async (req, res) => {
     try {
-        const cv = await searchCV(req.user.id);
-        if (!cv) {
-            console.log("cv not found");
-            res.status(404).json({
-                error: "CV not found"
-            });
-        } else {
-            res.json(cv);
-        }
+        await Document.findOne({user_id: userID,
+            fieldName: "cv"}, (err, result) => {
+                if(err){
+                    throw err;
+                }
+                if(result){
+                    res.status(200).json(result);
+                }else{
+                    res.status(404).json("CV not found");
+                }
+            })
+        // const cv = await searchCV(req.user.id);
+        // if (!cv) {
+        //     console.log("cv not found");
+        //     res.status(404).json({
+        //         error: "CV not found"
+        //     });
+        // } else {
+        //     res.json(cv);
+        // }
     } catch (err) {
         console.log(err);
-        res.status(400).json({
-            error: "Something's up"
-        });
+        res.status(400).json("Error while looking for cv");
     }
 }
 
 // API call to get the profile picture
 const getProfilePic = async (req, res) => {
     try {
-        const profilePic = await searchProfilePic(req.user.id);
-        if (!profilePic) {
-            // Maybe return a generic profile picture instead
-            console.log("profile picture not found");
-            res.status(404).json({
-                error: "Profile picture not found"
-            });
-        } else {
-            res.json(profilePic);
-        }
+        await Document.findOne({
+            user_id: userID,
+            fieldName: "profile-pic"
+        }, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("Profile picture not found");
+            }
+        });
+        // const profilePic = await searchProfilePic(req.user.id);
+        // if (!profilePic) {
+        //     // Maybe return a generic profile picture instead
+        //     console.log("profile picture not found");
+        //     res.status(404).json({
+        //         error: "Profile picture not found"
+        //     });
+        // } else {
+        //     res.json(profilePic);
+        // }
     } catch (err) {
         console.log(err);
-        res.status(400).json({
-            error: "Something's up"
-        });
+        res.status(400).json("Something's up");
     }
 }
 

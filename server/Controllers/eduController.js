@@ -68,6 +68,7 @@ const postEdu = async (req, res) => {
 //   }
 // };
 
+// Gets all of the user's education records
 const getEdu = async(req, res) => {
   try{
     await Edu.find({
@@ -93,6 +94,7 @@ const getEdu = async(req, res) => {
   }
 }
 
+// Gets the viewed user's education records
 const viewerGetEdu = async (req, res) => {
   try {
     let userID = req.viewID;
@@ -107,6 +109,7 @@ const viewerGetEdu = async (req, res) => {
   }
 }
 
+// Updates a certain education record
 const putEdu = async (req, res) => {
   await Edu.findOneAndUpdate({
       _id: req.params.id,
@@ -133,21 +136,21 @@ const putEdu = async (req, res) => {
 
 // Deletes a specific education record
 const deleteEdu = async (req, res) => {
-  console.log('id: ', req.params.id);
-  await Edu.findOneAndDelete({
-      _id: req.params.id,
-      user_id: req.user.id,
-    },
-    function (err, result) {
-      if (!result) {
-        res.status(404).json({
-          error: 'education history not found',
-        });
-      } else {
-        res.status(200).json('education history deleted');
+  try{
+    console.log('id: ', req.params.id);
+    await Edu.findOneAndDelete({_id: req.params.id, user_id: req.user.id}, function (err, result) {
+      if(err){
+        throw err;
       }
-    }
-  );
+      if (!result) {
+        res.status(404).json("Education record not found");
+      } else {
+        res.status(200).json('education record deleted');
+      }
+    });
+  }catch(error){
+    res.status(400).json("Failed to delete education record");
+  }
 };
 
 // Deletes all education API

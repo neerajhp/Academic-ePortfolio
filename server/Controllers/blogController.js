@@ -36,7 +36,7 @@ const postBlog = async (req, res) => {
 // Gets all of the user's blogs (API)
 const getAllBlogs = async (req, res) => {
     try{
-        await Blog.find({user_id: userID}, (err, result) => {
+        await Blog.find({user_id: req.user.id}, (err, result) => {
             if(err){
                 throw err;
             }

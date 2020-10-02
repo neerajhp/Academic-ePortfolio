@@ -38,7 +38,7 @@ const ReflectionDialog = ({ records, setRecords }) => {
     };
   
     const handleClose = () => {
-      API.getEducation().then(({ data }) => {
+      API.getAllBlogs().then(({ data }) => {
         setRecords(data);
         setOpen(false);
       });

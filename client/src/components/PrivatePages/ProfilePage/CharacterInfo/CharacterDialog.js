@@ -9,6 +9,8 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import API from '../../../../api/API';
+import CharacterForm from './CharacterForm';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
             <Typography variant='h2'>Edit Bio</Typography>
           </DialogTitle>
           <DialogContent>
-            {/* <EducationForm records={records} handleClose={handleClose} /> */}
+            <CharacterForm records={records} handleClose={handleClose} />
           </DialogContent>
         </Dialog>
       </div>

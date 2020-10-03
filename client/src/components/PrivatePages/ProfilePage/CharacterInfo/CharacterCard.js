@@ -68,6 +68,7 @@ const CharacterCard = ({ user }) => {
           <Typography variant="h2">
             {user.firstName} {user.lastName}
           </Typography>
+          <Typography>{getRecord(records)}</Typography>
           <Typography>{user.bio}</Typography>
           <CharacterDialog records={records} setRecords={setRecords} />
 

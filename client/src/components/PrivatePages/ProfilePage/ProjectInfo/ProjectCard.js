@@ -109,7 +109,7 @@ const ProjectCard = ({ type }) => {
   };
 
   const onIdFinish = (values) => {
-    API.getFile(values).then((result) => {
+    API.getFile(values.id).then((result) => {
       if (result.status === 200) {
         setFile(result.data);
       }

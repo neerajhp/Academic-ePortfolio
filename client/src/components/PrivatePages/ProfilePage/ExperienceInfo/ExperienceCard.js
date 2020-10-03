@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
     width: '100%',
-    background: theme.palette.secondary.light,
-    color: theme.palette.text.secondary,
+    // background: theme.palette.secondary.light,
+    // color: theme.palette.text.secondary,
     padding: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   title: {
     width: '100%',
@@ -55,11 +55,17 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(3),
   },
   table: {
-    '& .MuiTableCell-body': {
-      color: theme.palette.text.secondary,
+    '& .MuiTableCell-root': {
+      // color: theme.palette.text.secondary,
+      borderBottom: `1px solid ${theme.palette.primary.light}`,
     },
   },
-
+  addExperience: {
+    display: 'flex',
+    justifyContent: 'center',
+    background: theme.palette.neutral.light,
+    borderRadius: theme.spacing(2),
+  },
   period: {
     width: '30%',
     verticalAlign: 'top',
@@ -69,6 +75,12 @@ const useStyles = makeStyles((theme) => ({
   },
   organisation: {
     width: '100%',
+  },
+  role: {
+    color: theme.palette.primary.light,
+  },
+  description: {
+    marginTop: theme.spacing(1),
   },
 }));
 
@@ -97,7 +109,12 @@ const ExperienceCard = ({ experience }) => {
 
   const getRecord = (experience) => {
     if (!(Array.isArray(experience) && experience.length)) {
-      return <Typography> Add your Experience!</Typography>;
+      return (
+        <Typography variant='h3' className={classes.addExperience}>
+          {' '}
+          Display Your Experience here!
+        </Typography>
+      );
     } else {
       return (
         <Table className={classes.table}>
@@ -110,14 +127,15 @@ const ExperienceCard = ({ experience }) => {
                     {MONTHS[exp.monthEnd]}, {exp.yearEnd}
                   </Typography>
                 </TableCell>
-                <TableCell className={classes.education}>
-                  <Typography className={classes.organisation} variant='h4'>
+                <TableCell className={classes.experience}>
+                  <Typography className={classes.organisation} variant='h3'>
                     {exp.organization}
                   </Typography>
 
-                  <Typography>
+                  <Typography className={classes.role}>
                     {exp.role} {`, ${exp.employeeStatus}`}
                   </Typography>
+
                   <Typography className={classes.description}>
                     {exp.description}
                   </Typography>

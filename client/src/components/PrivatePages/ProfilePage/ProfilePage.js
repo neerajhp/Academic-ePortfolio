@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'row',
-    zIndex: '-1',
     marginTop: '1%',
   },
   section: {

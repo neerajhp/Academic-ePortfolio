@@ -116,6 +116,7 @@ const ProjectCard = ({ type }) => {
     });
   };
 
+
   return (
       <Paper className={`${classes.card}  ${cardSize}`}>
         <div className={classes.bio}>
@@ -194,7 +195,7 @@ const ProjectCard = ({ type }) => {
                       />
                     </Form.Item>
                   </Form>
-                  <div>{file}</div>
+                  <div><a href="{file}">{file}</a></div>
                 </div>
               </>
           )}

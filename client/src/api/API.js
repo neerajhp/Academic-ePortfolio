@@ -552,50 +552,50 @@ export default {
 
   // Viewer
   // Gets all the profile of the viewed person
-  viewerGetProfile: function (body) {
-    return axios.get('api/view/profile/:userName', {
+  viewerGetProfile: function (userName) {
+    return axios.get(`api/view/profile/${userName}`, {
 
     });
   },
 
   // Gets all the blogs of the viewed person
-  viewerGetAllBlogs: function (body) {
-    return axios.get('api/view/blog/:userName', {
+  viewerGetAllBlogs: function (userName) {
+    return axios.get(`api/view/blog/${userName}`, {
 
     });
   },
 
   // Gets all the experience of the viewed person
-  viewerGetAllExperience: function (body) {
-    return axios.get('api/view/experience/:userName', {
+  viewerGetAllExperience: function (userName) {
+    return axios.get(`api/view/experience/${userName}`, {
 
     });
   },
 
   // Gets all the education of the viewed person
-  viewerGetEdu: function (body) {
-    return axios.get('api/view/education/:userName', {
+  viewerGetEdu: function (userName) {
+    return axios.get(`api/view/education/${userName}`, {
 
     });
   },
 
   // Gets all the featured-works of the viewed person
-  viewerGetFeaturedWorks: function (body) {
-    return axios.get('api/view/featured-work/:userName', {
+  viewerGetFeaturedWorks: function (userName) {
+    return axios.get(`api/view/featured-work/${userName}`, {
 
     });
   },
 
   // Gets all the documents of the viewed person
-  viewerGetAllDocs: function (body) {
-    return axios.get('api/view/files/:userName', {
+  viewerGetAllDocs: function (userName) {
+    return axios.get(`api/view/files/${userName}`, {
 
     });
   },
 
   // Gets user information of the viewed person
-  viewerGetUserInformation: function (body) {
-    return axios.get('api/view/userInfo/:userName', {
+  viewerGetUserInformation: function (userName) {
+    return axios.get(`api/view/userInfo/${userName}`, {
 
     });
   },

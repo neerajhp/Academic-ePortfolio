@@ -11,6 +11,8 @@ import {
   IconButton,
   MenuItem,
   Grid,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -24,7 +26,6 @@ import API from '../../../../api/API';
 // Form Styles
 const useStyles = makeStyles((theme) => ({
   schoolEntry: {
-    marginTop: theme.spacing(3),
     display: 'flex',
     paddingLeft: '5%',
   },
@@ -40,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     width: '100%',
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.tertiary.main,
+    marginBottom: theme.spacing(3),
   },
 
   addButton: {
@@ -252,131 +254,137 @@ const EducationForm = ({ handleClose, records }) => {
       validationSchema={validationSchema}
     >
       {(formikProps) => (
-        <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
-          <Divider className={classes.divider} />
-          <FieldArray
-            name='schools'
-            render={(fieldArrayProps) => (
-              <React.Fragment>
-                {formikProps.values.schools.map((school, i) => (
-                  <React.Fragment key={i}>
-                    <div className={classes.schoolEntry}>
-                      <MenuBookIcon color='primary' style={{ fontSize: 40 }} />
-                      <div className={classes.form}>
-                        <FormEduSelect record={school.edu_type} index={i} />
-
-                        <FormField
-                          type={'schoolName'}
-                          label={'School Name'}
-                          index={i}
-                          record={school.schoolName}
-                        />
-                        {school.edu_type === 'University' ? (
-                          <FormField
-                            type={'unicourseName'}
-                            label={'Course Name'}
-                            index={i}
-                            record={school.unicourseName}
+        <React.Fragment>
+          <DialogContent dividers>
+            <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
+              <FieldArray
+                name='schools'
+                render={(fieldArrayProps) => (
+                  <React.Fragment>
+                    {formikProps.values.schools.map((school, i) => (
+                      <React.Fragment key={i}>
+                        <div className={classes.schoolEntry}>
+                          <MenuBookIcon
+                            color='primary'
+                            style={{ fontSize: 40 }}
                           />
-                        ) : (
-                          ''
-                        )}
-                        <div className={classes.periodInfo}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={12} sm={2}>
-                              <Typography>From: </Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={5}>
-                              <FormMonthSelect
-                                record={school.monthStart}
+                          <div className={classes.form}>
+                            <FormEduSelect record={school.edu_type} index={i} />
+
+                            <FormField
+                              type={'schoolName'}
+                              label={'School Name'}
+                              index={i}
+                              record={school.schoolName}
+                            />
+                            {school.edu_type === 'University' ? (
+                              <FormField
+                                type={'unicourseName'}
+                                label={'Course Name'}
                                 index={i}
-                                milestone={'monthStart'}
+                                record={school.unicourseName}
                               />
-                            </Grid>
-                            <Grid item xs={12} sm={5}>
-                              <FormYearSelect
-                                record={school}
-                                index={i}
-                                milestone={'yearStart'}
-                              />
-                            </Grid>
-                          </Grid>
+                            ) : (
+                              ''
+                            )}
+                            <div className={classes.periodInfo}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12} sm={2}>
+                                  <Typography>From: </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                  <FormMonthSelect
+                                    record={school.monthStart}
+                                    index={i}
+                                    milestone={'monthStart'}
+                                  />
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                  <FormYearSelect
+                                    record={school}
+                                    index={i}
+                                    milestone={'yearStart'}
+                                  />
+                                </Grid>
+                              </Grid>
+                            </div>
+                            <div className={classes.periodInfo}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12} sm={2}>
+                                  <Typography>To: </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                  <FormMonthSelect
+                                    record={school.monthEnd}
+                                    index={i}
+                                    milestone={'monthEnd'}
+                                  />
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                  <FormYearSelect
+                                    record={school}
+                                    index={i}
+                                    milestone={'yearEnd'}
+                                  />
+                                </Grid>
+                              </Grid>
+                            </div>
+                            <div className={classes.periodInfo}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12} sm={2} align='center'>
+                                  <FormGraduatedCheckBox index={i} />
+                                </Grid>
+                              </Grid>
+                            </div>
+                          </div>
+                          <div>
+                            <IconButton
+                              onClick={() => {
+                                API.deleteEducation(school._id)
+                                  .then((res) => {
+                                    fieldArrayProps.remove(i);
+                                  })
+                                  .catch((err) => {
+                                    console.log(err.response.data);
+                                  });
+                              }}
+                            >
+                              <DeleteIcon style={{ fontSize: 30 }} />
+                            </IconButton>
+                          </div>
                         </div>
-                        <div className={classes.periodInfo}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={12} sm={2}>
-                              <Typography>To: </Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={5}>
-                              <FormMonthSelect
-                                record={school.monthEnd}
-                                index={i}
-                                milestone={'monthEnd'}
-                              />
-                            </Grid>
-                            <Grid item xs={12} sm={5}>
-                              <FormYearSelect
-                                record={school}
-                                index={i}
-                                milestone={'yearEnd'}
-                              />
-                            </Grid>
-                          </Grid>
-                        </div>
-                        <div className={classes.periodInfo}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={12} sm={2} align='center'>
-                              <FormGraduatedCheckBox index={i} />
-                            </Grid>
-                          </Grid>
-                        </div>
-                      </div>
-                      <div>
-                        <IconButton
-                          onClick={() => {
-                            API.deleteEducation(school._id)
-                              .then((res) => {
-                                fieldArrayProps.remove(i);
-                              })
-                              .catch((err) => {
-                                console.log(err.response.data);
-                              });
-                          }}
-                        >
-                          <DeleteIcon style={{ fontSize: 30 }} />
-                        </IconButton>
-                      </div>
+                        <Divider className={classes.divider} />
+                      </React.Fragment>
+                    ))}
+
+                    <div className={classes.addButtonContainer}>
+                      <IconButton
+                        className={classes.button}
+                        onClick={() =>
+                          fieldArrayProps.push({
+                            edu_type: '',
+                            schoolName: '',
+                            unicourseName: '',
+                            unimajorname: '',
+                            monthStart: 1,
+                            yearStart: YEAR,
+                            monthEnd: 12,
+                            yearEnd: YEAR,
+                            graduated: false,
+                          })
+                        }
+                        color='primary'
+                      >
+                        <AddBoxIcon style={{ fontSize: 30 }} />
+                      </IconButton>
                     </div>
-                    <Divider className={classes.divider} />
                   </React.Fragment>
-                ))}
+                )}
+              />
+            </form>
+          </DialogContent>
 
-                <div className={classes.addButtonContainer}>
-                  <IconButton
-                    className={classes.button}
-                    onClick={() =>
-                      fieldArrayProps.push({
-                        edu_type: '',
-                        schoolName: '',
-                        unicourseName: '',
-                        unimajorname: '',
-                        monthStart: 1,
-                        yearStart: YEAR,
-                        monthEnd: 12,
-                        yearEnd: YEAR,
-                        graduated: false,
-                      })
-                    }
-                    color='primary'
-                  >
-                    <AddBoxIcon style={{ fontSize: 30 }} />
-                  </IconButton>
-                </div>
-              </React.Fragment>
-            )}
-          />
-
-          <div className={classes.buttonContainer}>
+          <DialogActions>
             <Button
               className={classes.button}
               onClick={() => handleClose()}
@@ -387,13 +395,14 @@ const EducationForm = ({ handleClose, records }) => {
             <Button
               type='Submit'
               className={classes.button}
+              onClick={() => formikProps.handleSubmit()}
               disabled={!formikProps.isValid}
               color='primary'
             >
               <Typography>Update</Typography>
             </Button>
-          </div>
-        </form>
+          </DialogActions>
+        </React.Fragment>
       )}
     </Formik>
   );

@@ -1,13 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
-import {
-  IconButton,
-  Typography,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
+import { IconButton, Typography, Dialog, DialogTitle } from '@material-ui/core';
 import ExperienceForm from './ExperienceForm';
 import API from '../../../../api/API';
 
@@ -17,6 +11,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     position: 'relative',
+  },
+  panelContainer: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    height: 224,
   },
   paper: {
     position: 'absolute',
@@ -41,10 +41,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExperienceDialog = ({ records, setRecords }) => {
+const ExperienceDialog = ({ records, setRecords, type }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -58,6 +63,10 @@ const ExperienceDialog = ({ records, setRecords }) => {
     });
   };
 
+  function capitaliseFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <div className={classes.container}>
       <IconButton onClick={handleOpen}>
@@ -66,42 +75,22 @@ const ExperienceDialog = ({ records, setRecords }) => {
       <Dialog
         fullWidth={true}
         maxWidth={'md'}
+        scroll={'paper'}
         open={open}
         onClose={handleClose}
-        aria-labelledby='form-dialog-title'
       >
         <DialogTitle disableTypography>
-          <Typography variant='h2'>Edit Experience Information</Typography>
+          <Typography variant='h2'>
+            Edit Your {capitaliseFirstLetter(type)} Experience
+          </Typography>
         </DialogTitle>
-        <DialogContent>
-          <div className={classes.formSection}>
-            <Typography className={classes.subTitle} variant='h3'>
-              Professional
-            </Typography>
-            <ExperienceForm
-              records={records.employment}
-              handleClose={handleClose}
-            />
-          </div>
-          <div className={classes.formSection}>
-            <Typography className={classes.subTitle} variant='h3'>
-              Volunteering
-            </Typography>
-            <ExperienceForm
-              records={records.volunteering}
-              handleClose={handleClose}
-            />
-          </div>
-          <div className={classes.formSection}>
-            <Typography className={classes.subTitle} variant='h3'>
-              Extracurricular
-            </Typography>
-            <ExperienceForm
-              records={records.extracurricular}
-              handleClose={handleClose}
-            />
-          </div>
-        </DialogContent>
+
+        <ExperienceForm
+          records={records}
+          handleClose={handleClose}
+          open={open}
+          expType={type}
+        />
       </Dialog>
     </div>
   );

@@ -52,16 +52,14 @@ const EducationDialog = ({ records, setRecords }) => {
       <Dialog
         fullWidth={true}
         maxWidth={'md'}
+        scroll={'paper'}
         open={open}
         onClose={handleClose}
-        aria-labelledby='form-dialog-title'
       >
         <DialogTitle disableTypography>
           <Typography variant='h2'>Edit Education Information</Typography>
         </DialogTitle>
-        <DialogContent>
-          <EducationForm records={records} handleClose={handleClose} />
-        </DialogContent>
+        <EducationForm records={records} handleClose={handleClose} />
       </Dialog>
     </div>
   );

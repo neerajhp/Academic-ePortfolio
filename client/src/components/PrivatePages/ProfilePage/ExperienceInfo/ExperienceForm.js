@@ -85,32 +85,6 @@ const FormField = ({ type, label, index, record, ...rest }) => {
   );
 };
 
-const FormExpSelect = ({ record, index }) => {
-  return (
-    <Field name={`experiences[${index}].type`}>
-      {({ field, meta }) => {
-        return (
-          <TextField
-            fullWidth
-            select
-            variant='outlined'
-            margin='dense'
-            label='Experience Type'
-            value={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
-            onChange={field.onChange(field.name)}
-            error={meta.touched && Boolean(meta.error)}
-          >
-            <MenuItem value={'Work'}>Employed</MenuItem>
-            <MenuItem value={'Volunteer'}>Volunteer</MenuItem>
-            <MenuItem value={'Extracurricular'}>Extra Curricular</MenuItem>
-          </TextField>
-        );
-      }}
-    </Field>
-  );
-};
-
 const FormStatusSelect = ({ record, index }) => {
   return (
     <Field name={`experiences[${index}].employeeStatus`}>
@@ -271,8 +245,6 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                         <div className={classes.expEntry}>
                           <WorkIcon color='primary' style={{ fontSize: 40 }} />
                           <div className={classes.form}>
-                            <FormExpSelect record={exp.type} index={i} />
-
                             <FormField
                               type={'organization'}
                               label={'Organization'}

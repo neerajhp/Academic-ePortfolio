@@ -1,7 +1,8 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Avatar, Typography } from "@material-ui/core";
-import { Upload } from "antd";
+import { Button, message, Upload } from "antd";
+import React, { useRef, useState } from "react";
+import CharacterDialog from './CharacterDialog';
 
 
 /* ================ Styling ================ */
@@ -31,8 +32,14 @@ const useStyles = makeStyles((theme) => ({
 const CharacterCard = ({ user }) => {
 
   const classes = useStyles();
+  const [records, setRecords] = useState(user);
   // const {profileImg} = API.getProfilePic();
   // console.log(profileImg[0]);  
+
+
+  const getRecord = () => {
+    return <Typography> Add Bio </Typography>;
+  };
 
   const onBeforeFileLoad = (elem) => {
     if(elem.target.files[0].size > 71680){
@@ -62,6 +69,8 @@ const CharacterCard = ({ user }) => {
             {user.firstName} {user.lastName}
           </Typography>
           <Typography>{user.bio}</Typography>
+          <CharacterDialog records={records} setRecords={setRecords} />
+
         </div>
       </Paper>
   );

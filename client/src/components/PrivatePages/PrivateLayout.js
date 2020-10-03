@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';
 import ProfilePage from './ProfilePage/ProfilePage';
 import AccountPage from './AccountPage/AccountPage';
+import Background from '../../assets/bkg-private.svg';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -17,6 +18,21 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
     marginRight: theme.spacing(2),
+  },
+  bkgContainer: {
+    width: '100vw',
+    height: '100vh',
+    zIndex: -1,
+    position: 'fixed',
+    backgroundImage: `url(${Background})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  },
+  contentContainer: {
+    zIndex: 10,
   },
 }));
 
@@ -36,7 +52,7 @@ const PrivateLayout = () => {
   }
 
   return (
-    <div>
+    <div className={classes.bkgContainer}>
       <AppBar position='fixed'>
         <Toolbar>
           <Typography variant='h3' className={classes.title}>
@@ -54,13 +70,16 @@ const PrivateLayout = () => {
         </Toolbar>
       </AppBar>
       <div className={classes.banner}> </div>
-      <Switch>
-        <Route exact path='/'>
-          <Redirect to='/profile' />
-        </Route>
-        <Route exact path='/profile' component={ProfilePage} />
-        <Route exact path='/account' component={AccountPage} />
-      </Switch>
+
+      <div className={classes.contentContainer}>
+        <Switch>
+          <Route exact path='/'>
+            <Redirect to='/profile' />
+          </Route>
+          <Route exact path='/profile' component={ProfilePage} />
+          <Route exact path='/account' component={AccountPage} />
+        </Switch>
+      </div>
     </div>
   );
 };

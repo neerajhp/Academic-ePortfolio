@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'row',
-    zIndex: '-1',
     marginTop: '1%',
   },
   section: {
@@ -75,7 +74,6 @@ const useStyles = makeStyles((theme) => ({
 const ProfilePage = () => {
   // Styling
   const classes = useStyles();
-  const [isLoading, setLoading] = useState(true);
   const [section, setSection] = useState(1);
 
   //Profile Information
@@ -102,7 +100,6 @@ const ProfilePage = () => {
     API.getAllExperience()
       .then(({ data }) => {
         setExperience(data);
-        console.log(data);
       })
       .catch();
   }, []);

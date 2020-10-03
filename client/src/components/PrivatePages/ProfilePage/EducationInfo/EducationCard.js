@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
     width: '100%',
-    background: theme.palette.secondary.light,
-    color: theme.palette.text.secondary,
+    // background: theme.palette.secondary.light,
+    // color: theme.palette.text.secondary,
     padding: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     '& .MuiTableCell-body': {
-      color: theme.palette.text.secondary,
+      // color: theme.palette.text.secondary,
     },
   },
   period: {

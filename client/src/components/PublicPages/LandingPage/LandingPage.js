@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Link, Typography } from '@material-ui/core';
-import Background from '../../../image/bg.png';
+import Background from '../../../assets/bkg.svg';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => {
@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => {
       height: '100vh',
       width: '100vw',
       position: 'fixed',
+      backgroundImage: `url(${Background})`,
+      backgroundSize: 'cover',
     },
     banner: {
       position: 'sticky',
@@ -37,21 +39,19 @@ const useStyles = makeStyles((theme) => {
       padding: '2em',
     },
 
-    background: {
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      backgroundSize: 'cover',
-    },
     submit: {
       backgroundColor: theme.palette.secondary.main,
       marginTop: '5%',
       marginLeft: '10%',
       width: '30%',
+      '&:hover': {
+        backgroundColor: theme.palette.secondary.light,
+        borderColor: theme.palette.secondary.light,
+        boxShadow: 'none',
+      },
     },
-    login:{
-      right:'2%',
-
+    login: {
+      right: '2%',
     },
   };
 });
@@ -65,41 +65,23 @@ const LandingPage = () => {
   // const { setAuthTokens } = useAuth();
 
   return (
-    <div
-      className='background'
-      style={{ backgroundImage: `url(${Background})` }}
-    >
-      <div className={classes.root}>
-        <img alt='background' src={Background} width='100%' />
-      </div>
-      <div className={classes.login}>
-      <Link href='./login'>
-        <Button
-            type='Submit'
-            color='textSecondary'
-        >
-          <Typography>Login</Typography>
-        </Button>
-      </Link>
-      </div>
+    <div className={classes.root}>
       <div className={classes.banner}>
         <Typography variant='h1' color='textSecondary'>
-         <strong> Welcome to ePortfolio </strong>
+          Welcome to ePortfolio
         </Typography>
       </div>
-
-      <Link href='./login'>
+      <Link href='./login' underline='none'>
         <Button
           type='Submit'
           variant='contained'
           className={classes.submit}
           color='primary'
         >
-          <Typography>Get Start with your own portfolio</Typography>
+          <Typography>Login To Your portfolio</Typography>
         </Button>
       </Link>
-
-      <Link href='./signup'>
+      <Link href='./signup' underline='none'>
         <Button
           type='Submit'
           variant='contained'

@@ -75,7 +75,6 @@ const useStyles = makeStyles((theme) => ({
 const ProfilePage = () => {
   // Styling
   const classes = useStyles();
-  const [isLoading, setLoading] = useState(true);
   const [section, setSection] = useState(1);
 
   //Profile Information
@@ -102,7 +101,6 @@ const ProfilePage = () => {
     API.getAllExperience()
       .then(({ data }) => {
         setExperience(data);
-        console.log(data);
       })
       .catch();
   }, []);

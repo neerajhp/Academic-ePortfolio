@@ -51,7 +51,7 @@ const ProjectCard = ({ type }) => {
   const inputEl = useRef(null);
   const [loading, setLoading] = useState(false);
   const [allFiles, setAllFiles] = useState([]);
-  const [file, setFile] = useState("");
+  const [allId, setAllId] = useState([]);
   //Default  card size is large
   var cardSize;
 
@@ -100,22 +100,23 @@ const ProjectCard = ({ type }) => {
     }
   };
 
-  const onFinish = (values) => {
-    API.getAllFiles(values).then((result) => {
+  const onFinish = () => {
+    API.getAllFiles().then((result) => {
       if (result.status === 200) {
         setAllFiles(result.data);
       }
     });
   };
 
-  const onIdFinish = (values) => {
-    API.getFile(values).then((result) => {
+  const onIdFinish = () => {
+    // test data
+    // ['url1','url2','url3','url4']
+    API.getFile().then((result) => {
       if (result.status === 200) {
-        setFile(result.data);
+        setAllId(result.data);
       }
     });
   };
-
 
   return (
       <Paper className={`${classes.card}  ${cardSize}`}>
@@ -144,28 +145,7 @@ const ProjectCard = ({ type }) => {
           {type === "large" && (
               <>
                 <div style={{ marginTop: 20 }}>
-                  <Form layout="inline" onFinish={onFinish}>
-                    <Form.Item>search by name:</Form.Item>
-                    <Form.Item
-                        name="document"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input your document id!",
-                          },
-                        ]}
-                    >
-                      <Input placeholder="document id" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button
-                          htmlType="submit"
-                          type="primary"
-                          shape="circle"
-                          icon={<SearchOutlined />}
-                      />
-                    </Form.Item>
-                  </Form>
+                  <Button onClick={() => onFinish()}>all file</Button>
                   <div>
                     {allFiles.map((item) => (
                         <div key={item.id}>{item.fieldName}</div>
@@ -173,29 +153,12 @@ const ProjectCard = ({ type }) => {
                   </div>
                 </div>
                 <div style={{ marginTop: 20 }}>
-                  <Form layout="inline" onFinish={onIdFinish}>
-                    <Form.Item style={{ marginLeft: 24 }}>search by id:</Form.Item>
-                    <Form.Item
-                        name="id"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input your document id!",
-                          },
-                        ]}
-                    >
-                      <Input placeholder="document id" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button
-                          htmlType="submit"
-                          type="primary"
-                          shape="circle"
-                          icon={<SearchOutlined />}
-                      />
-                    </Form.Item>
-                  </Form>
-                  <div><a href="{file}">{file}</a></div>
+                  <Button onClick={() => onIdFinish()}>file id</Button>
+                  {allId.map((item) => (
+                      <div key={item}>
+                        <a href={item}>{item}</a>
+                      </div>
+                  ))}
                 </div>
               </>
           )}

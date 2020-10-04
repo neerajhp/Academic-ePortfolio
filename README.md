@@ -1,19 +1,27 @@
 # UoM COMP30022 Capstone Project 2020
 
 A personal ePortfolio application capable of storing and managing documents and multimedia.
-This application is designed to present a student's evidence of achievement throughout their academic career.
+This application is designed to present a student's evidence of achievement and reflections of their academic career.
 Written by Team Home Alone
 
 <p float="left">
 <img src="https://github.com/neerajhp/Academic-ePortfolio/blob/media/LandingPage.png" width="40%" />
-<img src="https://github.com/neerajhp/Academic-ePortfolio/blob/media/LoginPage.png" width="40%" />  
+<img src="https://github.com/neerajhp/Academic-ePortfolio/blob/media/ProfilePage.png" width="40%" />  
                                                                                                </p>
-                                                                                               
+    
+
+### Academic ePortfolio
+
+This Academic ePortfolio allows users to create a portfolio through our platform. Portfolio's can be customised to display the following:
+- Education
+- Work, Volunteer and Extracurricular Experience
+- An introductory bio 
+- School Projects
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 
 ### Prerequisites
@@ -36,6 +44,7 @@ Once you have Node.js, NPM and have cloned the repository, you will need to run 
 npm install
 ```
 The command must be run in both the root folder and the client folder. This is to make sure that all of the required dependencies are installed. 
+
 
 ### Available Scripts
 
@@ -64,25 +73,6 @@ npm test
 ```
 Runs the backend tests
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Deployment
 
@@ -105,8 +95,7 @@ A production deployment of this project exists at https://homealone30022.herokua
 - **Neeraj Patel** - [Github](https://github.com/neerajhp)
 - **Polo Chiu** - [Github](https://github.com/polopineapple)
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
+
+We would like to thank our supervisor Kenny Lee for guiding us through this project :)

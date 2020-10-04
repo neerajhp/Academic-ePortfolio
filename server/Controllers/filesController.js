@@ -12,21 +12,39 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
+// // Returns all of the user's uploaded files (except profile picture and cv)
+// const getAllDocs = async (req, res) => {
+//     try{
+//         let documents = await findDocs(req.user.id);
+//         if(!documents || documents.length == 0){
+//             res.status(400).json("No documents found");
+//         }else{
+//             res.status(200).json(documents);
+//         }
+//         // // ideally, its probbaly better if the user_id is not from the query
+//         // const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
+//         // res.json(documents);
+//     }catch(err){
+//         console.log(err);
+//         res.json({error: "Something's up"});
+//     }
+// }
+
 // Returns all of the user's uploaded files (except profile picture and cv)
 const getAllDocs = async (req, res) => {
     try{
-        let documents = await findDocs(req.user.id);
-        if(!documents || documents.length == 0){
-            res.status(400).json("No documents found");
-        }else{
-            res.status(200).json(documents);
-        }
-        // // ideally, its probbaly better if the user_id is not from the query
-        // const documents = await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}});
-        // res.json(documents);
-    }catch(err){
-        console.log(err);
-        res.json({error: "Something's up"});
+        await Document.find({user_id: req.user.id, fieldName: {$in: ["document", "image"]}}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("No files found");
+            }
+        });
+    }catch(error){
+        res.status(400).json(error);
     }
 }
 

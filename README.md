@@ -64,12 +64,12 @@ npm test
 ```
 Runs the backend tests
 
-## Running the tests
+### Running the tests
 
 # Frontend Testing
 Explain how to run the automated tests for this system
 
-# Backend Testing
+## Backend Testing
 To run the backend tests, a local instance of MongoDB will be required and can be downloaded from https://www.mongodb.com/try/download/community
 
 After installing the local instance of MongoDB, make sure that the server is running, type npm test to run the testing suite. The test should give a list of testing suite that have passed and failed, and a coverage map showing what code is not being covered by the testing suites.
@@ -81,6 +81,14 @@ Alternatively, if you do not wish to install a local instance of MongoDB, a onli
 *Warning*
 Please note that testing conducted on the online server is not as reliable as local and may lead to some false positive or false negatives, this is due to the design of the testing suite and the nature of async.
 
+# Adding additional testing suites
+Testing suites can be added in the Test folder with the extension .test.js
+
+The clearDB.js and login.js are additional functionalities to aid in testing, clearDB should be called in every testing suite to make sure the database is wiped clean after each suite of tests. login.js can be called if need and will signup a testing account, login to the testing account and return a JWT token, and returne a userID of the user. 
+
+If routes are protected with JWT, a .set('Authorization', 'bearer ' + token).
+
+When testing with supertest, the syntax is different from regular jest testing, in order to utilise the regular jest syntax, a .then(data => {expect(data).{function}}) is required.
 
 
 ### Break down into end to end tests

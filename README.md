@@ -12,25 +12,48 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
-```
-Give examples
-```
+To get started, you will need to download Node.js and NPM
+
+Download links:
+Node.js https://nodejs.org/en/download/ (NPM manager included in the download)
+
 
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
+Once you have Node.js, NPM and have cloned the repository, you will need to run this command: 
+```
+npm install
+```
+The command must be run in both the root folder and the client folder. This is to make sure that all of the required dependencies are installed. 
+
+### Available Scripts
+
+After the dependencies have been installed, the following scripts can be run: 
 
 ```
-Give the example
+npm run dev
 ```
+Runs the app in development mode by concurrently running both the client and server. 
+Open http://localhost:3000 to view it in the browser.
 
-And repeat
+```
+npm client
+```
+Runs the client in development mode.
+Open http://localhost:3000 to view it in the browser.
 
 ```
-until finished
+npm server
 ```
+Runs the server in development mode
+Open http://localhost:5000 to view it in the browser
+
+```
+npm test
+```
+Runs the backend tests
 
 End with an example of getting some data out of the system or using it for a little demo
 

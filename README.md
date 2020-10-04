@@ -15,9 +15,9 @@ What things you need to install the software and how to install them
 To get started, you will need to download Node.js and NPM
 
 Download links:
-```
-Node.js https://nodejs.org/en/download/   (NPM manager included in the download)
-```
+
+https://nodejs.org/en/download/   (NPM manager included in the download)
+
 
 ### Installing
 

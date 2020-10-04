@@ -2,12 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import {
+  Box,
   IconButton,
   Typography,
   Dialog,
-  DialogContent,
   DialogTitle,
 } from '@material-ui/core';
+import { shadows } from '@material-ui/system';
 import ExperienceForm from './ExperienceForm';
 import API from '../../../../api/API';
 
@@ -18,6 +19,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     position: 'relative',
   },
+  panelContainer: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    height: 224,
+  },
   paper: {
     position: 'absolute',
     width: '40%',
@@ -25,6 +32,14 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+  dialog: {
+    '& .MuiDialogTitle-root': {
+      background: `linear-gradient(175deg, white 75%, ${theme.palette.secondary.main} 25%)`,
+    },
+    '& .MuiDialogActions-root': {
+      background: `linear-gradient(175deg, ${theme.palette.primary.main} 55%,  white 20%)`,
+    },
   },
   subTitle: {
     width: '100%',
@@ -41,10 +56,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExperienceDialog = ({ records, setRecords }) => {
+const ExperienceDialog = ({ records, setRecords, type }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -58,6 +78,10 @@ const ExperienceDialog = ({ records, setRecords }) => {
     });
   };
 
+  function capitaliseFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <div className={classes.container}>
       <IconButton onClick={handleOpen}>
@@ -66,42 +90,25 @@ const ExperienceDialog = ({ records, setRecords }) => {
       <Dialog
         fullWidth={true}
         maxWidth={'md'}
+        scroll={'paper'}
         open={open}
         onClose={handleClose}
-        aria-labelledby='form-dialog-title'
+        className={classes.dialog}
       >
-        <DialogTitle disableTypography>
-          <Typography variant='h2'>Edit Experience Information</Typography>
-        </DialogTitle>
-        <DialogContent>
-          <div className={classes.formSection}>
-            <Typography className={classes.subTitle} variant='h3'>
-              Professional
+        <Box boxShadow={2}>
+          <DialogTitle disableTypography>
+            <Typography variant='h2'>
+              Edit Your {capitaliseFirstLetter(type)} Experience
             </Typography>
-            <ExperienceForm
-              records={records.employment}
-              handleClose={handleClose}
-            />
-          </div>
-          <div className={classes.formSection}>
-            <Typography className={classes.subTitle} variant='h3'>
-              Volunteering
-            </Typography>
-            <ExperienceForm
-              records={records.volunteering}
-              handleClose={handleClose}
-            />
-          </div>
-          <div className={classes.formSection}>
-            <Typography className={classes.subTitle} variant='h3'>
-              Extracurricular
-            </Typography>
-            <ExperienceForm
-              records={records.extracurricular}
-              handleClose={handleClose}
-            />
-          </div>
-        </DialogContent>
+          </DialogTitle>
+        </Box>
+
+        <ExperienceForm
+          records={records}
+          handleClose={handleClose}
+          open={open}
+          expType={type}
+        />
       </Dialog>
     </div>
   );

@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(3),
   },
   table: {
-    '& .MuiTableCell-root': {
+    '& .MuiTable-root': {
       // color: theme.palette.text.secondary,
       borderBottom: `1px solid ${theme.palette.primary.light}`,
     },
@@ -160,6 +160,11 @@ const ExperienceCard = ({ experience }) => {
         <div className={classes.tableContainer}>
           {getRecord(records.employment)}
         </div>
+        <ExperienceDialog
+          type={'employment'}
+          records={records.employment}
+          setRecords={setRecords}
+        />
       </div>
       <div className={classes.workSection}>
         <Typography className={classes.subTitle} variant='h3'>
@@ -168,6 +173,11 @@ const ExperienceCard = ({ experience }) => {
         <div className={classes.tableContainer}>
           {getRecord(records.volunteering)}
         </div>
+        <ExperienceDialog
+          type={'volunteering'}
+          records={records.volunteering}
+          setRecords={setRecords}
+        />
       </div>
       <div className={classes.workSection}>
         <Typography className={classes.subTitle} variant='h3'>
@@ -176,8 +186,12 @@ const ExperienceCard = ({ experience }) => {
         <div className={classes.tableContainer}>
           {getRecord(records.extracurricular)}
         </div>
+        <ExperienceDialog
+          type={'extracurricular'}
+          records={records.extracurricular}
+          setRecords={setRecords}
+        />
       </div>
-      <ExperienceDialog records={records} setRecords={setRecords} />
     </Paper>
   );
 };

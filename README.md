@@ -15,8 +15,9 @@ What things you need to install the software and how to install them
 To get started, you will need to download Node.js and NPM
 
 Download links:
-Node.js https://nodejs.org/en/download/ (NPM manager included in the download)
-
+```
+Node.js https://nodejs.org/en/download/   (NPM manager included in the download)
+```
 
 ### Installing
 
@@ -54,8 +55,6 @@ Open http://localhost:5000 to view it in the browser
 npm test
 ```
 Runs the backend tests
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 

@@ -118,9 +118,7 @@ const putEdu = async (req, res) => {
     req.body,
     function (err, result) {
       if (!result) {
-        res.status(404).json({
-          error: 'education history not found',
-        });
+        res.status(404).json('Education history not found');
       } else {
         Edu.findById({
             _id: req.params.id,
@@ -145,7 +143,7 @@ const deleteEdu = async (req, res) => {
       if (!result) {
         res.status(404).json("Education record not found");
       } else {
-        res.status(200).json('education record deleted');
+        res.status(200).json('Education record deleted');
       }
     });
   }catch(error){

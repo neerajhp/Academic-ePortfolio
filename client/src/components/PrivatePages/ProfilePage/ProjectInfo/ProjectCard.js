@@ -109,11 +109,13 @@ const ProjectCard = ({ type }) => {
   };
 
   const onIdFinish = () => {
+
     // test data
     // ['url1','url2','url3','url4']
-    API.getFile().then((result) => {
+    API.getAllFiles().then((result) => {
       if (result.status === 200) {
         setAllId(result.data);
+        console.log(123,allFiles)
       }
     });
   };
@@ -154,12 +156,12 @@ const ProjectCard = ({ type }) => {
                 </div>
                 <div style={{ marginTop: 20 }}>
                   <Button onClick={() => onIdFinish()}>file id</Button>
-                  {allId.map((item) => (
-                      <div key={item}>
-                        <a href={item}>{item}</a>
+                  {allId && allId.map((item) => (
+                      <div key={item._id}>
+                        <a href={item.fileLink}>{item.fieldName}</a>
                       </div>
                   ))}
-                </div>
+                </div>s
               </>
           )}
         </div>

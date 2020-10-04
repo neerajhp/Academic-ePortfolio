@@ -218,13 +218,13 @@ export default {
     });
   },
   // Gets a file based on its objectID
-  getFile: function () {
-    return axios.get('/api/files/:id', {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
-  },
+  // getFile: function () {
+  //   return axios.get('/api/files/:id', {
+  //     headers: {
+  //       Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+  //     },
+  //   });
+  // },
   // Downloads a file
   downloadFile: function () {
     return axios.get('/api/files/download/:id', {
@@ -599,6 +599,15 @@ export default {
 
     });
   },
+
+  //Get a file based on its objectID
+  getFile:function (recordID){
+    return axios.get(`/api/files/${recordID}`,{
+      headers:{
+        Authorization :"Bearer:" + JSON.parse(localStorage.getItem('token')),
+      }
+    });
+  }
 
 }
 

@@ -66,7 +66,22 @@ Runs the backend tests
 
 ## Running the tests
 
+# Frontend Testing
 Explain how to run the automated tests for this system
+
+# Backend Testing
+To run the backend tests, a local instance of MongoDB will be required and can be downloaded from https://www.mongodb.com/try/download/community
+
+After installing the local instance of MongoDB, make sure that the server is running, type npm test to run the testing suite. The test should give a list of testing suite that have passed and failed, and a coverage map showing what code is not being covered by the testing suites.
+
+A coverage folder is also automatically generated, and can be accessed from the browser to view code coverage in more detail
+
+Alternatively, if you do not wish to install a local instance of MongoDB, a online database is available, this can be accessed by changing the test.env file in the config folder. The DB_CONNECTION is the variable being used to connect to the database, replacing this with the DB_ALTERNATIVE string will connect the server to an online database. 
+
+*Warning*
+Please note that testing conducted on the online server is not as reliable as local and may lead to some false positive or false negatives, this is due to the design of the testing suite and the nature of async.
+
+
 
 ### Break down into end to end tests
 

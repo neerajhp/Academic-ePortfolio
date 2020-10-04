@@ -107,7 +107,6 @@ const ProjectCard = ({ type }) => {
       }
     });
   };
-
   const onIdFinish = () => {
 
     // test data

@@ -226,16 +226,16 @@ export default {
   //   });
   // },
   // Downloads a file
-  downloadFile: function () {
-    return axios.get('/api/files/download/:id', {
+  downloadFile: function (recordID) {
+    return axios.get(`/api/files/download/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
   },
   // Displays an image based on the id in the params
-  displayImage: function () {
-    return axios.get('/api/files/image/:id', {
+  displayImage: function (recordID) {
+    return axios.get(`/api/files/image/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -251,8 +251,8 @@ export default {
     })
   },
   // Deletes the file by objectID
-  deleteFile: function () {
-    return axios.delete('/api/files/:id', {
+  deleteFile: function (recordID) {
+    return axios.delete(`/api/files/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -329,16 +329,16 @@ export default {
     });
   },
   // Gets a specific featured work
-  getFeaturedWork: function () {
-    return axios.get('api/profile/featured-work/:id', {
+  getFeaturedWork: function (recordID) {
+    return axios.get(`api/profile/featured-work/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
   },
   // Edit a specific featured work
-  editFeaturedWork: function (body) {
-    return axios.put('api/profile/featured-work/:id', {
+  editFeaturedWork: function (body, recordID) {
+    return axios.put(`api/profile/featured-work/${recordID}`, {
       title: body.title,
       type: body.type,
       description: body.description,
@@ -351,8 +351,8 @@ export default {
     });
   },
   // Removes a specific featured work
-  removeFeaturedWork: function () {
-    return axios.delete('api/profile/featured-work/:id', {
+  removeFeaturedWork: function (recordID) {
+    return axios.delete(`api/profile/featured-work/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -376,8 +376,8 @@ export default {
   },
 
   // Gets a specific blog post
-  getBlog: function () {
-    return axios.get('api/blog/:id', {
+  getBlog: function (recordID) {
+    return axios.get(`api/blog/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -395,8 +395,8 @@ export default {
     });
   },
   // Edit a specific blog post
-  editBlog: function (body) {
-    return axios.put('api/blog/:id', {
+  editBlog: function (body, recordID) {
+    return axios.put(`api/blog/${recordID}`, {
       title: body.title,
       dateCreated: body.dateCreated,
       content: body.content,
@@ -406,8 +406,8 @@ export default {
     });
   },
   // Removes a specific blog
-  removeBlog: function () {
-    return axios.delete('api/blog/:id', {
+  removeBlog: function (recordID) {
+    return axios.delete(`api/blog/${recordID}`, {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -552,50 +552,50 @@ export default {
 
   // Viewer
   // Gets all the profile of the viewed person
-  viewerGetProfile: function (body) {
-    return axios.get('api/view/profile/:userName', {
+  viewerGetProfile: function (userName) {
+    return axios.get(`api/view/profile/${userName}`, {
 
     });
   },
 
   // Gets all the blogs of the viewed person
-  viewerGetAllBlogs: function (body) {
-    return axios.get('api/view/blog/:userName', {
+  viewerGetAllBlogs: function (userName) {
+    return axios.get(`api/view/blog/${userName}`, {
 
     });
   },
 
   // Gets all the experience of the viewed person
-  viewerGetAllExperience: function (body) {
-    return axios.get('api/view/experience/:userName', {
+  viewerGetAllExperience: function (userName) {
+    return axios.get(`api/view/experience/${userName}`, {
 
     });
   },
 
   // Gets all the education of the viewed person
-  viewerGetEdu: function (body) {
-    return axios.get('api/view/education/:userName', {
+  viewerGetEdu: function (userName) {
+    return axios.get(`api/view/education/${userName}`, {
 
     });
   },
 
   // Gets all the featured-works of the viewed person
-  viewerGetFeaturedWorks: function (body) {
-    return axios.get('api/view/featured-work/:userName', {
+  viewerGetFeaturedWorks: function (userName) {
+    return axios.get(`api/view/featured-work/${userName}`, {
 
     });
   },
 
   // Gets all the documents of the viewed person
-  viewerGetAllDocs: function (body) {
-    return axios.get('api/view/files/:userName', {
+  viewerGetAllDocs: function (userName) {
+    return axios.get(`api/view/files/${userName}`, {
 
     });
   },
 
   // Gets user information of the viewed person
-  viewerGetUserInformation: function (body) {
-    return axios.get('api/view/userInfo/:userName', {
+  viewerGetUserInformation: function (userName) {
+    return axios.get(`api/view/userInfo/${userName}`, {
 
     });
   },

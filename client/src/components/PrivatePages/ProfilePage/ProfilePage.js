@@ -111,7 +111,9 @@ const ProfilePage = () => {
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2'>Fetching User Data</Typography>
+          <Typography variant='h2' color='textSecondary'>
+            Fetching User Data
+          </Typography>
         </div>
       </div>
     );
@@ -122,38 +124,23 @@ const ProfilePage = () => {
           <div className={classes.navSection}>
             <Paper className={classes.navBar}>
               <List>
-                <ListItem button>
+                <ListItem button onClick={() => setSection(1)}>
                   <ListItemIcon>
                     <FaceIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary='My Profile'
-                    onClick={() => setSection(1)}
-                  ></ListItemText>
+                  <ListItemText primary='My Profile'></ListItemText>
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={() => setSection(2)}>
                   <ListItemIcon>
                     <CreateIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary='My Reflections'
-                    onClick={() => setSection(2)}
-                  ></ListItemText>
+                  <ListItemText primary='My Reflections'></ListItemText>
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={() => setSection(3)}>
                   <ListItemIcon>
                     <MenuBookIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary='My Projects'
-                    onClick={() => setSection(3)}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <AccountBoxIcon className={classes.navBarIcon} />
-                  </ListItemIcon>
-                  <ListItemText primary='My CV'></ListItemText>
+                  <ListItemText primary='My Projects'></ListItemText>
                 </ListItem>
               </List>
             </Paper>

@@ -146,20 +146,23 @@ const PersonalInformationForm = ({ user }) => {
                 defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
-              // There's an error here if the user does not have a mobile number or birthDate in their account
+
               <FormikField
                 label='Date of Birth'
                 formikProps={formikProps}
                 formikKey='birthDate'
                 type='date'
                 required
-                defaultValue={user.birthDate.substring(0, 10)}
+                defaultValue={
+                  user.birthDate !== undefined
+                    ? user.birthDate.substring(0, 10)
+                    : new Date()
+                }
                 className={`${classes.field} ${fieldSubmitted}`}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
-
               <div className={classes.buttonWrapper}>
                 <Button
                   type='Submit'

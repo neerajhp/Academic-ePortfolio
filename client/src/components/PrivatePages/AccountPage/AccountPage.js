@@ -11,9 +11,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
-import AccountInformationForm from './AccountInformationForm';
-import PersonalInformationForm from './PersonalInformationForm';
-import ProfileSettingsForm from './ProfileSettingsForm';
+import AccountInformationForm from './AccountInformationForm/AccountInformationForm';
+import PersonalInformationForm from './PersonalInformationForm/PersonalInformationForm';
+import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -61,6 +61,18 @@ const useStyles = makeStyles((theme) => ({
     flexFlow: 'row wrap',
     alignItems: 'stretch',
     transition: 'all 700ms',
+  },
+  buttonWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   },
 }));
 

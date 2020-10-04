@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -16,6 +17,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import CharacterCard from './CharacterInfo/CharacterCard';
 import EducationCard from './EducationInfo/EducationCard';
+import ExperienceCard from './ExperienceInfo/ExperienceCard';
 import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
@@ -52,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'row',
-    zIndex: '-1',
     marginTop: '1%',
   },
   section: {
@@ -73,33 +74,46 @@ const useStyles = makeStyles((theme) => ({
 const ProfilePage = () => {
   // Styling
   const classes = useStyles();
-  const [isLoading, setLoading] = useState(true);
   const [section, setSection] = useState(1);
 
   //Profile Information
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
   const [userEducation, setEducation] = useState(null);
+  const [userExperience, setExperience] = useState(null);
+
+  //Load user data
 
   useEffect(() => {
-    API.getUserProfile().then(({ data }) => {
-      setUser(data);
-      setLoading(false);
-    });
+    API.getUserProfile()
+      .then(({ data }) => {
+        setUser(data);
+      })
+      .catch();
 
-    API.getEducation().then(({ data }) => {
-      setEducation(data);
-    });
+    API.getEducation()
+      .then(({ data }) => {
+        setEducation(data);
+      })
+      .catch();
+
+    API.getAllExperience()
+      .then(({ data }) => {
+        setExperience(data);
+      })
+      .catch();
   }, []);
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (isLoading) {
+  if (!(user && userEducation && userExperience)) {
     pageContent = (
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2'>Fetching User Data</Typography>
+          <Typography variant='h2' color='textSecondary'>
+            Fetching User Data
+          </Typography>
         </div>
       </div>
     );
@@ -110,38 +124,23 @@ const ProfilePage = () => {
           <div className={classes.navSection}>
             <Paper className={classes.navBar}>
               <List>
-                <ListItem button>
+                <ListItem button onClick={() => setSection(1)}>
                   <ListItemIcon>
                     <FaceIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary='My Profile'
-                    onClick={() => setSection(1)}
-                  ></ListItemText>
+                  <ListItemText primary='My Profile'></ListItemText>
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={() => setSection(2)}>
                   <ListItemIcon>
                     <CreateIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary='My Reflections'
-                    onClick={() => setSection(2)}
-                  ></ListItemText>
+                  <ListItemText primary='My Reflections'></ListItemText>
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={() => setSection(3)}>
                   <ListItemIcon>
                     <MenuBookIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary='My Projects'
-                    onClick={() => setSection(3)}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <AccountBoxIcon className={classes.navBarIcon} />
-                  </ListItemIcon>
-                  <ListItemText primary='My CV'></ListItemText>
+                  <ListItemText primary='My Projects'></ListItemText>
                 </ListItem>
               </List>
             </Paper>
@@ -156,6 +155,7 @@ const ProfilePage = () => {
             </div>
             <div className={classes.section}>
               <CharacterCard user={user} />
+              <ExperienceCard experience={userExperience} />
               <EducationCard education={userEducation} />
               <SkillsCard skills={user.skills} />
             </div>

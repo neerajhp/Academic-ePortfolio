@@ -2,16 +2,14 @@ const Blog = require("../Models/Blog");
 
 // Post a new blog
 const postBlog = async (req, res) => {
-    const newBlog = new Blog({
-        user_id: req.user.id,
-        title: req.body.title,
-        date_created: req.body.date_created,
-        content: req.body.content,
-        //images: req.body.images
-    });
-
-
-    try{
+   try{
+        const newBlog = new Blog({
+            user_id: req.user.id,
+            title: req.body.title,
+            date_created: req.body.date_created,
+            content: req.body.content,
+            //images: req.body.images
+        });
         await Blog.find({user_id: req.user.id, title: newBlog.title}, (err, result) => {
             if(err){
                 console.log("Error found");
@@ -38,12 +36,22 @@ const postBlog = async (req, res) => {
 // Gets all of the user's blogs (API)
 const getAllBlogs = async (req, res) => {
     try{
-        let blogs = await findBlogs(req.user.id);
-        if(!blogs || blogs.length === 0){
-            res.status(400).json("No blogs found");
-        }else{
-            res.status(200).json(blogs);
-        }
+        await Blog.find({user_id: req.user.id}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(400).json("Failed to find blogs");
+            }
+        })
+        // let blogs = await findBlogs(req.user.id);
+        // if(!blogs){
+        //     res.status(400).json("No blogs found");
+        // }else{
+        //     res.status(200).json(blogs);
+        // }
     }catch(error){
         res.status(400).json("Error occured while looking for blogs");
     }
@@ -52,30 +60,39 @@ const getAllBlogs = async (req, res) => {
 // Gets all of the blogs pf the user that's being viewed
 const viewerGetAllBlogs = async (req, res) => {
     try{
-        const userID = req.body.id;
-        let blogs = await findBlogs(userID);
-        if(!blogs || blogs.length === 0){
-            res.status(400).json("No blogs found");
-        }else{
-            res.status(200).json(blogs);
-        }
+        await Blog.find({user_id: req.viewID}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(400).json("Failed to find blogs");
+            }
+        })
+        // let blogs = await findBlogs(userID);
+        // if(!blogs){
+        //     res.status(400).json("No blogs found");
+        // }else{
+        //     res.status(200).json(blogs);
+        // }
     }catch(error){
         res.status(400).json("Error occured while looking for blogs");
     }
 }
 
 // function that looks for all of the user's blogs
-const findBlogs = async (userID) => {
-    let blogs;
-    await Blog.find({user_id: userID}, (err, result) => {
-        if(err){
-            throw err;
-        }else{
-            blogs = result;
-        }
-    });
-    return blogs;
-}
+// const findBlogs = async (userID) => {
+//     let blogs;
+//     await Blog.find({user_id: userID}, (err, result) => {
+//         if(err){
+//             throw err;
+//         }else{
+//             blogs = result;
+//         }
+//     });
+//     return blogs;
+// }
 
 // Gets a specific blog
 const getBlog = async (req, res) => {
@@ -136,7 +153,7 @@ const deleteBlog = async (req, res) => {
             if(err){
                 throw err;
             }else{
-                if(!result || result.deletedCount === 0){
+                if(!result){
                     res.status(400).json("Nothing was deleted");
                 }else{
                     res.status(200).json("The blog has been deleted");

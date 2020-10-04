@@ -5,6 +5,7 @@ import theme from './theme';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
 import { AuthContext } from '../context/auth';
+
 import PrivateLayout from './PrivatePages/PrivateLayout';
 import LoginPage from './PublicPages/LoginPage/LoginPage';
 import SignUpPage from './PublicPages/SignUpPage/SignUpPage';

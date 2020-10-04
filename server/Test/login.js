@@ -2,8 +2,11 @@ const server = require('../../app') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(server)
 
+let token;
+
+
 const loginUser = async () =>{
-    let token;
+
     await request.post("/api/user/signup")
         .send({
             firstName: "test",
@@ -27,5 +30,16 @@ const loginUser = async () =>{
     return token
 }
 
+const idUser = async () =>{
+    let ID;
+    await request.get("/api/user/getID")
+    .set('Authorization', 'bearer ' + token)
+    .then((response) =>{
+        ID = response.body
+    })
 
-module.exports = loginUser
+
+    return ID
+}
+
+module.exports = {loginUser, idUser}

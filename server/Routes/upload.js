@@ -32,6 +32,7 @@ router.post("/files", (req, res) => {
 
 });
 
+// Handles a single document upload (pdf, docx)
 const singleFile = parse.documentUpload.single("document");
 router.post("/file", (req, res) => {
     singleFile(req, res, (err) => {
@@ -69,6 +70,19 @@ router.post("/profile-pic", (req, res) => {
             uploadController.uploadProfilePic(req, res);
         }
     })
+});
+
+// Handles the upload of a single image
+const singleImage = parse.imageUpload.single("image");
+router.post("/image", (req, res) => {
+    singleImage(req, res, (err) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }else{
+            uploadController.uploadSingle(req, res);
+        }
+    });
 });
 
 // Handles the upload of multiple images

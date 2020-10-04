@@ -4,8 +4,11 @@ A personal ePortfolio application capable of storing and managing documents and 
 This application is designed to present a student's evidence of achievement throughout their academic career.
 Written by Team Home Alone
 
+<p float="left>
 <img src="https://github.com/neerajhp/Academic-ePortfolio/blob/media/LandingPage.png" width="40%" />
 <img src="https://github.com/neerajhp/Academic-ePortfolio/blob/media/LoginPage.png" width="40%" />  
+                                                                                               </p>
+                                                                                               
 
 ## Getting Started
 

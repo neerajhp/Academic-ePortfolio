@@ -90,6 +90,21 @@ If routes are protected with JWT, a .set('Authorization', 'bearer ' + token).
 
 When testing with supertest, the syntax is different from regular jest testing, in order to utilise the regular jest syntax, a .then(data => {expect(data).{function}}) is required.
 
+Below is a example of how to user both clearDB.j and login.js:
+
+const { clearDB } = require('./clearDB');
+const { setupUser, loginUser, idUser } = require('./login');
+
+clearDB();
+setupUser();
+
+let token;
+let ID;
+beforeAll(async () => {
+    token = await loginUser();
+    ID = await idUser();
+})
+
 
 ### Break down into end to end tests
 

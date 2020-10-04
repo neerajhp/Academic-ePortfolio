@@ -62,6 +62,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
+  buttonWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 /* ================ Component ================ */

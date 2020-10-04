@@ -1,7 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
-import { IconButton, Typography, Dialog, DialogTitle } from '@material-ui/core';
+import {
+  Box,
+  IconButton,
+  Typography,
+  Dialog,
+  DialogTitle,
+} from '@material-ui/core';
+import { shadows } from '@material-ui/system';
 import ExperienceForm from './ExperienceForm';
 import API from '../../../../api/API';
 
@@ -25,6 +32,14 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+  dialog: {
+    '& .MuiDialogTitle-root': {
+      background: `linear-gradient(175deg, white 75%, ${theme.palette.secondary.main} 25%)`,
+    },
+    '& .MuiDialogActions-root': {
+      background: `linear-gradient(175deg, ${theme.palette.primary.main} 55%,  white 20%)`,
+    },
   },
   subTitle: {
     width: '100%',
@@ -78,12 +93,15 @@ const ExperienceDialog = ({ records, setRecords, type }) => {
         scroll={'paper'}
         open={open}
         onClose={handleClose}
+        className={classes.dialog}
       >
-        <DialogTitle disableTypography>
-          <Typography variant='h2'>
-            Edit Your {capitaliseFirstLetter(type)} Experience
-          </Typography>
-        </DialogTitle>
+        <Box boxShadow={2}>
+          <DialogTitle disableTypography>
+            <Typography variant='h2'>
+              Edit Your {capitaliseFirstLetter(type)} Experience
+            </Typography>
+          </DialogTitle>
+        </Box>
 
         <ExperienceForm
           records={records}

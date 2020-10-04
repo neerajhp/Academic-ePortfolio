@@ -18,6 +18,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import validationSchema from './Validation';
 import API from '../../../../api/API';
 
@@ -392,15 +393,23 @@ const EducationForm = ({ handleClose, records }) => {
             >
               <Typography>Cancel</Typography>
             </Button>
-            <Button
-              type='Submit'
-              className={classes.button}
-              onClick={() => formikProps.handleSubmit()}
-              disabled={!formikProps.isValid}
-              color='primary'
-            >
-              <Typography>Update</Typography>
-            </Button>
+            <div className={classes.buttonWrapper}>
+              <Button
+                type='Submit'
+                className={classes.submit}
+                onClick={() => formikProps.handleSubmit()}
+                disabled={!formikProps.isValid || formikProps.isSubmitting}
+                color='primary'
+              >
+                <Typography>Update</Typography>
+              </Button>
+              {formikProps.isSubmitting && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
           </DialogActions>
         </React.Fragment>
       )}

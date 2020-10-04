@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import {
+  Box,
   IconButton,
   Typography,
   Dialog,
@@ -17,6 +18,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     position: 'relative',
+  },
+  dialog: {
+    '& .MuiDialogTitle-root': {
+      background: `linear-gradient(175deg, white 75%, ${theme.palette.secondary.main} 25%)`,
+    },
+    '& .MuiDialogActions-root': {
+      background: `linear-gradient(175deg, ${theme.palette.primary.main} 55%,  white 20%)`,
+    },
   },
   paper: {
     position: 'absolute',
@@ -55,10 +64,13 @@ const EducationDialog = ({ records, setRecords }) => {
         scroll={'paper'}
         open={open}
         onClose={handleClose}
+        className={classes.dialog}
       >
-        <DialogTitle disableTypography>
-          <Typography variant='h2'>Edit Education Information</Typography>
-        </DialogTitle>
+        <Box boxShadow={2}>
+          <DialogTitle disableTypography>
+            <Typography variant='h2'>Edit Education Information</Typography>
+          </DialogTitle>
+        </Box>
         <EducationForm records={records} handleClose={handleClose} />
       </Dialog>
     </div>

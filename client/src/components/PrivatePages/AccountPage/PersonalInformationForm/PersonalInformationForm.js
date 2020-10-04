@@ -146,6 +146,7 @@ const PersonalInformationForm = ({ user }) => {
                 defaultValue={user.mobileNumber}
                 className={`${classes.field} ${fieldSubmitted}`}
               />
+
               <FormikField
                 label='Date of Birth'
                 formikProps={formikProps}

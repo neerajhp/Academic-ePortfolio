@@ -111,7 +111,9 @@ const ProfilePage = () => {
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2'>Fetching User Data</Typography>
+          <Typography variant='h2' color='textSecondary'>
+            Fetching User Data
+          </Typography>
         </div>
       </div>
     );

@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
 import {
+  Box,
   DialogContent,
   DialogActions,
   Typography,
@@ -15,6 +16,7 @@ import {
 import WorkIcon from '@material-ui/icons/Work';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import validationSchema from './Validation';
 import API from '../../../../api/API';
 
@@ -45,14 +47,21 @@ const useStyles = makeStyles((theme) => ({
   addButton: {
     marginTop: theme.spacing(3),
   },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
   addButtonContainer: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  buttonWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   },
 }));
 
@@ -361,24 +370,29 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
               />
             </form>
           </DialogContent>
-          <DialogActions>
-            <Button
-              className={classes.button}
-              onClick={() => handleClose()}
-              color='primary'
-            >
-              <Typography>Cancel</Typography>
-            </Button>
-            <Button
-              type='Submit'
-              className={classes.button}
-              onClick={() => formikProps.handleSubmit()}
-              disabled={!formikProps.isValid}
-              color='primary'
-            >
-              <Typography>Update</Typography>
-            </Button>
-          </DialogActions>
+          <Box boxShadow={2}>
+            <DialogActions>
+              <Button className={classes.button} onClick={() => handleClose()}>
+                <Typography>Cancel</Typography>
+              </Button>
+              <div>
+                <Button
+                  type='Submit'
+                  className={classes.button}
+                  onClick={() => formikProps.handleSubmit()}
+                  disabled={!formikProps.isValid}
+                >
+                  <Typography>Update</Typography>
+                </Button>
+                {formikProps.isSubmitting && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+            </DialogActions>
+          </Box>
         </React.Fragment>
       )}
     </Formik>

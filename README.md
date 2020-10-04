@@ -4,6 +4,9 @@ A personal ePortfolio application capable of storing and managing documents and 
 This application is designed to present a student's evidence of achievement throughout their academic career.
 Written by Team Home Alone
 
+![ePortfolio Landing Page](../media/LandingPage.png?raw=true)
+![ePortfolio Login Page](../media/LoginPage.png?raw=true)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.

@@ -8,74 +8,15 @@ import validationSchema from './Validation';
 import API from '../../../api/API';
 import Background from '../../../assets/bkg.svg';
 
-/* ================ Styling ================ */
-
-const useStyles = makeStyles((theme) => ({
-  //Page container
-  root: {
-    height: '100vh',
-    width: '100vw',
-    position: 'fixed',
-    backgroundImage: `url(${Background})`,
-    backgroundSize: 'cover',
-  },
-  banner: {
-    position: 'sticky',
-    width: '100%',
-    height: '40%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formContainer: {
-    width: '100%',
-    height: '30%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formPaper: {
-    width: '40%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '2%',
-  },
-  successBoard: {
-    width: '25%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '2%',
-    background: theme.palette.primary.main,
-    '& >*': { margin: '1em' },
-  },
-  inputField: {
-    '& .MuiInputBase-input': {
-      color: theme.palette.text.secondary,
-    },
-  },
-  submit: {
-    backgroundColor: theme.palette.secondary.main,
-    '&:hover': {
-      backgroundColor: theme.palette.secondary.light,
-      borderColor: theme.palette.secondary.light,
-      boxShadow: 'none',
-    },
-  },
-}));
-
 /* ================ Component ================ */
 
-const SignUpPage = () => {
-  const classes = useStyles();
+const SignUpPage = ({ globalClasses }) => {
+  const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
 
   return (
-    <div className={classes.root}>
+    <React.Fragment>
       <div className={classes.banner}>
         <Typography variant='h1' color='textSecondary' display='flex'>
           Create Your New Portfolio
@@ -207,7 +148,7 @@ const SignUpPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

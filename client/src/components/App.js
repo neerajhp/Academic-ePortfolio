@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoute';
 import { AuthContext } from '../context/auth';
 
 import PrivateLayout from './PrivatePages/PrivateLayout';
+import PublicLayout from './PublicPages/PublicLayout';
 import LoginPage from './PublicPages/LoginPage/LoginPage';
 import SignUpPage from './PublicPages/SignUpPage/SignUpPage';
 import LandingPage from './PublicPages/LandingPage/LandingPage';
@@ -29,9 +30,7 @@ function App() {
           <CssBaseline>
             <Router>
               <Switch>
-                <Route exact path='/home' component={LandingPage} />
-                <Route exact path='/login' component={LoginPage} />
-                <Route exact path='/signup' component={SignUpPage} />
+                <Route path='/home' component={PublicLayout} />
                 <PrivateRoute path='/' component={PrivateLayout} />
               </Switch>
             </Router>

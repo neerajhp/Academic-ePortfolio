@@ -58,15 +58,13 @@ const useStyles = makeStyles((theme) => {
 
 /* ================ Component ================ */
 
-const LandingPage = () => {
-  const classes = useStyles();
-
+const LandingPage = ({ globalClasses }) => {
   // const [isLoggedIn, setLoggedIn] = useState(false);
   // const { setAuthTokens } = useAuth();
 
   return (
-    <div className={classes.root}>
-      <div className={classes.banner}>
+    <React.Fragment>
+      <div className={globalClasses.banner}>
         <Typography variant='h1' color='textSecondary'>
           Welcome to ePortfolio
         </Typography>
@@ -75,7 +73,7 @@ const LandingPage = () => {
         <Button
           type='Submit'
           variant='contained'
-          className={classes.submit}
+          className={globalClasses.submit}
           color='primary'
         >
           <Typography>Login To Your portfolio</Typography>
@@ -85,13 +83,13 @@ const LandingPage = () => {
         <Button
           type='Submit'
           variant='contained'
-          className={classes.submit}
+          className={globalClasses.submit}
           color='primary'
         >
           <Typography>Create Your New Portfolio</Typography>
         </Button>
       </Link>
-    </div>
+    </React.Fragment>
   );
 };
 

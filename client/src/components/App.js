@@ -8,9 +8,6 @@ import { AuthContext } from '../context/auth';
 
 import PrivateLayout from './PrivatePages/PrivateLayout';
 import PublicLayout from './PublicPages/PublicLayout';
-import LoginPage from './PublicPages/LoginPage/LoginPage';
-import SignUpPage from './PublicPages/SignUpPage/SignUpPage';
-import LandingPage from './PublicPages/LandingPage/LandingPage';
 
 function App() {
   //Check login tokens

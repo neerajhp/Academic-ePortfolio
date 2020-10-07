@@ -2,30 +2,44 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, Link, Typography } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Link,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core';
 import { useAuth } from '../../../context/auth';
 import API from '../../../api/API';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
-import Background from '../../../assets/bkg.svg';
+
+const useStyles = makeStyles((theme) => {
+  return {
+    rememberMe: {
+      color: theme.palette.text.secondary,
+    },
+  };
+});
 
 /* ================ Component ================ */
 
 const LoginPage = ({ globalClasses }) => {
-  const classes = globalClasses;
+  const classes = useStyles();
 
   const [isLoggedIn, setLoggedIn] = useState(false);
   const { setAuthTokens } = useAuth();
 
   return (
     <React.Fragment>
-      <div className={classes.banner}>
+      <div className={globalClasses.banner}>
         <Typography variant='h1'>Login to your Profile</Typography>
       </div>
-      <div className={classes.formContainer}>
+      <div className={globalClasses.formContainer}>
         {isLoggedIn && <Redirect to='/' />}
         {!isLoggedIn && (
-          <div className={classes.formPaper}>
+          <div className={globalClasses.formPaper}>
             <Formik
               initialValues={{
                 email: '',
@@ -55,7 +69,7 @@ const LoginPage = ({ globalClasses }) => {
             >
               {(formikProps) => (
                 <form
-                  className={classes.form}
+                  className={globalClasses.form}
                   onSubmit={formikProps.handleSubmit}
                 >
                   <FormikField
@@ -63,7 +77,7 @@ const LoginPage = ({ globalClasses }) => {
                     formikProps={formikProps}
                     formikKey='email'
                     required
-                    className={classes.inputField}
+                    className={globalClasses.inputField}
                   />
                   <FormikField
                     label='Password'
@@ -71,19 +85,24 @@ const LoginPage = ({ globalClasses }) => {
                     formikKey='password'
                     type='password'
                     required
-                    className={classes.inputField}
+                    className={globalClasses.inputField}
+                  />
+                  <FormControlLabel
+                    className={classes.rememberMe}
+                    control={<Checkbox value='remember' color='#FFFFFF' />}
+                    label='Remember me'
                   />
 
                   <Button
                     type='Submit'
                     fullWidth
                     variant='contained'
-                    className={classes.submit}
+                    className={globalClasses.submit}
                     disabled={!formikProps.isValid}
                   >
                     <Typography>Log In</Typography>
                   </Button>
-                  <Grid container className={classes.options}>
+                  <Grid container className={globalClasses.options}>
                     <Grid item>
                       <Link
                         href='./signup'

@@ -29,7 +29,9 @@ function App() {
             <Router>
               <Switch>
                 <Route path='/home' component={HomeLayout} />
-                <Route path='/view' component={PublicLayout} />
+                {authTokens === null && (
+                  <Route path='/view' component={PublicLayout} />
+                )}
                 <PrivateRoute path='/' component={PrivateLayout} />
               </Switch>
             </Router>

@@ -41,15 +41,6 @@ const PublicLayout = ({ match }) => {
   // Styling
   const classes = useStyles();
 
-  //Authentication Context
-  const { setAuthTokens } = useAuth();
-
-  //Log Out
-  function logOut() {
-    //Clears browser storage
-    setAuthTokens(null);
-  }
-
   return (
     <div className={classes.bkgContainer}>
       <AppBar position='fixed'>
@@ -63,7 +54,7 @@ const PublicLayout = ({ match }) => {
 
       <div className={classes.contentContainer}>
         <Switch>
-          <Route path={`${match.url}/:userId`} component={PublicProfilePage} />
+          <Route path={`/view/:userId`} component={PublicProfilePage} />
         </Switch>
       </div>
     </div>

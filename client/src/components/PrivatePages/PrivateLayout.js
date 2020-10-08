@@ -4,6 +4,7 @@ import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';
 import ProfilePage from './ProfilePage/ProfilePage';
+import PublicProfilePage from '../PublicPages/ProfilePage/PublicProfilePage';
 import AccountPage from './AccountPage/AccountPage';
 import Background from '../../assets/bkg-private.svg';
 
@@ -38,7 +39,9 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const PrivateLayout = () => {
+const PrivateLayout = ({ match }) => {
+  const baseURL = window.location.origin;
+
   // Styling
   const classes = useStyles();
 
@@ -58,10 +61,10 @@ const PrivateLayout = () => {
           <Typography variant='h3' className={classes.title}>
             ePortfolio
           </Typography>
-          <Link to='./myprofile' className={classes.link}>
+          <Link to='/myprofile' className={classes.link}>
             <Typography color='textSecondary'>My Profile</Typography>
           </Link>
-          <Link to='./myaccount' className={classes.link}>
+          <Link to='/myaccount' className={classes.link}>
             <Typography color='textSecondary'>My Account</Typography>
           </Link>
           <Button color='inherit' onClick={logOut}>
@@ -78,6 +81,7 @@ const PrivateLayout = () => {
           </Route>
           <Route exact path='/myprofile' component={ProfilePage} />
           <Route exact path='/myaccount' component={AccountPage} />
+          <Route path='/view/:userId' component={PublicProfilePage} />
         </Switch>
       </div>
     </div>

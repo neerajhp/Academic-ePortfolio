@@ -3,11 +3,12 @@ const supertest = require('supertest');
 const request = supertest(server);
 const mongoose = require('mongoose');
 
-const { clearDB } = require('./setup');
-const { loginUser, idUser } = require('./login');
+const { clearDB } = require('./clearDB');
+const { setupUser, loginUser,idUser } = require('./login');
 
 
 clearDB();
+setupUser();
 
 let token;
 let ID;

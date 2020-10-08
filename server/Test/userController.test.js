@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const request = supertest(server)
 const mongoose = require('mongoose');
 
-const { clearDB } = require('./setup');
+const { clearDB } = require('./clearDB');
 
 
 clearDB();
@@ -21,9 +21,10 @@ test("Should sign up a user", async () =>{
         firstName: "test",
         lastName: "test",
         email: "test@gmail.com",
+        userName: "testing123",
         password: "test123"
     })
-    .expect(201)
+    .expect(200)
     
 
 })
@@ -36,7 +37,7 @@ test("Should not sign up a user with the same email", async () =>{
         email: "test@gmail.com",
         password: "test2"
     })
-    .expect(409)
+    .expect(400)
 })
 
 test("Should login the user", async () =>{

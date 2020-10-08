@@ -15,12 +15,12 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import CharacterCard from './CharacterInfo/CharacterCard';
-import EducationCard from './EducationInfo/EducationCard';
-import ExperienceCard from './ExperienceInfo/ExperienceCard';
-import SkillsCard from './SkillsInfo/SkillsCard';
-import ReflectionCard from './ReflectionInfo/ReflectionCard';
-import ProjectCard from './ProjectInfo/ProjectCard';
+import CharacterCard from './CharacterInfo/PublicCharacterCard';
+import EducationCard from './EducationInfo/PublicEducationCard';
+import ExperienceCard from './ExperienceInfo/PublicExperienceCard';
+import SkillsCard from './SkillsInfo/PublicSkillsCard';
+import ReflectionCard from './ReflectionInfo/PublicReflectionCard';
+import ProjectCard from './ProjectInfo/PublicProjectCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -67,11 +67,26 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
+  card: {
+    margin: '0 0 1% 1%',
+    width: '100%',
+
+    padding: '5%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: { width: '100%' },
 }));
 
 /* ================ Component ================ */
 
-const ProfilePage = () => {
+const PublicProfilePage = ({ match, location }) => {
+  const {
+    params: { userId },
+  } = match;
+
   // Styling
   const classes = useStyles();
   const [section, setSection] = useState(1);
@@ -79,25 +94,19 @@ const ProfilePage = () => {
   //Profile Information
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
-  const [userEducation, setEducation] = useState(null);
   const [userExperience, setExperience] = useState(null);
 
   //Load user data
 
   useEffect(() => {
-    API.getUserProfile()
+    API.viewerGetProfile(userId)
       .then(({ data }) => {
         setUser(data);
+        console.log(data);
       })
       .catch();
 
-    API.getEducation()
-      .then(({ data }) => {
-        setEducation(data);
-      })
-      .catch();
-
-    API.getAllExperience()
+    API.viewerGetAllExperience(userId)
       .then(({ data }) => {
         setExperience(data);
       })
@@ -106,13 +115,13 @@ const ProfilePage = () => {
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (!(user && userEducation && userExperience)) {
+  if (!(user && userExperience)) {
     pageContent = (
       <div>
         <div className={classes.loading}>
           <CircularProgress />
           <Typography variant='h2' color='textSecondary'>
-            Fetching User Data
+            Fetching this Portfolio
           </Typography>
         </div>
       </div>
@@ -154,10 +163,16 @@ const ProfilePage = () => {
               Placeholder section
             </div>
             <div className={classes.section}>
-              <CharacterCard user={user} />
-              <ExperienceCard experience={userExperience} />
-              <EducationCard education={userEducation} />
-              <SkillsCard skills={user.skills} />
+              <CharacterCard user={user} globalClasses={classes} />
+              <ExperienceCard
+                experience={userExperience}
+                globalClasses={classes}
+              />
+              <EducationCard
+                education={user.education}
+                globalClasses={classes}
+              />
+              <SkillsCard skills={user.skills} globalClasses={classes} />
             </div>
             <div className={classes.section}>
               <ReflectionCard />
@@ -179,4 +194,4 @@ const ProfilePage = () => {
   return pageContent;
 };
 
-export default ProfilePage;
+export default PublicProfilePage;

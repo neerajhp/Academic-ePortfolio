@@ -8,7 +8,6 @@ import {
   Typography,
   TableBody,
 } from '@material-ui/core';
-import EducationDialog from './EducationDialog';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +60,7 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const EducationCard = ({ education }) => {
+const PublicEducationCard = ({ education }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(education);
@@ -105,9 +104,8 @@ const EducationCard = ({ education }) => {
         Education{' '}
       </Typography>
       <div className={classes.tableContainer}>{getRecord(records)}</div>
-      <EducationDialog records={records} setRecords={setRecords} />
     </Paper>
   );
 };
 
-export default EducationCard;
+export default PublicEducationCard;

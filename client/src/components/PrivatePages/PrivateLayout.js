@@ -58,10 +58,10 @@ const PrivateLayout = () => {
           <Typography variant='h3' className={classes.title}>
             ePortfolio
           </Typography>
-          <Link to='./profile' className={classes.link}>
+          <Link to='./myprofile' className={classes.link}>
             <Typography color='textSecondary'>My Profile</Typography>
           </Link>
-          <Link to='./account' className={classes.link}>
+          <Link to='./myaccount' className={classes.link}>
             <Typography color='textSecondary'>My Account</Typography>
           </Link>
           <Button color='inherit' onClick={logOut}>
@@ -74,10 +74,10 @@ const PrivateLayout = () => {
       <div className={classes.contentContainer}>
         <Switch>
           <Route exact path='/'>
-            <Redirect to='/profile' />
+            <Redirect to='/myprofile' />
           </Route>
-          <Route exact path='/profile' component={ProfilePage} />
-          <Route exact path='/account' component={AccountPage} />
+          <Route exact path='/myprofile' component={ProfilePage} />
+          <Route exact path='/myaccount' component={AccountPage} />
         </Switch>
       </div>
     </div>

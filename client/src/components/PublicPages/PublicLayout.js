@@ -1,142 +1,71 @@
 import React from 'react';
+import { useAuth } from '../../context/auth';
+import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { Switch, Route } from 'react-router-dom';
-import Background from '../../assets/bkg-alt.jpg';
-import LoginPage from './LoginPage/LoginPage';
-import SignupPage from './SignUpPage/SignUpPage';
-import LandingPage from './LandingPage/LandingPage';
-import SearchPage from './SearchPage/SearchPage';
-import { Fade } from '@material-ui/core';
+import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';
+import PublicProfilePage from './ProfilePage/PublicProfilePage';
+import Background from '../../assets/bkg-private.svg';
 
 /* ================ Styling ================ */
-const useStyles = makeStyles((theme) => {
-  return {
-    //Page container
-    root: {
-      height: '100vh',
-      width: '100vw',
-      position: 'fixed',
-      backgroundImage: `url(${Background})`,
-      backgroundSize: 'cover',
-      height: '100vh',
-      width: '100vw',
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      justifyContent: 'center',
-      paddingLeft: theme.spacing(5),
-    },
-    banner: {
-      color: theme.palette.text.secondary,
-    },
-    contentContainer: {},
-    formContainer: {
-      paddingLeft: theme.spacing(3),
-    },
-    formPaper: {
-      width: '35%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '2em',
-    },
-    avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
-    icon: { fontSize: 40, color: theme.palette.primary.main },
-    inputField: {
-      '& .MuiInputBase-input': {
-        color: theme.palette.text.secondary,
-      },
-      '& .MuiFormLabel-root.Mui-focused': {
-        color: theme.palette.text.secondary,
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: '#FFFFFF',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: '#FFFFFF',
-        },
-      },
-    },
-    submit: {
-      color: theme.palette.text.secondary,
-      backgroundColor: theme.palette.secondary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.secondary.light,
-        borderColor: theme.palette.secondary.light,
-        boxShadow: 'none',
-      },
-    },
-
-    landingButtonContainer: {
-      marginTop: theme.spacing(2),
-      display: 'flex',
-      width: '40vw',
-      justifyContent: 'space-around',
-    },
-    landingButton: {
-      marginRight: theme.spacing(2) + 'px',
-      color: theme.palette.text.secondary,
-      backgroundColor: theme.palette.secondary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.secondary.light,
-        borderColor: theme.palette.secondary.light,
-        boxShadow: 'none',
-      },
-    },
-    successBoard: {
-      color: theme.palette.text.secondary,
-      width: '25%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '2%',
-      '& >*': { margin: '1em' },
-    },
-  };
-});
+const useStyles = makeStyles((theme) => ({
+  //Page container
+  title: {
+    marginLeft: '5%',
+    flexGrow: 1,
+  },
+  banner: theme.mixins.toolbar,
+  link: {
+    textDecoration: 'none',
+    marginRight: theme.spacing(2),
+  },
+  bkgContainer: {
+    width: '100vw',
+    height: '100vh',
+    zIndex: -1,
+    position: 'fixed',
+    backgroundImage: `url(${Background})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  },
+  contentContainer: {
+    zIndex: 10,
+  },
+}));
 
 /* ================ Component ================ */
 
-const PublicLayout = () => {
+const PublicLayout = ({ match }) => {
+  // Styling
   const classes = useStyles();
 
-  return (
-    <div className={classes.root}>
-      <Fade>
-        <Switch>
-          <Route
-            exact
-            path='/home/landing'
-            render={(props) => (
-              <LandingPage {...props} globalClasses={classes} />
-            )}
-          />
+  //Authentication Context
+  const { setAuthTokens } = useAuth();
 
-          <Route
-            exact
-            path='/home/login'
-            render={(props) => <LoginPage {...props} globalClasses={classes} />}
-          />
-          <Route
-            exact
-            path='/home/signup'
-            render={(props) => (
-              <SignupPage {...props} globalClasses={classes} />
-            )}
-          />
-          <Route
-            exact
-            path='/home/search'
-            render={(props) => (
-              <SearchPage {...props} globalClasses={classes} />
-            )}
-          />
+  //Log Out
+  function logOut() {
+    //Clears browser storage
+    setAuthTokens(null);
+  }
+
+  return (
+    <div className={classes.bkgContainer}>
+      <AppBar position='fixed'>
+        <Toolbar>
+          <Typography variant='h3' className={classes.title}>
+            ePortfolio
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <div className={classes.banner}> </div>
+
+      <div className={classes.contentContainer}>
+        <Switch>
+          <Route path={`${match.url}/:userId`} component={PublicProfilePage} />
         </Switch>
-      </Fade>
+      </div>
     </div>
   );
 };

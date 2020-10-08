@@ -8,6 +8,7 @@ import { AuthContext } from '../context/auth';
 
 import PrivateLayout from './PrivatePages/PrivateLayout';
 import PublicLayout from './PublicPages/PublicLayout';
+import HomeLayout from './PublicPages/HomeLayout';
 
 function App() {
   //Check login tokens
@@ -27,7 +28,8 @@ function App() {
           <CssBaseline>
             <Router>
               <Switch>
-                <Route path='/home' component={PublicLayout} />
+                <Route path='/home' component={HomeLayout} />
+                <Route path='/view' component={PublicLayout} />
                 <PrivateRoute path='/' component={PrivateLayout} />
               </Switch>
             </Router>

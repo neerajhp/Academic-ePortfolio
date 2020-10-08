@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const COLOURS = ['primary', 'secondary'];
 
 /* ================ Component ================ */
-const SkillsCard = ({ skills }) => {
+const PublicSkillsCard = ({ skills, globalClasses }) => {
   const classes = useStyles();
 
   const getSkills = (skills) => {
@@ -58,8 +58,8 @@ const SkillsCard = ({ skills }) => {
   };
 
   return (
-    <Paper className={classes.card}>
-      <Typography className={classes.title} variant='h2'>
+    <Paper className={globalClasses.card}>
+      <Typography className={globalClasses.title} variant='h2'>
         What I'm Good At
       </Typography>
       {getSkills(skills)}
@@ -67,4 +67,4 @@ const SkillsCard = ({ skills }) => {
   );
 };
 
-export default SkillsCard;
+export default PublicSkillsCard;

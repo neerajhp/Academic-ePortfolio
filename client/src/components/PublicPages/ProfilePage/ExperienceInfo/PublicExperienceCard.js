@@ -8,33 +8,15 @@ import {
   Typography,
   TableBody,
 } from '@material-ui/core';
-import ExperienceDialog from './ExperienceDialog.js';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
-  card: {
-    margin: '0 0 1% 1%',
-    width: '100%',
-    // background: theme.palette.secondary.light,
-    // color: theme.palette.text.secondary,
-    padding: theme.spacing(5),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   workSection: {
     margin: theme.spacing(2),
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
-  },
-  title: {
-    width: '100%',
-    marginBottom: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'row',
   },
   subTitle: {
     width: '100%',
@@ -102,7 +84,7 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const ExperienceCard = ({ experience }) => {
+const PublicExperienceCard = ({ experience, globalClasses }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(experience);
@@ -149,8 +131,8 @@ const ExperienceCard = ({ experience }) => {
   };
 
   return (
-    <Paper className={classes.card}>
-      <Typography className={classes.title} variant='h2'>
+    <Paper className={globalClasses.card}>
+      <Typography className={globalClasses.title} variant='h2'>
         Experience{' '}
       </Typography>
       <div className={classes.workSection}>
@@ -160,11 +142,6 @@ const ExperienceCard = ({ experience }) => {
         <div className={classes.tableContainer}>
           {getRecord(records.employment)}
         </div>
-        <ExperienceDialog
-          type={'employment'}
-          records={records.employment}
-          setRecords={setRecords}
-        />
       </div>
       <div className={classes.workSection}>
         <Typography className={classes.subTitle} variant='h3'>
@@ -173,11 +150,6 @@ const ExperienceCard = ({ experience }) => {
         <div className={classes.tableContainer}>
           {getRecord(records.volunteering)}
         </div>
-        <ExperienceDialog
-          type={'volunteering'}
-          records={records.volunteering}
-          setRecords={setRecords}
-        />
       </div>
       <div className={classes.workSection}>
         <Typography className={classes.subTitle} variant='h3'>
@@ -186,14 +158,9 @@ const ExperienceCard = ({ experience }) => {
         <div className={classes.tableContainer}>
           {getRecord(records.extracurricular)}
         </div>
-        <ExperienceDialog
-          type={'extracurricular'}
-          records={records.extracurricular}
-          setRecords={setRecords}
-        />
       </div>
     </Paper>
   );
 };
 
-export default ExperienceCard;
+export default PublicExperienceCard;

@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+axios.defaults.baseURL = window.location.origin;
+
 export default {
   //userSignup
   userSignup: function (user) {
@@ -33,14 +35,7 @@ export default {
       },
     });
   },
-  getViewedProfile: function (body) {
-    return axios.get('/api/view/profile', {
-      userID: body.userID,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
-  },
+
   getCV: function () {
     return axios.get('/api/profile/cv', {
       headers: {
@@ -72,7 +67,6 @@ export default {
   },
   // Creates an education record
   postEducation: function (body) {
-    console.log(body.edu_type);
     return axios.post(
       '/api/profile/education',
       {
@@ -204,7 +198,7 @@ export default {
       file: body.file,
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      }
+      },
     });
   },
   // Multiple uploads of images
@@ -243,12 +237,12 @@ export default {
   },
   // Use this if the link doesn't work (Not sure if this will work)
   // At the moment this only works for displaying the logged in user's profile picture
-  displayProfilePic: function() {
+  displayProfilePic: function () {
     return axios.get('/api/files/image/profile-pic', {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
-    })
+    });
   },
   // Deletes the file by objectID
   deleteFile: function (recordID) {
@@ -550,67 +544,48 @@ export default {
     );
   },
 
-  // Viewer
+  /* =========== Viewer =========== */
   // Gets all the profile of the viewed person
   viewerGetProfile: function (userName) {
-    return axios.get(`api/view/profile/${userName}`, {
-
-    });
+    return axios.get(`api/view/profile/${userName}`, {});
   },
 
   // Gets all the blogs of the viewed person
   viewerGetAllBlogs: function (userName) {
-    return axios.get(`api/view/blog/${userName}`, {
-
-    });
+    return axios.get(`api/view/blog/${userName}`, {});
   },
 
   // Gets all the experience of the viewed person
   viewerGetAllExperience: function (userName) {
-    return axios.get(`api/view/experience/${userName}`, {
-
-    });
+    return axios.get(`api/view/experience/${userName}`, {});
   },
 
   // Gets all the education of the viewed person
   viewerGetEdu: function (userName) {
-    return axios.get(`api/view/education/${userName}`, {
-
-    });
+    return axios.get(`api/view/education/${userName}`, {});
   },
 
   // Gets all the featured-works of the viewed person
   viewerGetFeaturedWorks: function (userName) {
-    return axios.get(`api/view/featured-work/${userName}`, {
-
-    });
+    return axios.get(`api/view/featured-work/${userName}`, {});
   },
 
   // Gets all the documents of the viewed person
   viewerGetAllDocs: function (userName) {
-    return axios.get(`api/view/files/${userName}`, {
-
-    });
+    return axios.get(`api/view/files/${userName}`, {});
   },
 
   // Gets user information of the viewed person
   viewerGetUserInformation: function (userName) {
-    return axios.get(`api/view/userInfo/${userName}`, {
-
-    });
+    return axios.get(`api/view/userInfo/${userName}`, {});
   },
 
   //Get a file based on its objectID
-  getFile:function (recordID){
-    return axios.get(`/api/files/${recordID}`,{
-      headers:{
-        Authorization :"Bearer:" + JSON.parse(localStorage.getItem('token')),
-      }
+  getFile: function (recordID) {
+    return axios.get(`/api/files/${recordID}`, {
+      headers: {
+        Authorization: 'Bearer:' + JSON.parse(localStorage.getItem('token')),
+      },
     });
-  }
-
-}
-
-  
-    
-     
+  },
+};

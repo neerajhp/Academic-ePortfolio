@@ -22,17 +22,17 @@ const LandingPage = ({ globalClasses }) => {
             className={globalClasses.landingButton}
             color='primary'
           >
-            <Typography>Login To Your portfolio</Typography>
+            <Typography>Get Started With Your portfolio</Typography>
           </Button>
         </Link>
-        <Link href='./signup' underline='none'>
+        <Link href='./search' underline='none'>
           <Button
             type='Submit'
             variant='contained'
             className={globalClasses.landingButton}
             color='primary'
           >
-            <Typography>Create Your New Portfolio</Typography>
+            <Typography>Search for a Portfolio</Typography>
           </Button>
         </Link>
       </div>

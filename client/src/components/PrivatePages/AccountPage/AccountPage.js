@@ -14,6 +14,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import AccountInformationForm from './AccountInformationForm/AccountInformationForm';
 import PersonalInformationForm from './PersonalInformationForm/PersonalInformationForm';
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
+import Tutorial from '../Tutorial/Tutorial';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -117,6 +118,7 @@ const AccountPage = () => {
               </ListItem>
             </List>
           </Paper>
+          <Tutorial />
         </div>
 
         <div className={classes.sectionContainer}>

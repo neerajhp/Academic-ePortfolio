@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -10,7 +10,10 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  IconButton,
 } from '@material-ui/core';
+
+import HelpIcon from '@material-ui/icons/Help';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
@@ -21,6 +24,7 @@ import ExperienceCard from './ExperienceInfo/ExperienceCard';
 import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
+import Tutorial from '../Tutorial/Tutorial';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   navSection: {
     position: 'fixed',
     width: '25vw',
+    height: '100vh',
     marginTop: '1%',
     zIndex: '100',
   },
@@ -50,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     color: '#FFFFFF',
   },
+
   sectionContainer: {
     position: 'absolute',
     display: 'flex',
@@ -111,9 +117,7 @@ const ProfilePage = () => {
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2' color='textSecondary'>
-            Fetching User Data
-          </Typography>
+          <Typography variant='h2'>Fetching User Data</Typography>
         </div>
       </div>
     );
@@ -144,6 +148,7 @@ const ProfilePage = () => {
                 </ListItem>
               </List>
             </Paper>
+            <Tutorial />
           </div>
 
           <div className={classes.sectionContainer}>

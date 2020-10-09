@@ -464,6 +464,21 @@ export default {
       }
     );
   },
+  // Updates a logged in user's email
+  updateEmail: function (body) {
+    return axios.put('api/user/update/email', {email: body.email}, {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  changePassword: function (body) {
+    return axios.put('api/user/update/password', {oldPassword: body.oldPassword, newPassword: body.newPassword}, {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // Create an experience card
   createExperience: function (body) {
     return axios.post(

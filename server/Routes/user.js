@@ -38,4 +38,14 @@ router.get("/getID", authenticate.authenticateToken, async (req, res) => {
     userController.getUserID(req, res);
 });
 
+// Update email (logged in user only)
+router.put("/update/email", authenticate.authenticateToken, async (req, res) => {
+    userController.updateEmail(req, res);
+});
+
+// Change password (logged in user only)
+router.put("/update/password", authenticate.authenticateToken, async (req, res) => {
+    userController.changePassword(req, res);
+});
+
 module.exports = router;

@@ -1,6 +1,5 @@
 const server = require('../../app') // Link to your server file
 const supertest = require('supertest');
-const setup = require('./setup');
 const request = supertest(server)
 
 let token;

@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const request = supertest(server)
 const mongoose = require('mongoose');
 
-const { clearDB } = require('./setup');
+const { clearDB } = require('./clearDB');
 
 
 clearDB();

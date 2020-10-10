@@ -45,9 +45,15 @@ const PublicLayout = ({ match }) => {
     <div className={classes.bkgContainer}>
       <AppBar position='fixed'>
         <Toolbar>
-          <Typography variant='h3' className={classes.title}>
-            ePortfolio
-          </Typography>
+          <Link to='/home/landing' className={classes.link}>
+            <Typography
+              variant='h3'
+              color='textSecondary'
+              className={classes.title}
+            >
+              ePortfolio
+            </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
       <div className={classes.banner}> </div>

@@ -48,4 +48,8 @@ router.put("/update/password", authenticate.authenticateToken, async (req, res) 
     userController.changePassword(req, res);
 });
 
+router.put("/update/tutorial", authenticate.authenticateToken, async (req, res) => {
+    userController.finishTutorial(req, res);
+})
+
 module.exports = router;

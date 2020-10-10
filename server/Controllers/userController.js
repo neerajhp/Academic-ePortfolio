@@ -267,12 +267,12 @@ const getUserID = async (req, res) => {
 const updateEmail = async (req, res) => {
   try{
 
-    await User.findByIdAndUpdate(req.user.id, {"email": req.body.email}, {new: true}, (err, result) => {
+    await User.findByIdAndUpdate(req.user.id, {"email": req.body.email}, (err, result) => {
       if(err){
         throw err;
       }
       if(result){
-        res.status(200).json(result);
+        res.status(200).json("Email updated");
       }else{
         res.status(404).json("User not found");
       }
@@ -286,15 +286,16 @@ const updateEmail = async (req, res) => {
 // User should input their old password before making a new one
 const changePassword = async (req, res) => {
   try{
-    let oldPassword = await User.findById(req.user.id, (err, result) => {
+    let user = await User.findById(req.user.id, (err, result) => {
       if(err){
         throw err;
       }
       if(result){
-        return result.password;
+        return result;
       }
     });
-    bcrypt.compare(req.body.oldPassword, oldPassword, (err, result) => {
+    
+    bcrypt.compare(req.body.oldPassword, user.password, (err, result) => {
       if(err){
         throw err;
       }
@@ -317,6 +318,24 @@ const changePassword = async (req, res) => {
 
 }
 
+// Disables the tutorial
+const finishTutorial = async (req, res) => {
+  try{
+    await User.findByIdAndUpdate(req.user.id, {"tutorial": false}, {"new": true}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        res.status(200).json(result);
+      }else{
+        res.status(404).json("User not found");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Error while trying to update tutorial field");
+  }
+}
+
 module.exports = {
   postSignup,
   postLogin,
@@ -325,6 +344,7 @@ module.exports = {
   editUserInformation,
   updateEmail,
   changePassword,
-  getUserID
+  getUserID,
+  finishTutorial
 }
 

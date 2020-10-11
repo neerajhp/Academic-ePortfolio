@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Switch, Route } from 'react-router-dom';
 import Background from '../../assets/bkg-alt.jpg';
 import LoginPage from './LoginPage/LoginPage';
+import ResetPage from "./ResetPage/ResetPage";
 import SignupPage from './SignUpPage/SignUpPage';
 import LandingPage from './LandingPage/LandingPage';
 import SearchPage from './SearchPage/SearchPage';
@@ -127,6 +128,11 @@ const HomeLayout = () => {
             render={(props) => (
               <SignupPage {...props} globalClasses={classes} />
             )}
+          />
+          <Route
+              exact
+              path="/home/reset"
+              render={(props) => <ResetPage {...props} globalClasses={classes} />}
           />
           <Route
             exact

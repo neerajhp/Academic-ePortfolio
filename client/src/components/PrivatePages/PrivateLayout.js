@@ -7,7 +7,7 @@ import PrivateRoute from '../Routes/PrivateRoute';
 import ProfilePage from './ProfilePage/ProfilePage';
 import PublicProfilePage from '../PublicPages/ProfilePage/PublicProfilePage';
 import AccountPage from './AccountPage/AccountPage';
-import Background from '../../assets/bkg-private.svg';
+import Background from '../../assets/Background/bkg-private.svg';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({

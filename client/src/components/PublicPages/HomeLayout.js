@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Switch, Route } from 'react-router-dom';
-import Background from '../../assets/bkg-alt.jpg';
+import Background from '../../assets/Background/bkg-alt.jpg';
 import LoginPage from './LoginPage/LoginPage';
 import SignupPage from './SignUpPage/SignUpPage';
 import LandingPage from './LandingPage/LandingPage';

@@ -79,7 +79,7 @@ const TutorialStepper = ({ activeStep }) => {
               </Typography>
               <img
                 className={classes.pageImage}
-                src={require('../../../assets/WelcomePage.png')}
+                src={require('../../../assets/Tutorial/WelcomePage.png')}
               />
             </div>
           </React.Fragment>
@@ -103,7 +103,7 @@ const TutorialStepper = ({ activeStep }) => {
               </Typography>
               <img
                 className={classes.pageImage}
-                src={require('../../../assets/EditPage.gif')}
+                src={require('../../../assets/Tutorial/EditPage.gif')}
               />
             </div>
           </React.Fragment>
@@ -127,7 +127,7 @@ const TutorialStepper = ({ activeStep }) => {
               </Typography>
               <img
                 className={classes.pageImage}
-                src={require('../../../assets/AccountEditPage.gif')}
+                src={require('../../../assets/Tutorial/AccountEditPage.gif')}
               />
             </div>
           </React.Fragment>

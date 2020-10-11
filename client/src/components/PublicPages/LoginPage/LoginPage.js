@@ -139,6 +139,7 @@ const LoginPage = ({ globalClasses }) => {
                   >
                     <Typography>Log In</Typography>
                   </Button>
+
                   <Divider className={classes.loginDivider} />
                   <Link href='./signup' underline='none'>
                     <Button

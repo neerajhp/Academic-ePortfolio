@@ -113,6 +113,17 @@ const LoginPage = ({ globalClasses }) => {
                       </Link>
                     </Grid>
                   </Grid>
+                  <Grid container className={globalClasses.options}>
+                    <Grid item>
+                      <Link
+                          href="./reset"
+                          variant="body2"
+                          color="textSecondary"
+                      >
+                        {"Forget your password?Reset"}
+                      </Link>
+                    </Grid>
+                  </Grid>
                 </form>
               )}
             </Formik>

@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogTitle,
 } from '@material-ui/core';
-import { shadows } from '@material-ui/system';
 import ExperienceForm from './ExperienceForm';
 import API from '../../../../api/API';
 

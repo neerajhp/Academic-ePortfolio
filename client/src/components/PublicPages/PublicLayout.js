@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAuth } from '../../context/auth';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';

@@ -10,7 +10,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@material-ui/core';
-import { useAuth } from '../../../context/auth';
+import { authenticate } from '../../../helpers/auth';
 import API from '../../../api/API';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
@@ -29,7 +29,6 @@ const LoginPage = ({ globalClasses }) => {
   const classes = useStyles();
 
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const { setAuthTokens } = useAuth();
 
   return (
     <React.Fragment>
@@ -54,11 +53,12 @@ const LoginPage = ({ globalClasses }) => {
                   .then((result) => {
                     if (result.status === 200) {
                       //Login information matches records
-                      setAuthTokens(result.data.token);
+                      authenticate(result.data.token);
                       setLoggedIn(true);
                     }
                   })
                   .catch((err) => {
+                    console.log(err);
                     actions.setErrors({
                       email: err.response.data,
                       password: err.response.data,
@@ -89,7 +89,7 @@ const LoginPage = ({ globalClasses }) => {
                   />
                   <FormControlLabel
                     className={classes.rememberMe}
-                    control={<Checkbox value='remember' color='#FFFFFF' />}
+                    control={<Checkbox value='remember' color='default' />}
                     label='Remember me'
                   />
 

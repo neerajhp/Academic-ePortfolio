@@ -15,6 +15,7 @@ import {
 
 import HelpIcon from '@material-ui/icons/Help';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import InfoIcon from "@material-ui/icons/Info";
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -25,6 +26,7 @@ import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
 import Tutorial from '../Tutorial/Tutorial';
+import AboutCard from "./AboutInfo/AboutCard";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -146,6 +148,12 @@ const ProfilePage = () => {
                   </ListItemIcon>
                   <ListItemText primary='My Projects'></ListItemText>
                 </ListItem>
+                <ListItem button onClick={() => setSection(4)}>
+                  <ListItemIcon>
+                    <InfoIcon className={classes.navBarIcon} />
+                  </ListItemIcon>
+                  <ListItemText primary="About"></ListItemText>
+                </ListItem>
               </List>
             </Paper>
             <Tutorial />
@@ -174,6 +182,9 @@ const ProfilePage = () => {
               <ProjectCard type={'small'} />
               <ProjectCard type={'small'} />
               <ProjectCard type={'medium'} />
+            </div>
+            <div className={classes.section}>
+              <AboutCard />
             </div>
           </div>
         </div>

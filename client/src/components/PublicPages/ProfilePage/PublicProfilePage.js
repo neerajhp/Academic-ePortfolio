@@ -113,6 +113,22 @@ const PublicProfilePage = ({ match, location }) => {
       .catch();
   }, []);
 
+  const checkExperience = () => {
+    return (
+      userExperience.volunteering.length === 0 &&
+      userExperience.employment.length === 0 &&
+      userExperience.extracurricular.length === 0
+    );
+  };
+
+  const checkEducation = () => {
+    return user.education.length === 0;
+  };
+
+  const checkSkills = () => {
+    return user.skills.length === 0;
+  };
+
   //If profile hasn't been fetched yet
   var pageContent;
   if (!(user && userExperience)) {
@@ -127,6 +143,7 @@ const PublicProfilePage = ({ match, location }) => {
       </div>
     );
   } else {
+    console.log(userExperience.volunteering.length === 0);
     pageContent = (
       <div>
         <div className={classes.container}>
@@ -164,15 +181,22 @@ const PublicProfilePage = ({ match, location }) => {
             </div>
             <div className={classes.section}>
               <CharacterCard user={user} globalClasses={classes} />
-              <ExperienceCard
-                experience={userExperience}
-                globalClasses={classes}
-              />
-              <EducationCard
-                education={user.education}
-                globalClasses={classes}
-              />
-              <SkillsCard skills={user.skills} globalClasses={classes} />
+
+              {!checkExperience() && (
+                <ExperienceCard
+                  experience={userExperience}
+                  globalClasses={classes}
+                />
+              )}
+              {!checkEducation() && (
+                <EducationCard
+                  education={user.education}
+                  globalClasses={classes}
+                />
+              )}
+              {!checkSkills() && (
+                <SkillsCard skills={user.skills} globalClasses={classes} />
+              )}
             </div>
             <div className={classes.section}>
               <ReflectionCard />

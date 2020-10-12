@@ -28,6 +28,10 @@ router.post('/googlelogin', (req, res) => {
   userController.googleLogin(req, res);
 });
 
+router.post('/facebooklogin', (req, res) => {
+  userController.facebookLogin(req, res);
+});
+
 router.get('/userInfo', authenticate.authenticateToken, async (req, res) => {
   userController.getUserInformation(req, res);
 });

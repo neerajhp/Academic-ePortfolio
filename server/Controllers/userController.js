@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { OAuth2Client } = require('google-auth-library');
+const fetch = require('node-fetch');
 
 const saltRounds = 10;
 
@@ -227,6 +228,81 @@ exports.googleLogin = (req, res) => {
     });
 };
 
+exports.facebookLogin = (req, res) => {
+  console.log('FACEBOOK LOGIN REQ BODY', req.body);
+  const { userID, accessToken } = req.body;
+
+  const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+  return (
+    fetch(url, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      // .then((response) => console.log(response))
+      .then((response) => {
+        const { email, name } = response;
+        User.findOne({ email }).exec((err, user) => {
+          if (user) {
+            const token = jwt.sign(
+              { id: user._id },
+              process.env.SECRET_OR_KEY,
+              {
+                expiresIn: '7d',
+              }
+            );
+            const { id, email } = user;
+            return res.json({
+              token,
+              user: { id, email },
+            });
+          } else {
+            let given_name = name.split(' ')[0];
+            let family_name = name.split(' ')[1];
+            let password = email + process.env.SECRET_OR_KEY;
+            const randomID = Math.floor(Math.random() * Math.floor(999));
+            newUser = new User({
+              firstName: given_name,
+              lastName: family_name,
+              email: email,
+              userName: `${given_name}.${family_name}.${randomID}`,
+              password: password,
+              //Format: YYYY-MM-DD
+              birthDate: '',
+              mobileNumber: '',
+              biography: '',
+              skills: '',
+            });
+            newUser.save((err, data) => {
+              if (err) {
+                console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
+                return res.status(400).json({
+                  error: 'User signup failed with facebook',
+                });
+              }
+              const token = jwt.sign(
+                { id: data._id },
+                process.env.SECRET_OR_KEY,
+                {
+                  expiresIn: '7d',
+                }
+              );
+              const { id, email } = data;
+              return res.json({
+                token,
+                user: { id, email },
+              });
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        res.json({
+          error: 'Facebook login failed. Try later',
+        });
+      })
+  );
+};
 //************** Helpers **************//
 // Function to find the info associated with the given id
 const findInfo = async (userID) => {

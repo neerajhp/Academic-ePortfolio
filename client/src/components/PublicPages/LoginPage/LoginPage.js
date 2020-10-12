@@ -13,11 +13,12 @@ import {
 } from '@material-ui/core';
 import { authenticate } from '../../../helpers/auth';
 import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import API from '../../../api/API';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
 import googleLogo from '../../../assets/Forms/googleLogo.svg';
-import githubLogo from '../../../assets/Forms/githubLogo.svg';
+import FacebookIcon from '@material-ui/icons/Facebook';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -45,9 +46,9 @@ const useStyles = makeStyles((theme) => {
     gitHubButton: {
       marginTop: `${theme.spacing(1)}px`,
       color: '#FFFFFF',
-      backgroundColor: '#313131',
+      backgroundColor: '#4168b1',
       '&:hover': {
-        backgroundColor: '#2a2a2a',
+        backgroundColor: '#3c5fa2',
       },
     },
     buttonLogo: {
@@ -79,6 +80,22 @@ const LoginPage = ({ globalClasses }) => {
   const responseGoogle = (response) => {
     console.log(response);
     sendGoogleToken(response.tokenId);
+  };
+
+  const sendFacebookToken = (userID, accessToken) => {
+    API.facebookLogin(userID, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        authenticate(res.data.token);
+        setLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log('FACEBOOK SIGNIN ERROR', error.response);
+      });
+  };
+
+  const responseFacebook = (response) => {
+    sendFacebookToken(response.userID, response.accessToken);
   };
 
   return (
@@ -191,19 +208,24 @@ const LoginPage = ({ globalClasses }) => {
                       />
                     </Grid>
                     <Grid item xs={6}>
-                      <Button
-                        fullWidth
-                        variant='contained'
-                        className={classes.gitHubButton}
-                        startIcon={
-                          <img
-                            src={githubLogo}
-                            className={classes.buttonLogo}
-                          />
-                        }
-                      >
-                        Sign in with GitHub
-                      </Button>
+                      <FacebookLogin
+                        appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
+                        autoLoad={false}
+                        callback={responseFacebook}
+                        render={(renderProps) => (
+                          <Button
+                            fullWidth
+                            variant='contained'
+                            className={classes.gitHubButton}
+                            startIcon={
+                              <FacebookIcon className={classes.buttonLogo} />
+                            }
+                            onClick={renderProps.onClick}
+                          >
+                            Sign in with Facebook
+                          </Button>
+                        )}
+                      />
                     </Grid>
                   </Grid>
                 </form>

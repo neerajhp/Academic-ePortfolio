@@ -33,60 +33,20 @@ const postSignup = async (req, res) => {
       // If its a new email, check the username's uniqueness
       if(!account){
         console.log("email is unique");
-        if(newUser.userName){
-          User.findOne({userName: newUser.userName}, (err, result) => {
-            // If the username doesn't exist in the db, then the user can be saved
-            if(!result){
-              console.log("username is unique");
-              newUser.save();
-              res.status(200).json("New user saved");
-            }else{
-              // Suggest a username that is unique to the user
-              console.log("userName not unique");
-              let suggestedUserName = suggestUserName(newUser.userName);
-              console.log("suggested: " + suggestedUserName);
-              res.status(400).json({
-                message: "Username not unique",
-                suggestion: suggestedUserName
-              });
-            }
-          });
-        }else{
-          let userName = generateUniqueUserName(newUser.email);
+        let userName = generateUniqueUserName(newUser.email);
           userName.then(function(result){
             newUser.userName = result;
             newUser.save();
             res.status(200).json("New user saved");
           });
-          //res.status(200).json("New user saved");
-        }
         
 
       }else{
         res.status(400).json("An account with this email already exists");
       }
-    })
-
-    //Check if the email is already registered
-    // await User.findOne({
-    //   email: newUser.email,
-    // }).then(async (profile) => {
-    //   if (!profile) {
-    //     newUser.save();
-    //     res.status(201).json('User added');
-    //   } else {
-    //     res.status(409).send('Email already linked to account');
-    //   }
-    // });
+    });
   });
 };
-
-// Suggest a new user name (Doesn't check the db)
-const suggestUserName = (userName) => {
-  let proposedName = userName;
-  proposedName += Math.floor((Math.random() * 100) + 1);
-  return proposedName;
-}
 
 // Suggests a definitely unique username (Checks the db)
 // Unfortunately I can't get it to work
@@ -112,10 +72,6 @@ const generateUniqueUserName =  async (email) => {
         console.log("Username not good");
       }
     });
-  }
-
-  if(allGood){
-    console.log("Found a username");
   }
   return username;
 }
@@ -174,6 +130,34 @@ const postLogin = async (req, res) => {
       console.log('Error is ', err.message);
     });
 };
+
+// Allows users to change their username
+const changeUserName = async (req, res) => {
+  try{
+    await User.findOne({userName: req.body.userName}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(!result){
+        User.findByIdAndUpdate(req.user.id, {userName: req.body.userName}, (err, result) => {
+          if(err){
+            throw err;
+          }
+          if(result){
+            res.status(200).json("Username has been changed");
+          }else{
+            res.status(404).json("The user was not found");
+          }
+        });
+      }else{
+        // Suggest a new username
+        res.status(400).json("Username not unique");
+      }
+    });
+  }catch(error){
+    res.status(400).json("Failed to update username");
+  }
+}
 
 // Function to find the info associated with the given id
 const findInfo = async (userID) => {

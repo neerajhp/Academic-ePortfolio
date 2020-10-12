@@ -76,9 +76,6 @@ const generateUniqueUserName =  async (email) => {
   return username;
 }
 
-// let userName = generateUniqueUserName("denzel_tano@yahoo.com");
-// console.log(userName);
-
 //LOGIN
 const postLogin = async (req, res) => {
   var newUser = {};
@@ -139,12 +136,12 @@ const changeUserName = async (req, res) => {
         throw err;
       }
       if(!result){
-        User.findByIdAndUpdate(req.user.id, {userName: req.body.userName}, (err, result) => {
+        User.findByIdAndUpdate(req.user.id, {userName: req.body.userName}, {new: true}, (err, result) => {
           if(err){
             throw err;
           }
           if(result){
-            res.status(200).json("Username has been changed");
+            res.status(200).json(result.userName);
           }else{
             res.status(404).json("The user was not found");
           }
@@ -331,7 +328,7 @@ const finishTutorial = async (req, res) => {
         throw err;
       }
       if(result){
-        res.status(200).json(result);
+        res.status(200).json(result.tutorial);
       }else{
         res.status(404).json("User not found");
       }
@@ -350,6 +347,7 @@ module.exports = {
   updateEmail,
   changePassword,
   getUserID,
-  finishTutorial
+  finishTutorial,
+  changeUserName
 }
 

@@ -43,6 +43,10 @@ router.put("/update/email", authenticate.authenticateToken, async (req, res) => 
     userController.updateEmail(req, res);
 });
 
+router.put("/update/username", authenticate.authenticateToken, async (req, res) => {
+    userController.changeUserName(req, res);
+})
+
 // Change password (logged in user only)
 router.put("/update/password", authenticate.authenticateToken, async (req, res) => {
     userController.changePassword(req, res);

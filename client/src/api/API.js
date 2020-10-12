@@ -135,8 +135,11 @@ export default {
 
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function (body) {
-    return axios.put('/api/profile/bio', {
-      biography: body.bio,
+    return axios.put('/api/profile/bio', 
+    {
+      biography: body.bio
+    },
+    {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -440,8 +443,7 @@ export default {
       },
     });
   },
-  // Edit User information
-  // At the moment the user cannot change their email and password using this api
+  // Edit User information (name, mobile number, birthdate)
   editUserInformation: function (body) {
     return axios.put(
       'api/user/userInfo',
@@ -468,6 +470,16 @@ export default {
   },
   changePassword: function (body) {
     return axios.put('api/user/update/password', {oldPassword: body.oldPassword, newPassword: body.newPassword}, {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  changeUserName: function (body) {
+    return axios.put('api/user/update/username', {
+      userName: body.userName
+    }, 
+    {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },

@@ -52,8 +52,13 @@ const postSignup = async (req, res) => {
             }
           });
         }else{
-          newUser.save();
-          res.status(200).json("New user saved");
+          let userName = generateUniqueUserName(newUser.email);
+          userName.then(function(result){
+            newUser.userName = result;
+            newUser.save();
+            res.status(200).json("New user saved");
+          });
+          //res.status(200).json("New user saved");
         }
         
 
@@ -85,22 +90,38 @@ const suggestUserName = (userName) => {
 
 // Suggests a definitely unique username (Checks the db)
 // Unfortunately I can't get it to work
-const generateUniqueUserName = async (proposedName) => {
-  return await User.findOne({userName: proposedName})
-  .then(function(account) {
-    if(account){
-      console.log(`${proposedName} already exists`);
-      proposedName += Math.floor((Math.random() * 100) + 1);
-      return generateUniqueUserName(proposedName);
-    }
-    console.log("proposed name is unique " + proposedName);
-    return proposedName;
-  })
-  .catch(function(err){
-    console.log(err);
-    throw err;
-  })
+const generateUniqueUserName =  async (email) => {
+
+  var regExp = /(.+)@/
+  var proposedName = email.match(regExp)[1];
+  
+  var username;
+  var allGood = false;
+  while(!allGood){
+    console.log("Start the loop");
+    await User.findOne({userName: proposedName}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(!result){
+        console.log("Username's good");
+        allGood = true;
+        username = proposedName;
+      }else{
+        proposedName += Math.floor((Math.random() * 100) + 1);
+        console.log("Username not good");
+      }
+    });
+  }
+
+  if(allGood){
+    console.log("Found a username");
+  }
+  return username;
 }
+
+// let userName = generateUniqueUserName("denzel_tano@yahoo.com");
+// console.log(userName);
 
 //LOGIN
 const postLogin = async (req, res) => {

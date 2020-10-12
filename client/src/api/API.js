@@ -19,6 +19,12 @@ export default {
     });
   },
 
+  googleLogin: function (idToken) {
+    return axios.post(`api/user/googleLogin`, {
+      idToken: idToken,
+    });
+  },
+
   /* ================ Authorised Calls ================ */
   getUserInfo: () => {
     return axios.get('/api/user/userInfo', {

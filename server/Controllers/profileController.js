@@ -13,6 +13,7 @@ require('dotenv').config();
 
 const getAllInfo = async (userID) => {
   // Get cv, featuredWorks, blogs, education, skills, profile picture
+
   try {
     let userRecord;
     await User.findOne(
@@ -98,6 +99,7 @@ const viewerGetProfile = async (req, res) => {
 
 // Gets the user's profile
 const getProfile = async (req, res) => {
+  console.log('Requesst ', req);
   try {
     let profile = await getAllInfo(req.user.id);
     if (profile) {

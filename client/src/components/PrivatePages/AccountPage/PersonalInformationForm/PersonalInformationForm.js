@@ -154,7 +154,7 @@ const PersonalInformationForm = ({ user }) => {
                 type='date'
                 required
                 defaultValue={
-                  user.birthDate !== undefined
+                  user.birthDate !== undefined && user.birthDate !== null
                     ? user.birthDate.substring(0, 10)
                     : new Date()
                 }

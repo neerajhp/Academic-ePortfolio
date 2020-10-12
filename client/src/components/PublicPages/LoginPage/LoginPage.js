@@ -12,6 +12,7 @@ import {
   Checkbox,
 } from '@material-ui/core';
 import { authenticate } from '../../../helpers/auth';
+import { GoogleLogin } from 'react-google-login';
 import API from '../../../api/API';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
@@ -46,11 +47,7 @@ const useStyles = makeStyles((theme) => {
       color: '#FFFFFF',
       backgroundColor: '#313131',
       '&:hover': {
-        color: '#313131',
-        backgroundColor: '#FFFFFF',
-      },
-      '&:hover img': {
-        filter: 'invert(1)',
+        backgroundColor: '#2a2a2a',
       },
     },
     buttonLogo: {
@@ -66,6 +63,23 @@ const LoginPage = ({ globalClasses }) => {
   const classes = useStyles();
 
   const [isLoggedIn, setLoggedIn] = useState(false);
+
+  const sendGoogleToken = (idToken) => {
+    API.googleLogin(idToken)
+      .then((res) => {
+        console.log(res.data);
+        authenticate(res.data.token);
+        setLoggedIn(true);
+      })
+      .catch((err) => {
+        console.log('GOOGLE SIGNIN ERROR', err.response);
+      });
+  };
+
+  const responseGoogle = (response) => {
+    console.log(response);
+    sendGoogleToken(response.tokenId);
+  };
 
   return (
     <React.Fragment>
@@ -150,26 +164,48 @@ const LoginPage = ({ globalClasses }) => {
                       Signup for a Portfolio
                     </Button>
                   </Link>
-                  <Button
-                    fullWidth
-                    variant='contained'
-                    className={classes.googleButton}
-                    startIcon={
-                      <img src={googleLogo} className={classes.buttonLogo} />
-                    }
-                  >
-                    Sign in with Google
-                  </Button>
-                  <Button
-                    fullWidth
-                    variant='contained'
-                    className={classes.gitHubButton}
-                    startIcon={
-                      <img src={githubLogo} className={classes.buttonLogo} />
-                    }
-                  >
-                    Sign in with GitHub
-                  </Button>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <GoogleLogin
+                        clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                        render={(renderProps) => (
+                          <Button
+                            fullWidth
+                            variant='contained'
+                            className={classes.googleButton}
+                            startIcon={
+                              <img
+                                src={googleLogo}
+                                className={classes.buttonLogo}
+                              />
+                            }
+                            onClick={renderProps.onClick}
+                            disabled={renderProps.disabled}
+                          >
+                            Sign in with Google
+                          </Button>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        className={classes.gitHubButton}
+                        startIcon={
+                          <img
+                            src={githubLogo}
+                            className={classes.buttonLogo}
+                          />
+                        }
+                      >
+                        Sign in with GitHub
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </form>
               )}
             </Formik>

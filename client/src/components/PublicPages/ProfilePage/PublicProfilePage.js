@@ -136,9 +136,7 @@ const PublicProfilePage = ({ match, location }) => {
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2' color='textSecondary'>
-            Fetching this Portfolio
-          </Typography>
+          <Typography variant='h2'>Fetching this Portfolio</Typography>
         </div>
       </div>
     );

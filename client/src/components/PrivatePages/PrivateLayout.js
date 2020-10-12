@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 
 const PrivateLayout = ({ match }) => {
-  const baseURL = window.location.origin;
   const history = useHistory();
 
   // Styling

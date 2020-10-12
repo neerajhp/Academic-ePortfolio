@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Avatar, Typography } from '@material-ui/core';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -29,11 +29,6 @@ const useStyles = makeStyles((theme) => ({
 
 const PublicCharacterCard = ({ user }) => {
   const classes = useStyles();
-  const [records, setRecords] = useState(user);
-
-  const getRecord = () => {
-    return <Typography> Add Bio </Typography>;
-  };
 
   return (
     <Paper className={classes.characterCard}>
@@ -43,7 +38,6 @@ const PublicCharacterCard = ({ user }) => {
         <Typography variant='h2'>
           {user.firstName} {user.lastName}
         </Typography>
-        <Typography>{getRecord(records)}</Typography>
         <Typography>{user.bio}</Typography>
       </div>
     </Paper>

@@ -10,15 +10,12 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  IconButton,
 } from '@material-ui/core';
 
-import HelpIcon from '@material-ui/icons/Help';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import InfoIcon from "@material-ui/icons/Info";
+import InfoIcon from '@material-ui/icons/Info';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import CharacterCard from './CharacterInfo/CharacterCard';
 import EducationCard from './EducationInfo/EducationCard';
 import ExperienceCard from './ExperienceInfo/ExperienceCard';
@@ -26,7 +23,7 @@ import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
 import Tutorial from '../Tutorial/Tutorial';
-import AboutCard from "./AboutInfo/AboutCard";
+import AboutCard from './AboutInfo/AboutCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -152,7 +149,7 @@ const ProfilePage = () => {
                   <ListItemIcon>
                     <InfoIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText primary="About"></ListItemText>
+                  <ListItemText primary='About'></ListItemText>
                 </ListItem>
               </List>
             </Paper>

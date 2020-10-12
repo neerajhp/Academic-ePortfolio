@@ -195,6 +195,7 @@ const LoginPage = ({ globalClasses }) => {
                             className={classes.googleButton}
                             startIcon={
                               <img
+                                alt='google-logo'
                                 src={googleLogo}
                                 className={classes.buttonLogo}
                               />

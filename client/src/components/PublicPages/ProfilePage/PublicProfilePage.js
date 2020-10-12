@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -14,7 +13,6 @@ import {
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import CharacterCard from './CharacterInfo/PublicCharacterCard';
 import EducationCard from './EducationInfo/PublicEducationCard';
 import ExperienceCard from './ExperienceInfo/PublicExperienceCard';
@@ -111,7 +109,7 @@ const PublicProfilePage = ({ match, location }) => {
         setExperience(data);
       })
       .catch();
-  }, []);
+  });
 
   const checkExperience = () => {
     return (

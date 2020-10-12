@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -87,8 +87,6 @@ const MONTHS = {
 const PublicExperienceCard = ({ experience, globalClasses }) => {
   const classes = useStyles();
 
-  const [records, setRecords] = useState(experience);
-
   const getRecord = (experience) => {
     return (
       <Table className={classes.table}>
@@ -126,33 +124,33 @@ const PublicExperienceCard = ({ experience, globalClasses }) => {
       <Typography className={globalClasses.title} variant='h2'>
         Experience{' '}
       </Typography>
-      {!(records.employment.length === 0) && (
+      {!(experience.employment.length === 0) && (
         <div className={classes.workSection}>
           <Typography className={classes.subTitle} variant='h3'>
             Professional Work
           </Typography>
           <div className={classes.tableContainer}>
-            {getRecord(records.employment)}
+            {getRecord(experience.employment)}
           </div>
         </div>
       )}
-      {!(records.volunteering.length === 0) && (
+      {!(experience.volunteering.length === 0) && (
         <div className={classes.workSection}>
           <Typography className={classes.subTitle} variant='h3'>
             Volunteer Work
           </Typography>
           <div className={classes.tableContainer}>
-            {getRecord(records.volunteering)}
+            {getRecord(experience.volunteering)}
           </div>
         </div>
       )}
-      {!(records.extracurricular.length === 0) && (
+      {!(experience.extracurricular.length === 0) && (
         <div className={classes.workSection}>
           <Typography className={classes.subTitle} variant='h3'>
             Extracurricular Work
           </Typography>
           <div className={classes.tableContainer}>
-            {getRecord(records.extracurricular)}
+            {getRecord(experience.extracurricular)}
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
-import { Paper, Typography, Grid, Button, Divider } from '@material-ui/core';
+import { Paper, Typography, Grid, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FormikField from '../../../utils/FormikField';

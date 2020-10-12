@@ -1,10 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
-import { Button, message, Form, Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 
@@ -48,10 +44,10 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 const ProjectCard = ({ type }) => {
   const classes = useStyles();
-  const inputEl = useRef(null);
-  const [loading, setLoading] = useState(false);
-  const [allFiles, setAllFiles] = useState([]);
-  const [file, setFile] = useState('');
+  // const inputEl = useRef(null);
+  // const [loading, setLoading] = useState(false);
+  // const [allFiles, setAllFiles] = useState([]);
+  // const [file, setFile] = useState('');
   //Default  card size is large
   var cardSize;
 

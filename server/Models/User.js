@@ -40,6 +40,10 @@ const userSchema = mongoose.Schema({
     skills: {
         type: [String],
         default: []
+    },
+    tutorial: {
+        type: Boolean,
+        default: true 
     }
 });
 

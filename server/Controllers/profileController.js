@@ -356,12 +356,10 @@ const getAboutMe = async (req, res) => {
       if (err) {
         res.status(404).send(err);
       } else {
-        if (!result.aboutMe) {
-          res.status(404).json({
-            error: 'about me not found',
-          });
-        } else {
+        if (result) {
           res.status(200).json(result.aboutMe);
+        } else {
+          res.status(404).json("Not found");
         }
       }
     }

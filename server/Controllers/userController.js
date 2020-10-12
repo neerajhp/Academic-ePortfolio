@@ -8,7 +8,7 @@ require('dotenv').config();
 const saltRounds = 10;
 
 //SIGNUP
-exports.postSignup = async (req, res) => {
+const postSignup = async (req, res) => {
   //hash the password
   bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
 
@@ -33,77 +33,51 @@ exports.postSignup = async (req, res) => {
       // If its a new email, check the username's uniqueness
       if(!account){
         console.log("email is unique");
-        if(newUser.userName){
-          User.findOne({userName: newUser.userName}, (err, result) => {
-            // If the username doesn't exist in the db, then the user can be saved
-            if(!result){
-              console.log("username is unique");
-              newUser.save();
-              res.status(200).json("New user saved");
-            }else{
-              // Suggest a username that is unique to the user
-              console.log("userName not unique");
-              let suggestedUserName = suggestUserName(newUser.userName);
-              console.log("suggested: " + suggestedUserName);
-              res.status(400).json({
-                message: "Username not unique",
-                suggestion: suggestedUserName
-              });
-            }
+        let userName = generateUniqueUserName(newUser.email);
+          userName.then(function(result){
+            newUser.userName = result;
+            newUser.save();
+            res.status(200).json("New user saved");
           });
-        }else{
-          newUser.save();
-          res.status(200).json("New user saved");
-        }
         
 
       }else{
         res.status(400).json("An account with this email already exists");
       }
-    })
-
-    //Check if the email is already registered
-    // await User.findOne({
-    //   email: newUser.email,
-    // }).then(async (profile) => {
-    //   if (!profile) {
-    //     newUser.save();
-    //     res.status(201).json('User added');
-    //   } else {
-    //     res.status(409).send('Email already linked to account');
-    //   }
-    // });
+    });
   });
 };
 
-// Suggest a new user name (Doesn't check the db)
-const suggestUserName = (userName) => {
-  let proposedName = userName;
-  proposedName += Math.floor((Math.random() * 100) + 1);
-  return proposedName;
-}
-
 // Suggests a definitely unique username (Checks the db)
 // Unfortunately I can't get it to work
-const generateUniqueUserName = async (proposedName) => {
-  return await User.findOne({userName: proposedName})
-  .then(function(account) {
-    if(account){
-      console.log(`${proposedName} already exists`);
-      proposedName += Math.floor((Math.random() * 100) + 1);
-      return generateUniqueUserName(proposedName);
-    }
-    console.log("proposed name is unique " + proposedName);
-    return proposedName;
-  })
-  .catch(function(err){
-    console.log(err);
-    throw err;
-  })
+const generateUniqueUserName =  async (email) => {
+
+  var regExp = /(.+)@/
+  var proposedName = email.match(regExp)[1];
+  
+  var username;
+  var allGood = false;
+  while(!allGood){
+    console.log("Start the loop");
+    await User.findOne({userName: proposedName}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(!result){
+        console.log("Username's good");
+        allGood = true;
+        username = proposedName;
+      }else{
+        proposedName += Math.floor((Math.random() * 100) + 1);
+        console.log("Username not good");
+      }
+    });
+  }
+  return username;
 }
 
 //LOGIN
-exports.postLogin = async (req, res) => {
+const postLogin = async (req, res) => {
   var newUser = {};
   newUser.email = req.body.email;
   newUser.password = req.body.password;
@@ -154,6 +128,34 @@ exports.postLogin = async (req, res) => {
     });
 };
 
+// Allows users to change their username
+const changeUserName = async (req, res) => {
+  try{
+    await User.findOne({userName: req.body.userName}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(!result){
+        User.findByIdAndUpdate(req.user.id, {userName: req.body.userName}, {new: true}, (err, result) => {
+          if(err){
+            throw err;
+          }
+          if(result){
+            res.status(200).json(result.userName);
+          }else{
+            res.status(404).json("The user was not found");
+          }
+        });
+      }else{
+        // Suggest a new username
+        res.status(400).json("Username not unique");
+      }
+    });
+  }catch(error){
+    res.status(400).json("Failed to update username");
+  }
+}
+
 // Function to find the info associated with the given id
 const findInfo = async (userID) => {
   let userInfo;
@@ -177,7 +179,7 @@ const findInfo = async (userID) => {
 
 }
 
-exports.getUserInformation = async (req, res) => {
+const getUserInformation = async (req, res) => {
   try{
     await User.findById(req.user.id, (err, result) => {
       if(err){
@@ -208,7 +210,7 @@ exports.getUserInformation = async (req, res) => {
   }
 }
 
-exports.viewerGetUserInformation = async (req, res) => {
+const viewerGetUserInformation = async (req, res) => {
   try{
     let userID = req.viewID;
     let userInfo = await findInfo(userID);
@@ -223,7 +225,7 @@ exports.viewerGetUserInformation = async (req, res) => {
 }
 
 // Edits the user's personal information (except email and password)
-exports.editUserInformation = async (req, res) => {
+const editUserInformation = async (req, res) => {
   try{
       const objectModel = Object.assign(req.body);
       if(objectModel.password || objectModel.email){
@@ -235,11 +237,12 @@ exports.editUserInformation = async (req, res) => {
               throw err;
           }
           if(result){
-              if(result.nModified == 0){
-                res.status(400).json("Attempted to edit a property that doesn't exist in the record");
-              }else{
-                res.status(200).json("Successfully updated user information");
-              }
+              res.status(200).json("Successfully updated user information");
+              // if(result.nModified == 0){
+              //   res.status(400).json("Attempted to edit a property that doesn't exist in the record");
+              // }else{
+              //   res.status(200).json("Successfully updated user information");
+              // }
           }else{
               res.status(404).json("User not found");
           }
@@ -249,7 +252,7 @@ exports.editUserInformation = async (req, res) => {
   }
 }
 
-exports.getUserID = async (req, res) => {
+const getUserID = async (req, res) => {
   try{
       let userID = await User.findById(req.user.id);
       if(userID){
@@ -260,5 +263,91 @@ exports.getUserID = async (req, res) => {
   }catch(error){
       res.status(400).send(error);
   }
+}
+
+// Updates a logged in user's email
+const updateEmail = async (req, res) => {
+  try{
+
+    await User.findByIdAndUpdate(req.user.id, {"email": req.body.email}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        res.status(200).json("Email updated");
+      }else{
+        res.status(404).json("User not found");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Failed to update the user's email");
+  }
+}
+
+// Allows the logged in user to change their password
+// User should input their old password before making a new one
+const changePassword = async (req, res) => {
+  try{
+    let user = await User.findById(req.user.id, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        return result;
+      }
+    });
+    
+    bcrypt.compare(req.body.oldPassword, user.password, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        bcrypt.hash(req.body.newPassword, saltRounds, async (err, hash) => {
+          if(err){
+            throw err;
+          }
+          User.findByIdAndUpdate(req.user.id, {password: hash}, (err, result) => {
+            res.status(200).json("Password updated");
+          })
+        });
+      }else{
+        res.status(400).json("User inputted the wrong password");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Errow while trying to change password");
+  }
+
+}
+
+// Disables the tutorial
+const finishTutorial = async (req, res) => {
+  try{
+    await User.findByIdAndUpdate(req.user.id, {"tutorial": false}, {"new": true}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        res.status(200).json(result.tutorial);
+      }else{
+        res.status(404).json("User not found");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Error while trying to update tutorial field");
+  }
+}
+
+module.exports = {
+  postSignup,
+  postLogin,
+  getUserInformation,
+  viewerGetUserInformation,
+  editUserInformation,
+  updateEmail,
+  changePassword,
+  getUserID,
+  finishTutorial,
+  changeUserName
 }
 

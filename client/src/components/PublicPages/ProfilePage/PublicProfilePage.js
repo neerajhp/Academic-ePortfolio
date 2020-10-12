@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -10,23 +10,17 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  IconButton,
 } from '@material-ui/core';
-
-import HelpIcon from '@material-ui/icons/Help';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import InfoIcon from "@material-ui/icons/Info";
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import CharacterCard from './CharacterInfo/CharacterCard';
-import EducationCard from './EducationInfo/EducationCard';
-import ExperienceCard from './ExperienceInfo/ExperienceCard';
-import SkillsCard from './SkillsInfo/SkillsCard';
-import ReflectionCard from './ReflectionInfo/ReflectionCard';
-import ProjectCard from './ProjectInfo/ProjectCard';
-import Tutorial from '../Tutorial/Tutorial';
-import AboutCard from "./AboutInfo/AboutCard";
+import CharacterCard from './CharacterInfo/PublicCharacterCard';
+import EducationCard from './EducationInfo/PublicEducationCard';
+import ExperienceCard from './ExperienceInfo/PublicExperienceCard';
+import SkillsCard from './SkillsInfo/PublicSkillsCard';
+import ReflectionCard from './ReflectionInfo/PublicReflectionCard';
+import ProjectCard from './ProjectInfo/PublicProjectCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
   navSection: {
     position: 'fixed',
     width: '25vw',
-    height: '100vh',
     marginTop: '1%',
     zIndex: '100',
   },
@@ -57,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     color: '#FFFFFF',
   },
-
   sectionContainer: {
     position: 'absolute',
     display: 'flex',
@@ -75,11 +67,26 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
+  card: {
+    margin: '0 0 1% 1%',
+    width: '100%',
+
+    padding: '5%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: { width: '100%' },
 }));
 
 /* ================ Component ================ */
 
-const ProfilePage = () => {
+const PublicProfilePage = ({ match, location }) => {
+  const {
+    params: { userId },
+  } = match;
+
   // Styling
   const classes = useStyles();
   const [section, setSection] = useState(1);
@@ -87,25 +94,19 @@ const ProfilePage = () => {
   //Profile Information
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
-  const [userEducation, setEducation] = useState(null);
   const [userExperience, setExperience] = useState(null);
 
   //Load user data
 
   useEffect(() => {
-    API.getUserProfile()
+    API.viewerGetProfile(userId)
       .then(({ data }) => {
         setUser(data);
+        console.log(data);
       })
       .catch();
 
-    API.getEducation()
-      .then(({ data }) => {
-        setEducation(data);
-      })
-      .catch();
-
-    API.getAllExperience()
+    API.viewerGetAllExperience(userId)
       .then(({ data }) => {
         setExperience(data);
       })
@@ -114,12 +115,14 @@ const ProfilePage = () => {
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (!(user && userEducation && userExperience)) {
+  if (!(user && userExperience)) {
     pageContent = (
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2'>Fetching User Data</Typography>
+          <Typography variant='h2' color='textSecondary'>
+            Fetching this Portfolio
+          </Typography>
         </div>
       </div>
     );
@@ -148,15 +151,8 @@ const ProfilePage = () => {
                   </ListItemIcon>
                   <ListItemText primary='My Projects'></ListItemText>
                 </ListItem>
-                <ListItem button onClick={() => setSection(4)}>
-                  <ListItemIcon>
-                    <InfoIcon className={classes.navBarIcon} />
-                  </ListItemIcon>
-                  <ListItemText primary="About"></ListItemText>
-                </ListItem>
               </List>
             </Paper>
-            <Tutorial />
           </div>
 
           <div className={classes.sectionContainer}>
@@ -167,10 +163,16 @@ const ProfilePage = () => {
               Placeholder section
             </div>
             <div className={classes.section}>
-              <CharacterCard user={user} />
-              <ExperienceCard experience={userExperience} />
-              <EducationCard education={userEducation} />
-              <SkillsCard skills={user.skills} />
+              <CharacterCard user={user} globalClasses={classes} />
+              <ExperienceCard
+                experience={userExperience}
+                globalClasses={classes}
+              />
+              <EducationCard
+                education={user.education}
+                globalClasses={classes}
+              />
+              <SkillsCard skills={user.skills} globalClasses={classes} />
             </div>
             <div className={classes.section}>
               <ReflectionCard />
@@ -183,9 +185,6 @@ const ProfilePage = () => {
               <ProjectCard type={'small'} />
               <ProjectCard type={'medium'} />
             </div>
-            <div className={classes.section}>
-              <AboutCard />
-            </div>
           </div>
         </div>
       </div>
@@ -195,4 +194,4 @@ const ProfilePage = () => {
   return pageContent;
 };
 
-export default ProfilePage;
+export default PublicProfilePage;

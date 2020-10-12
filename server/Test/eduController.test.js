@@ -3,9 +3,8 @@ const supertest = require('supertest');
 const request = supertest(server);
 const mongoose = require('mongoose');
 
-const { clearDB } = require('./setup');
+const { clearDB } = require('./clearDB');
 const { setupUser, loginUser,idUser } = require('./login');
-const setup = require('./setup');
 const { searchAllEdu } = require('../Controllers/eduController')
 
 clearDB();

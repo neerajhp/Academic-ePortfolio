@@ -2,83 +2,44 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, Link, Typography } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Link,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core';
 import { useAuth } from '../../../context/auth';
 import API from '../../../api/API';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
-import Background from '../../../assets/bkg.svg';
 
-/* ================ Styling ================ */
-const useStyles = makeStyles((theme) => ({
-  //Page container
-  root: {
-    height: '100vh',
-    width: '100vw',
-    position: 'fixed',
-    backgroundImage: `url(${Background})`,
-    backgroundSize: 'cover',
-  },
-  banner: {
-    position: 'sticky',
-    width: '100%',
-    height: '40%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formContainer: {
-    width: '100%',
-    height: '30%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formPaper: {
-    width: '30%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '2em',
-  },
-
-  avatar: { height: '70px', width: '70px', background: '#FFFFFF' },
-  icon: { fontSize: 40, color: theme.palette.primary.main },
-  inputField: {
-    '& .MuiInputBase-input': {
+const useStyles = makeStyles((theme) => {
+  return {
+    rememberMe: {
       color: theme.palette.text.secondary,
     },
-  },
-  submit: {
-    backgroundColor: theme.palette.secondary.main,
-    '&:hover': {
-      backgroundColor: theme.palette.secondary.light,
-      borderColor: theme.palette.secondary.light,
-      boxShadow: 'none',
-    },
-  },
-}));
+  };
+});
 
 /* ================ Component ================ */
 
-const LoginPage = () => {
+const LoginPage = ({ globalClasses }) => {
   const classes = useStyles();
 
   const [isLoggedIn, setLoggedIn] = useState(false);
   const { setAuthTokens } = useAuth();
 
   return (
-    <div className={classes.root}>
-      <div className={classes.banner}>
-        <Typography variant='h1' color='textSecondary'>
-          Login to Your Portfolio
-        </Typography>
+    <React.Fragment>
+      <div className={globalClasses.banner}>
+        <Typography variant='h1'>Login to your Profile</Typography>
       </div>
-      <div className={classes.formContainer}>
+      <div className={globalClasses.formContainer}>
         {isLoggedIn && <Redirect to='/' />}
         {!isLoggedIn && (
-          <div className={classes.formPaper}>
+          <div className={globalClasses.formPaper}>
             <Formik
               initialValues={{
                 email: '',
@@ -108,7 +69,7 @@ const LoginPage = () => {
             >
               {(formikProps) => (
                 <form
-                  className={classes.form}
+                  className={globalClasses.form}
                   onSubmit={formikProps.handleSubmit}
                 >
                   <FormikField
@@ -116,7 +77,7 @@ const LoginPage = () => {
                     formikProps={formikProps}
                     formikKey='email'
                     required
-                    className={classes.inputField}
+                    className={globalClasses.inputField}
                   />
                   <FormikField
                     label='Password'
@@ -124,20 +85,24 @@ const LoginPage = () => {
                     formikKey='password'
                     type='password'
                     required
-                    className={classes.inputField}
+                    className={globalClasses.inputField}
+                  />
+                  <FormControlLabel
+                    className={classes.rememberMe}
+                    control={<Checkbox value='remember' color='#FFFFFF' />}
+                    label='Remember me'
                   />
 
                   <Button
                     type='Submit'
                     fullWidth
                     variant='contained'
-                    className={classes.submit}
+                    className={globalClasses.submit}
                     disabled={!formikProps.isValid}
-                    color='primary'
                   >
                     <Typography>Log In</Typography>
                   </Button>
-                  <Grid container className={classes.options}>
+                  <Grid container className={globalClasses.options}>
                     <Grid item>
                       <Link
                         href='./signup'
@@ -148,13 +113,24 @@ const LoginPage = () => {
                       </Link>
                     </Grid>
                   </Grid>
+                  <Grid container className={globalClasses.options}>
+                    <Grid item>
+                      <Link
+                          href="./reset"
+                          variant="body2"
+                          color="textSecondary"
+                      >
+                        {"Forget your password?Reset"}
+                      </Link>
+                    </Grid>
+                  </Grid>
                 </form>
               )}
             </Formik>
           </div>
         )}
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

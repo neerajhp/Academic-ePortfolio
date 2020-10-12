@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
-import API from '../../../api/API';
+import React, { useState } from "react";
+import { Formik } from "formik";
+import { Typography, Avatar, Grid, Link, Button } from "@material-ui/core";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import FormikField from "../../utils/FormikField";
+import validationSchema from "./Validation";
+import API from "../../../api/API";
 
 /* ================ Component ================ */
 
-const SignUpPage = ({ globalClasses }) => {
+const ResetPage = ({ globalClasses }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
@@ -20,17 +20,17 @@ const SignUpPage = ({ globalClasses }) => {
           <Avatar className={classes.avatar}>
             <ThumbUpIcon className={classes.icon} />
           </Avatar>
-          <Typography variant='h2'>Congratulations!</Typography>
+          <Typography variant="h2">Congratulations!</Typography>
           <Typography>
             You now have an academic ePorfolio, login and start editing!
           </Typography>
           <Button
-            type='Submit'
+            type="Submit"
             fullWidth
-            variant='contained'
+            variant="contained"
             className={classes.landingButton}
           >
-            <Link href='./login' variant='body2' color='inherit'>
+            <Link href="./login" variant="body2" color="inherit">
               Click here to login
             </Link>
           </Button>
@@ -42,19 +42,17 @@ const SignUpPage = ({ globalClasses }) => {
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
-        <Typography variant='h1' color='textSecondary'>
-          Create your new Portfolio
+        <Typography variant="h1" color="textSecondary">
+          Reset your new Portfolio
         </Typography>
       </div>
       <div className={classes.formContainer}>
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              firstName: '',
-              lastName: '',
-              email: '',
-              password: '',
-              confirmPassword: '',
+              email: "",
+              password: "",
+              confirmPassword: "",
             }}
             onSubmit={(values, actions) => {
               API.userSignup({
@@ -67,7 +65,7 @@ const SignUpPage = ({ globalClasses }) => {
                   setSubmitted(true);
                 })
                 .catch((err) => {
-                  actions.setFieldError('email', err.response.data);
+                  actions.setFieldError("email", err.response.data);
                   actions.setSubmitting(false);
                 });
             }}
@@ -78,63 +76,43 @@ const SignUpPage = ({ globalClasses }) => {
                 className={classes.form}
                 onSubmit={formikProps.handleSubmit}
               >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <FormikField
-                      label='FirstName'
-                      formikProps={formikProps}
-                      formikKey='firstName'
-                      required
-                      className={classes.inputField}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormikField
-                      label='LastName'
-                      formikProps={formikProps}
-                      formikKey='lastName'
-                      required
-                      className={classes.inputField}
-                    />
-                  </Grid>
-                </Grid>
                 <FormikField
-                  label='Email'
+                  label="Email"
                   formikProps={formikProps}
-                  formikKey='email'
+                  formikKey="email"
                   required
                   className={classes.inputField}
                 />
                 <FormikField
-                  label='Password'
+                  label="Password"
                   formikProps={formikProps}
-                  formikKey='password'
-                  type='password'
+                  formikKey="password"
+                  type="password"
                   required
                   className={classes.inputField}
                 />
                 <FormikField
-                  label='Confirm Password'
+                  label="Confirm Password"
                   formikProps={formikProps}
-                  formikKey='confirmPassword'
-                  type='password'
+                  formikKey="confirmPassword"
+                  type="password"
                   required
                   className={classes.inputField}
                 />
 
                 <Button
-                  type='Submit'
+                  type="Submit"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   className={classes.submit}
                   disabled={!formikProps.isValid}
-                  color='primary'
+                  color="primary"
                 >
-                  <Typography>Sign Up</Typography>
+                  <Typography>Reset</Typography>
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href='./login' variant='body2' color='textSecondary'>
+                    <Link href="./login" variant="body2" color="textSecondary">
                       Log In
                     </Link>
                   </Grid>
@@ -148,4 +126,4 @@ const SignUpPage = ({ globalClasses }) => {
   );
 };
 
-export default SignUpPage;
+export default ResetPage;

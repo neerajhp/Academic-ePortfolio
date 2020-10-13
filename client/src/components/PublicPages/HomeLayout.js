@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => {
       paddingLeft: theme.spacing(3),
     },
     formPaper: {
-      width: '35%',
+      width: '40%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',

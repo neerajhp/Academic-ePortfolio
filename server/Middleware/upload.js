@@ -28,7 +28,7 @@ const createStorage = multerS3({
     });
 
 
-// Middleware for uploading images
+// Middleware for uploading images and video
 const imageUpload = multer({
     storage: createStorage,
     fileFilter: (req, file, cb) => {

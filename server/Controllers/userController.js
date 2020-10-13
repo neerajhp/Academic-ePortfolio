@@ -4,14 +4,16 @@ const User = require('../Models/User.js');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const { OAuth2Client } = require('google-auth-library');
+const fetch = require('node-fetch');
 
 const saltRounds = 10;
+
 
 //SIGNUP
 const postSignup = async (req, res) => {
   //hash the password
   bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-
     const newUser = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -22,11 +24,11 @@ const postSignup = async (req, res) => {
       birthDate: req.body.birthDate,
       mobileNumber: req.body.mobileNumber,
       biography: req.body.biography,
-      skills: req.body.skills
+      skills: req.body.skills,
     });
     // Look for duplicate email
-    await User.findOne({email: newUser.email}, (err, account) => {
-      if(err){
+    await User.findOne({ email: newUser.email }, (err, account) => {
+      if (err) {
         console.log(err);
         throw err;
       }
@@ -128,6 +130,159 @@ const postLogin = async (req, res) => {
     });
 };
 
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT);
+// Google Login
+exports.googleLogin = (req, res) => {
+  const { idToken } = req.body;
+
+  client
+    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT })
+    .then((response) => {
+      // console.log('GOOGLE LOGIN RESPONSE', response);
+      const {
+        email_verified,
+        given_name,
+        family_name,
+        email,
+      } = response.payload;
+      if (email_verified) {
+        User.findOne({ email }).exec((err, user) => {
+          if (user) {
+            const token = jwt.sign(
+              { id: user._id },
+              process.env.SECRET_OR_KEY,
+              {
+                expiresIn: '7d',
+              }
+            );
+            const { id, email } = user;
+            return res.json({
+              token,
+              user: { id, email },
+            });
+          } else {
+            let password = email + process.env.SECRET_OR_KEY;
+            const randomID = Math.floor(Math.random() * Math.floor(999));
+            newUser = new User({
+              firstName: given_name,
+              lastName: family_name,
+              email: email,
+              userName: `${given_name}.${family_name}.${randomID}`,
+              password: password,
+              //Format: YYYY-MM-DD
+              birthDate: '',
+              mobileNumber: '',
+              biography: '',
+              skills: '',
+            });
+            newUser.save((err, data) => {
+              if (err) {
+                console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
+                return res.status(400).json({
+                  error: 'User signup failed with google',
+                });
+              }
+              const token = jwt.sign(
+                { id: data._id },
+                process.env.SECRET_OR_KEY,
+                {
+                  expiresIn: '7d',
+                }
+              );
+              const { id, email } = data;
+              return res.json({
+                token,
+                user: { id, email },
+              });
+            });
+          }
+        });
+      } else {
+        return res.status(400).json({
+          error: 'Google login failed. Try again',
+        });
+      }
+    });
+};
+
+exports.facebookLogin = (req, res) => {
+  console.log('FACEBOOK LOGIN REQ BODY', req.body);
+  const { userID, accessToken } = req.body;
+
+  const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+  return (
+    fetch(url, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      // .then((response) => console.log(response))
+      .then((response) => {
+        const { email, name } = response;
+        User.findOne({ email }).exec((err, user) => {
+          if (user) {
+            const token = jwt.sign(
+              { id: user._id },
+              process.env.SECRET_OR_KEY,
+              {
+                expiresIn: '7d',
+              }
+            );
+            const { id, email } = user;
+            return res.json({
+              token,
+              user: { id, email },
+            });
+          } else {
+            let given_name = name.split(' ')[0];
+            let family_name = name.split(' ')[1];
+            let password = email + process.env.SECRET_OR_KEY;
+            const randomID = Math.floor(Math.random() * Math.floor(999));
+            newUser = new User({
+              firstName: given_name,
+              lastName: family_name,
+              email: email,
+              userName: `${given_name}.${family_name}.${randomID}`,
+              password: password,
+              //Format: YYYY-MM-DD
+              birthDate: '',
+              mobileNumber: '',
+              biography: '',
+              skills: '',
+            });
+            newUser.save((err, data) => {
+              if (err) {
+                console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
+                return res.status(400).json({
+                  error: 'User signup failed with facebook',
+                });
+              }
+              const token = jwt.sign(
+                { id: data._id },
+                process.env.SECRET_OR_KEY,
+                {
+                  expiresIn: '7d',
+                }
+              );
+              const { id, email } = data;
+              return res.json({
+                token,
+                user: { id, email },
+              });
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        res.json({
+          error: 'Facebook login failed. Try later',
+        });
+      })
+  );
+};
+//************** Helpers **************//
+
 // Allows users to change their username
 const changeUserName = async (req, res) => {
   try{
@@ -156,75 +311,78 @@ const changeUserName = async (req, res) => {
   }
 }
 
+
 // Function to find the info associated with the given id
 const findInfo = async (userID) => {
   let userInfo;
   await User.findById(userID, (err, result) => {
-    if(err){
-        throw err;
+    if (err) {
+      throw err;
     }
-    if(result){
-        userInfo = {
-            firstName: result.firstName,
-            lastName: result.lastName,
-            email: result.email,
-            mobileNumber: result.mobileNumber,
-            birthDate: result.birthDate
-        }
-    }else{
-        userInfo = null;
+    if (result) {
+      userInfo = {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        mobileNumber: result.mobileNumber,
+        birthDate: result.birthDate,
+      };
+    } else {
+      userInfo = null;
     }
   });
   return userInfo;
+};
 
-}
 
 const getUserInformation = async (req, res) => {
   try{
     await User.findById(req.user.id, (err, result) => {
-      if(err){
-          throw err;
+      if (err) {
+        throw err;
       }
-      if(result){
-          userInfo = {
-              firstName: result.firstName,
-              lastName: result.lastName,
-              email: result.email,
-              mobileNumber: result.mobileNumber,
-              birthDate: result.birthDate
-          }
-          res.status(200).json(userInfo);
-      }else{
-          res.status(404).json("User not found");
-          //userInfo = null;
+      if (result) {
+        userInfo = {
+          firstName: result.firstName,
+          lastName: result.lastName,
+          email: result.email,
+          mobileNumber: result.mobileNumber,
+          birthDate: result.birthDate,
+        };
+        res.status(200).json(userInfo);
+      } else {
+        res.status(404).json('User not found');
+        //userInfo = null;
       }
     });
-      // let userInfo = await findInfo(req.user.id);
-      // if(userInfo){
-      //   res.status(200).json(userInfo);
-      // }else{
-      //   res.status(400).json("User not found");
-      // }
-  }catch(error){
-      res.status(400).send(error);
+    // let userInfo = await findInfo(req.user.id);
+    // if(userInfo){
+    //   res.status(200).json(userInfo);
+    // }else{
+    //   res.status(400).json("User not found");
+    // }
+  } catch (error) {
+    res.status(400).send(error);
   }
-}
+};
+
 
 const viewerGetUserInformation = async (req, res) => {
   try{
     let userID = req.viewID;
     let userInfo = await findInfo(userID);
-      if(userInfo){
-        res.status(200).json(userInfo);
-      }else{
-        res.status(400).json("User not found");
-      }
-    }catch(error){
-      res.status(400).send(error);
+    if (userInfo) {
+      res.status(200).json(userInfo);
+    } else {
+      res.status(400).json('User not found');
     }
-}
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 
 // Edits the user's personal information (except email and password)
+
 const editUserInformation = async (req, res) => {
   try{
       const objectModel = Object.assign(req.body);
@@ -249,8 +407,10 @@ const editUserInformation = async (req, res) => {
       })
   }catch(error){
       res.status(400).send(error);
+
   }
-}
+};
+
 
 const getUserID = async (req, res) => {
   try{
@@ -350,4 +510,5 @@ module.exports = {
   finishTutorial,
   changeUserName
 }
+
 

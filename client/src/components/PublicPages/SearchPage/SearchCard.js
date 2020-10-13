@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Avatar, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({

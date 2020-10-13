@@ -5,7 +5,6 @@ import { Paper, Typography, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';
-import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 

@@ -19,6 +19,19 @@ export default {
     });
   },
 
+  googleLogin: function (idToken) {
+    return axios.post(`api/user/googleLogin`, {
+      idToken: idToken,
+    });
+  },
+
+  facebookLogin: function (userID, accessToken) {
+    return axios.post('api/user/facebooklogin', {
+      userID,
+      accessToken,
+    });
+  },
+
   /* ================ Authorised Calls ================ */
   getUserInfo: () => {
     return axios.get('/api/user/userInfo', {

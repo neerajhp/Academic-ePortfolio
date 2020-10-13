@@ -9,7 +9,6 @@ const fetch = require('node-fetch');
 
 const saltRounds = 10;
 
-
 //SIGNUP
 const postSignup = async (req, res) => {
   //hash the password
@@ -33,18 +32,16 @@ const postSignup = async (req, res) => {
         throw err;
       }
       // If its a new email, check the username's uniqueness
-      if(!account){
-        console.log("email is unique");
+      if (!account) {
+        console.log('email is unique');
         let userName = generateUniqueUserName(newUser.email);
-          userName.then(function(result){
-            newUser.userName = result;
-            newUser.save();
-            res.status(200).json("New user saved");
-          });
-        
-
-      }else{
-        res.status(400).json("An account with this email already exists");
+        userName.then(function (result) {
+          newUser.userName = result;
+          newUser.save();
+          res.status(200).json('New user saved');
+        });
+      } else {
+        res.status(400).json('An account with this email already exists');
       }
     });
   });
@@ -52,31 +49,30 @@ const postSignup = async (req, res) => {
 
 // Suggests a definitely unique username (Checks the db)
 // Unfortunately I can't get it to work
-const generateUniqueUserName =  async (email) => {
-
-  var regExp = /(.+)@/
+const generateUniqueUserName = async (email) => {
+  var regExp = /(.+)@/;
   var proposedName = email.match(regExp)[1];
-  
+
   var username;
   var allGood = false;
-  while(!allGood){
-    console.log("Start the loop");
-    await User.findOne({userName: proposedName}, (err, result) => {
-      if(err){
+  while (!allGood) {
+    console.log('Start the loop');
+    await User.findOne({ userName: proposedName }, (err, result) => {
+      if (err) {
         throw err;
       }
-      if(!result){
+      if (!result) {
         console.log("Username's good");
         allGood = true;
         username = proposedName;
-      }else{
-        proposedName += Math.floor((Math.random() * 100) + 1);
-        console.log("Username not good");
+      } else {
+        proposedName += Math.floor(Math.random() * 100 + 1);
+        console.log('Username not good');
       }
     });
   }
   return username;
-}
+};
 
 //LOGIN
 const postLogin = async (req, res) => {
@@ -130,10 +126,9 @@ const postLogin = async (req, res) => {
     });
 };
 
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT);
 // Google Login
-exports.googleLogin = (req, res) => {
+const googleLogin = (req, res) => {
   const { idToken } = req.body;
 
   client
@@ -206,7 +201,7 @@ exports.googleLogin = (req, res) => {
     });
 };
 
-exports.facebookLogin = (req, res) => {
+const facebookLogin = (req, res) => {
   console.log('FACEBOOK LOGIN REQ BODY', req.body);
   const { userID, accessToken } = req.body;
 
@@ -285,32 +280,36 @@ exports.facebookLogin = (req, res) => {
 
 // Allows users to change their username
 const changeUserName = async (req, res) => {
-  try{
-    await User.findOne({userName: req.body.userName}, (err, result) => {
-      if(err){
+  try {
+    await User.findOne({ userName: req.body.userName }, (err, result) => {
+      if (err) {
         throw err;
       }
-      if(!result){
-        User.findByIdAndUpdate(req.user.id, {userName: req.body.userName}, {new: true}, (err, result) => {
-          if(err){
-            throw err;
+      if (!result) {
+        User.findByIdAndUpdate(
+          req.user.id,
+          { userName: req.body.userName },
+          { new: true },
+          (err, result) => {
+            if (err) {
+              throw err;
+            }
+            if (result) {
+              res.status(200).json(result.userName);
+            } else {
+              res.status(404).json('The user was not found');
+            }
           }
-          if(result){
-            res.status(200).json(result.userName);
-          }else{
-            res.status(404).json("The user was not found");
-          }
-        });
-      }else{
+        );
+      } else {
         // Suggest a new username
-        res.status(400).json("Username not unique");
+        res.status(400).json('Username not unique');
       }
     });
-  }catch(error){
-    res.status(400).json("Failed to update username");
+  } catch (error) {
+    res.status(400).json('Failed to update username');
   }
-}
-
+};
 
 // Function to find the info associated with the given id
 const findInfo = async (userID) => {
@@ -334,9 +333,8 @@ const findInfo = async (userID) => {
   return userInfo;
 };
 
-
 const getUserInformation = async (req, res) => {
-  try{
+  try {
     await User.findById(req.user.id, (err, result) => {
       if (err) {
         throw err;
@@ -366,9 +364,8 @@ const getUserInformation = async (req, res) => {
   }
 };
 
-
 const viewerGetUserInformation = async (req, res) => {
-  try{
+  try {
     let userID = req.viewID;
     let userInfo = await findInfo(userID);
     if (userInfo) {
@@ -384,123 +381,134 @@ const viewerGetUserInformation = async (req, res) => {
 // Edits the user's personal information (except email and password)
 
 const editUserInformation = async (req, res) => {
-  try{
-      const objectModel = Object.assign(req.body);
-      if(objectModel.password || objectModel.email){
-        res.status(400).json("This function cannot change the password or email");
-        return;
+  try {
+    const objectModel = Object.assign(req.body);
+    if (objectModel.password || objectModel.email) {
+      res.status(400).json('This function cannot change the password or email');
+      return;
+    }
+    await User.updateOne({ _id: req.user.id }, objectModel, (err, result) => {
+      if (err) {
+        throw err;
       }
-      await User.updateOne({_id: req.user.id}, objectModel, (err, result) => {
-          if(err){
-              throw err;
-          }
-          if(result){
-              res.status(200).json("Successfully updated user information");
-              // if(result.nModified == 0){
-              //   res.status(400).json("Attempted to edit a property that doesn't exist in the record");
-              // }else{
-              //   res.status(200).json("Successfully updated user information");
-              // }
-          }else{
-              res.status(404).json("User not found");
-          }
-      })
-  }catch(error){
-      res.status(400).send(error);
-
+      if (result) {
+        res.status(200).json('Successfully updated user information');
+        // if(result.nModified == 0){
+        //   res.status(400).json("Attempted to edit a property that doesn't exist in the record");
+        // }else{
+        //   res.status(200).json("Successfully updated user information");
+        // }
+      } else {
+        res.status(404).json('User not found');
+      }
+    });
+  } catch (error) {
+    res.status(400).send(error);
   }
 };
 
-
 const getUserID = async (req, res) => {
-  try{
-      let userID = await User.findById(req.user.id);
-      if(userID){
-        res.status(200).json(userID._id);
-      }else{
-        res.status(400).json("User not found");
-      }
-  }catch(error){
-      res.status(400).send(error);
+  try {
+    let userID = await User.findById(req.user.id);
+    if (userID) {
+      res.status(200).json(userID._id);
+    } else {
+      res.status(400).json('User not found');
+    }
+  } catch (error) {
+    res.status(400).send(error);
   }
-}
+};
 
 // Updates a logged in user's email
 const updateEmail = async (req, res) => {
-  try{
-
-    await User.findByIdAndUpdate(req.user.id, {"email": req.body.email}, (err, result) => {
-      if(err){
-        throw err;
+  try {
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { email: req.body.email },
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        if (result) {
+          res.status(200).json('Email updated');
+        } else {
+          res.status(404).json('User not found');
+        }
       }
-      if(result){
-        res.status(200).json("Email updated");
-      }else{
-        res.status(404).json("User not found");
-      }
-    })
-  }catch(error){
+    );
+  } catch (error) {
     res.status(400).json("Failed to update the user's email");
   }
-}
+};
 
 // Allows the logged in user to change their password
 // User should input their old password before making a new one
 const changePassword = async (req, res) => {
-  try{
+  try {
     let user = await User.findById(req.user.id, (err, result) => {
-      if(err){
+      if (err) {
         throw err;
       }
-      if(result){
+      if (result) {
         return result;
       }
     });
-    
+
     bcrypt.compare(req.body.oldPassword, user.password, (err, result) => {
-      if(err){
+      if (err) {
         throw err;
       }
-      if(result){
+      if (result) {
         bcrypt.hash(req.body.newPassword, saltRounds, async (err, hash) => {
-          if(err){
+          if (err) {
             throw err;
           }
-          User.findByIdAndUpdate(req.user.id, {password: hash}, (err, result) => {
-            res.status(200).json("Password updated");
-          })
+          User.findByIdAndUpdate(
+            req.user.id,
+            { password: hash },
+            (err, result) => {
+              res.status(200).json('Password updated');
+            }
+          );
         });
-      }else{
-        res.status(400).json("User inputted the wrong password");
+      } else {
+        res.status(400).json('User inputted the wrong password');
       }
-    })
-  }catch(error){
-    res.status(400).json("Errow while trying to change password");
+    });
+  } catch (error) {
+    res.status(400).json('Errow while trying to change password');
   }
-
-}
+};
 
 // Disables the tutorial
 const finishTutorial = async (req, res) => {
-  try{
-    await User.findByIdAndUpdate(req.user.id, {"tutorial": false}, {"new": true}, (err, result) => {
-      if(err){
-        throw err;
+  try {
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { tutorial: false },
+      { new: true },
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        if (result) {
+          res.status(200).json(result.tutorial);
+        } else {
+          res.status(404).json('User not found');
+        }
       }
-      if(result){
-        res.status(200).json(result.tutorial);
-      }else{
-        res.status(404).json("User not found");
-      }
-    })
-  }catch(error){
-    res.status(400).json("Error while trying to update tutorial field");
+    );
+  } catch (error) {
+    res.status(400).json('Error while trying to update tutorial field');
   }
-}
+};
 
 module.exports = {
   postSignup,
   postLogin,
+  googleLogin,
+  facebookLogin,
   getUserInformation,
   viewerGetUserInformation,
   editUserInformation,
@@ -508,7 +516,5 @@ module.exports = {
   changePassword,
   getUserID,
   finishTutorial,
-  changeUserName
-}
-
-
+  changeUserName,
+};

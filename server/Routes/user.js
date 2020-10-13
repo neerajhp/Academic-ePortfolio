@@ -56,4 +56,13 @@ router.put("/update/tutorial", authenticate.authenticateToken, async (req, res) 
     userController.finishTutorial(req, res);
 })
 
+// Email Confirmation
+router.post("/confirmation", async (req, res) => {
+    userController.confirmationPost(req,res);
+})
+
+router.post ("/resend", async (req, res) => {
+    userController.resendTokenPost(req,res);
+})
+
 module.exports = router;

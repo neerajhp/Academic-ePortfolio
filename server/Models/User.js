@@ -44,6 +44,10 @@ const userSchema = mongoose.Schema({
     tutorial: {
         type: Boolean,
         default: true 
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 });
 

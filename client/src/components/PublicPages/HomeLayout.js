@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Background from '../../assets/Background/bkg-alt.jpg';
 import LoginPage from './LoginPage/LoginPage';
 import ResetPage from './ResetPage/ResetPage';
@@ -108,6 +108,9 @@ const HomeLayout = () => {
     <div className={classes.root}>
       <Fade>
         <Switch>
+          <Route exact path='/home'>
+            <Redirect to='/home/landing' />
+          </Route>
           <Route
             exact
             path='/home/landing'

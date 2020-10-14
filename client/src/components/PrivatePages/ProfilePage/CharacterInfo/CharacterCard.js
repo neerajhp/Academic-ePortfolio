@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Avatar, Typography } from "@material-ui/core";
-import { Button, message, Upload } from "antd";
-import React, { useRef, useState } from "react";
-import CharacterDialog from './CharacterDialog';
-
+import { Upload } from "antd";
+import React, { useState } from "react";
+import CharacterDialog from "./CharacterDialog";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -30,50 +29,31 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 
 const CharacterCard = ({ user }) => {
-
   const classes = useStyles();
   const [records, setRecords] = useState(user);
-  // const {profileImg} = API.getProfilePic();
-  // console.log(profileImg[0]);  
-
-
-  const getRecord = () => {
-    return <Typography> Add Bio </Typography>;
-  };
-
-  const onBeforeFileLoad = (elem) => {
-    if(elem.target.files[0].size > 71680){
-      alert("File is too big!");
-      elem.target.value = "";
-    };
-  }
-  
-
-
 
   return (
-      <Paper className={classes.characterCard}>
-        <Upload
-            name="profile-pic"
-            accept="image/*"
-            showUploadList={false}
-            action="/api/upload/profile-pic"
-            headers={{
-              Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
-            }}
-        >
-          <Avatar className={classes.profilePicture} />
-        </Upload>
-        <div className={classes.bio}>
-          <Typography variant="h2">
-            {user.firstName} {user.lastName}
-          </Typography>
-          <Typography>{getRecord(records)}</Typography>
-          <Typography>{user.bio}</Typography>
-          <CharacterDialog records={records} setRecords={setRecords} />
-
-        </div>
-      </Paper>
+    <Paper className={classes.characterCard}>
+      <Upload
+        name="profile-pic"
+        accept="image/*"
+        showUploadList={false}
+        action="/api/upload/profile-pic"
+        headers={{
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        }}
+      >
+        <Avatar className={classes.profilePicture} />
+      </Upload>
+      <div className={classes.bio}>
+        <Typography style={{ color: "#fff" }} variant="h2">
+          {user.firstName} {user.lastName}
+        </Typography>
+        <Typography>Add Bio</Typography>
+        <Typography>{user.bio}</Typography>
+        <CharacterDialog records={records} setRecords={setRecords} />
+      </div>
+    </Paper>
   );
 };
 

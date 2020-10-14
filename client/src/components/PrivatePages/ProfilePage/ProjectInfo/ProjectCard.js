@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
-import { Button, message, Form, Input } from "antd";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { Button, message } from "antd";
 import axios from "axios";
 import API from "../../../../api/API";
-import ProjectDialog from './ProjectDialog';
-import FormatListBulletedIcon from '@material-ui/icons/List';
-import GetAppIcon from '@material-ui/icons/GetApp'
+import ProjectDialog from "./ProjectDialog";
+import FormatListBulletedIcon from "@material-ui/icons/List";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 /* ================ Styling ================ */
 
@@ -20,6 +21,26 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "flex-start",
     position: "relative",
+  },
+  bio: {
+    flex: 1,
+  },
+  delete: {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    cursor: "pointer",
+  },
+  title: {
+    fontSize: "20px",
+    lineHeight: "26px",
+    marginBottom: "10px",
+    color: "#fff",
+  },
+  msg: {
+    fontSize: "14px",
+    lineHeight: "20px",
+    color: "rgba(255, 255, 255, 0.7)",
   },
   description: {
     marginLeft: "5%",
@@ -46,10 +67,9 @@ const useStyles = makeStyles((theme) => ({
   hidden: {
     display: "none",
   },
-
 }));
 /* ================ Component ================ */
-const ProjectCard = ({type,project}) => {
+const ProjectCard = ({ type, project }) => {
   const classes = useStyles();
   const inputEl = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -57,8 +77,6 @@ const ProjectCard = ({type,project}) => {
   const [allId, setAllId] = useState([]);
   //Default  card size is large
   var cardSize;
-
-
 
   switch (type) {
     case "large":
@@ -73,7 +91,6 @@ const ProjectCard = ({type,project}) => {
     default:
       cardSize = classes.large;
   }
-
 
   const handleChoseFile = (e) => {
     e.preventDefault();
@@ -114,105 +131,112 @@ const ProjectCard = ({type,project}) => {
     });
   };
   const onIdFinish = () => {
-
     // test data
     // ['url1','url2','url3','url4']
     API.getAllFiles().then((result) => {
       if (result.status === 200) {
         setAllId(result.data);
-        console.log(123,allFiles)
+        console.log(123, allFiles);
       }
     });
-  };
-
-  const getRecord = () => {
-    return <Typography> Add your project!</Typography>;
   };
 
   const [records, setRecords] = useState(project);
 
   return (
-      <Paper className={`${classes.card}  ${cardSize}`}>
-        <div className={classes.bio}>
-          {type === "small" && (
-              <>
-                <Typography className={classes.title} variant="h3">
-                  This is a small Project Card
-                </Typography>
-                <Typography>This is the project description</Typography>
-                <input
-                    className={classes.hidden}
-                    type="file"
-                    ref={inputEl}
-                    accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
-                    multiple
-                    onChange={handleChoseFile}
-                />
-                {getRecord(records)}
-                {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-                <ProjectDialog records={records} setRecords={setRecords} />
-                <div className={classes.upload}>
-                  <Button loading={loading} onClick={() => inputEl.current.click()}>
-                    Upload
-                  </Button>
-                </div>
-              </>
-          )}
-          {type === "medium" && (
-              <>
-                <Typography className={classes.title} variant="h2">
-                  This is a medium Project Card
-                </Typography>
-                <Typography>This is the project description</Typography>
-                <input
-                    className={classes.hidden}
-                    type="file"
-                    ref={inputEl}
-                    accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
-                    multiple
-                    onChange={handleChoseFile}
-                />
-                {getRecord(records)}
-                {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-                <ProjectDialog records={records} setRecords={setRecords} />
-                <div className={classes.upload}>
-                  <Button loading={loading} onClick={() => inputEl.current.click()}>
-                    Upload
-                  </Button>
-                </div>
-              </>
-          )}
-          {type === "large" && (
-              <>
-                <Typography className={classes.title} variant="h1">
-                  Showcase
-                </Typography>
-                <div style={{ marginTop: 5}}>
-                  <Typography variant="h4"> List uploaded files
-                    <FormatListBulletedIcon onClick={() => onFinish()}> </FormatListBulletedIcon>
-                  </Typography>
+    <Paper className={`${classes.card}  ${cardSize}`}>
+      <div className={classes.bio}>
+        {type === "small" && (
+          <>
+            <DeleteIcon className={classes.delete} />
+            <Typography className={classes.title} variant="h3">
+              This is a small Project Card
+            </Typography>
+            <Typography className={classes.msg}>
+              This is the project description
+            </Typography>
+            <Typography className={classes.msg}>Add your project!</Typography>
+            <ProjectDialog records={records} setRecords={setRecords} />
+            <div className={classes.upload}>
+              <Button loading={loading} onClick={() => inputEl.current.click()}>
+                Upload
+              </Button>
+            </div>
+            <input
+              className={classes.hidden}
+              type="file"
+              ref={inputEl}
+              accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
+              multiple
+              onChange={handleChoseFile}
+            />
+          </>
+        )}
+        {type === "medium" && (
+          <>
+            <DeleteIcon className={classes.delete} />
+            <Typography className={classes.title} variant="h2">
+              This is a medium Project Card
+            </Typography>
+            <Typography className={classes.msg}>
+              This is the project description
+            </Typography>
+            <Typography className={classes.msg}>Add your project!</Typography>
+            <ProjectDialog records={records} setRecords={setRecords} />
+            <div className={classes.upload}>
+              <Button loading={loading} onClick={() => inputEl.current.click()}>
+                Upload
+              </Button>
+            </div>
+            <input
+              className={classes.hidden}
+              type="file"
+              ref={inputEl}
+              accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
+              multiple
+              onChange={handleChoseFile}
+            />
+          </>
+        )}
+        {type === "large" && (
+          <>
+            <Typography className={classes.title} variant="h1">
+              Showcase
+            </Typography>
+            <div style={{ marginTop: 5 }}>
+              <Typography style={{ color: "#fff" }} variant="h4">
+                {" "}
+                List uploaded files
+                <FormatListBulletedIcon onClick={() => onFinish()}>
+                  {" "}
+                </FormatListBulletedIcon>
+              </Typography>
+              <div>
+                {allFiles.map((item) => (
+                  <div key={item.id}>{item.fieldName}</div>
+                ))}
+              </div>
+            </div>
+            <div style={{ marginTop: 50 }}>
+              <Typography style={{ color: "#fff" }} variant="h4">
+                {" "}
+                Download files
+                <GetAppIcon onClick={() => onIdFinish()}>
+                  Download files
+                </GetAppIcon>
+              </Typography>
 
-                  <div>
-                    {allFiles.map((item) => (
-                        <div key={item.id}>{item.fieldName}</div>
-                    ))}
+              {allId &&
+                allId.map((item) => (
+                  <div key={item._id}>
+                    <a href={item.fileLink}>{item.fieldName}</a>
                   </div>
-                </div>
-                <div style={{ marginTop: 50 }}>
-                  <Typography variant="h4"> Download files
-                    <GetAppIcon onClick={() => onIdFinish()}>Download files</GetAppIcon>
-                  </Typography>
-
-                  {allId && allId.map((item) => (
-                      <div key={item._id}>
-                        <a href={item.fileLink}>{item.fieldName}</a>
-                      </div>
-                  ))}
-                </div>
-              </>
-          )}
-        </div>
-      </Paper>
+                ))}
+            </div>
+          </>
+        )}
+      </div>
+    </Paper>
   );
 };
 

@@ -76,3 +76,18 @@ test("Should get skills", async () => {
         expect(data.body).toEqual(["Basketball", "Table tennis", "Volleyball"])
     })
 });
+
+// Update about me
+test("Should update aboutMe", async () => {
+    await request.put("/api/profile/aboutMe")
+    .set('Authorization', 'bearer ' + token)
+    .send({
+        aboutMe: "blah blah blah"
+    })
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual("blah blah blah")
+    })
+    
+})

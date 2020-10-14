@@ -60,6 +60,40 @@ const createFeaturedWork = async (req, res) => {
     });
 }
 
+const addFiles = async (req, res) => {
+    try{
+        await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { attachedFiles: req.body.attachedFiles },}, {new: true}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result.attachedFiles);
+            }else{
+                res.status(404).json("Featured work not found");
+            }
+        })
+    }catch(err){
+        res.status(400).json("Failed to add attached files to the featured work model");
+    }
+}
+
+const addUrl = async (req, res) => {
+    try{
+        await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { url: req.body.url },}, {new: true}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result.url);
+            }else{
+                res.status(404).json("Featured work not found");
+            }
+        })
+    }catch(error){
+        res.status(400).json("Failed to add url to the featured work model");
+    }
+}
+
 // Allows users to edit the properties of a featured work
 const editFeaturedWork = async (req, res) => {
     try{
@@ -261,6 +295,8 @@ module.exports = {
     getFeaturedWork,
     getAllFeaturedWorks,
     viewerGetFeaturedWorks,
+    addFiles,
+    addUrl,
     removeFeaturedWork,
     clearShowcase,
     removeAllFeaturedWorks

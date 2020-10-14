@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const User = require('../Models/User.js');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -22,6 +21,7 @@ const postSignup = async (req, res) => {
       //Format: YYYY-MM-DD
       birthDate: req.body.birthDate,
       mobileNumber: req.body.mobileNumber,
+      socialMedia: req.body.socialMedia,
       biography: req.body.biography,
       skills: req.body.skills,
     });
@@ -311,7 +311,7 @@ const changeUserName = async (req, res) => {
   }
 };
 
-// Function to find the info associated with the given id
+// Function to find the user info associated with the given id
 const findInfo = async (userID) => {
   let userInfo;
   await User.findById(userID, (err, result) => {
@@ -322,8 +322,10 @@ const findInfo = async (userID) => {
       userInfo = {
         firstName: result.firstName,
         lastName: result.lastName,
+        userName: result.userName,
         email: result.email,
         mobileNumber: result.mobileNumber,
+        socialMedia: result.socialMedia,
         birthDate: result.birthDate,
       };
     } else {
@@ -343,8 +345,10 @@ const getUserInformation = async (req, res) => {
         userInfo = {
           firstName: result.firstName,
           lastName: result.lastName,
+          userName: result.userName,
           email: result.email,
           mobileNumber: result.mobileNumber,
+          socialMedia: result.socialMedia,
           birthDate: result.birthDate,
         };
         res.status(200).json(userInfo);
@@ -378,7 +382,7 @@ const viewerGetUserInformation = async (req, res) => {
   }
 };
 
-// Edits the user's personal information (except email and password)
+// Edits the user's personal information (except email,password and social media)
 
 const editUserInformation = async (req, res) => {
   try {

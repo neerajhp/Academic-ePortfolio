@@ -7,6 +7,7 @@ const showcaseController = require('../Controllers/showcaseController');
 const eduController = require('../Controllers/eduController');
 const blogController = require('../Controllers/blogController');
 const expController = require('../Controllers/experienceController');
+//const { AccountTreeSharp } = require('@material-ui/icons');
 
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
@@ -505,6 +506,64 @@ const getSkills = async (req, res) => {
   );
 };
 
+// Add available social media links to the user model
+const addSocialMedia = async (req, res) => {
+  try{
+      await User.findById(req.user.id, (err, result) => {
+        if(err){
+          throw err;
+        }
+        if(result){
+          const links = createSocialMediaJSON(req.body, result.socialMedia);
+          User.findByIdAndUpdate(req.user.id, {socialMedia: links}, {new: true}, (err, result) => {
+            if(err){
+              throw err;
+            }
+            if(result){
+              res.status(200).json(result.socialMedia);
+            }else{
+              res.status(400).json("Failed to find and update the user");
+            }
+          });
+        }else{
+          res.status(404).json("User not found");
+        }
+      });
+  }catch(error){
+    res.status(400).json("Failed to update the user's social media links");
+  }
+  
+}
+
+// Creates the json that will be stored in the user's account
+const createSocialMediaJSON = (accounts, original) => {
+  //var links = {};
+  for(const account of accounts){
+    console.log(account);
+    switch(account.site){
+      case "facebook":
+        original["facebook"] = account.link;
+        break;
+      case "linkedIn":
+        original["linkedIn"] = account.link;
+        break;
+      case "instagram":
+        original["instagram"] = account.link;
+        break;
+      case "youtube":
+        original["youtube"] = account.link;
+        break;
+      case "twitter":
+        original["twitter"] = account.link;
+        break;
+      default:
+        break;
+    }
+  }
+  return original;
+  
+}
+
 module.exports = {
   getProfile,
   viewerGetProfile,
@@ -520,4 +579,5 @@ module.exports = {
   addSkills,
   removeSkills,
   deleteProfile,
+  addSocialMedia
 };

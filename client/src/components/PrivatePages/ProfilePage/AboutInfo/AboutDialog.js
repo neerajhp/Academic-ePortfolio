@@ -1,37 +1,50 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
 import {
+  Button,
   IconButton,
   Typography,
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@material-ui/core";
-import API from "../../../../api/API";
-import AboutForm from "./AboutForm";
+} from '@material-ui/core';
+import API from '../../../../api/API';
+import AboutForm from './AboutForm';
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-    position: "relative",
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    position: 'relative',
   },
   icon: {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: 'rgba(255, 255, 255, 0.7)',
   },
   paper: {
-    position: "absolute",
-    width: "40%",
+    position: 'absolute',
+    width: '40%',
     backgroundColor: theme.palette.neutral.main,
-    border: "2px solid #000",
+    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  newButton: {
+    '&.MuiButton-text': {
+      padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
+    },
+    '&.MuiButtonBase-root': {
+      width: '100%',
+      backgroundColor: theme.palette.neutral.light,
+      '&:hover': {
+        backgroundColor: theme.palette.neutral.main,
+      },
+    },
+  },
 }));
 
-const AboutDialog = ({ records, setRecords }) => {
+const AboutDialog = ({ records, setRecords, empty }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -42,31 +55,41 @@ const AboutDialog = ({ records, setRecords }) => {
 
   const handleClose = () => {
     API.getAboutMe().then(({ data }) => {
-      setRecords({ aboutMe: data });
+      setRecords(data);
       setOpen(false);
     });
   };
 
+  const openButton = empty ? (
+    <Button onClick={handleOpen} className={classes.newButton}>
+      <Typography variant='h2'>
+        Add a little paragraph about yourself
+      </Typography>
+    </Button>
+  ) : (
+    <IconButton onClick={handleOpen}>
+      <EditIcon />
+    </IconButton>
+  );
+
   return (
-    <div className={classes.container}>
-      <IconButton onClick={handleOpen}>
-        <EditIcon className={classes.icon} />
-      </IconButton>
+    <React.Fragment>
+      {openButton}
       <Dialog
         fullWidth={true}
-        maxWidth={"md"}
+        maxWidth={'md'}
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
         <DialogTitle disableTypography>
-          <Typography variant="h2">Edit About</Typography>
+          <Typography variant='h2'>Edit About</Typography>
         </DialogTitle>
         <DialogContent>
           <AboutForm records={records} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 };
 

@@ -15,8 +15,6 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
     width: '100%',
-    // background: theme.palette.secondary.light,
-    // color: theme.palette.text.secondary,
     padding: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
@@ -24,22 +22,31 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   title: { width: '100%' },
+  emptySection: {
+    margin: theme.spacing(2),
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
   tableContainer: {
     width: '90%',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
-  table: {
-    '& .MuiTableCell-body': {
-      // color: theme.palette.text.secondary,
-    },
-  },
+
   period: {
     width: '30%',
     verticalAlign: 'top',
   },
   education: {
     verticalAlign: 'top',
+  },
+  editDialogContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    position: 'relative',
   },
 }));
 
@@ -68,33 +75,43 @@ const EducationCard = ({ education }) => {
 
   const getRecord = (education) => {
     if (!(Array.isArray(education) && education.length)) {
-      return <Typography> Add your education!</Typography>;
+      return (
+        <div className={classes.emptySection}>
+          <EducationDialog
+            records={records}
+            setRecords={setRecords}
+            empty={true}
+          />
+        </div>
+      );
     } else {
       return (
-        <Table className={classes.table}>
-          <TableBody>
-            {education.map((edu, i) => (
-              <TableRow key={i} className={classes.table}>
-                <TableCell className={classes.period}>
-                  <Typography>
-                    {MONTHS[edu.monthStart]}, {edu.yearStart} -
-                    {MONTHS[edu.monthEnd]}, {edu.yearEnd}
-                  </Typography>
-                </TableCell>
-                <TableCell className={classes.education}>
-                  <Typography variant='h4'>{edu.schoolName}</Typography>
-                  {edu.edu_type === 'University' ? (
+        <div className={classes.tableContainer}>
+          <Table className={classes.table}>
+            <TableBody>
+              {education.map((edu, i) => (
+                <TableRow key={i} className={classes.table}>
+                  <TableCell className={classes.period}>
                     <Typography>
-                      {edu.unicourseName} {edu.unimajorName}
+                      {MONTHS[edu.monthStart]}, {edu.yearStart} -
+                      {MONTHS[edu.monthEnd]}, {edu.yearEnd}
                     </Typography>
-                  ) : (
-                    ''
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  </TableCell>
+                  <TableCell className={classes.education}>
+                    <Typography variant='h3'>{edu.schoolName}</Typography>
+                    {edu.edu_type === 'University' ? (
+                      <Typography>
+                        {edu.unicourseName} {edu.unimajorName}
+                      </Typography>
+                    ) : (
+                      ''
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       );
     }
   };
@@ -104,8 +121,14 @@ const EducationCard = ({ education }) => {
       <Typography className={classes.title} variant='h2'>
         Education{' '}
       </Typography>
-      <div className={classes.tableContainer}>{getRecord(records)}</div>
-      <EducationDialog records={records} setRecords={setRecords} />
+      {getRecord(records)}
+      <div className={classes.editDialogContainer}>
+        <EducationDialog
+          records={records}
+          setRecords={setRecords}
+          empty={false}
+        />
+      </div>
     </Paper>
   );
 };

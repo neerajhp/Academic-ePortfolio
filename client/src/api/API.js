@@ -148,15 +148,17 @@ export default {
 
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function (body) {
-    return axios.put('/api/profile/bio', 
-    {
-      biography: body.bio
-    },
-    {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.put(
+      '/api/profile/bio',
+      {
+        biography: body.bio,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Single upload of file
   uploadFile: function (body) {
@@ -441,12 +443,17 @@ export default {
   },
   // Edit about me
   editAboutMe: function (body) {
-    return axios.put('api/profile/aboutMe', {
-      aboutMe: body.aboutMe,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.put(
+      'api/profile/aboutMe',
+      {
+        aboutMe: body,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Get user information
   getUserInformation: function () {
@@ -475,28 +482,39 @@ export default {
   },
   // Updates a logged in user's email
   updateEmail: function (body) {
-    return axios.put('api/user/update/email', {email: body.email}, {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
+    return axios.put(
+      'api/user/update/email',
+      { email: body.email },
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   changePassword: function (body) {
-    return axios.put('api/user/update/password', {oldPassword: body.oldPassword, newPassword: body.newPassword}, {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
+    return axios.put(
+      'api/user/update/password',
+      { oldPassword: body.oldPassword, newPassword: body.newPassword },
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   changeUserName: function (body) {
-    return axios.put('api/user/update/username', {
-      userName: body.userName
-    }, 
-    {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.put(
+      'api/user/update/username',
+      {
+        userName: body.userName,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Create an experience card
   createExperience: function (body) {

@@ -15,8 +15,6 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
     width: '100%',
-    // background: theme.palette.secondary.light,
-    // color: theme.palette.text.secondary,
     padding: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
@@ -30,15 +28,26 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'flex-end',
   },
+  emptySection: {
+    margin: theme.spacing(2),
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    order: 3,
+  },
   title: {
     width: '100%',
     marginBottom: theme.spacing(3),
     display: 'flex',
     flexDirection: 'row',
   },
-  subTitle: {
+  tableTitle: {
+    display: 'flex',
     width: '100%',
-    marginBottom: theme.spacing(3),
+    alignItems: 'center',
+  },
+  subTitle: {
+    width: '95%',
     display: 'flex',
     flexDirection: 'row',
     '&::after': {
@@ -55,17 +64,11 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(3),
   },
   table: {
-    '& .MuiTable-root': {
-      // color: theme.palette.text.secondary,
-      borderBottom: `1px solid ${theme.palette.primary.light}`,
+    '&.MuiTable-root': {
+      width: '90%',
     },
   },
-  addExperience: {
-    display: 'flex',
-    justifyContent: 'center',
-    background: theme.palette.neutral.light,
-    borderRadius: theme.spacing(2),
-  },
+
   period: {
     width: '30%',
     verticalAlign: 'top',
@@ -81,6 +84,12 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     marginTop: theme.spacing(1),
+  },
+  editDialogContainer: {
+    width: '5%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    position: 'relative',
   },
 }));
 
@@ -107,43 +116,68 @@ const ExperienceCard = ({ experience }) => {
 
   const [records, setRecords] = useState(experience);
 
-  const getRecord = (experience) => {
+  function capitaliseFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const getRecord = (experience, type) => {
     if (!(Array.isArray(experience) && experience.length)) {
       return (
-        <Typography variant='h3' className={classes.addExperience}>
-          {' '}
-          Display Your Experience here!
-        </Typography>
+        <div className={classes.emptySection}>
+          <ExperienceDialog
+            type={type}
+            records={experience}
+            setRecords={setRecords}
+            empty={true}
+          />
+        </div>
       );
     } else {
       return (
-        <Table className={classes.table}>
-          <TableBody>
-            {experience.map((exp, i) => (
-              <TableRow key={i} className={classes.table}>
-                <TableCell className={classes.period}>
-                  <Typography>
-                    {MONTHS[exp.monthStart]}, {exp.yearStart} -
-                    {MONTHS[exp.monthEnd]}, {exp.yearEnd}
-                  </Typography>
-                </TableCell>
-                <TableCell className={classes.experience}>
-                  <Typography className={classes.organisation} variant='h3'>
-                    {exp.organization}
-                  </Typography>
+        <div className={classes.workSection}>
+          <div className={classes.tableTitle}>
+            <Typography className={classes.subTitle} variant='h3'>
+              {capitaliseFirstLetter(type)}
+            </Typography>{' '}
+            <div className={classes.editDialogContainer}>
+              <ExperienceDialog
+                type={type}
+                records={experience}
+                setRecords={setRecords}
+                empty={false}
+              />
+            </div>
+          </div>
+          <div className={classes.tableContainer}>
+            <Table className={classes.table}>
+              <TableBody>
+                {experience.map((exp, i) => (
+                  <TableRow key={i} className={classes.table}>
+                    <TableCell className={classes.period}>
+                      <Typography>
+                        {MONTHS[exp.monthStart]}, {exp.yearStart} -
+                        {MONTHS[exp.monthEnd]}, {exp.yearEnd}
+                      </Typography>
+                    </TableCell>
+                    <TableCell className={classes.experience}>
+                      <Typography className={classes.organisation} variant='h3'>
+                        {exp.organization}
+                      </Typography>
 
-                  <Typography className={classes.role}>
-                    {exp.role} {`, ${exp.employeeStatus}`}
-                  </Typography>
+                      <Typography className={classes.role}>
+                        {exp.role} {`, ${exp.employeeStatus}`}
+                      </Typography>
 
-                  <Typography className={classes.description}>
-                    {exp.description}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                      <Typography className={classes.description}>
+                        {exp.description}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       );
     }
   };
@@ -153,45 +187,10 @@ const ExperienceCard = ({ experience }) => {
       <Typography className={classes.title} variant='h2'>
         Experience{' '}
       </Typography>
-      <div className={classes.workSection}>
-        <Typography className={classes.subTitle} variant='h3'>
-          Professional Work
-        </Typography>
-        <div className={classes.tableContainer}>
-          {getRecord(records.employment)}
-        </div>
-        <ExperienceDialog
-          type={'employment'}
-          records={records.employment}
-          setRecords={setRecords}
-        />
-      </div>
-      <div className={classes.workSection}>
-        <Typography className={classes.subTitle} variant='h3'>
-          Volunteer Work
-        </Typography>
-        <div className={classes.tableContainer}>
-          {getRecord(records.volunteering)}
-        </div>
-        <ExperienceDialog
-          type={'volunteering'}
-          records={records.volunteering}
-          setRecords={setRecords}
-        />
-      </div>
-      <div className={classes.workSection}>
-        <Typography className={classes.subTitle} variant='h3'>
-          Extracurricular Work
-        </Typography>
-        <div className={classes.tableContainer}>
-          {getRecord(records.extracurricular)}
-        </div>
-        <ExperienceDialog
-          type={'extracurricular'}
-          records={records.extracurricular}
-          setRecords={setRecords}
-        />
-      </div>
+
+      {getRecord(records.employment, 'employment')}
+      {getRecord(records.volunteering, 'volunteering')}
+      {getRecord(records.extracurricular, 'extracurricular')}
     </Paper>
   );
 };

@@ -90,4 +90,15 @@ test("Should update aboutMe", async () => {
         expect(data.body).toEqual("blah blah blah")
     })
     
+});
+
+// Get about me
+test("Should get aboutMe", async () => {
+    await request.get("/api/profile/aboutMe")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual("blah blah blah")
+    })
 })

@@ -136,9 +136,9 @@ test("Should get all education ", async () =>{
 })
 
 // viewerGetEdu
-let userName = "testing123"
+//let userName = "testing123"
 test("Should get education for viewer", async () =>{
-    await request.get(`/api/view/education/${userName}`)
+    await request.get("/api/view/education/test")
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -312,6 +312,6 @@ test("Should not delete all education records if they dont exist", async () =>{
 // searchAllEdu
 test("Should get all education will return null ", async () =>{
     const result = await searchAllEdu(ID)
-    expect(result).toEqual([])
+    expect(result).toBeUndefined()
 
 })

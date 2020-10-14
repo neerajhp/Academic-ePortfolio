@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -14,7 +13,6 @@ import {
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import CharacterCard from './CharacterInfo/PublicCharacterCard';
 import EducationCard from './EducationInfo/PublicEducationCard';
 import ExperienceCard from './ExperienceInfo/PublicExperienceCard';
@@ -111,7 +109,23 @@ const PublicProfilePage = ({ match, location }) => {
         setExperience(data);
       })
       .catch();
-  }, []);
+  });
+
+  const checkExperience = () => {
+    return (
+      userExperience.volunteering.length === 0 &&
+      userExperience.employment.length === 0 &&
+      userExperience.extracurricular.length === 0
+    );
+  };
+
+  const checkEducation = () => {
+    return user.education.length === 0;
+  };
+
+  const checkSkills = () => {
+    return user.skills.length === 0;
+  };
 
   //If profile hasn't been fetched yet
   var pageContent;
@@ -120,13 +134,12 @@ const PublicProfilePage = ({ match, location }) => {
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2' color='textSecondary'>
-            Fetching this Portfolio
-          </Typography>
+          <Typography variant='h2'>Fetching this Portfolio</Typography>
         </div>
       </div>
     );
   } else {
+    console.log(userExperience.volunteering.length === 0);
     pageContent = (
       <div>
         <div className={classes.container}>
@@ -164,15 +177,22 @@ const PublicProfilePage = ({ match, location }) => {
             </div>
             <div className={classes.section}>
               <CharacterCard user={user} globalClasses={classes} />
-              <ExperienceCard
-                experience={userExperience}
-                globalClasses={classes}
-              />
-              <EducationCard
-                education={user.education}
-                globalClasses={classes}
-              />
-              <SkillsCard skills={user.skills} globalClasses={classes} />
+
+              {!checkExperience() && (
+                <ExperienceCard
+                  experience={userExperience}
+                  globalClasses={classes}
+                />
+              )}
+              {!checkEducation() && (
+                <EducationCard
+                  education={user.education}
+                  globalClasses={classes}
+                />
+              )}
+              {!checkSkills() && (
+                <SkillsCard skills={user.skills} globalClasses={classes} />
+              )}
             </div>
             <div className={classes.section}>
               <ReflectionCard />

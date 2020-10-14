@@ -6,7 +6,6 @@ import {
   IconButton,
   Typography,
   Dialog,
-  DialogContent,
   DialogTitle,
 } from '@material-ui/core';
 import EducationForm from './EducationForm';

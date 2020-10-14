@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -87,47 +87,36 @@ const MONTHS = {
 const PublicExperienceCard = ({ experience, globalClasses }) => {
   const classes = useStyles();
 
-  const [records, setRecords] = useState(experience);
-
   const getRecord = (experience) => {
-    if (!(Array.isArray(experience) && experience.length)) {
-      return (
-        <Typography variant='h3' className={classes.addExperience}>
-          {' '}
-          Display Your Experience here!
-        </Typography>
-      );
-    } else {
-      return (
-        <Table className={classes.table}>
-          <TableBody>
-            {experience.map((exp, i) => (
-              <TableRow key={i} className={classes.table}>
-                <TableCell className={classes.period}>
-                  <Typography>
-                    {MONTHS[exp.monthStart]}, {exp.yearStart} -
-                    {MONTHS[exp.monthEnd]}, {exp.yearEnd}
-                  </Typography>
-                </TableCell>
-                <TableCell className={classes.experience}>
-                  <Typography className={classes.organisation} variant='h3'>
-                    {exp.organization}
-                  </Typography>
+    return (
+      <Table className={classes.table}>
+        <TableBody>
+          {experience.map((exp, i) => (
+            <TableRow key={i} className={classes.table}>
+              <TableCell className={classes.period}>
+                <Typography>
+                  {MONTHS[exp.monthStart]}, {exp.yearStart} -
+                  {MONTHS[exp.monthEnd]}, {exp.yearEnd}
+                </Typography>
+              </TableCell>
+              <TableCell className={classes.experience}>
+                <Typography className={classes.organisation} variant='h3'>
+                  {exp.organization}
+                </Typography>
 
-                  <Typography className={classes.role}>
-                    {exp.role} {`, ${exp.employeeStatus}`}
-                  </Typography>
+                <Typography className={classes.role}>
+                  {exp.role} {`, ${exp.employeeStatus}`}
+                </Typography>
 
-                  <Typography className={classes.description}>
-                    {exp.description}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      );
-    }
+                <Typography className={classes.description}>
+                  {exp.description}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
   };
 
   return (
@@ -135,30 +124,36 @@ const PublicExperienceCard = ({ experience, globalClasses }) => {
       <Typography className={globalClasses.title} variant='h2'>
         Experience{' '}
       </Typography>
-      <div className={classes.workSection}>
-        <Typography className={classes.subTitle} variant='h3'>
-          Professional Work
-        </Typography>
-        <div className={classes.tableContainer}>
-          {getRecord(records.employment)}
+      {!(experience.employment.length === 0) && (
+        <div className={classes.workSection}>
+          <Typography className={classes.subTitle} variant='h3'>
+            Professional Work
+          </Typography>
+          <div className={classes.tableContainer}>
+            {getRecord(experience.employment)}
+          </div>
         </div>
-      </div>
-      <div className={classes.workSection}>
-        <Typography className={classes.subTitle} variant='h3'>
-          Volunteer Work
-        </Typography>
-        <div className={classes.tableContainer}>
-          {getRecord(records.volunteering)}
+      )}
+      {!(experience.volunteering.length === 0) && (
+        <div className={classes.workSection}>
+          <Typography className={classes.subTitle} variant='h3'>
+            Volunteer Work
+          </Typography>
+          <div className={classes.tableContainer}>
+            {getRecord(experience.volunteering)}
+          </div>
         </div>
-      </div>
-      <div className={classes.workSection}>
-        <Typography className={classes.subTitle} variant='h3'>
-          Extracurricular Work
-        </Typography>
-        <div className={classes.tableContainer}>
-          {getRecord(records.extracurricular)}
+      )}
+      {!(experience.extracurricular.length === 0) && (
+        <div className={classes.workSection}>
+          <Typography className={classes.subTitle} variant='h3'>
+            Extracurricular Work
+          </Typography>
+          <div className={classes.tableContainer}>
+            {getRecord(experience.extracurricular)}
+          </div>
         </div>
-      </div>
+      )}
     </Paper>
   );
 };

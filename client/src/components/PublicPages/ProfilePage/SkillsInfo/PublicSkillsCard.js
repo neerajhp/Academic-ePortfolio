@@ -37,24 +37,20 @@ const PublicSkillsCard = ({ skills, globalClasses }) => {
   const classes = useStyles();
 
   const getSkills = (skills) => {
-    if (!(Array.isArray(skills) && skills.length)) {
-      return <Typography> Add Some of your skills!</Typography>;
-    } else {
-      return (
-        <div
-          className={classes.skillsContainer}
-          style={{ height: 10 * skills.length }}
-        >
-          {skills.map((skill, i) => (
-            <Chip
-              key={i}
-              label={skill}
-              color={COLOURS[Math.floor(Math.random() * COLOURS.length)]}
-            />
-          ))}
-        </div>
-      );
-    }
+    return (
+      <div
+        className={classes.skillsContainer}
+        style={{ height: 10 * skills.length }}
+      >
+        {skills.map((skill, i) => (
+          <Chip
+            key={i}
+            label={skill}
+            color={COLOURS[Math.floor(Math.random() * COLOURS.length)]}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (

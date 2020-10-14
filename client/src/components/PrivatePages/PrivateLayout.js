@@ -1,12 +1,13 @@
 import React from 'react';
-import { useAuth } from '../../context/auth';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import { Switch, useHistory, Redirect, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';
+import { logout } from '../../helpers/auth';
+import PrivateRoute from '../Routes/PrivateRoute';
 import ProfilePage from './ProfilePage/ProfilePage';
 import PublicProfilePage from '../PublicPages/ProfilePage/PublicProfilePage';
 import AccountPage from './AccountPage/AccountPage';
-import Background from '../../assets/bkg-private.svg';
+import Background from '../../assets/Background/bkg-private.svg';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -40,19 +41,10 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 
 const PrivateLayout = ({ match }) => {
-  const baseURL = window.location.origin;
+  const history = useHistory();
 
   // Styling
   const classes = useStyles();
-
-  //Authentication Context
-  const { setAuthTokens } = useAuth();
-
-  //Log Out
-  function logOut() {
-    //Clears browser storage
-    setAuthTokens(null);
-  }
 
   return (
     <div className={classes.bkgContainer}>
@@ -67,7 +59,12 @@ const PrivateLayout = ({ match }) => {
           <Link to='/myaccount' className={classes.link}>
             <Typography color='textSecondary'>My Account</Typography>
           </Link>
-          <Button color='inherit' onClick={logOut}>
+          <Button
+            color='inherit'
+            onClick={() => {
+              logout(() => history.push('/home/login'));
+            }}
+          >
             Logout
           </Button>
         </Toolbar>
@@ -76,12 +73,12 @@ const PrivateLayout = ({ match }) => {
 
       <div className={classes.contentContainer}>
         <Switch>
-          <Route exact path='/'>
+          <PrivateRoute exact path='/'>
             <Redirect to='/myprofile' />
-          </Route>
-          <Route exact path='/myprofile' component={ProfilePage} />
-          <Route exact path='/myaccount' component={AccountPage} />
-          <Route path='/view/:userId' component={PublicProfilePage} />
+          </PrivateRoute>
+          <PrivateRoute exact path='/myprofile' component={ProfilePage} />
+          <PrivateRoute exact path='/myaccount' component={AccountPage} />
+          <PrivateRoute path='/view/:userId' component={PublicProfilePage} />
         </Switch>
       </div>
     </div>

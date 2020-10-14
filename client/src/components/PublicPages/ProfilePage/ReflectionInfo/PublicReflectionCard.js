@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 
@@ -29,15 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const PublicReflectionCard = (reflection) => {
+const PublicReflectionCard = () => {
   const classes = useStyles();
 
-  const [loading, setLoading] = useState(false);
-  const [records, setRecords] = useState(reflection);
-
-  const getRecord = () => {
-    return <Typography> Add your reflection!</Typography>;
-  };
   return (
     <Paper className={classes.card}>
       <div className={classes.bio}>
@@ -45,8 +39,6 @@ const PublicReflectionCard = (reflection) => {
           This is a Reflection
         </Typography>
         <Typography>This is the blog introduction</Typography>
-
-        {getRecord(records)}
       </div>
     </Paper>
   );

@@ -2,9 +2,9 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Switch, Route } from 'react-router-dom';
-import Background from '../../assets/bkg-alt.jpg';
+import Background from '../../assets/Background/bkg-alt.jpg';
 import LoginPage from './LoginPage/LoginPage';
-import ResetPage from "./ResetPage/ResetPage";
+import ResetPage from './ResetPage/ResetPage';
 import SignupPage from './SignUpPage/SignUpPage';
 import LandingPage from './LandingPage/LandingPage';
 import SearchPage from './SearchPage/SearchPage';
@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme) => {
       position: 'fixed',
       backgroundImage: `url(${Background})`,
       backgroundSize: 'cover',
-      height: '100vh',
-      width: '100vw',
+
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) => {
       paddingLeft: theme.spacing(3),
     },
     formPaper: {
-      width: '35%',
+      width: '40%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -130,9 +129,9 @@ const HomeLayout = () => {
             )}
           />
           <Route
-              exact
-              path="/home/reset"
-              render={(props) => <ResetPage {...props} globalClasses={classes} />}
+            exact
+            path='/home/reset'
+            render={(props) => <ResetPage {...props} globalClasses={classes} />}
           />
           <Route
             exact

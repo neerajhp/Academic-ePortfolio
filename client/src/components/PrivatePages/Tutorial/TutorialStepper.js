@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -78,8 +77,9 @@ const TutorialStepper = ({ activeStep }) => {
                 platform and how to make the most of your new portfolio.
               </Typography>
               <img
+                alt='Welcome-page'
                 className={classes.pageImage}
-                src={require('../../../assets/WelcomePage.png')}
+                src={require('../../../assets/Tutorial/WelcomePage.png')}
               />
             </div>
           </React.Fragment>
@@ -102,8 +102,9 @@ const TutorialStepper = ({ activeStep }) => {
                 Click the <EditIcon /> next to the content you wish to edit.
               </Typography>
               <img
+                alt='Editing-Account-gif'
                 className={classes.pageImage}
-                src={require('../../../assets/EditPage.gif')}
+                src={require('../../../assets/Tutorial/EditPage.gif')}
               />
             </div>
           </React.Fragment>
@@ -126,8 +127,9 @@ const TutorialStepper = ({ activeStep }) => {
                 Upcoming features include editing your privacy settings.
               </Typography>
               <img
+                alt='Editing-PersonalInfo-gif'
                 className={classes.pageImage}
-                src={require('../../../assets/AccountEditPage.gif')}
+                src={require('../../../assets/Tutorial/AccountEditPage.gif')}
               />
             </div>
           </React.Fragment>
@@ -148,6 +150,14 @@ const TutorialStepper = ({ activeStep }) => {
           </React.Fragment>
         );
       case 4:
+        return (
+          <React.Fragment>
+            <Typography variant='h1' className={classes.pageTitle}>
+              Get Started with your Profile now!
+            </Typography>
+          </React.Fragment>
+        );
+      default:
         return (
           <React.Fragment>
             <Typography variant='h1' className={classes.pageTitle}>

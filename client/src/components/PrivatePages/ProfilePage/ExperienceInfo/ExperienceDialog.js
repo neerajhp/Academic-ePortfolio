@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogTitle,
 } from '@material-ui/core';
-import { shadows } from '@material-ui/system';
 import ExperienceForm from './ExperienceForm';
 import API from '../../../../api/API';
 
@@ -60,11 +59,6 @@ const ExperienceDialog = ({ records, setRecords, type }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const handleOpen = () => {
     setOpen(true);

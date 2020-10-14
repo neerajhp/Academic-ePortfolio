@@ -63,9 +63,60 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
+
+  card: {
+    margin: '0 0 1% 1%',
+    width: '100%',
+    padding: '5%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  title: {
+    width: '100%',
+    marginBottom: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'row',
+    '&::after': {
+      content: '""',
+      flex: '1 1',
+      borderColor: '#D9D7D7',
+      borderBottom: '1px solid',
+      margin: 'auto',
+    },
+  },
+  formContainer: {
+    width: '100%',
+    height: '30%',
+    display: 'flex',
+    marginBottom: theme.spacing(2),
+  },
+  form: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  formTitle: {
+    width: '25%',
+  },
+
+  field: {
+    flexGrow: 1,
+    '& .MuiFormLabel-root': {
+      color: theme.palette.text.primary,
+    },
+  },
+  fieldSubmitted: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.secondary.main,
+      },
+    },
+  },
   buttonWrapper: {
     margin: theme.spacing(1),
     position: 'relative',
+    alignSelf: 'flex-end',
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
@@ -123,9 +174,9 @@ const AccountPage = () => {
 
         <div className={classes.sectionContainer}>
           <div className={classes.section}>
-            <AccountInformationForm user={user} />
-            <PersonalInformationForm user={user} />
-            <ProfileSettingsForm user={user} />
+            <AccountInformationForm user={user} globalClasses={classes} />
+            <PersonalInformationForm user={user} globalClasses={classes} />
+            <ProfileSettingsForm user={user} globalClasses={classes} />
           </div>
         </div>
       </div>

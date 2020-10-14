@@ -6,8 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
   Slide,
 } from '@material-ui/core';
 
@@ -51,10 +49,6 @@ const Tutorial = () => {
     if (activeStep > 0) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   return (

@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  Divider,
   Button,
   Grid,
   Link,
@@ -10,15 +11,49 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@material-ui/core';
-import { useAuth } from '../../../context/auth';
+import { authenticate } from '../../../helpers/auth';
+import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import API from '../../../api/API';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
+import googleLogo from '../../../assets/Forms/googleLogo.svg';
+import FacebookIcon from '@material-ui/icons/Facebook';
 
 const useStyles = makeStyles((theme) => {
   return {
     rememberMe: {
       color: theme.palette.text.secondary,
+    },
+    loginDivider: {
+      margin: `${theme.spacing(2)}px 0`,
+      backgroundColor: '#FFFFFF',
+    },
+    signupButton: {
+      margin: `${theme.spacing(1)}px 0`,
+      color: theme.palette.text.secondary,
+      backgroundColor: theme.palette.secondary.main,
+    },
+    googleButton: {
+      marginTop: `${theme.spacing(1)}px`,
+      color: '#FFFFFF',
+      backgroundColor: '#4285F4',
+      '&:hover': {
+        color: '#FFFFFF',
+        backgroundColor: '#1A4d94',
+      },
+    },
+    gitHubButton: {
+      marginTop: `${theme.spacing(1)}px`,
+      color: '#FFFFFF',
+      backgroundColor: '#4168b1',
+      '&:hover': {
+        backgroundColor: '#3c5fa2',
+      },
+    },
+    buttonLogo: {
+      width: `${theme.spacing(3)}px`,
+      height: `${theme.spacing(3)}px`,
     },
   };
 });
@@ -29,7 +64,39 @@ const LoginPage = ({ globalClasses }) => {
   const classes = useStyles();
 
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const { setAuthTokens } = useAuth();
+
+  const sendGoogleToken = (idToken) => {
+    API.googleLogin(idToken)
+      .then((res) => {
+        console.log(res.data);
+        authenticate(res.data.token);
+        setLoggedIn(true);
+      })
+      .catch((err) => {
+        console.log('GOOGLE SIGNIN ERROR', err.response);
+      });
+  };
+
+  const responseGoogle = (response) => {
+    console.log(response);
+    sendGoogleToken(response.tokenId);
+  };
+
+  const sendFacebookToken = (userID, accessToken) => {
+    API.facebookLogin(userID, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        authenticate(res.data.token);
+        setLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log('FACEBOOK SIGNIN ERROR', error.response);
+      });
+  };
+
+  const responseFacebook = (response) => {
+    sendFacebookToken(response.userID, response.accessToken);
+  };
 
   return (
     <React.Fragment>
@@ -54,11 +121,12 @@ const LoginPage = ({ globalClasses }) => {
                   .then((result) => {
                     if (result.status === 200) {
                       //Login information matches records
-                      setAuthTokens(result.data.token);
+                      authenticate(result.data.token);
                       setLoggedIn(true);
                     }
                   })
                   .catch((err) => {
+                    console.log(err);
                     actions.setErrors({
                       email: err.response.data,
                       password: err.response.data,
@@ -89,7 +157,7 @@ const LoginPage = ({ globalClasses }) => {
                   />
                   <FormControlLabel
                     className={classes.rememberMe}
-                    control={<Checkbox value='remember' color='#FFFFFF' />}
+                    control={<Checkbox value='remember' color='default' />}
                     label='Remember me'
                   />
 
@@ -102,26 +170,63 @@ const LoginPage = ({ globalClasses }) => {
                   >
                     <Typography>Log In</Typography>
                   </Button>
-                  <Grid container className={globalClasses.options}>
-                    <Grid item>
-                      <Link
-                        href='./signup'
-                        variant='body2'
-                        color='textSecondary'
-                      >
-                        {"Don't have an account? Sign Up"}
-                      </Link>
+
+                  <Divider className={classes.loginDivider} />
+                  <Link href='./signup' underline='none'>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      className={globalClasses.submit}
+                    >
+                      Signup for a Portfolio
+                    </Button>
+                  </Link>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <GoogleLogin
+                        clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                        render={(renderProps) => (
+                          <Button
+                            fullWidth
+                            variant='contained'
+                            className={classes.googleButton}
+                            startIcon={
+                              <img
+                                alt='google-logo'
+                                src={googleLogo}
+                                className={classes.buttonLogo}
+                              />
+                            }
+                            onClick={renderProps.onClick}
+                            disabled={renderProps.disabled}
+                          >
+                            Sign in with Google
+                          </Button>
+                        )}
+                      />
                     </Grid>
-                  </Grid>
-                  <Grid container className={globalClasses.options}>
-                    <Grid item>
-                      <Link
-                          href="./reset"
-                          variant="body2"
-                          color="textSecondary"
-                      >
-                        {"Forget your password?Reset"}
-                      </Link>
+                    <Grid item xs={6}>
+                      <FacebookLogin
+                        appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
+                        autoLoad={false}
+                        callback={responseFacebook}
+                        render={(renderProps) => (
+                          <Button
+                            fullWidth
+                            variant='contained'
+                            className={classes.gitHubButton}
+                            startIcon={
+                              <FacebookIcon className={classes.buttonLogo} />
+                            }
+                            onClick={renderProps.onClick}
+                          >
+                            Sign in with Facebook
+                          </Button>
+                        )}
+                      />
                     </Grid>
                   </Grid>
                 </form>

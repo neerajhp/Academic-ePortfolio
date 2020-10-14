@@ -2,6 +2,7 @@ const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 const Showcase = require("../Models/Showcase");
 
 const uploadController = require("../Controllers/uploadController");
+const filesController = require("../Controllers/filesController");
 
 // Initializes a showcase for the user
 // This object will store the user's featured works (I might not user this)
@@ -34,7 +35,7 @@ const createFeaturedWork = async (req, res) => {
         title: req.body.title,
         type: req.body.type,
         description: req.body.description,
-        attachedFile: req.body.attachedFile,
+        attachedFiles: req.body.attachedFiles,
         image: req.body.image,
         url: req.body.url
     });
@@ -61,43 +62,62 @@ const createFeaturedWork = async (req, res) => {
 
 // Allows users to edit the properties of a featured work
 const editFeaturedWork = async (req, res) => {
-    await FeaturedWork.updateOne({
-        user_id: req.user.id,
-        _id: req.params.id
-    }, req.body, (err, result) => {
-        if(err){
-            console.log("something's up");
-            res.status(404).json(err);
-        }else{
-            console.log(result);
-            if(result.nModified === 0){
-                res.status(400).json("Nothing was changed");
+    try{
+        await FeaturedWork.updateOne({
+            user_id: req.user.id,
+            _id: req.params.id
+        }, req.body, (err, result) => {
+            if(err){
+                console.log("something's up");
+                res.status(404).json(err);
             }else{
-                console.log("successfully updated");
-                //res.status(200).json("featured work updated");
-                FeaturedWork.findById({
-                    _id: req.params.id
-                }, function (err, updated) {
-                    res.status(200).json(updated);
-                });
+                if(result){
+                    console.log("successfully updated");
+                    //res.status(200).json("featured work updated");
+                    FeaturedWork.findById({
+                        _id: req.params.id
+                    }, function (err, updated) {
+                        if(err){
+                            throw err;
+                        }
+                        res.status(200).json(updated);
+                    });
+                }
+                // if(result.nModified === 0){
+                //     res.status(400).json("Nothing was changed");
+                // }else{
+                //     console.log("successfully updated");
+                //     //res.status(200).json("featured work updated");
+                //     FeaturedWork.findById({
+                //         _id: req.params.id
+                //     }, function (err, updated) {
+                //         res.status(200).json(updated);
+                //     });
+                // }
             }
-        }
-    });
+        });
+    }catch(error){
+        res.status(400).json("Error while updating");
+    }
 }
 
 // Gets a specific featured work based on its object id
 const getFeaturedWork = async (req, res) => {
-    await FeaturedWork.findById(req.params.id, (err, result) => {
-        if(err){
-            console.log("Featured work not found");
-            res.status(404).json(err);
-        }else{
-            res.status(200).json(result);
-            if(result.fileLink){
-                console.log(result.fileLink);
+    try{
+        await FeaturedWork.findById(req.params.id, (err, result) => {
+            if(err){
+                console.log("Featured work not found");
+                res.status(404).json(err);
+            }else{
+                res.status(200).json(result);
+                if(result.fileLink){
+                    console.log(result.fileLink);
+                }
             }
-        }
-    });
+        });
+    }catch(error){
+        res.status(400).json("Error while looking for featured work");
+    }
 
 }
 
@@ -116,13 +136,17 @@ const removeFeaturedWork = async (req, res) => {
         //         }
         //     }
         // })
-        await FeaturedWork.deleteOne({_id: req.params.id}, (err, result) => {
+        await FeaturedWork.findByIdAndDelete(req.params.id, (err, result) => {
             if(err){
                 console.log("failed to delete");
                 throw err;
             }
             if(result){
-                res.status(200).json("Successfully deleted featured work");
+                
+                res.status(200).json({
+                    message: "Successfully deleted featured work",
+                    filesToDelete: result.attachedFiles
+                });
             }else{
                 res.status(404).json("Failed to find featured work");
             }
@@ -230,7 +254,6 @@ const findShowcase = async (userID) => {
     return showcase;
 }
 
-//const getShowcase = 
 
 module.exports = {
     createFeaturedWork,

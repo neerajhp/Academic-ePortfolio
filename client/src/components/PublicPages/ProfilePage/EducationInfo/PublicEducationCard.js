@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -63,8 +63,6 @@ const MONTHS = {
 const PublicEducationCard = ({ education }) => {
   const classes = useStyles();
 
-  const [records, setRecords] = useState(education);
-
   const getRecord = (education) => {
     if (!(Array.isArray(education) && education.length)) {
       return <Typography> Add your education!</Typography>;
@@ -103,7 +101,7 @@ const PublicEducationCard = ({ education }) => {
       <Typography className={classes.title} variant='h2'>
         Education{' '}
       </Typography>
-      <div className={classes.tableContainer}>{getRecord(records)}</div>
+      <div className={classes.tableContainer}>{getRecord(education)}</div>
     </Paper>
   );
 };

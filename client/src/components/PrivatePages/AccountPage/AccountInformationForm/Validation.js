@@ -1,8 +1,11 @@
 import * as yup from 'yup';
 
-const validationSchema = yup.object().shape({
+export const emailValidationSchema = yup.object().shape({
   email: yup.string().label('Email').email().required(),
-  password: yup
+});
+
+export const passwordValidationSchema = yup.object().shape({
+  newPassword: yup
     .string()
     .label('Password')
     .required()
@@ -11,13 +14,11 @@ const validationSchema = yup.object().shape({
       /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
       'Password must contain at least 8 characters, one uppercase, one number and one special case character'
     ),
-  confirmPassword: yup
+  confirmNewPassword: yup
     .string()
     .required()
     .label('Confirm password')
     .test('passwords-match', 'Passwords do not match', function (value) {
-      return this.parent.password === value;
+      return this.parent.newPassword === value;
     }),
 });
-
-export default validationSchema;

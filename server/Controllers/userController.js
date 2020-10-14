@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../Models/User.js');
+const Token = require('../Models/Token')
 var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
+const {google} = require('googleapis')
+const OAuth2 = google.auth.OAuth2
 const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
@@ -11,6 +14,18 @@ const { OAuth2Client } = require('google-auth-library');
 const fetch = require('node-fetch');
 
 const saltRounds = 10;
+
+// Email verification //
+const myOAuth2Client = new OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+)
+
+myOAuth2Client.setCredentials({
+  refresh_token: process.env.REFRESH_TOKEN
+});
+
+const myAccessToken = myOAuth2Client.getAccessToken()
 
 //SIGNUP
 const postSignup = async (req, res) => {
@@ -41,20 +56,25 @@ const postSignup = async (req, res) => {
           userName.then(function(result){
             newUser.userName = result;
             newUser.save();
-            res.status(200).json("New user saved");
+            // res.status(200).json("New user saved");
         });
         
-        // Confirmation Token
-      var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
-      token.save(function (err) {
-        if (err) { return res.status(500).send({ msg: err.message }); }
-        var transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user: process.env.SENDGRID_USERNAME, pass: process.env.SENDGRID_PASSWORD } });
-        var mailOptions = { from: 'no-reply@yourwebapplication.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
-        transporter.sendMail(mailOptions, function (err) {
-            if (err) { return res.status(500).send({ msg: err.message }); }
-            res.status(200).send('A verification email has been sent to ' + user.email + '.');
-          }); 
-        })
+        User.findOne({ email: newUser.email }), (err, user) => {
+          console.log(newUser.email)
+          // Confirmation Token
+          var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
+          token.save(function (err) {
+            if (err) { return res.status(500).send({ msg: err.message }) }
+            console.log(token)
+            var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "kaiying@student.unimelb.edu.au", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
+            var mailOptions = { from: 'kaiying@student.unimelb.edu.au', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+            transporter.sendMail(mailOptions, function (err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+                res.status(200).send('A verification email has been sent to ' + user.email + '.');
+              }); 
+            })
+        }
+        
 
       } else {
         res.status(400).json("An account with this email already exists");
@@ -527,10 +547,11 @@ const confirmationPost = async (req, res) => {
   // Find a matching token
   Token.findOne({ token: req.body.token }, function (err, token) {
     if (!token) {
+      console.log(token)
       return res.status(400).send('We were unable to find a valid token. Your token my have expired.');
     } else {
       // If we found a token, find a matching user
-      User.findOne({ _id: token._userId, email: req.body.email }, function (err, user) {
+      User.findOne({ _id: token.userID, email: req.body.email }, function (err, user) {
         if (!user) return res.status(400).send('We were unable to find a user for this token.');
         if (user.isVerified) return res.status(400).send('This user has already been verified.');
 
@@ -558,13 +579,15 @@ const resendTokenPost = async (req, res) => {
 
         // Save the token
         token.save(function (err) {
-            if (err) { return res.status(500).send({ msg: err.message }); }
+            if (err) { return res.status(500).send({ msg: err.message }) }
 
             // Send the email
-            var transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user: process.env.SENDGRID_USERNAME, pass: process.env.SENDGRID_PASSWORD } });
-            var mailOptions = { from: 'no-reply@codemoto.io', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+            var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "kaiying@student.unimelb.edu.au", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
+            var mailOptions = { from: 'kaiying@student.unimelb.edu.au', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
             transporter.sendMail(mailOptions, function (err) {
-              if (err) { return res.status(500).send({ msg: err.message }); }
+              if (err) { console.log(mailOptions) 
+              return res.status(500).send({ msg: err.message })
+            }
               res.status(200).send('A verification email has been sent to ' + user.email + '.');
             });
         });

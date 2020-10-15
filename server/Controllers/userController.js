@@ -154,13 +154,13 @@ const postLogin = async (req, res) => {
     });
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // Google Login
 const googleLogin = (req, res) => {
   const { idToken } = req.body;
 
   client
-    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT })
+    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
     .then((response) => {
       // console.log('GOOGLE LOGIN RESPONSE', response);
       const {

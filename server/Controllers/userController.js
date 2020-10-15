@@ -58,11 +58,9 @@ const postSignup = async (req, res) => {
               newUser.userName = result;
               await newUser.save();
               res.status(200).json("New user saved");
-              console.log('user saved')
-              console.log('ringing token')
-              await sendTokenPost(req, res);
+              await sendTokenPost(newUser.email, res);
             } catch {
-              console.log('user not saved')
+              res.status(400).json("User not saved")
             }
             
         });
@@ -188,18 +186,21 @@ const googleLogin = (req, res) => {
           } else {
             let password = email + process.env.SECRET_OR_KEY;
             const randomID = Math.floor(Math.random() * Math.floor(999));
-            newUser = new User({
+            bcrypt.hash(password, saltRounds, async (err, hash) => {
+              newUser = new User({
               firstName: given_name,
               lastName: family_name,
               email: email,
               userName: `${given_name}.${family_name}.${randomID}`,
-              password: password,
+              password: hash,
               //Format: YYYY-MM-DD
               birthDate: '',
               mobileNumber: '',
               biography: '',
               skills: '',
+              isVerified: true,
             });
+            
             newUser.save((err, data) => {
               if (err) {
                 console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
@@ -220,6 +221,7 @@ const googleLogin = (req, res) => {
                 user: { id, email },
               });
             });
+          })
           }
         });
       } else {
@@ -263,18 +265,20 @@ const facebookLogin = (req, res) => {
             let family_name = name.split(' ')[1];
             let password = email + process.env.SECRET_OR_KEY;
             const randomID = Math.floor(Math.random() * Math.floor(999));
-            newUser = new User({
-              firstName: given_name,
-              lastName: family_name,
-              email: email,
-              userName: `${given_name}.${family_name}.${randomID}`,
-              password: password,
-              //Format: YYYY-MM-DD
-              birthDate: '',
-              mobileNumber: '',
-              biography: '',
-              skills: '',
-            });
+            bcrypt.hash(password, saltRounds, async (err, hash) => {
+              newUser = new User({
+                firstName: given_name,
+                lastName: family_name,
+                email: email,
+                userName: `${given_name}.${family_name}.${randomID}`,
+                password: password,
+                //Format: YYYY-MM-DD
+                birthDate: '',
+                mobileNumber: '',
+                biography: '',
+                skills: '',
+                isVerified: true,
+              });
             newUser.save((err, data) => {
               if (err) {
                 console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
@@ -295,6 +299,8 @@ const facebookLogin = (req, res) => {
                 user: { id, email },
               });
             });
+            })
+            
           }
         });
       })
@@ -557,9 +563,9 @@ const confirmationPost = async (req, res) => {
   });
 }
 
-const sendTokenPost = async (req, res) => {
+const sendTokenPost = async (email, res) => {
   console.log('calling token')
-  await User.findOne({ email: req.body.email }, function (err, user) {
+  await User.findOne({ email: email }, function (err, user) {
     // Confirmation Token
     var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
     token.save(function (err) {

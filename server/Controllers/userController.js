@@ -53,34 +53,25 @@ const postSignup = async (req, res) => {
       if (!account) {
         console.log('email is unique');
         let userName = generateUniqueUserName(newUser.email);
-          userName.then(function(result){
-            newUser.userName = result;
-            newUser.save();
-            // res.status(200).json("New user saved");
+          userName.then(async (result) => {
+            try{
+              newUser.userName = result;
+              await newUser.save();
+              res.status(200).json("New user saved");
+              console.log('user saved')
+              console.log('ringing token')
+              await sendTokenPost(req, res);
+            } catch {
+              console.log('user not saved')
+            }
+            
         });
-        
-        User.findOne({ email: newUser.email }), (err, user) => {
-          console.log(newUser.email)
-          // Confirmation Token
-          var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
-          token.save(function (err) {
-            if (err) { return res.status(500).send({ msg: err.message }) }
-            console.log(token)
-            var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "kaiying@student.unimelb.edu.au", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
-            var mailOptions = { from: 'kaiying@student.unimelb.edu.au', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
-            transporter.sendMail(mailOptions, function (err) {
-                if (err) { return res.status(500).send({ msg: err.message }); }
-                res.status(200).send('A verification email has been sent to ' + user.email + '.');
-              }); 
-            })
-        }
-        
-
       } else {
         res.status(400).json("An account with this email already exists");
       }
     });
   });
+  
 };
 
 // Suggests a definitely unique username (Checks the db)
@@ -566,10 +557,29 @@ const confirmationPost = async (req, res) => {
   });
 }
 
+const sendTokenPost = async (req, res) => {
+  console.log('calling token')
+  await User.findOne({ email: req.body.email }, function (err, user) {
+    // Confirmation Token
+    var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
+    token.save(function (err) {
+      if (err) { return res.status(500).send({ msg: err.message }) }
+      var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "kaiying@student.unimelb.edu.au", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
+      var mailOptions = { from: 'kaiying@student.unimelb.edu.au', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+      transporter.sendMail(mailOptions, function (err) {
+          if (err) { return res.status(500).send({ msg: err.message }); }
+          res.status(200).send('A verification email has been sent to ' + user.email + '.');
+        }); 
+      })
+    })
+}
+
+
+
 // Resending Token
 const resendTokenPost = async (req, res) => {
 
-  User.findOne({ email: req.body.email }, function (err, user) {
+  await User.findOne({ email: req.body.email }, (err, user) => {
       if (!user) return res.status(400).send('We were unable to find a user with that email.');
       if (user.isVerified) {
         return res.status(400).send('This account has already been verified. Please log in.');
@@ -609,6 +619,7 @@ module.exports = {
   finishTutorial,
   changeUserName,
   confirmationPost,
+  sendTokenPost,
   resendTokenPost
 }
 

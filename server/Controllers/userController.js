@@ -154,21 +154,13 @@ const postLogin = async (req, res) => {
     });
 };
 
-<<<<<<< HEAD
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-=======
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_OLD);
->>>>>>> 6ad1a3a233657160cdf0a88e95d4276965a46961
 // Google Login
 const googleLogin = (req, res) => {
   const { idToken } = req.body;
 
   client
-<<<<<<< HEAD
     .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
-=======
-    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_OLD })
->>>>>>> 6ad1a3a233657160cdf0a88e95d4276965a46961
     .then((response) => {
       // console.log('GOOGLE LOGIN RESPONSE', response);
       const {

@@ -184,23 +184,29 @@ const googleLogin = (req, res) => {
               user: { id, email },
             });
           } else {
+            // Might be a better way to call the function
+            let userName = generateUniqueUserName(email)
+              userName.then( (result) => {
+                console.log(result)
+                  userName = result;
+              });
             let password = email + process.env.SECRET_OR_KEY;
-            const randomID = Math.floor(Math.random() * Math.floor(999));
             bcrypt.hash(password, saltRounds, async (err, hash) => {
               newUser = new User({
-              firstName: given_name,
-              lastName: family_name,
-              email: email,
-              userName: `${given_name}.${family_name}.${randomID}`,
-              password: hash,
-              //Format: YYYY-MM-DD
-              birthDate: '',
-              mobileNumber: '',
-              biography: '',
-              skills: '',
-              isVerified: true,
-            });
+                firstName: given_name,
+                lastName: family_name,
+                email: email,
+                userName: userName,
+                password: hash,
+                //Format: YYYY-MM-DD
+                birthDate: '',
+                mobileNumber: '',
+                biography: '',
+                skills: '',
+                isVerified: true,
+              });
             
+
             newUser.save((err, data) => {
               if (err) {
                 console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
@@ -264,13 +270,17 @@ const facebookLogin = (req, res) => {
             let given_name = name.split(' ')[0];
             let family_name = name.split(' ')[1];
             let password = email + process.env.SECRET_OR_KEY;
-            const randomID = Math.floor(Math.random() * Math.floor(999));
+            let userName = generateUniqueUserName(email)
+              userName.then( (result) => {
+                console.log(result)
+                  userName = result;
+              });
             bcrypt.hash(password, saltRounds, async (err, hash) => {
               newUser = new User({
                 firstName: given_name,
                 lastName: family_name,
                 email: email,
-                userName: `${given_name}.${family_name}.${randomID}`,
+                userName: userName,
                 password: password,
                 //Format: YYYY-MM-DD
                 birthDate: '',

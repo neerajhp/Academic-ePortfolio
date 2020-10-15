@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../Models/User.js');
-const Token = require('../Models/Token')
+const Token = require('../Models/Token');
 var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
-const {google} = require('googleapis')
-const OAuth2 = google.auth.OAuth2
+const { google } = require('googleapis');
+const OAuth2 = google.auth.OAuth2;
 const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
@@ -18,14 +18,14 @@ const saltRounds = 10;
 // Email verification //
 const myOAuth2Client = new OAuth2(
   process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-)
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 myOAuth2Client.setCredentials({
-  refresh_token: process.env.REFRESH_TOKEN
+  refresh_token: process.env.REFRESH_TOKEN,
 });
 
-const myAccessToken = myOAuth2Client.getAccessToken()
+const myAccessToken = myOAuth2Client.getAccessToken();
 
 //SIGNUP
 const postSignup = async (req, res) => {
@@ -53,23 +53,21 @@ const postSignup = async (req, res) => {
       if (!account) {
         console.log('email is unique');
         let userName = generateUniqueUserName(newUser.email);
-          userName.then(async (result) => {
-            try{
-              newUser.userName = result;
-              await newUser.save();
-              res.status(200).json("New user saved");
-              await sendTokenPost(req, res);
-            } catch {
-              res.status(400).json("User not saved")
-            }
-            
+        userName.then(async (result) => {
+          try {
+            newUser.userName = result;
+            await newUser.save();
+            res.status(200).json('New user saved');
+            await sendTokenPost(req, res);
+          } catch {
+            res.status(400).json('User not saved');
+          }
         });
       } else {
-        res.status(400).json("An account with this email already exists");
+        res.status(400).json('An account with this email already exists');
       }
     });
   });
-  
 };
 
 // Suggests a definitely unique username (Checks the db)
@@ -111,10 +109,13 @@ const postLogin = async (req, res) => {
   })
     .then((profile) => {
       //Email does not exist
-      if (!profile) return res.status(409).send('Email does not match our records')
+      if (!profile)
+        return res.status(409).send('Email does not match our records');
       // Account is not verified
       if (!profile.isVerified) {
-        res.status(401).send('The account is not verified, please check your email')
+        res
+          .status(401)
+          .send('The account is not verified, please check your email');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -185,11 +186,11 @@ const googleLogin = (req, res) => {
             });
           } else {
             // Might be a better way to call the function
-            let userName = generateUniqueUserName(email)
-              userName.then( (result) => {
-                console.log(result)
-                  userName = result;
-              });
+            let userName = generateUniqueUserName(email);
+            userName.then((result) => {
+              console.log(result);
+              userName = result;
+            });
             let password = email + process.env.SECRET_OR_KEY;
             bcrypt.hash(password, saltRounds, async (err, hash) => {
               newUser = new User({
@@ -205,29 +206,28 @@ const googleLogin = (req, res) => {
                 skills: '',
                 isVerified: true,
               });
-            
 
-            newUser.save((err, data) => {
-              if (err) {
-                console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
-                return res.status(400).json({
-                  error: 'User signup failed with google',
-                });
-              }
-              const token = jwt.sign(
-                { id: data._id },
-                process.env.SECRET_OR_KEY,
-                {
-                  expiresIn: '7d',
+              newUser.save((err, data) => {
+                if (err) {
+                  console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
+                  return res.status(400).json({
+                    error: 'User signup failed with google',
+                  });
                 }
-              );
-              const { id, email } = data;
-              return res.json({
-                token,
-                user: { id, email },
+                const token = jwt.sign(
+                  { id: data._id },
+                  process.env.SECRET_OR_KEY,
+                  {
+                    expiresIn: '7d',
+                  }
+                );
+                const { id, email } = data;
+                return res.json({
+                  token,
+                  user: { id, email },
+                });
               });
             });
-          })
           }
         });
       } else {
@@ -270,18 +270,18 @@ const facebookLogin = (req, res) => {
             let given_name = name.split(' ')[0];
             let family_name = name.split(' ')[1];
             let password = email + process.env.SECRET_OR_KEY;
-            let userName = generateUniqueUserName(email)
-              userName.then( (result) => {
-                console.log(result)
-                  userName = result;
-              });
+            let userName = generateUniqueUserName(email);
+            userName.then((result) => {
+              console.log(result);
+              userName = result;
+            });
             bcrypt.hash(password, saltRounds, async (err, hash) => {
               newUser = new User({
                 firstName: given_name,
                 lastName: family_name,
                 email: email,
                 userName: userName,
-                password: password,
+                password: hash,
                 //Format: YYYY-MM-DD
                 birthDate: '',
                 mobileNumber: '',
@@ -289,28 +289,27 @@ const facebookLogin = (req, res) => {
                 skills: '',
                 isVerified: true,
               });
-            newUser.save((err, data) => {
-              if (err) {
-                console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
-                return res.status(400).json({
-                  error: 'User signup failed with facebook',
-                });
-              }
-              const token = jwt.sign(
-                { id: data._id },
-                process.env.SECRET_OR_KEY,
-                {
-                  expiresIn: '7d',
+              newUser.save((err, data) => {
+                if (err) {
+                  console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
+                  return res.status(400).json({
+                    error: 'User signup failed with facebook',
+                  });
                 }
-              );
-              const { id, email } = data;
-              return res.json({
-                token,
-                user: { id, email },
+                const token = jwt.sign(
+                  { id: data._id },
+                  process.env.SECRET_OR_KEY,
+                  {
+                    expiresIn: '7d',
+                  }
+                );
+                const { id, email } = data;
+                return res.json({
+                  token,
+                  user: { id, email },
+                });
               });
             });
-            })
-            
           }
         });
       })
@@ -554,70 +553,144 @@ const confirmationPost = async (req, res) => {
   // Find a matching token
   Token.findOne({ token: req.body.token }, function (err, token) {
     if (!token) {
-      console.log(token)
-      return res.status(400).send('We were unable to find a valid token. Your token my have expired.');
+      console.log(token);
+      return res
+        .status(400)
+        .send(
+          'We were unable to find a valid token. Your token my have expired.'
+        );
     } else {
       // If we found a token, find a matching user
-      User.findOne({ _id: token.userID, email: req.body.email }, function (err, user) {
-        if (!user) return res.status(400).send('We were unable to find a user for this token.');
-        if (user.isVerified) return res.status(400).send('This user has already been verified.');
+      User.findOne({ _id: token.userID, email: req.body.email }, function (
+        err,
+        user
+      ) {
+        if (!user)
+          return res
+            .status(400)
+            .send('We were unable to find a user for this token.');
+        if (user.isVerified)
+          return res.status(400).send('This user has already been verified.');
 
         // Verify and save the user
         user.isVerified = true;
         user.save(function (err) {
-          if (err) { return res.status(500).send({ msg: err.message }); }
-          res.status(200).send("The account has been verified. Please log in.");
+          if (err) {
+            return res.status(500).send({ msg: err.message });
+          }
+          res.status(200).send('The account has been verified. Please log in.');
         });
       });
     }
   });
-}
+};
 
 const sendTokenPost = async (req, res) => {
-  console.log('calling token')
+  console.log('calling token');
   await User.findOne({ email: req.body.email }, function (err, user) {
     // Confirmation Token
-    var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
+    var token = new Token({
+      userID: user._id,
+      token: crypto.randomBytes(16).toString('hex'),
+    });
     token.save(function (err) {
-      if (err) { return res.status(500).send({ msg: err.message }) }
-      var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "homealone30022@gmail.com", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
-      var mailOptions = { from: 'homealone30022@gmail.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+      if (err) {
+        return res.status(500).send({ msg: err.message });
+      }
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          type: 'OAuth2',
+          user: 'homealone30022@gmail.com',
+          clientId: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          refreshToken: process.env.REFRESH_TOKEN,
+          accessToken: myAccessToken,
+        },
+      });
+      var mailOptions = {
+        from: 'homealone30022@gmail.com',
+        to: user.email,
+        subject: 'Account Verification Token',
+        text:
+          'Hello,\n\n' +
+          'Please verify your account by clicking the link: \nhttp://' +
+          req.headers.host +
+          '/confirmation/' +
+          token.token +
+          '.\n',
+      };
       transporter.sendMail(mailOptions, function (err) {
-          if (err) { return res.status(500).send({ msg: err.message }); }
-          res.status(200).send('A verification email has been sent to ' + user.email + '.');
-        }); 
-      })
-    })
-}
-
-
+        if (err) {
+          return res.status(500).send({ msg: err.message });
+        }
+        res
+          .status(200)
+          .send('A verification email has been sent to ' + user.email + '.');
+      });
+    });
+  });
+};
 
 // Resending Token
 const resendTokenPost = async (req, res) => {
-
   await User.findOne({ email: req.body.email }, (err, user) => {
-      if (!user) return res.status(400).send('We were unable to find a user with that email.');
-      if (user.isVerified) {
-        return res.status(400).send('This account has already been verified. Please log in.');
-      } else {
-        // Create a verification token, save it, and send email
-        var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
+    if (!user)
+      return res
+        .status(400)
+        .send('We were unable to find a user with that email.');
+    if (user.isVerified) {
+      return res
+        .status(400)
+        .send('This account has already been verified. Please log in.');
+    } else {
+      // Create a verification token, save it, and send email
+      var token = new Token({
+        userID: user._id,
+        token: crypto.randomBytes(16).toString('hex'),
+      });
 
-        // Save the token
-        token.save(function (err) {
-            if (err) { return res.status(500).send({ msg: err.message }) }
+      // Save the token
+      token.save(function (err) {
+        if (err) {
+          return res.status(500).send({ msg: err.message });
+        }
 
-            // Send the email
-            var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "homealone30022@gmail.com", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
-            var mailOptions = { from: 'homealone30022@gmail.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
-            transporter.sendMail(mailOptions, function (err) {
-              if (err) { console.log(mailOptions) 
-              return res.status(500).send({ msg: err.message })
-            }
-              res.status(200).send('A verification email has been sent to ' + user.email + '.');
-            });
+        // Send the email
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            type: 'OAuth2',
+            user: 'homealone30022@gmail.com',
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            refreshToken: process.env.REFRESH_TOKEN,
+            accessToken: myAccessToken,
+          },
         });
-      }
+        var mailOptions = {
+          from: 'homealone30022@gmail.com',
+          to: user.email,
+          subject: 'Account Verification Token',
+          text:
+            'Hello,\n\n' +
+            'Please verify your account by clicking the link: \nhttp://' +
+            req.headers.host +
+            '/confirmation/' +
+            token.token +
+            '.\n',
+        };
+        transporter.sendMail(mailOptions, function (err) {
+          if (err) {
+            console.log(mailOptions);
+            return res.status(500).send({ msg: err.message });
+          }
+          res
+            .status(200)
+            .send('A verification email has been sent to ' + user.email + '.');
+        });
+      });
+    }
   });
 };
 
@@ -636,6 +709,5 @@ module.exports = {
   changeUserName,
   confirmationPost,
   sendTokenPost,
-  resendTokenPost
-}
-
+  resendTokenPost,
+};

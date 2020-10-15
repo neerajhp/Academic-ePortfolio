@@ -58,7 +58,7 @@ const postSignup = async (req, res) => {
               newUser.userName = result;
               await newUser.save();
               res.status(200).json("New user saved");
-              await sendTokenPost(newUser.email, res);
+              await sendTokenPost(req, res);
             } catch {
               res.status(400).json("User not saved")
             }
@@ -573,15 +573,15 @@ const confirmationPost = async (req, res) => {
   });
 }
 
-const sendTokenPost = async (email, res) => {
+const sendTokenPost = async (req, res) => {
   console.log('calling token')
-  await User.findOne({ email: email }, function (err, user) {
+  await User.findOne({ email: req.body.email }, function (err, user) {
     // Confirmation Token
     var token = new Token({ userID: user._id, token: crypto.randomBytes(16).toString('hex') });
     token.save(function (err) {
       if (err) { return res.status(500).send({ msg: err.message }) }
-      var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "kaiying@student.unimelb.edu.au", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
-      var mailOptions = { from: 'kaiying@student.unimelb.edu.au', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+      var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "homealone30022@gmail.com", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
+      var mailOptions = { from: 'homealone30022@gmail.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
       transporter.sendMail(mailOptions, function (err) {
           if (err) { return res.status(500).send({ msg: err.message }); }
           res.status(200).send('A verification email has been sent to ' + user.email + '.');
@@ -608,8 +608,8 @@ const resendTokenPost = async (req, res) => {
             if (err) { return res.status(500).send({ msg: err.message }) }
 
             // Send the email
-            var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "kaiying@student.unimelb.edu.au", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
-            var mailOptions = { from: 'kaiying@student.unimelb.edu.au', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+            var transporter = nodemailer.createTransport({ service: 'gmail', auth: { type: "OAuth2", user: "homealone30022@gmail.com", clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, refreshToken: process.env.REFRESH_TOKEN , accessToken: myAccessToken } });
+            var mailOptions = { from: 'homealone30022@gmail.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
             transporter.sendMail(mailOptions, function (err) {
               if (err) { console.log(mailOptions) 
               return res.status(500).send({ msg: err.message })

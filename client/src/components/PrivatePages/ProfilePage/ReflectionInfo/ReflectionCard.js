@@ -88,30 +88,30 @@ const ReflectionCard = (reflection) => {
   };
 
   return (
-    <Paper className={classes.card}>
-      <div className={classes.bio}>
-        <Typography className={classes.title} variant='h2'>
-          This is a Reflection
-        </Typography>
-        <Typography>This is the blog introduction</Typography>
-        <input
-          className={classes.hidden}
-          type='file'
-          ref={inputEl}
-          accept='image/*'
-          multiple
-          onChange={handleChoseImg}
-        />
-        {getRecord(records)}
-        {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-        <ReflectionDialog records={records} setRecords={setRecords} />
-        <div className={classes.upload}>
-          <Button loading={loading} onClick={() => inputEl.current.click()}>
-            Upload
-          </Button>
+      <Paper className={classes.card}>
+        <div className={classes.bio}>
+          <Typography className={classes.title} variant='h2'>
+            This is a Reflection
+          </Typography>
+          <Typography>This is the blog introduction</Typography>
+          <input
+              className={classes.hidden}
+              type='file'
+              ref={inputEl}
+              accept='image/*'
+              multiple
+              onChange={handleChoseImg}
+          />
+          {getRecord(records)}
+          {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+          <ReflectionDialog records={records} setRecords={setRecords} />
+          <div className={classes.upload}>
+            <Button loading={loading} onClick={() => inputEl.current.click()}>
+              Upload
+            </Button>
+          </div>
         </div>
-      </div>
-    </Paper>
+      </Paper>
   );
 };
 

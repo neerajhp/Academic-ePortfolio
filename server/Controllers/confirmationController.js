@@ -1,7 +1,8 @@
 const User = require('../Models/User.js');
 const Token = require('../Models/Token');
+const Reset = require('../Models/Reset');
 
-
+var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 const {
@@ -184,8 +185,124 @@ const resendTokenPost = async (req, res) => {
     });
 };
 
+
+// Password Reset
+
+const resetPut = async (req, res) => {
+    // Find a matching token
+    Reset.findOne({
+        token: req.params.token
+    }, function (err, token) {
+        if (!token) {
+            return res
+                .status(400)
+                .send(
+                    'We were unable to find a valid token. Your token my have expired.'
+                );
+        } else {
+            // If we found a token, find a matching user
+            bcrypt.hash(req.body.password, 10, async (err, hash) => {
+                User.findOneAndUpdate({_id: token.userID}, {password: hash}, (err, user) => {
+                    if (err) 
+                            return res.status(500).send({
+                                msg: err.message
+                            });
+                    if (!user)
+                         return res
+                            .status(400)
+                            .send('We were unable to find a user for this token.');
+                
+                    
+                    
+                });
+
+           
+
+            }) 
+            Reset.findOneAndDelete({
+                token: req.params.token
+            }, (err, result) => {
+                if (result){
+                    return res.status(200).send('The password has been reset. Please log in.')
+                } else  {
+                    console.log('not deleted')
+                }
+                    
+
+            })
+
+           
+        }
+    });
+};
+
+// Sending reset password link
+const sendResetPost = async (req, res) => {
+    await User.findOne({
+        email: req.body.email
+    }, (err, user) => {
+        if (err) return res.status(400).send("An error has occured")
+        if (!user) {
+            return res
+                .status(400)
+                .send('We were unable to find a user with that email.');
+        } else {
+            // Create a verification token, save it, and send email
+            var token = new Reset({
+                userID: user._id,
+                token: crypto.randomBytes(16).toString('hex'),
+            });
+
+            // Save the token
+            token.save(function (err) {
+                if (err) {
+                    return res.status(500).send({
+                        msg: err.message
+                    });
+                }
+
+                // Send the email
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        type: 'OAuth2',
+                        user: 'homealone30022@gmail.com',
+                        clientId: process.env.GOOGLE_CLIENT_ID,
+                        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                        refreshToken: process.env.REFRESH_TOKEN,
+                        accessToken: myAccessToken,
+                    },
+                });
+                var mailOptions = {
+                    from: 'homealone30022@gmail.com',
+                    to: user.email,
+                    subject: 'Account Reset Link',
+                    text: 'Hello,\n\n' +
+                        'Please reset your account by clicking the link: \nhttp://' +
+                        req.headers.host +
+                        '/reset/' +
+                        token.token +
+                        '.\n',
+                };
+                transporter.sendMail(mailOptions, function (err) {
+                    if (err) {
+                        console.log(mailOptions);
+                        return res.status(500).send({
+                            msg: err.message
+                        });
+                    }
+                    res
+                        .status(200)
+                        .send('A reset email has been sent to ' + user.email + '.');
+                });
+            });
+        }
+    });
+};
 module.exports = {
     confirmationPost,
     sendTokenPost,
     resendTokenPost,
+    resetPut,
+    sendResetPost,
 };

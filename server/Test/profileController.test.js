@@ -35,6 +35,17 @@ test("Should update bio", async () =>{
     
 });
 
+// Get bio
+test("Should get bio", async () => {
+    await request.get("/api/profile/bio")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual("Testing the functionality of the biography 1 2 3")
+    })
+});
+
 // Add skills
 test("Should add skills", async () => {
     console.log(token)
@@ -77,6 +88,16 @@ test("Should get skills", async () => {
     })
 });
 
+// Should return "" when aboutMe hasn't been initialized
+test("Should return empty string when aboutMe hasn't been initialized", async () => {
+    await request.get("/api/profile/aboutMe")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data.body).toEqual("")
+    })
+})
+
 // Update about me
 test("Should update aboutMe", async () => {
     await request.put("/api/profile/aboutMe")
@@ -101,4 +122,82 @@ test("Should get aboutMe", async () => {
         expect(data).toBeDefined()
         expect(data.body).toEqual("blah blah blah")
     })
-})
+});
+
+// Should create a social media JSON
+test('Should update social media JSON', async () => {
+    await request.put("/api/profile/social-media")
+    .set('Authorization', 'bearer ' + token)
+    .send([{"site": "youtube", "link": "www.youtube.com"}, {"site": "facebook", "link": "www.facebook.com"}])
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual({
+            linkedIn: "",
+            facebook: "www.facebook.com",
+            instagram: "",
+            youtube: "www.youtube.com",
+            twitter: ""
+        })
+    });
+});
+
+// Should return an error when tryin to access cv, because it hasn't been uploaded
+test("Should return error when trying to access cv", async () => {
+    await request.get("/api/profile/cv")
+    .set('Authorization', 'bearer ' + token)
+    .expect(404)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual('CV not found')
+    })
+});
+
+// Should return an error when trying to access profile picture, because it hasn't been uploaded
+test("Should return error when trying to access profile picture", async () => {
+    await request.get("/api/profile/profile-pic")
+    .set('Authorization', 'bearer ' + token)
+    .expect(404)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual('Profile picture not found')
+    })
+});
+
+// Get user's profile
+test("Should be able to find the user's profile", async () => {
+    await request.get("/api/profile")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+    });
+});
+
+// Should change user's privacy to true
+test("Should change user's privacy to true", async () => {
+    await request.put("/api/profile/private")
+    .set('Authorization', 'bearer ' + token)
+    .send({
+        private: true
+    })
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual(true)
+    });
+});
+
+// Delete the user
+test("Should delete the user and all of the info attached to the user", async () => {
+    await request.delete("/api/profile/deleteProfile")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual("User deleted")
+    })
+});
+
+
+

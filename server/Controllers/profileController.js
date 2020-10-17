@@ -100,7 +100,6 @@ const viewerGetProfile = async (req, res) => {
 
 // Gets the user's profile
 const getProfile = async (req, res) => {
-  console.log('Requesst ', req);
   try {
     let profile = await getAllInfo(req.user.id);
     if (profile) {
@@ -165,6 +164,7 @@ const deleteProfile = async (req, res) => {
         _id: req.user.id,
       },
       (err, result) => {
+        console.log("About to delete user")
         if (err) {
           throw err;
         } else {
@@ -181,49 +181,6 @@ const deleteProfile = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
-  }
-};
-
-// Gets the user's general information (Contact details, name, birth date)
-const getUserInformation = async (req, res) => {
-  try {
-    await User.findById(req.user.id, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      if (result) {
-        const userInfo = {
-          firstName: result.firstName,
-          lastName: result.lastName,
-          email: result.email,
-          mobileNumber: result.mobileNumber,
-          birthDate: result.birthDate,
-        };
-        res.status(200).json(userInfo);
-      } else {
-        res.status(404).json('User not found');
-      }
-    });
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
-
-// Edit the name, mobile number and birthDate of the user
-const editUserInformation = async (req, res) => {
-  try {
-    await User.findByIdAndUpdate(req.user.id, req.body, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        res.status(404).json('User not found');
-      }
-    });
-  } catch (error) {
-    res.status(400).send(error);
   }
 };
 
@@ -269,7 +226,7 @@ const searchProfilePic = async (userID) => {
 const getCV = async (req, res) => {
   try {
     await Document.findOne(
-      { user_id: userID, fieldName: 'cv' },
+      { user_id: req.user.id, fieldName: 'cv' },
       (err, result) => {
         if (err) {
           throw err;
@@ -573,7 +530,7 @@ const changePrivacy = async (req, res) => {
       }
       if(result){
         console.log("Change privacy value");
-        res.status(200).json(result);
+        res.status(200).json(result.private);
       }else{
         res.status(404).json("Failed to find user record");
       }
@@ -586,8 +543,6 @@ const changePrivacy = async (req, res) => {
 module.exports = {
   getProfile,
   viewerGetProfile,
-  getUserInformation,
-  editUserInformation,
   getCV,
   getProfilePic,
   getBio,

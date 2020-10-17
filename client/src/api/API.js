@@ -526,6 +526,22 @@ export default {
       }
     );
   },
+  // Finish the user's tutorial
+  finishTutorial: function (){
+    return axios.put('api/user/update/tutorial', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
+  // Change the user's privacy setting
+  changePrivacy: function(body){
+    return axios.put('api/profile/private', {private: body.private}, {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // Create an experience card
   createExperience: function (body) {
     return axios.post(

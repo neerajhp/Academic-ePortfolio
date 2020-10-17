@@ -200,8 +200,6 @@ const searchAllEdu = async (userID) => {
       if(result){
           edu = result;
           edu.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-      }else{
-          edu = null;
       }
     });
     return edu;

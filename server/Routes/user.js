@@ -78,13 +78,4 @@ router.put(
   }
 );
 
-// Email Confirmation
-router.post("/confirmation", async (req, res) => {
-    userController.confirmationPost(req,res);
-})
-
-router.post ("/resend", async (req, res) => {
-    userController.resendTokenPost(req,res);
-})
-
 module.exports = router;

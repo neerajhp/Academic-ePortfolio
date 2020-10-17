@@ -77,45 +77,109 @@ const addFiles = async (req, res) => {
     }
 }
 
-const addUrl = async (req, res) => {
+const addUrl = async (objectID, userID, url) => {
+    //console.log("Add urls");
+    let success;
+    await FeaturedWork.findOneAndUpdate({_id: objectID, user_id: userID}, {$addToSet: { url: url },}, {new: true}, (err, result) => {
+        if(err){
+            //console.log("error found");
+            throw err;
+        }
+        if(result){
+            //console.log("updated");
+            success = true;
+        }else{
+            //console.log("Featured work not found");
+            success = false;
+            //res.status(404).json("Featured work not found");
+        }
+    });
+    return success;
+    // try{
+    //     let success;
+    //     await FeaturedWork.findOneAndUpdate({_id: objectID, user_id: userID}, {$addToSet: { url: url },}, {new: true}, (err, result) => {
+    //         if(err){
+    //             throw err;
+    //         }
+    //         if(result){
+    //             console.log("updated");
+    //             success = true;
+    //         }else{
+    //             console.log("Featured work not found");
+    //             success = false;
+    //             //res.status(404).json("Featured work not found");
+    //         }
+    //     });
+    // }catch(error){
+    //     res.status(400).json("Failed to add url to the featured work model");
+    // }
+}
+
+const removeUrl = async (req, res) => {
     try{
-        await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { url: req.body.url },}, {new: true}, (err, result) => {
+        await FeaturedWork.findByIdAndUpdate(req.params.id, {$pull: { url: {$in : req.body.url}},}, {new: true}, (err, result) => {
             if(err){
                 throw err;
             }
             if(result){
-                res.status(200).json(result.url);
+                console.log("url removed");
+                res.status(200).json(result);
             }else{
-                res.status(404).json("Featured work not found");
+                res.status(404).json('Failed to find featured work with the specified id');
             }
         })
     }catch(error){
-        res.status(400).json("Failed to add url to the featured work model");
+        res.status(400).json("Failed to remove a url");
     }
 }
+
 
 // Allows users to edit the properties of a featured work
 const editFeaturedWork = async (req, res) => {
     try{
-        await FeaturedWork.updateOne({
-            user_id: req.user.id,
-            _id: req.params.id
-        }, req.body, (err, result) => {
+        //console.log("Start edit");
+        // if(req.body.url != null){
+        //     console.log("Time to add urls");
+        //     await addUrl(req.params.id, req.user.id, req.body.url);
+        //     delete req.body.url;
+        //     // await addUrl(req.params.id, req.user.id, req.body.url, (err,result) => {
+        //     //     if(err){
+        //     //         throw err;
+        //     //     }
+        //     //     console.log(result);
+        //     //     if(result){
+        //     //         //console.log("Urls have been added");
+        //     //         delete req.body.url;
+        //     //     }else{
+        //     //         //console.log("Failed to add urls");
+        //     //         res.status(400).json("Failed to add urls");
+        //     //         return;
+        //     //     }
+        //     // });
+        //     // let urlSuccess = await addUrl(req.params.id, req.user.id, req.body.url);
+        //     // if(urlSuccess){
+        //     //     console.log("Urls have been added");
+        //     //     delete req.body.url;
+        //     // }else{
+        //     //     console.log("Failed to add urls");
+        //     //     res.status(400).json("Failed to add urls");
+        //     //     return;
+        //     // }
+        // }else{
+        //     console.log("No urls to add");
+        // }
+        
+        await FeaturedWork.findByIdAndUpdate(
+            req.params.id, req.body, {new: true}, (err, result) => {
+            console.log("Time to update featured work");
             if(err){
                 console.log("something's up");
                 res.status(404).json(err);
             }else{
                 if(result){
-                    console.log("successfully updated");
+                    //console.log("successfully updated");
                     //res.status(200).json("featured work updated");
-                    FeaturedWork.findById({
-                        _id: req.params.id
-                    }, function (err, updated) {
-                        if(err){
-                            throw err;
-                        }
-                        res.status(200).json(updated);
-                    });
+                    res.status(200).json(result);
                 }
                 // if(result.nModified === 0){
                 //     res.status(400).json("Nothing was changed");
@@ -297,6 +361,7 @@ module.exports = {
     viewerGetFeaturedWorks,
     addFiles,
     addUrl,
+    removeUrl,
     removeFeaturedWork,
     clearShowcase,
     removeAllFeaturedWorks

@@ -67,6 +67,10 @@ const userSchema = mongoose.Schema({
     tutorial: {
         type: Boolean,
         default: true 
+    },
+    private: {
+        type: Boolean,
+        default: false
     }
 });
 

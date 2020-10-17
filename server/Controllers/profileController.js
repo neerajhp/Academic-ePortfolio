@@ -564,6 +564,25 @@ const createSocialMediaJSON = (accounts, original) => {
   
 }
 
+// Change the privacy setting
+const changePrivacy = async (req, res) => {
+  try{
+    await User.findByIdAndUpdate(req.user.id, {private: req.body.private}, {new: true}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        console.log("Change privacy value");
+        res.status(200).json(result);
+      }else{
+        res.status(404).json("Failed to find user record");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Failed to change privacy value");
+  }
+}
+
 module.exports = {
   getProfile,
   viewerGetProfile,
@@ -579,5 +598,6 @@ module.exports = {
   addSkills,
   removeSkills,
   deleteProfile,
-  addSocialMedia
+  addSocialMedia,
+  changePrivacy
 };

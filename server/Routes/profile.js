@@ -23,6 +23,9 @@ router.get("/profile-pic", profileController.getProfilePic);
 // Edits the user's social media links
 router.put("/social-media", profileController.addSocialMedia);
 
+// Change the user's privacy settings
+router.put("/private", profileController.changePrivacy);
+
 // Education Section //
 
 // Create
@@ -59,8 +62,13 @@ router.delete("/featured-work", showcaseController.clearShowcase);
 router.put("/featured-work/:id", showcaseController.editFeaturedWork);
 // Attach files to specific featured work
 router.put("/featured-work/files/:id", showcaseController.addFiles);
+
 // Add urls to specific featured work
-router.put("/featured-work/url/:id", showcaseController.addUrl);
+//router.put("/featured-work/url/:id", showcaseController.addUrl);
+
+// Removes the urls specified in the body's list
+//router.delete("/featured-work/url/:id", showcaseController.removeUrl);
+
 // Gets a specific featured work by its object id
 router.get("/featured-work/:id", showcaseController.getFeaturedWork);
 // Removes a specific featured work by its object id

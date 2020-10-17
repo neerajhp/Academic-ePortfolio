@@ -302,8 +302,12 @@ const changeUserName = async (req, res) => {
           }
         );
       } else {
-        // Suggest a new username
-        res.status(400).json('Username not unique');
+        if(result._id == req.user.id){
+          res.status(200).json("User inputted the same username");
+        }else{
+          // Suggest a new username
+          res.status(400).json('Username not unique');
+        }
       }
     });
   } catch (error) {

@@ -14,6 +14,8 @@ describe('Login Page', () => {
     })
 
     it('test invalid email login', () => {
+
+
         cy.visit('http://localhost:3000/login')
 
         cy.get('input').eq(0).type('ccartmann@email.com')
@@ -41,6 +43,7 @@ describe('Login Page', () => {
         cy.url().should('eq', 'http://localhost:3000/home/signup')
     })
 
+    //need to find a way to test url of new tabs 
     // it('test google signin link', () => {
     //   cy.visit('http://localhost:3000/login')
     //   cy.get('button').eq(2).contain('Google')

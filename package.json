@@ -29,6 +29,7 @@
     "body-parser": "^1.19.0",
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
+    "cypress-react-unit-test": "^4.16.0",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -55,7 +56,8 @@
     "yup": "^0.29.3"
   },
   "devDependencies": {
-    "cypress": "^5.3.0",
+    "@testing-library/cypress": "^7.0.1",
+    "cypress": "^5.4.0",
     "cypress-react-selector": "^2.1.0",
     "env-cmd": "^10.1.0",
     "jest": "^24.9.0",

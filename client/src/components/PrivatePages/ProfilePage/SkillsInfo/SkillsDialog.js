@@ -1,23 +1,25 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
+import AddIcon from "@material-ui/icons/Add";
 import {
-  Button,
+  IconButton,
   Typography,
   Dialog,
   DialogContent,
   DialogTitle,
 } from "@material-ui/core";
-import ProjectForm from "./ProjectForm";
 import API from "../../../../api/API";
+import SkillsForm from "./SkillsForm";
 
 const useStyles = makeStyles((theme) => ({
-  // container: {
-  //   width: "100%",
-  //   display: "flex",
-  //   justifyContent: "flex-end",
-  //   position: "relative",
-  // },
+  container: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+  },
   paper: {
     position: "absolute",
     width: "40%",
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProjectDialog = ({ records, setRecords }) => {
+const AboutDialog = ({ getData, skills }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -38,15 +40,17 @@ const ProjectDialog = ({ records, setRecords }) => {
   };
 
   const handleClose = () => {
-    API.getAllBlogs().then(({ data }) => {
-      setRecords(data);
+    API.getAboutMe().then(({ data }) => {
+      getData();
       setOpen(false);
     });
   };
 
   return (
-    <>
-      <EditIcon onClick={handleOpen} />
+    <div className={classes.container}>
+      <IconButton onClick={handleOpen}>
+        <AddIcon />
+      </IconButton>
       <Dialog
         fullWidth={true}
         maxWidth={"md"}
@@ -55,14 +59,14 @@ const ProjectDialog = ({ records, setRecords }) => {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle disableTypography>
-          <Typography variant="h2">Edit Project</Typography>
+          <Typography variant="h2">Add Skills</Typography>
         </DialogTitle>
         <DialogContent>
-          <ProjectForm records={records} handleClose={handleClose} />
+          <SkillsForm skills={skills} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
-export default ProjectDialog;
+export default AboutDialog;

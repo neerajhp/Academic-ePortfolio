@@ -672,4 +672,42 @@ export default {
       },
     });
   },
+
+  /* =========== Confirmation =========== */
+    // Resends account confirmation token
+    resendTokenPost: function (body) {
+      return axios.post(
+        "/api/confirmation/resend",
+        {
+          
+        },
+      );
+    },
+    // Verifies account
+    confirmationPost: function (body, token) {
+      return axios.post(
+        `/api/confirmation/verify/${token}`,
+        {
+          email: body.email,
+        },
+      );
+    },
+    // Sends reset password email
+    sendResetPost: function (body, token) {
+      return axios.post(
+        "/api/confirmation/reset",
+        {
+          email: body.email,
+        },
+      );
+    },
+    // Verifies account
+    resetPut: function (body, token) {
+      return axios.put(
+        `/api/confirmation/reset/${token}`,
+        {
+          password: body.password,
+        },
+      );
+    },
 };

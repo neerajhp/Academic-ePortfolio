@@ -177,6 +177,7 @@ const ExperienceCard = ({ experience }) => {
           type={'volunteering'}
           records={records.volunteering}
           setRecords={setRecords}
+
         />
       </div>
       <div className={classes.workSection}>

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   
     return (
       <div className={classes.container}>
-        <IconButton onClick={handleOpen}>
+        <IconButton onClick={handleOpen} data-testid = "bio">
           <EditIcon />
         </IconButton>
         <Dialog

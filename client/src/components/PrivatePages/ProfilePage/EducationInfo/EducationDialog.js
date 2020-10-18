@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogTitle,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import EducationForm from './EducationForm';
 import API from '../../../../api/API';
 
@@ -61,7 +62,9 @@ const EducationDialog = ({ records, setRecords, empty }) => {
 
   const openButton = empty ? (
     <Button onClick={handleOpen} className={classes.newEducationButton}>
-      <Typography variant='h2'>Add Your Education</Typography>
+      <Typography variant='h2'>
+        <AddIcon /> Add Your Education
+      </Typography>
     </Button>
   ) : (
     <IconButton onClick={handleOpen}>

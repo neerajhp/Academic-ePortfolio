@@ -6,9 +6,9 @@ import {
   IconButton,
   Typography,
   Dialog,
-  DialogContent,
   DialogTitle,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import API from '../../../../api/API';
 import AboutForm from './AboutForm';
 
@@ -18,6 +18,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     position: 'relative',
+  },
+  dialog: {
+    '& .MuiDialogTitle-root': {
+      background: `linear-gradient(175deg, white 75%, ${theme.palette.secondary.overlay} 25%)`,
+    },
+    '& .MuiDialogActions-root': {
+      background: `linear-gradient(175deg, ${theme.palette.primary.overlay} 55%,  white 20%)`,
+    },
   },
   icon: {
     color: 'rgba(255, 255, 255, 0.7)',
@@ -63,7 +71,7 @@ const AboutDialog = ({ records, setRecords, empty }) => {
   const openButton = empty ? (
     <Button onClick={handleOpen} className={classes.newButton}>
       <Typography variant='h2'>
-        Add a little paragraph about yourself
+        <AddIcon /> Add a little paragraph about yourself
       </Typography>
     </Button>
   ) : (
@@ -81,13 +89,13 @@ const AboutDialog = ({ records, setRecords, empty }) => {
         open={open}
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
+        className={classes.dialog}
       >
         <DialogTitle disableTypography>
           <Typography variant='h2'>Edit About</Typography>
         </DialogTitle>
-        <DialogContent>
-          <AboutForm records={records} handleClose={handleClose} />
-        </DialogContent>
+
+        <AboutForm records={records} handleClose={handleClose} />
       </Dialog>
     </React.Fragment>
   );

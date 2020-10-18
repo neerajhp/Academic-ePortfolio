@@ -7,6 +7,7 @@ import {
   TableCell,
   Typography,
   TableBody,
+  Divider,
 } from '@material-ui/core';
 import ExperienceDialog from './ExperienceDialog.js';
 
@@ -67,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
     '&.MuiTable-root': {
       width: '90%',
     },
+    '& .MuiTableCell-root': {
+      borderBottom: '0px ',
+    },
   },
 
   period: {
@@ -84,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     marginTop: theme.spacing(1),
+  },
+  workDivider: {
+    width: '100%',
   },
   editDialogContainer: {
     width: '5%',
@@ -152,27 +159,39 @@ const ExperienceCard = ({ experience }) => {
             <Table className={classes.table}>
               <TableBody>
                 {experience.map((exp, i) => (
-                  <TableRow key={i} className={classes.table}>
-                    <TableCell className={classes.period}>
-                      <Typography>
-                        {MONTHS[exp.monthStart]}, {exp.yearStart} -
-                        {MONTHS[exp.monthEnd]}, {exp.yearEnd}
-                      </Typography>
-                    </TableCell>
-                    <TableCell className={classes.experience}>
-                      <Typography className={classes.organisation} variant='h3'>
-                        {exp.organization}
-                      </Typography>
+                  <React.Fragment key={i}>
+                    <TableRow className={classes.table}>
+                      <TableCell className={classes.period}>
+                        <Typography>
+                          {MONTHS[exp.monthStart]}, {exp.yearStart} -
+                          {MONTHS[exp.monthEnd]}, {exp.yearEnd}
+                        </Typography>
+                      </TableCell>
+                      <TableCell className={classes.experience}>
+                        <Typography
+                          className={classes.organisation}
+                          variant='h3'
+                        >
+                          {exp.organization}
+                        </Typography>
 
-                      <Typography className={classes.role}>
-                        {exp.role} {`, ${exp.employeeStatus}`}
-                      </Typography>
+                        <Typography className={classes.role}>
+                          {exp.role} {`, ${exp.employeeStatus}`}
+                        </Typography>
 
-                      <Typography className={classes.description}>
-                        {exp.description}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
+                        <Typography className={classes.description}>
+                          {exp.description}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                    <tr>
+                      <td colSpan='2'>
+                        {experience[i + 1] && (
+                          <Divider className={classes.workDivider} />
+                        )}
+                      </td>
+                    </tr>
+                  </React.Fragment>
                 ))}
               </TableBody>
             </Table>

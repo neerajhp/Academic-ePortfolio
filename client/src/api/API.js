@@ -350,17 +350,22 @@ export default {
   },
   // Edit a specific featured work
   editFeaturedWork: function (body, recordID) {
-    return axios.put(`api/profile/featured-work/${recordID}`, {
-      title: body.title,
-      type: body.type,
-      description: body.description,
-      attachedFile: body.attachedFile,
-      image: body.image,
-      url: body.url,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.put(
+      `api/profile/featured-work/${recordID}`,
+      {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        attachedFile: body.attachedFile,
+        image: body.image,
+        url: body.url,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Removes a specific featured work
   removeFeaturedWork: function (recordID) {
@@ -408,14 +413,19 @@ export default {
   },
   // Edit a specific blog post
   editBlog: function (body, recordID) {
-    return axios.put(`api/blog/${recordID}`, {
-      title: body.title,
-      dateCreated: body.dateCreated,
-      content: body.content,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.put(
+      `api/blog/${recordID}`,
+      {
+        title: body.title,
+        dateCreated: body.dateCreated,
+        content: body.content,
       },
-    });
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Removes a specific blog
   removeBlog: function (recordID) {

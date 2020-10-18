@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogTitle,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import ExperienceForm from './ExperienceForm';
 import API from '../../../../api/API';
 
@@ -86,7 +87,7 @@ const ExperienceDialog = ({ records, setRecords, type, empty }) => {
   const openButton = empty ? (
     <Button onClick={handleOpen} className={classes.newExperienceButton}>
       <Typography variant='h2'>
-        Add {capitaliseFirstLetter(type)} Experience
+        <AddIcon /> Add {capitaliseFirstLetter(type)} Experience
       </Typography>
     </Button>
   ) : (

@@ -42,7 +42,7 @@ const AboutCard = () => {
         console.log(records);
       })
       .catch();
-  }, []);
+  });
 
   return (
     <Paper className={classes.card}>

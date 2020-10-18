@@ -11,7 +11,7 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: 'Roboto',
     fontWeight: 400,
-    fontSize: 14,
+    fontSize: 12,
     h1: {
       fontSize: 40,
     },
@@ -37,4 +37,5 @@ const theme = createMuiTheme({
     },
   },
 });
+
 export default theme;

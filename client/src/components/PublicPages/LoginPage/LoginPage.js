@@ -68,6 +68,7 @@ const LoginPage = ({ globalClasses }) => {
   const sendGoogleToken = (idToken) => {
     API.googleLogin(idToken)
       .then((res) => {
+        console.log('Got it');
         console.log(res.data);
         authenticate(res.data.token);
         setLoggedIn(true);
@@ -78,7 +79,7 @@ const LoginPage = ({ globalClasses }) => {
   };
 
   const responseGoogle = (response) => {
-    console.log(response);
+    // console.log(response);
     sendGoogleToken(response.tokenId);
   };
 

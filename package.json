@@ -29,13 +29,19 @@
     "body-parser": "^1.19.0",
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
+<<<<<<< HEAD
     "cypress-react-unit-test": "^4.16.4",
+=======
+    "crypto": "^1.0.1",
+    "cypress-react-unit-test": "^4.16.0",
+>>>>>>> master
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "formik": "^2.2.0",
    
     "google-auth-library": "^6.1.1",
+    "googleapis": "^61.0.0",
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.2",
@@ -44,8 +50,10 @@
     "multer": "^1.4.2",
     "multer-gridfs-storage": "^4.2.0",
     "multer-s3": "^2.9.0",
-    "nodemon": "^2.0.5",
-,
+    "nodemailer": "^6.4.13",
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
     "react": "^16.14.0",
     "react-avatar-edit": "^0.8.3",

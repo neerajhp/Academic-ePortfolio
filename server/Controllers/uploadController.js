@@ -1,4 +1,6 @@
 const Document = require("../Models/Document");
+const User = require('../Models/User');
+
 
 require('dotenv').config();
 
@@ -57,8 +59,13 @@ const uploadCV = async (req, res) => {
 // Upload profile picture API
 const uploadProfilePic = async (req, res) => {
     await filesController.deleteExclusiveFile(req.user.id, "profile-pic");
-
     await uploadSingle(req, res);
+    await User.findByIdAndUpdate(
+        req.user.id,
+        {profilePic: req.body.location},   
+        { new: true },
+    )
+    console.log(req.file.location)
     console.log("new profile pic uploaded");
 }
 

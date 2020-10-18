@@ -23,6 +23,7 @@ const profileRoute = require('./server/Routes/profile');
 const blogRoute = require('./server/Routes/blog');
 const expRoute = require('./server/Routes/experience');
 const viewRoute = require('./server/Routes/view');
+const confirmationRoute = require('./server/Routes/confirmation');
 
 
 // Attach the routes
@@ -33,6 +34,7 @@ server.use('/api/profile', profileRoute);
 server.use('/api/blog', blogRoute);
 server.use('/api/experience', expRoute);
 server.use('/api/view', viewRoute);
+server.use('/api/confirmation', confirmationRoute);
 
 // Database connection
 mongoose.connect(

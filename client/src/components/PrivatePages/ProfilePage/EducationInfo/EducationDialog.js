@@ -54,7 +54,7 @@ const EducationDialog = ({ records, setRecords }) => {
 
   return (
     <div className={classes.container}>
-      <IconButton onClick={handleOpen}>
+      <IconButton onClick={handleOpen} data-testid="education-form">
         <EditIcon />
       </IconButton>
       <Dialog

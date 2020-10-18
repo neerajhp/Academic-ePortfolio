@@ -35,9 +35,9 @@ const AboutCard = () => {
     <Paper className={classes.characterCard}>
       <div className={classes.bio}>
         <Typography style={{ color: "#fff" }} variant="h2">
-          About Me
+          About
         </Typography>
-        <Typography>Add About Me</Typography>
+        <Typography>Add an introduction of your eprotfolio</Typography>
         <Typography>{records.aboutMe}</Typography>
         <AboutDialog records={records} setRecords={setRecords} />
       </div>

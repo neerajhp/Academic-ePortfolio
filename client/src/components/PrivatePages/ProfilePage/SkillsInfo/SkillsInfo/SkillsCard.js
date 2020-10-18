@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Chip, Typography } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import CancelIcon from '@material-ui/icons/Cancel';
 import API from "../../../../api/API";
+import SkillsForm from "./SkillsForm";
 import SkillsDialog from "./SkillsDialog";
 
 /* ================ Styling ================ */
@@ -72,9 +73,10 @@ const SkillsCard = () => {
         >
           {skills.map((skill, i) => (
             <div className={classes.skill} key={i}>
-              <CloseIcon
+              <CancelIcon
                 onClick={() => handleDel(skill)}
                 className={classes.del}
+                color="primary"
               />
               <Chip
                 label={skill}

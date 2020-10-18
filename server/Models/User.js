@@ -29,6 +29,29 @@ const userSchema = mongoose.Schema({
     mobileNumber: {
         type: String,
     },
+    // A json for social media links
+    socialMedia: {
+        linkedIn: {
+            type: String,
+            default: ""
+        },
+        facebook: {
+            type: String,
+            default: ""
+        },
+        instagram: {
+            type: String,
+            default: ""
+        },
+        youtube: {
+            type: String,
+            default: ""
+        },
+        twitter: {
+            type: String,
+            default: ""
+        }
+    },
     biography: {
         type: String,
         default: ""
@@ -46,6 +69,10 @@ const userSchema = mongoose.Schema({
         default: true 
     },
     isVerified: {
+        type: Boolean,
+        default: false
+    },
+    private: {
         type: Boolean,
         default: false
     }

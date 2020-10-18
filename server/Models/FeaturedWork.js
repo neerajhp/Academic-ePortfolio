@@ -20,7 +20,7 @@ const featuredWorkSchema = mongoose.Schema({
     // Holds the id of the image
     image: {type: String},
     // Could be a link to another site or a reflection
-    url: {type: String}
+    url: [{type: String}]
 });
 
 const FeaturedWork = mongoose.model("FeaturedWork", featuredWorkSchema);

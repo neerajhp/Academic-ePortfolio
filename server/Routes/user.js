@@ -70,6 +70,7 @@ router.put(
   }
 );
 
+// Finish tutorial
 router.put(
   '/update/tutorial',
   authenticate.authenticateToken,

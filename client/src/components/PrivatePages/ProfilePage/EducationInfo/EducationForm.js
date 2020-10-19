@@ -17,7 +17,7 @@ import {
 import SchoolIcon from '@material-ui/icons/School';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import AddIcon from '@material-ui/icons/Add';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import validationSchema from './Validation';
 import API from '../../../../api/API';
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
   schoolEntry: {
     display: 'flex',
     paddingLeft: '5%',
+    marginTop: theme.spacing(2),
   },
   form: {
     flexGrow: 1,
@@ -43,11 +44,10 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     width: '100%',
     backgroundColor: theme.palette.tertiary.main,
-    marginBottom: theme.spacing(3),
   },
 
   addButton: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   buttonContainer: {
     display: 'flex',
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   addButtonContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   graduatedButton: {
     marginBottom: theme.spacing(3),
@@ -359,7 +359,7 @@ const EducationForm = ({ handleClose, records }) => {
                     ))}
 
                     <div className={classes.addButtonContainer}>
-                      <IconButton
+                      <Button
                         className={classes.button}
                         onClick={() =>
                           fieldArrayProps.push({
@@ -374,10 +374,11 @@ const EducationForm = ({ handleClose, records }) => {
                             graduated: false,
                           })
                         }
-                        color='primary'
+                        color='secondary'
+                        startIcon={<AddIcon style={{ fontSize: 30 }} />}
                       >
-                        <AddBoxIcon style={{ fontSize: 30 }} />
-                      </IconButton>
+                        Add a school
+                      </Button>
                     </div>
                   </React.Fragment>
                 )}

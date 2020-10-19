@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   newEducationButton: {
     '&.MuiButton-text': {
+      textTransform: 'none',
       padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
     },
     '&.MuiButtonBase-root': {

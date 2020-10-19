@@ -111,7 +111,7 @@ const sendTokenPost = async (req, res) => {
             req.headers.host +
             '/home/confirmation/' +
             token.token +
-            '.\n',
+            '\n',
         };
         transporter.sendMail(mailOptions, function (err) {
           if (err) {
@@ -180,7 +180,7 @@ const resendTokenPost = async (req, res) => {
               req.headers.host +
               '/home/confirmation/' +
               token.token +
-              '.\n',
+              '\n',
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
@@ -302,7 +302,7 @@ const sendResetPost = async (req, res) => {
               req.headers.host +
               '/reset/' +
               token.token +
-              '.\n',
+              '\n',
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {

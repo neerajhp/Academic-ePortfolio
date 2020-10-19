@@ -98,8 +98,8 @@ const sendTokenPost = async (req, res) => {
                 to: user.email,
                 subject: 'Account Verification Token',
                 text: 'Hello,\n\n' +
-                    'Please verify your account by clicking the link: \nhttp://' +
-                    req.headers.host +
+                    'Please verify your account by clicking the link: \n' +
+                    req.headers.referer +
                     '/confirmation/' +
                     token.token +
                     '.\n',
@@ -163,8 +163,8 @@ const resendTokenPost = async (req, res) => {
                     to: user.email,
                     subject: 'Account Verification Token',
                     text: 'Hello,\n\n' +
-                        'Please verify your account by clicking the link: \nhttp://' +
-                        req.headers.host +
+                        'Please verify your account by clicking the link: \n' +
+                        req.headers.referer +
                         '/confirmation/' +
                         token.token +
                         '.\n',
@@ -278,8 +278,8 @@ const sendResetPost = async (req, res) => {
                     to: user.email,
                     subject: 'Account Reset Link',
                     text: 'Hello,\n\n' +
-                        'Please reset your account by clicking the link: \nhttp://' +
-                        req.headers.host +
+                        'Please reset your account by clicking the link: \n' +
+                        req.headers.referer +
                         '/reset/' +
                         token.token +
                         '.\n',

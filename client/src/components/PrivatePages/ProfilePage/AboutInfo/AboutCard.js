@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from '../../../../api/API';
 import AboutDialog from './AboutDialog';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link as RouterLink } from 'react-router-dom';
 import { Formik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -65,7 +65,6 @@ const LoginPage = ({ globalClasses }) => {
 
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [resendRqd, setResendRqd] = useState(false);
-  const [resendMessage, setResendMessage] = useState('');
 
   const sendGoogleToken = (idToken) => {
     API.googleLogin(idToken)
@@ -101,18 +100,18 @@ const LoginPage = ({ globalClasses }) => {
     sendFacebookToken(response.userID, response.accessToken);
   };
 
-  const resendEmail = (email) => {
-    API.resendToken(email)
-      .then((res) => {
-        if (res.status === 200) {
-          setResendMessage(res.data);
-        }
-        setResendRqd(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
-  };
+  // const resendEmail = (email) => {
+  //   API.resendToken(email)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         setResendMessage(res.data);
+  //       }
+  //       setResendRqd(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response.data);
+  //     });
+  // };
 
   return (
     <React.Fragment>
@@ -197,18 +196,25 @@ const LoginPage = ({ globalClasses }) => {
                   )}
                   {resendRqd && (
                     <Button
-                      fullWidth
                       variant='contained'
-                      className={globalClasses.submit}
-                      onClick={() => resendEmail(formikProps.values.email)}
+                      className={globalClasses.landingButton}
+                      color='primary'
+                      fullWidth
+                      underline='none'
                     >
-                      <Typography>Resend Token</Typography>
+                      {' '}
+                      <RouterLink
+                        to={{
+                          pathname: '/home/signup',
+                          state: {
+                            email: formikProps.values.email,
+                          },
+                        }}
+                        style={{ color: '#FFFFFF', textDecoration: 'none' }}
+                      >
+                        <Typography>Get a new link</Typography>
+                      </RouterLink>
                     </Button>
-                  )}
-                  {resendMessage && (
-                    <Typography variant='h4' color='secondary'>
-                      {resendMessage}
-                    </Typography>
                   )}
 
                   <Divider className={classes.loginDivider} />

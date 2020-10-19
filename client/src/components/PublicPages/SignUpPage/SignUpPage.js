@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
@@ -8,7 +8,7 @@ import API from '../../../api/API';
 
 /* ================ Component ================ */
 
-const SignUpPage = ({ globalClasses }) => {
+const SignUpPage = ({ globalClasses, location }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
@@ -17,6 +17,13 @@ const SignUpPage = ({ globalClasses }) => {
   );
   const [resendMessage, setResendMessage] = useState(null);
   const [resendError, setResendError] = useState(null);
+
+  useEffect(() => {
+    if (location.state !== undefined) {
+      setEmail(location.state.email);
+      setSubmitted(true);
+    }
+  }, [location.state]);
 
   const resendEmail = (email) => {
     API.resendToken(email)

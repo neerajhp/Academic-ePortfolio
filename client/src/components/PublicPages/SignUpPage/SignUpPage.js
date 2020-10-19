@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import MailIcon from '@material-ui/icons/Mail';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
 import API from '../../../api/API';
@@ -12,28 +12,70 @@ const SignUpPage = ({ globalClasses }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState(
+    'No email has been provided. Return to the signup page.'
+  );
+  const [resendMessage, setResendMessage] = useState(null);
+  const [resendError, setResendError] = useState(null);
+
+  const resendEmail = (email) => {
+    API.resendToken(email)
+      .then((res) => {
+        if (res.status === 200) {
+          setResendMessage(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setResendError(err.response.data);
+      });
+  };
 
   if (Submitted) {
     return (
       <div className={classes.formContainer}>
         <div className={classes.successBoard}>
           <Avatar className={classes.avatar}>
-            <ThumbUpIcon className={classes.icon} />
+            <MailIcon className={classes.icon} />
           </Avatar>
           <Typography variant='h2'>Congratulations!</Typography>
-          <Typography>
-            You now have an academic ePorfolio, login and start editing!
+          <Typography variant='h4' align='center'>
+            You're on your way to getting started with your own academic
+            ePorfolio!
+          </Typography>
+          <Typography variant='h5' align='center'>
+            An email has been sent to {email}
+          </Typography>
+          <Typography variant='h4' align='center'>
+            Verify your email and then{' '}
+            <Link href='./login' variant='h4' color='textSecondary'>
+              Log In!
+            </Link>
           </Typography>
           <Button
-            type='Submit'
             fullWidth
             variant='contained'
-            className={classes.landingButton}
+            className={classes.submit}
+            color='primary'
+            onClick={() => resendEmail(email)}
           >
-            <Link href='./login' variant='body2' color='inherit'>
-              Click here to login
-            </Link>
+            <Typography>
+              Didn't recieve a token? Click Here to Resend.
+            </Typography>
           </Button>
+          {resendMessage && (
+            <Typography color='secondary'>Email has been resent</Typography>
+          )}
+          {resendError && (
+            <React.Fragment>
+              <Typography color='error'>{resendError}</Typography>
+              <Typography>
+                <Link href='./landing' color='textSecondary'>
+                  Click here to begin process agian{' '}
+                </Link>
+              </Typography>
+            </React.Fragment>
+          )}
         </div>
       </div>
     );
@@ -65,6 +107,7 @@ const SignUpPage = ({ globalClasses }) => {
               })
                 .then((res) => {
                   setSubmitted(true);
+                  setEmail(values.email);
                 })
                 .catch((err) => {
                   actions.setFieldError('email', err.response.data);

@@ -108,7 +108,7 @@ const sendTokenPost = async (req, res) => {
           text:
             'Hello,\n\n' +
             'Please verify your account by clicking the link: \nhttp://' +
-            req.headers.host +
+            req.headers.referer +
             '/home/confirmation/' +
             token.token +
             '\n',
@@ -177,7 +177,7 @@ const resendTokenPost = async (req, res) => {
             text:
               'Hello,\n\n' +
               'Please verify your account by clicking the link: \nhttp://' +
-              req.headers.host +
+              req.headers.referer +
               '/home/confirmation/' +
               token.token +
               '\n',
@@ -299,7 +299,7 @@ const sendResetPost = async (req, res) => {
             text:
               'Hello,\n\n' +
               'Please reset your account by clicking the link: \nhttp://' +
-              req.headers.host +
+              req.headers.referer +
               '/reset/' +
               token.token +
               '\n',

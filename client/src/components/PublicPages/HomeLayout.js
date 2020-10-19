@@ -139,7 +139,7 @@ const HomeLayout = () => {
           />
           <Route
             exact
-            path='/home/confirmation/:token'
+            path='/home/signup/confirmation/:token'
             render={(props) => (
               <AccountVerifiedPage {...props} globalClasses={classes} />
             )}

@@ -107,8 +107,8 @@ const sendTokenPost = async (req, res) => {
           subject: 'Account Verification Token',
           text:
             'Hello,\n\n' +
-            'Please verify your account by clicking the link: \nhttp://' +
-            req.headers.referer +
+            'Please verify your account by clicking the link: \n' +
+            req.headers.host +
             '/home/confirmation/' +
             token.token +
             '\n',
@@ -176,8 +176,8 @@ const resendTokenPost = async (req, res) => {
             subject: 'Account Verification Token',
             text:
               'Hello,\n\n' +
-              'Please verify your account by clicking the link: \nhttp://' +
-              req.headers.referer +
+              'Please verify your account by clicking the link: \n' +
+              req.headers.origin +
               '/home/confirmation/' +
               token.token +
               '\n',

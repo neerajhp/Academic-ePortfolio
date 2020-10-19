@@ -64,6 +64,8 @@ const LoginPage = ({ globalClasses }) => {
   const classes = useStyles();
 
   const [isLoggedIn, setLoggedIn] = useState(false);
+  const [resendRqd, setResendRqd] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
 
   const sendGoogleToken = (idToken) => {
     API.googleLogin(idToken)
@@ -99,6 +101,19 @@ const LoginPage = ({ globalClasses }) => {
     sendFacebookToken(response.userID, response.accessToken);
   };
 
+  const resendEmail = (email) => {
+    API.resendToken(email)
+      .then((res) => {
+        if (res.status === 200) {
+          setResendMessage(res.data);
+        }
+        setResendRqd(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
@@ -127,11 +142,17 @@ const LoginPage = ({ globalClasses }) => {
                     }
                   })
                   .catch((err) => {
-                    console.log(err);
-                    actions.setErrors({
-                      email: err.response.data,
-                      password: err.response.data,
-                    });
+                    if (err.response.status === 401) {
+                      setResendRqd(true);
+                      actions.setErrors({
+                        email: `${err.response.data} Or click below to resend a link to your email.`,
+                      });
+                    } else {
+                      actions.setErrors({
+                        email: err.response.data,
+                        password: err.response.data,
+                      });
+                    }
                   });
               }}
               validationSchema={validationSchema}
@@ -154,6 +175,7 @@ const LoginPage = ({ globalClasses }) => {
                     formikKey='password'
                     type='password'
                     required
+                    disabled={resendRqd}
                     className={globalClasses.inputField}
                   />
                   <FormControlLabel
@@ -162,15 +184,32 @@ const LoginPage = ({ globalClasses }) => {
                     label='Remember me'
                   />
 
-                  <Button
-                    type='Submit'
-                    fullWidth
-                    variant='contained'
-                    className={globalClasses.submit}
-                    disabled={!formikProps.isValid}
-                  >
-                    <Typography>Log In</Typography>
-                  </Button>
+                  {!resendRqd && (
+                    <Button
+                      type='Submit'
+                      fullWidth
+                      variant='contained'
+                      className={globalClasses.submit}
+                      disabled={!formikProps.isValid}
+                    >
+                      <Typography>Log In</Typography>
+                    </Button>
+                  )}
+                  {resendRqd && (
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      className={globalClasses.submit}
+                      onClick={() => resendEmail(formikProps.values.email)}
+                    >
+                      <Typography>Resend Token</Typography>
+                    </Button>
+                  )}
+                  {resendMessage && (
+                    <Typography variant='h4' color='secondary'>
+                      {resendMessage}
+                    </Typography>
+                  )}
 
                   <Divider className={classes.loginDivider} />
                   <Link href='./signup' underline='none'>

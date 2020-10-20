@@ -10,11 +10,13 @@ const signupUser = async () =>{
             firstName: "test",
             lastName: "test",
             email: "test@gmail.com",
-            password: "test123"
+            password: "test123",
+            isVerified: true
         })
         .expect(200)
 
 }
+
 
 const loginUser = async () =>{
 

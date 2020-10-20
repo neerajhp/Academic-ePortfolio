@@ -69,6 +69,7 @@ const getAllInfo = async (userID) => {
       email: userRecord.email,
       bio: userRecord.biography,
       aboutMe: userRecord.aboutMe,
+      socialMedia: userRecord.socialMedia,
       cv: cv,
       skills: userRecord.skills,
       profilePic: profilePic,

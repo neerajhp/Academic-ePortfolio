@@ -135,19 +135,6 @@ test("Should add extracurricular experience to database", async () =>{
     
 });
 
-// Should trigger an error when nothing is in the body
-test("Should trigger an error when nothing is in the body", async () =>{
-    await request.post("/api/experience")
-    .set('Authorization', 'bearer ' + token)
-    .send({})
-    .expect(400)
-    .then(data => {
-        expect(data).toBeDefined()
-        expect(data.body).toEqual('Error while trying to save new experience');
-    })
-    
-});
-
 // Should update the specified experience object
 test("Should update the specified experience object", async () =>{
     await request.put(`/api/experience/${objectID}`)
@@ -172,3 +159,73 @@ test("Should update the specified experience object", async () =>{
         }));
     });
 });
+
+// Should get the specified experience object
+test("Should get the specified experience object", async () =>{
+    await request.get(`/api/experience/${objectID}`)
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data.body).toBeDefined()
+        expect(data.body).toEqual(expect.objectContaining({
+            "type": "employment",
+            "organization": "FC Barcelona",
+            "role": "Manager",
+            "employeeStatus": "Full Time",
+            "yearStart": 2011,
+            "yearEnd": 2013,
+            "monthStart": 10,
+            "monthEnd": 12,
+            "description": "Striker who scored 20 goals a season, and won the golden boot in 2012"
+        }));
+    });
+});
+
+// Should delete the specified experience object
+test("Should delete the specified experience object", async () => {
+    await request.delete(`/api/experience/${objectID}`)
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data.body).toBeDefined()
+    });
+});
+
+// Should fail to delete something that does not exist
+test("Should fail to delete something that does not exist", async () => {
+    await request.delete(`/api/experience/${1234}`)
+    .set('Authorization', 'bearer ' + token)
+    .expect(400)
+    .then(data => {
+        expect(data.body).toBeDefined()
+    });
+});
+
+// Should delete all of the experiences
+test("Should delete everything", async () => {
+    await request.delete("/api/experience/delete")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data.body).toBeDefined()
+        expect(data.body).toEqual('Experience cleared')
+    });
+});
+
+// Should get nothing when attempting to get the experience after deleting every experience
+test("Should get nothing when attempting to get the experience after deleting every experience", async () =>{
+    await request.get("/api/experience")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual({
+            "employment": [],
+            "volunteering": [],
+            "extracurricular": [],
+        });
+    });
+    
+});
+
+

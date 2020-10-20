@@ -100,7 +100,6 @@ const PublicProfilePage = ({ match, location }) => {
     API.viewerGetProfile(userId)
       .then(({ data }) => {
         setUser(data);
-        console.log(data);
       })
       .catch();
 
@@ -109,9 +108,10 @@ const PublicProfilePage = ({ match, location }) => {
         setExperience(data);
       })
       .catch();
-  });
+  }, [userId]);
 
   const checkExperience = () => {
+    console.log(userExperience);
     return (
       userExperience.volunteering.length === 0 &&
       userExperience.employment.length === 0 &&
@@ -139,7 +139,6 @@ const PublicProfilePage = ({ match, location }) => {
       </div>
     );
   } else {
-    console.log(userExperience.volunteering.length === 0);
     pageContent = (
       <div>
         <div className={classes.container}>

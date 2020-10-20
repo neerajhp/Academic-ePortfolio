@@ -104,6 +104,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         margin: theme.spacing(1),
     },
+
 }));
 /* ================ Component ================ */
         const ProjectCard = ({ type, project }) => {
@@ -114,7 +115,6 @@ const useStyles = makeStyles((theme) => ({
         const [checked, setChecked] = React.useState(false);
         //Default  card size is large
         var cardSize;
-
         switch (type) {
             case "large":
                 cardSize = classes.large;
@@ -301,7 +301,6 @@ const useStyles = makeStyles((theme) => ({
                                         <Typography className={classes.titleLarge} variant="h1">
                                             Showcase
                                         </Typography>
-
                                         <div style={{ marginTop: 70 }}>
                                             <Typography
                                                 onClick={() => onFinish()}

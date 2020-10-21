@@ -554,7 +554,7 @@ const getPrivacy = async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(400).send("failed to get privacy value")
+    res.status(400).send("Failed to get privacy value")
   }
   
 }

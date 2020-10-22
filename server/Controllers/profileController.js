@@ -541,6 +541,25 @@ const changePrivacy = async (req, res) => {
   }
 }
 
+const getPrivacy = async (req, res) => {
+  try{
+    await User.findById(req.user.id, (err, result) =>{
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log("Send privacy value")
+        res.status(200).send(result.private)
+      } else {
+        res.status(404).send("Failed to find user record")
+      }
+    })
+  } catch (error) {
+    res.status(400).send("Failed to get privacy value")
+  }
+  
+}
+
 module.exports = {
   getProfile,
   viewerGetProfile,
@@ -555,5 +574,6 @@ module.exports = {
   removeSkills,
   deleteProfile,
   addSocialMedia,
-  changePrivacy
+  changePrivacy,
+  getPrivacy
 };

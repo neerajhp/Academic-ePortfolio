@@ -3,7 +3,6 @@ const User = require('../Models/User');
 const findUserID = async (req, res, next) => {
   try {
     let userName = req.params.userName;
-    console.log(userName);
     if (userName == null) {
       res.status(404).send('User not found');
       return;
@@ -12,6 +11,8 @@ const findUserID = async (req, res, next) => {
       if (err) {
         throw err;
       } else {
+        if (result == null) return res.status(404).send('User not found')
+        if (result.private == true) return res. status(403).send('User profile is private')
         req.viewID = result._id;
         next();
       }

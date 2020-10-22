@@ -25,6 +25,7 @@ router.put("/social-media", profileController.addSocialMedia);
 
 // Change the user's privacy settings
 router.put("/private", profileController.changePrivacy);
+router.get("/private", profileController.getPrivacy);
 
 // Education Section //
 

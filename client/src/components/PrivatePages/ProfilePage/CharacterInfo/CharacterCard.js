@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Avatar, Typography ,Table, TableRow, TableBody} from '@material-ui/core';
+import { Paper, Avatar, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import CharacterDialog from './CharacterDialog';
 import { Upload, message } from 'antd';
@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     color: 'white !important ',
   },
-  
 }));
 
 /* ================ function ================ */
@@ -48,35 +47,33 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 
-
 /* ================ Component ================ */
 
 const CharacterCard = ({ user }) => {
   const classes = useStyles();
   const [records, setRecords] = useState(user);
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink)
+  // const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink);
 
   const getRecord = (user) => {
-    if (user.biography){
+    if (user.biography) {
       return <Typography> user.biography </Typography>;
-    }
-    else{
-      return <Typography> add your bio </Typography>
+    } else {
+      return <Typography> add your bio </Typography>;
     }
   };
 
-  const handleChange = info => {
+  const handleChange = (info) => {
     if (info.file.status === 'uploading') {
-      setLoading({ loading: true });
+      // setLoading({ loading: true });
       return;
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => {
-        setLoading(false);
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        // setLoading(false);
         setImageUrl(imageUrl);
-      })
+      });
     }
   };
 
@@ -93,12 +90,14 @@ const CharacterCard = ({ user }) => {
           Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         }}
       >
-        <Avatar src={imageUrl} 
-        alt="avatar" 
-        className={classes.profilePicture}
-        headers={{
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        }}
+        <Avatar
+          src={imageUrl}
+          alt='avatar'
+          className={classes.profilePicture}
+          headers={{
+            Authorization:
+              'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+          }}
         />
       </Upload>
 
@@ -106,7 +105,7 @@ const CharacterCard = ({ user }) => {
         <Typography variant='h2'>
           {user.firstName} {user.lastName}
         </Typography>
-        <Typography>{getRecord(records)}</Typography>
+        {getRecord(records)}
         <Typography>{user.bio}</Typography>
         <CharacterDialog records={records} setRecords={setRecords} />
       </div>

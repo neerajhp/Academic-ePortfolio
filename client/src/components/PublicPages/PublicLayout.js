@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import PublicProfilePage from './ProfilePage/PublicProfilePage';
@@ -59,6 +59,9 @@ const PublicLayout = ({ match }) => {
 
       <div className={classes.contentContainer}>
         <Switch>
+          <Route exact path='/view'>
+            <Redirect to='/home/search' />
+          </Route>
           <Route path={`/view/:userId`} component={PublicProfilePage} />
         </Switch>
       </div>

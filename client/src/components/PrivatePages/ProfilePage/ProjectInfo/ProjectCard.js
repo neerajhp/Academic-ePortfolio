@@ -1,13 +1,22 @@
-import React, { useRef, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Typography } from '@material-ui/core';
-import axios from 'axios';
-import API from '../../../../api/API';
-import ProjectDialog from './ProjectDialog';
-import BackupIcon from '@material-ui/icons/Backup';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import { ButtonGroup, Button } from '@material-ui/core';
+import React, { useRef, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Paper, Typography } from "@material-ui/core";
+import axios from "axios";
+import API from "../../../../api/API";
+import ProjectDialog from "./ProjectDialog";
+import FormatListBulletedIcon from "@material-ui/icons/List";
+import BackupIcon from "@material-ui/icons/Backup";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import { ButtonGroup, Button } from "@material-ui/core";
+import { flexbox } from "@material-ui/system";
+import mediumProjectPic from "../../../../assets/ProjectPic/mediumProPic.png";
+import smallProjectPic from "../../../../assets/ProjectPic/smallProPic.png";
+import Switch from "@material-ui/core/Switch";
+import Collapse from "@material-ui/core/Collapse";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 /* ================ Styling ================ */
 
@@ -16,8 +25,10 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 0 1% 1%',
     background: theme.palette.primary.light,
     color: theme.palette.text.secondary,
-    padding: '5%',
-    display: 'flex',
+
+    padding: "5%",
+    display: "inline",
+
     //alignItems: "center",
     justifyContent: 'flex-start',
     position: 'relative',
@@ -28,18 +39,20 @@ const useStyles = makeStyles((theme) => ({
   },
   large: {
     background: theme.palette.secondary.light,
-    width: '100%',
-    height: '40%',
+
+    width: "100%",
+    height: "auto",
   },
   medium: {
-    alignItems: 'center',
-    width: '100%',
-    height: '30%',
+    alignItems: "center",
+    width: "100%",
+    height: "auto",
   },
   small: {
-    alignItems: 'center',
-    width: '49%',
-    height: '30%',
+    alignItems: "center",
+    width: "49%",
+    height: "auto",
+
   },
   upload: {
     position: 'absolute',
@@ -50,7 +63,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   titleLarge: {
-    marginTop: '0px',
+
+    marginTop: "0px",
+
   },
   title: {
     marginBottom: '50px',
@@ -63,16 +78,39 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '10px',
   },
   fileItem: {
-    textAlign: 'center',
-    margin: '0 20px',
-    fontWeight: 'bolder',
-    fontSize: '1em',
+
+    textAlign: "center",
+    margin: "0 10px",
+    fontWeight: "bolder",
+    fontSize: "1em",
   },
   fileLink: {
-    color: '#fff',
-    fontWeight: 'bolder',
-    marginTop: '15px',
-    paddingTop: '15px',
+    color: "#fff",
+    fontWeight: "bolder",
+    marginTop: "15px",
+    paddingTop: "15px",
+  },
+  pic: {
+    marginTop: "10px",
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  img: {
+    width: "100%",
+    height: "100%",
+  },
+  root: {
+    height: 18,
+  },
+  container: {
+    display: "flex",
+  },
+  paper: {
+    margin: theme.spacing(1),
+
   },
 }));
 /* ================ Component ================ */
@@ -81,6 +119,7 @@ const ProjectCard = ({ type, project }) => {
   const inputEl = useRef(null);
   const [allFiles, setAllFiles] = useState([]);
   const [allId, setAllId] = useState([]);
+  const [checked, setChecked] = React.useState(false);
   //Default  card size is large
   var cardSize;
 
@@ -153,6 +192,10 @@ const ProjectCard = ({ type, project }) => {
     });
   };
 
+  const handleChange = () => {
+    setChecked((prev) => !prev);
+  };
+
   const getRecord = () => {
     return <Typography> Add your project!</Typography>;
   };
@@ -164,71 +207,109 @@ const ProjectCard = ({ type, project }) => {
       <div className={classes.bio}>
         {type === 'small' && (
           <>
-            <Typography className={classes.title} variant='h3'>
-              This is a small Project Card
+
+            <Typography className={classes.titleLarge} variant="h6">
+              Small Project
             </Typography>
-            <Typography>This is the project description</Typography>
-            <input
-              className={classes.hidden}
-              type='file'
-              ref={inputEl}
-              accept='.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx'
-              multiple
-              onChange={handleChoseFile}
+
+            <FormControlLabel
+              control={<Switch checked={checked} onChange={handleChange} />}
+              label="Show"
             />
-            {getRecord(records)}
-            {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-            {/* <ProjectDialog records={records} setRecords={setRecords} /> */}
-            <div className={classes.upload}>
-              <ButtonGroup>
-                <Button>
-                  <ProjectDialog records={records} setRecords={setRecords} />
-                </Button>
-                <Button onClick={() => inputEl.current.click()}>
-                  <BackupIcon />
-                </Button>
-                <Button onClick={() => handleDel(records?.recordID)}>
-                  <DeleteIcon />
-                </Button>
-              </ButtonGroup>
+            <div className={classes.container}>
+              <Collapse in={checked}>
+                <img
+                  alt="smallPic"
+                  src={smallProjectPic}
+                  className={classes.pic}
+                />
+                <Typography>This is the project description</Typography>
+                <input
+                  className={classes.hidden}
+                  type="file"
+                  ref={inputEl}
+                  accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
+                  multiple
+                  onChange={handleChoseFile}
+                />
+                {getRecord(records)}
+                {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+                {/* <ProjectDialog records={records} setRecords={setRecords} />*/}
+                <div className={classes.upload}>
+                  <ButtonGroup color="#fff">
+                    <Button>
+                      <ProjectDialog
+                        records={records}
+                        setRecords={setRecords}
+                      />
+                    </Button>
+                    <Button onClick={() => inputEl.current.click()}>
+                      <BackupIcon />
+                    </Button>
+                    <Button onClick={() => handleDel(records?.recordID)}>
+                      <DeleteIcon />
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Collapse>
+
             </div>
           </>
         )}
         {type === 'medium' && (
           <>
-            <Typography className={classes.title} variant='h2'>
-              This is a medium Project Card
+
+            <Typography className={classes.titleLarge} variant="h6">
+              Medium Project
             </Typography>
-            <Typography>This is the project description</Typography>
-            <input
-              className={classes.hidden}
-              type='file'
-              ref={inputEl}
-              accept='.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx'
-              multiple
-              onChange={handleChoseFile}
+            <FormControlLabel
+              control={<Switch checked={checked} onChange={handleChange} />}
+              label="Show"
             />
-            {getRecord(records)}
-            {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-            {/* <ProjectDialog records={records} setRecords={setRecords} /> */}
-            <div className={classes.upload}>
-              <ButtonGroup>
-                <Button>
-                  <ProjectDialog records={records} setRecords={setRecords} />
-                </Button>
-                <Button onClick={() => inputEl.current.click()}>
-                  <BackupIcon />
-                </Button>
-                <Button onClick={() => handleDel(records?.recordID)}>
-                  <DeleteIcon />
-                </Button>
-              </ButtonGroup>
+            <div className={classes.container}>
+              <Collapse in={checked}>
+                <img
+                  alt="mediumPic"
+                  src={mediumProjectPic}
+                  className={classes.pic}
+                />
+
+                <Typography>This is the project description</Typography>
+                <input
+                  className={classes.hidden}
+                  type="file"
+                  ref={inputEl}
+                  accept=".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx"
+                  multiple
+                  onChange={handleChoseFile}
+                />
+                {getRecord(records)}
+                {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+                {/* <ProjectDialog records={records} setRecords={setRecords} /> */}
+                <div className={classes.upload}>
+                  <ButtonGroup color="#fff">
+                    <Button>
+                      <ProjectDialog
+                        records={records}
+                        setRecords={setRecords}
+                      />
+                    </Button>
+                    <Button onClick={() => inputEl.current.click()}>
+                      <BackupIcon />
+                    </Button>
+                    <Button onClick={() => handleDel(records?.recordID)}>
+                      <DeleteIcon />
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Collapse>
             </div>
           </>
         )}
-        {type === 'large' && (
+        {type === "large" && (
           <>
-            <Typography className={classes.titleLarge} variant='h1'>
+            <Typography className={classes.titleLarge} variant="h1">
+
               Showcase
             </Typography>
 
@@ -244,7 +325,9 @@ const ProjectCard = ({ type, project }) => {
                 {allFiles.map((item) => (
                   <div className={classes.fileItem} key={item.id}>
                     <AssignmentIcon style={{ fontSize: 60 }} />
-                    <div>{item.fieldName}</div>
+
+                    <div>{item.s3_key.replace(`user-${item.user_id}/`, "")}</div>
+
                   </div>
                 ))}
               </div>
@@ -261,7 +344,7 @@ const ProjectCard = ({ type, project }) => {
                 allId.map((item) => (
                   <div key={item._id}>
                     <a className={classes.fileLink} href={item.fileLink}>
-                      {item.fieldName}
+                      {item.s3_key}
                     </a>
                   </div>
                 ))}

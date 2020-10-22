@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
 import { Typography, Button, Divider, TextField } from '@material-ui/core';
+import API from '../../../../api/API';
 
 /* ================ Styling ================ */
 
@@ -94,7 +95,37 @@ const ReflectionForm = ({ handleClose, records }) => {
             initialValues={{
                 reflections: records,
             }}
-            onSubmit={(values, actions) => {}}
+            onSubmit={(values, actions) => {
+                console.log(values)
+                // values.reflections.forEach((reflection) => {
+                //   if (reflection._id) {
+                //     //Update existing record
+                //     API.editBlog(reflection, reflection._id)
+                //       .then((res) => {
+                //         handleClose();
+                //       })
+                //       .catch((err) => {
+                //         actions.setSubmitting(false);
+                //       });
+                //   } else {
+                //     //Create new record
+                //     API.createBlog(reflection)
+                //       .then((res) => {
+                //         handleClose();
+                //       })
+                //       .catch((err) => {
+                //         actions.setSubmitting(false);
+                //       });
+                //   }
+                // });
+                API.createBlog(values)
+                    .then((res) => {
+                    handleClose();
+                    })
+                    .catch((err) => {
+                    actions.setSubmitting(false);
+                    });
+              }}
         >
             {(formikProps) => (
                 <form classes={classes.form} onSubmit={formikProps.handleSubmit}>

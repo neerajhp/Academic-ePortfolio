@@ -1,7 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
-import { Typography, Button, Divider, TextField } from '@material-ui/core';
+import {
+  DialogContent,
+  DialogActions,
+  Typography,
+  Button,
+  TextField
+} from '@material-ui/core';
+import FormikField from '../../../utils/FormikField';
+import API from '../../../../api/API';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 /* ================ Styling ================ */
 
@@ -34,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const ContentField = ({ type, label, index, record }) => {
+const ContentField = ({record }) => {
   return (
-    <Field name={`reflections[${index}].${type}`}>
+    <Field name={'bio'}>
       {({ field, meta }) => {
         return (
           <TextField
@@ -46,7 +55,6 @@ const ContentField = ({ type, label, index, record }) => {
             fullWidth
             multiline
             rows={4}
-            label={label}
             defaultValue={record}
             helperText={meta.touched && meta.error ? meta.error : ' '}
             onChange={field.onChange(field.name)}
@@ -68,48 +76,96 @@ const CharacterForm = ({ handleClose, records }) => {
 
   return (
     <Formik
-      initialValues={{
-        reflections: records,
+        initialValues={{
+         'bio' : records
+        }}
+      onSubmit={(values, actions) => {
+        console.log(values)
+        API.updateBio(values).then(handleClose());
       }}
-      onSubmit={(values, actions) => {}}
     >
       {(formikProps) => (
-        <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
-          <Divider className={classes.divider} />
-          <FieldArray
-            name='Bio'
-            render={(fieldArrayProps) => (
-              <React.Fragment>
-                <ContentField
-                  type={'Content'}
-                  rowsMax={4}
-                  // record={reflections.title}
-                />
-              </React.Fragment>
-            )}
-          />
-
-          <div className={classes.buttonContainer}>
-            <Button
-              className={classes.button}
-              onClick={() => handleClose()}
-              color='primary'
-            >
+        <React.Fragment>
+          <DialogContent dividers>
+            <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
+              <ContentField record = {records}/>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button className={classes.button} onClick={() => handleClose()}>
               <Typography>Cancel</Typography>
             </Button>
-            <Button
-              type='Submit'
-              className={classes.button}
-              disabled={!formikProps.isValid}
-              color='primary'
-            >
-              <Typography>Update</Typography>
-            </Button>
-          </div>
-        </form>
+            <div>
+              <Button
+                type='Submit'
+                className={classes.button}
+                onClick={() => formikProps.handleSubmit()}
+                disabled={!formikProps.isValid}
+              >
+                <Typography>Update</Typography>
+              </Button>
+              {formikProps.isSubmitting && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
+          </DialogActions>
+        </React.Fragment>
       )}
     </Formik>
   );
 };
+
+
+// const CharacterForm = ({ handleClose, records }) => {
+//   const classes = useStyles();
+
+//   return (
+//     <Formik
+//       initialValues={{
+//         reflections: records,
+//       }}
+//       onSubmit={(values, actions) => {}}
+//     >
+//       {(formikProps) => (
+//         <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
+//           <Divider className={classes.divider} />
+//           <FieldArray
+//             name='Bio'
+//             render={(fieldArrayProps) => (
+//               <React.Fragment>
+//                 <ContentField
+//                   type={'Content'}
+//                   rowsMax={4}
+//                   // record={reflections.title}
+//                 />
+//               </React.Fragment>
+//             )}
+//           />
+
+//           <div className={classes.buttonContainer}>
+//             <Button
+//               className={classes.button}
+//               onClick={() => handleClose()}
+//               color='primary'
+//             >
+//               <Typography>Cancel</Typography>
+//             </Button>
+//             <Button
+//               type='Submit'
+//               className={classes.button}
+//               disabled={!formikProps.isValid}
+//               color='primary'
+//             >
+//               <Typography>Update</Typography>
+//             </Button>
+//           </div>
+//         </form>
+//       )}
+//     </Formik>
+//   );
+// };
 
 export default CharacterForm;

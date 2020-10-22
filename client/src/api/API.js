@@ -138,6 +138,7 @@ export default {
     });
   },
   // Gets all of the user's uploaded files (except profile picture and cv)
+
   getAllFiles: function () {
     return axios.get("api/files/", {
       headers: {

@@ -28,6 +28,8 @@ const postSignup = async (req, res) => {
       socialMedia: req.body.socialMedia,
       biography: req.body.biography,
       skills: req.body.skills,
+      // remove for development 
+      isVerified: req.body.isVerified
     });
     // Look for duplicate email
     await User.findOne({ email: newUser.email }, (err, account) => {

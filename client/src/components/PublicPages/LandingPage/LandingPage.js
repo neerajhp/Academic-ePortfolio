@@ -3,7 +3,7 @@ import { Button, Link, Typography } from '@material-ui/core';
 
 /* ================ Component ================ */
 
-const LandingPage = ({ globalClasses }) => {
+const AccountVerifiedPage = ({ globalClasses }) => {
   // const [isLoggedIn, setLoggedIn] = useState(false);
   // const { setAuthTokens } = useAuth();
 
@@ -40,4 +40,4 @@ const LandingPage = ({ globalClasses }) => {
   );
 };
 
-export default LandingPage;
+export default AccountVerifiedPage;

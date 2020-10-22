@@ -12,6 +12,17 @@ export default {
       password: user.password,
     });
   },
+
+  resendToken: function (userEmail) {
+    return axios.post('/api/confirmation/resend', {
+      email: userEmail,
+    });
+  },
+  emailVerified: function (token, userEmail) {
+    return axios.post(`/api/confirmation/verify/${token}`, {
+      email: userEmail,
+    });
+  },
   userLogin: function (user) {
     return axios.post('/api/user/login', {
       email: user.email,

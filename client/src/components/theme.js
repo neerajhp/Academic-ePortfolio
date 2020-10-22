@@ -22,6 +22,9 @@ const theme = createMuiTheme({
       fontSize: 20,
     },
     h4: {
+      fontSize: 16,
+    },
+    h5: {
       fontWeight: 500,
       fontSize: 16,
     },

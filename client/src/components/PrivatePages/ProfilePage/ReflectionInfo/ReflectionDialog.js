@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const ReflectionDialog = ({ records, setRecords }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,25 +45,25 @@ const ReflectionDialog = ({ records, setRecords }) => {
   };
 
   return (
-      <div className={classes.container}>
-        <IconButton onClick={handleOpen}>
-          <EditIcon />
-        </IconButton>
-        <Dialog
-            fullWidth={true}
-            maxWidth={'md'}
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='form-dialog-title'
-        >
-          <DialogTitle disableTypography>
-            <Typography variant='h2'>Edit Reflection</Typography>
-          </DialogTitle>
-          <DialogContent>
-            <ReflectionForm records={records} handleClose={handleClose} />
-          </DialogContent>
-        </Dialog>
-      </div>
+    <div className={classes.container}>
+      <IconButton onClick={handleOpen}>
+        <EditIcon />
+      </IconButton>
+      <Dialog
+        fullWidth={true}
+        maxWidth={'md'}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='form-dialog-title'
+      >
+        <DialogTitle disableTypography>
+          <Typography variant='h2'>Edit Reflection</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <ReflectionForm records={records} handleClose={handleClose} />
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 

@@ -1,28 +1,28 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import EditIcon from '@material-ui/icons/Edit';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import EditIcon from "@material-ui/icons/Edit";
 import {
   IconButton,
   Typography,
   Dialog,
   DialogContent,
   DialogTitle,
-} from '@material-ui/core';
-import ReflectionForm from './ReflectionForm';
-import API from '../../../../api/API';
+} from "@material-ui/core";
+import ReflectionForm from "./ReflectionForm";
+import API from "../../../../api/API";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    position: 'relative',
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    position: "relative",
   },
   paper: {
-    position: 'absolute',
-    width: '40%',
+    position: "absolute",
+    width: "40%",
     backgroundColor: theme.palette.neutral.main,
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
@@ -45,25 +45,23 @@ const ReflectionDialog = ({ records, setRecords }) => {
   };
 
   return (
-      <div className={classes.container}>
-        <IconButton onClick={handleOpen}>
-          <EditIcon />
-        </IconButton>
-        <Dialog
-            fullWidth={true}
-            maxWidth={'md'}
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='form-dialog-title'
-        >
-          <DialogTitle disableTypography>
-            <Typography variant='h2'>Edit Reflection</Typography>
-          </DialogTitle>
-          <DialogContent>
-            <ReflectionForm records={records} handleClose={handleClose} />
-          </DialogContent>
-        </Dialog>
-      </div>
+    <>
+      <EditIcon onClick={handleOpen} />
+      <Dialog
+        fullWidth={true}
+        maxWidth={"md"}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle disableTypography>
+          <Typography variant="h2">Edit Reflection</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <ReflectionForm records={records} handleClose={handleClose} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

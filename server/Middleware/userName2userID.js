@@ -12,7 +12,7 @@ const findUserID = async (req, res, next) => {
         throw err;
       } else {
         if (result == null) return res.status(404).send('User not found')
-
+        if (result.private == true) return res. status(403).send('User profile is private')
         req.viewID = result._id;
         next();
       }

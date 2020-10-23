@@ -1,36 +1,34 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import EditIcon from '@material-ui/icons/Edit';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import EditIcon from "@material-ui/icons/Edit";
 import {
-  Button,
   IconButton,
   Typography,
   Dialog,
+  DialogContent,
   DialogTitle,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import API from '../../../../api/API';
-import ReflectionForm from './ReflectionForm';
+} from "@material-ui/core";
+import ReflectionForm from "./ReflectionForm";
+import API from "../../../../api/API";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    position: 'relative',
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    position: "relative",
   },
   paper: {
-    position: 'absolute',
-    width: '40%',
+    position: "absolute",
+    width: "40%",
     backgroundColor: theme.palette.neutral.main,
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
 }));
 
-
-const ReflectionDialog = ({ records, setRecords, empty }) => {
+const ReflectionDialog = ({ records, setRecords }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -40,43 +38,30 @@ const ReflectionDialog = ({ records, setRecords, empty }) => {
   };
 
   const handleClose = () => {
-    setOpen(false);
-    // API.getAMe().then(({ data }) => {
-    //   setRecords(data);
-    //   setOpen(false);
-    // });
+    API.getAllBlogs().then(({ data }) => {
+      setRecords(data);
+      setOpen(false);
+    });
   };
 
-  const openButton = empty ? (
-    <Button onClick={handleOpen} className={classes.newButton}>
-      <Typography variant='h2'>
-        <AddIcon /> Add a Reflection
-      </Typography>
-    </Button>
-  ) : (
-    <IconButton onClick={handleOpen}>
-      <EditIcon />
-    </IconButton>
-  );
-
   return (
-    <React.Fragment>
-      {openButton}
+    <>
+      <EditIcon onClick={handleOpen} />
       <Dialog
         fullWidth={true}
-        maxWidth={'md'}
+        maxWidth={"md"}
         open={open}
         onClose={handleClose}
-        aria-labelledby='form-dialog-title'
-        className={classes.dialog}
+        aria-labelledby="form-dialog-title"
       >
         <DialogTitle disableTypography>
-          <Typography variant='h2'>Edit Reflection</Typography>
+          <Typography variant="h2">Edit Reflection</Typography>
         </DialogTitle>
-
-        <ReflectionForm records={records} handleClose={handleClose} />
+        <DialogContent>
+          <ReflectionForm records={records} handleClose={handleClose} />
+        </DialogContent>
       </Dialog>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     const openButton = empty ? (
       <Button onClick={handleOpen} className={classes.newButton}>
         <Typography variant='h2'>
-          <AddIcon /> Add a little paragraph about yourself
+          <AddIcon /> Add Bio
         </Typography>
       </Button>
     ) : (

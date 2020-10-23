@@ -291,20 +291,27 @@ const getProfilePic = async (req, res) => {
 
 // Biography
 const getBio = async (req, res) => {
-  await User.findById(
-    {
-      _id: req.user.id,
-    },
-    function (err, result) {
-      if (!result.biography) {
-        res.status(404).json({
-          error: 'biography not found',
-        });
-      } else {
-        res.status(200).json(result.biography);
+  try{
+    await User.findById(
+      {
+        _id: req.user.id,
+      },
+      function (err, result) {
+        if(err){
+          throw err;
+        }
+        if(result){
+          res.status(200).json(result.biography);
+        }else{
+          res.status(404).json(
+            'biography not found'
+          );
+        }
       }
-    }
-  );
+    );
+  }catch(error){
+    res.status(400).json("Error while trying to get bio");
+  }
 };
 
 // Biography

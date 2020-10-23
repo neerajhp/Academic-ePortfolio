@@ -1,7 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, FieldArray, Formik } from 'formik';
-import { Typography, Button, Divider, TextField } from '@material-ui/core';
+import API from '../../../../api/API';
+
+import {
+    DialogContent,
+    DialogActions,
+    Typography,
+    Button,
+    TextField
+  } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 /* ================ Styling ================ */
 
@@ -88,18 +97,22 @@ const ContentField = ({ type, label, index, record }) => {
 
 const ReflectionForm = ({ handleClose, records }) => {
     const classes = useStyles();
-
+  
     return (
-        <Formik
-            initialValues={{
-                reflections: records,
-            }}
-            onSubmit={(values, actions) => {}}
-        >
-            {(formikProps) => (
-                <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
-                    <Divider className={classes.divider} />
-                    <FieldArray
+      <Formik
+          initialValues={{
+           'bio' : records
+          }}
+        onSubmit={(values, actions) => {
+          console.log(values)
+          API.updateBio(values).then(handleClose());
+        }}
+      >
+        {(formikProps) => (
+          <React.Fragment>
+            <DialogContent dividers>
+              <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
+              <FieldArray
                         name='reflections'
                         render={(fieldArrayProps) => (
                             <React.Fragment>
@@ -120,28 +133,34 @@ const ReflectionForm = ({ handleClose, records }) => {
                             </React.Fragment>
                         )}
                     />
-
-                    <div className={classes.buttonContainer}>
-                        <Button
-                            className={classes.button}
-                            onClick={() => handleClose()}
-                            color='primary'
-                        >
-                            <Typography>Cancel</Typography>
-                        </Button>
-                        <Button
-                            type='Submit'
-                            className={classes.button}
-                            disabled={!formikProps.isValid}
-                            color='primary'
-                        >
-                            <Typography>Update</Typography>
-                        </Button>
-                    </div>
-                </form>
-            )}
-        </Formik>
+              </form>
+            </DialogContent>
+            <DialogActions>
+              <Button className={classes.button} onClick={() => handleClose()}>
+                <Typography>Cancel</Typography>
+              </Button>
+              <div>
+                <Button
+                  type='Submit'
+                  className={classes.button}
+                  onClick={() => formikProps.handleSubmit()}
+                  disabled={!formikProps.isValid}
+                >
+                  <Typography>Update</Typography>
+                </Button>
+                {formikProps.isSubmitting && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+            </DialogActions>
+          </React.Fragment>
+        )}
+      </Formik>
     );
-};
-
+  };
+  
+  
 export default ReflectionForm;

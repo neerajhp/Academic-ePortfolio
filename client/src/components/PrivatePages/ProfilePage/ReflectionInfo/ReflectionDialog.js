@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import {
+  Button,
   IconButton,
   Typography,
   Dialog,
-  DialogContent,
   DialogTitle,
 } from '@material-ui/core';
-import ReflectionForm from './ReflectionForm';
+import AddIcon from '@material-ui/icons/Add';
 import API from '../../../../api/API';
+import ReflectionForm from './ReflectionForm';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,42 +29,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ReflectionDialog = ({ records, setRecords }) => {
+
+const ReflectionDialog = ({ records, setRecords, empty }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    API.getAllBlogs().then(({ data }) => {
-      setRecords(data);
-      setOpen(false);
-    });
+    setOpen(false);
+    // API.getAMe().then(({ data }) => {
+    //   setRecords(data);
+    //   setOpen(false);
+    // });
   };
 
+  const openButton = empty ? (
+    <Button onClick={handleOpen} className={classes.newButton}>
+      <Typography variant='h2'>
+        <AddIcon /> Add a Reflection
+      </Typography>
+    </Button>
+  ) : (
+    <IconButton onClick={handleOpen}>
+      <EditIcon />
+    </IconButton>
+  );
+
   return (
-    <div className={classes.container}>
-      <IconButton onClick={handleOpen}>
-        <EditIcon />
-      </IconButton>
+    <React.Fragment>
+      {openButton}
       <Dialog
         fullWidth={true}
         maxWidth={'md'}
         open={open}
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
+        className={classes.dialog}
       >
         <DialogTitle disableTypography>
           <Typography variant='h2'>Edit Reflection</Typography>
         </DialogTitle>
-        <DialogContent>
-          <ReflectionForm records={records} handleClose={handleClose} />
-        </DialogContent>
+
+        <ReflectionForm records={records} handleClose={handleClose} />
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 };
 

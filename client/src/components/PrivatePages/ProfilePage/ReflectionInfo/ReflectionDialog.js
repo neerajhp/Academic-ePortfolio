@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const ReflectionDialog = ({ records, setRecords }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,6 +45,7 @@ const ReflectionDialog = ({ records, setRecords }) => {
   };
 
   return (
+
     <>
       <EditIcon onClick={handleOpen} />
       <Dialog
@@ -56,6 +57,7 @@ const ReflectionDialog = ({ records, setRecords }) => {
       >
         <DialogTitle disableTypography>
           <Typography variant="h2">Edit Reflection</Typography>
+
         </DialogTitle>
         <DialogContent>
           <ReflectionForm records={records} handleClose={handleClose} />

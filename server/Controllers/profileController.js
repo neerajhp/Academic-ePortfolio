@@ -7,6 +7,7 @@ const showcaseController = require('../Controllers/showcaseController');
 const eduController = require('../Controllers/eduController');
 const blogController = require('../Controllers/blogController');
 const expController = require('../Controllers/experienceController');
+//const { AccountTreeSharp } = require('@material-ui/icons');
 
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
 require('dotenv').config();
@@ -68,6 +69,7 @@ const getAllInfo = async (userID) => {
       email: userRecord.email,
       bio: userRecord.biography,
       aboutMe: userRecord.aboutMe,
+      socialMedia: userRecord.socialMedia,
       cv: cv,
       skills: userRecord.skills,
       profilePic: profilePic,
@@ -99,7 +101,6 @@ const viewerGetProfile = async (req, res) => {
 
 // Gets the user's profile
 const getProfile = async (req, res) => {
-  console.log('Requesst ', req);
   try {
     let profile = await getAllInfo(req.user.id);
     if (profile) {
@@ -164,6 +165,7 @@ const deleteProfile = async (req, res) => {
         _id: req.user.id,
       },
       (err, result) => {
+        console.log("About to delete user")
         if (err) {
           throw err;
         } else {
@@ -180,49 +182,6 @@ const deleteProfile = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
-  }
-};
-
-// Gets the user's general information (Contact details, name, birth date)
-const getUserInformation = async (req, res) => {
-  try {
-    await User.findById(req.user.id, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      if (result) {
-        const userInfo = {
-          firstName: result.firstName,
-          lastName: result.lastName,
-          email: result.email,
-          mobileNumber: result.mobileNumber,
-          birthDate: result.birthDate,
-        };
-        res.status(200).json(userInfo);
-      } else {
-        res.status(404).json('User not found');
-      }
-    });
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
-
-// Edit the name, mobile number and birthDate of the user
-const editUserInformation = async (req, res) => {
-  try {
-    await User.findByIdAndUpdate(req.user.id, req.body, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        res.status(404).json('User not found');
-      }
-    });
-  } catch (error) {
-    res.status(400).send(error);
   }
 };
 
@@ -268,7 +227,7 @@ const searchProfilePic = async (userID) => {
 const getCV = async (req, res) => {
   try {
     await Document.findOne(
-      { user_id: userID, fieldName: 'cv' },
+      { user_id: req.user.id, fieldName: 'cv' },
       (err, result) => {
         if (err) {
           throw err;
@@ -505,11 +464,105 @@ const getSkills = async (req, res) => {
   );
 };
 
+// Add available social media links to the user model
+const addSocialMedia = async (req, res) => {
+  try{
+      await User.findById(req.user.id, (err, result) => {
+        if(err){
+          throw err;
+        }
+        if(result){
+          const links = createSocialMediaJSON(req.body, result.socialMedia);
+          User.findByIdAndUpdate(req.user.id, {socialMedia: links}, {new: true}, (err, result) => {
+            if(err){
+              throw err;
+            }
+            if(result){
+              res.status(200).json(result.socialMedia);
+            }else{
+              res.status(400).json("Failed to find and update the user");
+            }
+          });
+        }else{
+          res.status(404).json("User not found");
+        }
+      });
+  }catch(error){
+    res.status(400).json("Failed to update the user's social media links");
+  }
+  
+}
+
+// Creates the json that will be stored in the user's account
+const createSocialMediaJSON = (accounts, original) => {
+  //var links = {};
+  for(const account of accounts){
+    console.log(account);
+    switch(account.site){
+      case "facebook":
+        original["facebook"] = account.link;
+        break;
+      case "linkedIn":
+        original["linkedIn"] = account.link;
+        break;
+      case "instagram":
+        original["instagram"] = account.link;
+        break;
+      case "youtube":
+        original["youtube"] = account.link;
+        break;
+      case "twitter":
+        original["twitter"] = account.link;
+        break;
+      default:
+        break;
+    }
+  }
+  return original;
+  
+}
+
+// Change the privacy setting
+const changePrivacy = async (req, res) => {
+  try{
+    await User.findByIdAndUpdate(req.user.id, {private: req.body.private}, {new: true}, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        console.log("Change privacy value");
+        res.status(200).json(result.private);
+      }else{
+        res.status(404).json("Failed to find user record");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Failed to change privacy value");
+  }
+}
+
+const getPrivacy = async (req, res) => {
+  try{
+    await User.findById(req.user.id, (err, result) =>{
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log("Send privacy value")
+        res.status(200).send(result.private)
+      } else {
+        res.status(404).send("Failed to find user record")
+      }
+    })
+  } catch (error) {
+    res.status(400).send("Failed to get privacy value")
+  }
+  
+}
+
 module.exports = {
   getProfile,
   viewerGetProfile,
-  getUserInformation,
-  editUserInformation,
   getCV,
   getProfilePic,
   getBio,
@@ -520,4 +573,7 @@ module.exports = {
   addSkills,
   removeSkills,
   deleteProfile,
+  addSocialMedia,
+  changePrivacy,
+  getPrivacy
 };

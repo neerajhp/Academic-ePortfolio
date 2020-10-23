@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const filesController = require("../Controllers/filesController");
-const authenticate = require("../Middleware/authenticate");
+const { authenticateToken } = require("../Middleware/authenticate");
 
-router.use(authenticate.authenticateToken);
+router.use(authenticateToken);
+
 // Get all documents that belong to the user
 router.get("/", filesController.getAllDocs);
 

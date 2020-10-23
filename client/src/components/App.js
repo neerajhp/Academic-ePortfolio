@@ -17,7 +17,7 @@ function App() {
         <CssBaseline>
           <Router>
             <Switch>
-              <Route path='/home' component={HomeLayout} />
+              {!isAuth() && <Route path='/home' component={HomeLayout} />}
               {!isAuth() && <Route path='/view' component={PublicLayout} />}
               <PrivateRoute path='/' component={PrivateLayout} />
             </Switch>

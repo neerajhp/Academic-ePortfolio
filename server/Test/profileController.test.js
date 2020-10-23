@@ -142,6 +142,24 @@ test('Should update social media JSON', async () => {
     });
 });
 
+// Should remove unwanted social media links
+test('Should remove unwanted social media links', async () => {
+    await request.put("api/profile/social-media")
+    .set('Authorization', 'bearer ' + token)
+    .send([{"site": "youtube", "link": ""}])
+    .expect(200)
+    .then(data => {
+        expect(data).toBeDefined()
+        expect(data.body).toEqual({
+            linkedIn: "",
+            facebook: "www.facebook.com",
+            instagram: "",
+            youtube: "",
+            twitter: ""
+        })
+    });
+});
+
 // Should return an error when tryin to access cv, because it hasn't been uploaded
 test("Should return error when trying to access cv", async () => {
     await request.get("/api/profile/cv")

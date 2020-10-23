@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   newExperienceButton: {
     '&.MuiButton-text': {
+      textTransform: 'none',
       padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
     },
     '&.MuiButtonBase-root': {

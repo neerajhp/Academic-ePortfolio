@@ -12,6 +12,17 @@ export default {
       password: user.password,
     });
   },
+
+  resendToken: function (userEmail) {
+    return axios.post('/api/confirmation/resend', {
+      email: userEmail,
+    });
+  },
+  emailVerified: function (token, userEmail) {
+    return axios.post(`/api/confirmation/verify/${token}`, {
+      email: userEmail,
+    });
+  },
   userLogin: function (user) {
     return axios.post('/api/user/login', {
       email: user.email,
@@ -138,6 +149,7 @@ export default {
     });
   },
   // Gets all of the user's uploaded files (except profile picture and cv)
+
   getAllFiles: function () {
     return axios.get('api/files/', {
       headers: {
@@ -162,30 +174,41 @@ export default {
   },
   // Single upload of file
   uploadFile: function (body) {
-    return axios.post('/api/upload/file', {
-      file: body.file,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "/api/upload/file",
+      {
+        file: body.file
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    )
   },
   uploadFiles: function (body) {
-    return axios.post('/api/upload/files', {
+    return axios.post(
+      "/api/upload/files", {
       // The files key must be "document"
-      files: body.files, // This is an array of files (current limit: 5 files)
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      files: body.files
       },
+      { // This is an array of files (current limit: 5 files)
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
     });
   },
   uploadCV: function (body) {
-    return axios.post('/api/upload/cv', {
-      // The file key must be "cv"
-      file: body.file, // This is a single file
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "/api/upload/cv", {
+        file:body.file // This is a single file
       },
-    });
+      // The file key must be "cv"
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   deleteCV: function () {
     return axios.delete('/api/files/cv', {
@@ -195,13 +218,16 @@ export default {
     });
   },
   uploadProfilePic: function (body) {
-    return axios.post('/api/upload/profile-pic', {
-      // The file key is "profile-pic"
-      file: body.file,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "/api/upload/profile-pic", {
+        // The file key is "profile-pic"
+        file: body.file,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   deleteProfilePic: function () {
     return axios.delete('/api/files/profile-pic', {
@@ -212,22 +238,28 @@ export default {
   },
   // Single upload of image
   uploadImage: function (body) {
-    return axios.post('/api/upload/image', {
-      file: body.file,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "/api/upload/image", {
+        file: body.file,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   // Multiple uploads of images
   uploadImages: function (body) {
-    return axios.post('/api/upload/images', {
-      // The file key is "image"
-      files: body.files, // This is an array of images (current limit: 5 files)
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "/api/upload/images", {
+        // The file key is "image"
+        files: body.files, // This is an array of images (current limit: 5 files)
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   // Gets a file based on its objectID
   // getFile: function () {
@@ -272,8 +304,11 @@ export default {
   },
   // Deletes multiple files
   deleteFiles: function (body) {
-    return axios.delete('/api/files/delete', {
-      IDs: body.IDs,
+    return axios.delete(
+      "/api/files/delete", {
+        IDs: body.IDs,
+      },
+      {
       headers: {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
@@ -298,39 +333,48 @@ export default {
   },
   // Add skills to the user's skills array (At the moment there is no limit on the number of skills)
   addSkills: function (body) {
-    return axios.put('api/profile/skills', {
-      skills: body.skills,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.put(
+      "api/profile/skills", {
+        skills: body.skills,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   // Removes specified skills from the user's skills array
   removeSkills: function (body) {
-    return axios.delete('api/profile/skills', {
-      skills: body.skills,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.delete(
+      "api/profile/skills", {
+        skills: body.skills,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   // Creates a featured work
   createFeaturedWork: function (body) {
-    return axios.post('api/profile/featured-work', {
-      title: body.title,
-      type: body.type,
-      description: body.description,
-      // attachedFile: {
-      //      documentID: "5f10kjipmd"
-      //      fileLink: "http/:www.random.com/"
-      //  }
-      attachedFile: body.attachedFile,
-      image: body.image,
-      url: body.url,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "api/profile/featured-work", {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        // attachedFile: {
+        //      documentID: "5f10kjipmd"
+        //      fileLink: "http/:www.random.com/"
+        //  }
+        attachedFile: body.attachedFile,
+        image: body.image,
+        url: body.url,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   // Gets all of the user's featured works
   getAllFeaturedWorks: function () {
@@ -402,14 +446,17 @@ export default {
   },
   // Create a new blog post
   createBlog: function (body) {
-    return axios.post('api/blog', {
-      title: body.title,
-      dateCreated: body.dateCreated,
-      content: body.content,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+    return axios.post(
+      "api/blog", {
+        title: body.title,
+        dateCreated: body.dateCreated,
+        content: body.content,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
   },
   // Edit a specific blog post
   editBlog: function (body, recordID) {
@@ -556,15 +603,6 @@ export default {
       },
     });
   },
-  // Gets all of the viewed profile's experience
-  viewGetAllExperience: function (body) {
-    return axios.get('api/view/experience', {
-      userID: body.userID,
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
-  },
   // Gets the user's employment history
   getEmploymentHist: function () {
     return axios.get('api/experience/employment', {
@@ -656,4 +694,42 @@ export default {
       },
     });
   },
+
+  /* =========== Confirmation =========== */
+    // Resends account confirmation token
+    resendTokenPost: function (body) {
+      return axios.post(
+        "/api/confirmation/resend",
+        {
+
+        },
+      );
+    },
+    // Verifies account
+    confirmationPost: function (body, token) {
+      return axios.post(
+        `/api/confirmation/verify/${token}`,
+        {
+          email: body.email,
+        },
+      );
+    },
+    // Sends reset password email
+    sendResetPost: function (body, token) {
+      return axios.post(
+        "/api/confirmation/reset",
+        {
+          email: body.email,
+        },
+      );
+    },
+    // Verifies account
+    resetPut: function (body, token) {
+      return axios.put(
+        `/api/confirmation/reset/${token}`,
+        {
+          password: body.password,
+        },
+      );
+    },
 };

@@ -71,7 +71,7 @@ const ReflectionDialog = ({ records, setRecords, empty }) => {
         className={classes.dialog}
       >
         <DialogTitle disableTypography>
-          <Typography variant='h2'>Edit About</Typography>
+          <Typography variant='h2'>Edit Reflection</Typography>
         </DialogTitle>
 
         <ReflectionForm records={records} handleClose={handleClose} />
@@ -79,45 +79,5 @@ const ReflectionDialog = ({ records, setRecords, empty }) => {
     </React.Fragment>
   );
 };
-
-
-// const ReflectionDialog = ({ records, setRecords }) => {
-//   const classes = useStyles();
-//   // getModalStyle is not a pure function, we roll the style only on the first render
-//   const [open, setOpen] = React.useState(false);
-
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-
-//   const handleClose = () => {
-//     API.getAllBlogs().then(({ data }) => {
-//       setRecords(data);
-//       setOpen(false);
-//     });
-//   };
-
-//   return (
-//       <div className={classes.container}>
-//         <IconButton onClick={handleOpen}>
-//           <EditIcon />
-//         </IconButton>
-//         <Dialog
-//             fullWidth={true}
-//             maxWidth={'md'}
-//             open={open}
-//             onClose={handleClose}
-//             aria-labelledby='form-dialog-title'
-//         >
-//           <DialogTitle disableTypography>
-//             <Typography variant='h2'>Edit Reflection</Typography>
-//           </DialogTitle>
-//           <DialogContent>
-//             <ReflectionForm records={records} handleClose={handleClose} />
-//           </DialogContent>
-//         </Dialog>
-//       </div>
-//   );
-// };
 
 export default ReflectionDialog;

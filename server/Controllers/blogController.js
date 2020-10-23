@@ -166,6 +166,24 @@ const addImages = async (req, res) => {
     }
 }
 
+// Removes the skills specified in the body from the user's skills array
+const removeImages = async (req, res) => {
+    try{
+        await Blog.findByIdAndUpdate(req.params.id, {$pull: { images: { $in: req.body.images}}}, {new: true}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("Blog not found");
+            }
+        })
+    }catch(error){
+        res.status(400).json("Failed to remove specified images");
+    }
+  };
+
 // Deletes the blog specified by params.id
 const deleteBlog = async (req, res) => {
     try{
@@ -239,5 +257,6 @@ module.exports = {
     clearBlogs,
     removeAllBlogs,
     updateBlog,
-    addImages
+    addImages,
+    removeImages
 }

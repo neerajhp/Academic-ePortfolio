@@ -486,6 +486,18 @@ export default {
       },
     })
   },
+  // Remove blog images
+  removeBlogImages: function (body, recordID){
+    return axios.delete(`api/blog/images/${recordID}`,
+    {
+      images: body.images
+    },
+    {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
   // Removes a specific blog
   removeBlog: function (recordID) {
     return axios.delete(`api/blog/${recordID}`, {

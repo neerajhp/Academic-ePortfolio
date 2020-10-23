@@ -13,6 +13,8 @@ router.delete("/", blogController.clearBlogs);
 
 router.put("/images/:id", blogController.addImages);
 
+router.delete("/images/:id", blogController.removeImages);
+
 router.delete("/:id", blogController.deleteBlog);
 
 router.put("/:id", blogController.updateBlog);

@@ -146,17 +146,37 @@ const updateBlog = async (req, res) => {
     }
 }
 
+// Add images to the reflection
+const addImages = async (req, res) => {
+    try{
+        await Blog.findByIdAndUpdate(req.params.id, {
+            $addToSet: { images: req.body.images }
+        }, {new: true}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("Blog entry not found");
+            }
+        })
+    }catch(error){
+        res.status(400).json("Error while trying to add images");
+    }
+}
+
 // Deletes the blog specified by params.id
 const deleteBlog = async (req, res) => {
     try{
-        await Blog.deleteOne({_id: req.params.id, user_id: req.user.id}, (err, result) => {
+        await Blog.findByIdAndDelete(req.params.id, (err, result) => {
             if(err){
                 throw err;
             }else{
                 if(!result){
                     res.status(400).json("Nothing was deleted");
                 }else{
-                    res.status(200).json("The blog has been deleted");
+                    res.status(200).json(result);
                 }
             }
         })
@@ -218,5 +238,6 @@ module.exports = {
     deleteBlog,
     clearBlogs,
     removeAllBlogs,
-    updateBlog
+    updateBlog,
+    addImages
 }

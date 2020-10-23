@@ -11,8 +11,11 @@ router.get("/", blogController.getAllBlogs);
 
 router.delete("/", blogController.clearBlogs);
 
+router.put("/images/:id", blogController.addImages);
+
 router.delete("/:id", blogController.deleteBlog);
 
 router.put("/:id", blogController.updateBlog);
+
 
 module.exports = router;

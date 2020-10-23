@@ -474,6 +474,18 @@ export default {
       }
     );
   },
+  // Add images to blog
+  addBlogImages: function (body, recordID) {
+    return axios.put(`api/blog/images/${recordID}`, 
+    {
+      images: body.images
+    },
+    {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
   // Removes a specific blog
   removeBlog: function (recordID) {
     return axios.delete(`api/blog/${recordID}`, {

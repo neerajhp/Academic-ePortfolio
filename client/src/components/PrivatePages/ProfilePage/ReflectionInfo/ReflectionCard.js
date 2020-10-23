@@ -1,7 +1,6 @@
 import ReflectionDialog from './ReflectionDialog';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
-import { Button, message } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import API from '../../../../api/API';
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
     position: 'relative',
   },
-  description: {
+  reflection: {
     marginLeft: '5%',
     color: 'white !important ',
   },
@@ -33,51 +32,27 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
 }));
-/* ================ Component ================ */
-// const ReflectionCard = (reflection) => {
-//   const classes = useStyles();
 
-//   const [records, setRecords] = useState(reflection);
-
-//   const getRecord = () => {
-//     console.log(records)
-//     return <Typography> Add your reflection!</Typography>;
-//   };
-
-//   return (
-//     <Paper className={classes.card}>
-//       <div className={classes.bio}>
-//         <Typography className={classes.title} variant='h2'>
-//           This is a Reflection
-//         </Typography>
-//         <Typography>{getRecord(records)}</Typography>
-//         {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-//         <ReflectionDialog records={records} setRecords={setRecords} />
-//       </div>
-//     </Paper>
-//       );
-// };
-
-const ReflectionCard= (reflection, reflection_id) => {
+const ReflectionCard= (reflection) => {
   const classes = useStyles();
-  // const [records, setRecords] = useState(''reflection'');
   const [records, setRecords] = useState("");
 
-  useEffect(() => {
-    API.getBlog(reflection_id)
-      .then(({ data }) => {
-        setRecords(data);
-        console.log(records);
-      })
-      .catch();
-  });
+  console.log(reflection);
+  // useEffect(() => {
+  //   API.getBlog(reflection)
+  //     .then(({ data }) => {
+  //       setRecords(data);
+  //       console.log(records);
+  //     })
+  //     .catch();
+  // });
 
   return (
     <Paper className={classes.card}>
       <Typography className={classes.title} variant='h2'>
         Reflection  
       </Typography>
-      <div className={classes.bio}>
+      <div className={classes.reflection}>
         <Typography>{records}</Typography>
       </div>
       <div className={classes.editDialogContainer}>
@@ -90,69 +65,5 @@ const ReflectionCard= (reflection, reflection_id) => {
     </Paper>
   );
 };
-
-
-//   const inputEl = useRef(null);
-//   const [loading, setLoading] = useState(false);
-//   const [records, setRecords] = useState(reflection);
-
-//   const handleChoseImg = (e) => {
-//     e.preventDefault();
-//     const file = e.target.files;
-//     if (!file.length) {
-//       return false;
-//     }
-//     if (file.length < 6) {
-//       setLoading(true);
-//       let param = new FormData();
-//       for (const key in file) {
-//         if (file.hasOwnProperty(key)) {
-//           const item = file[key];
-//           param.append('image', item);
-//         }
-//       }
-//       axios({
-//         method: 'post',
-//         url: '/api/upload/images',
-//         data: param,
-//         headers: {
-//           Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-//         },
-//         responseType: 'blob',
-//       }).then((result) => {
-//         setLoading(false);
-//       });
-//     } else {
-//       message.info('the max number is 5');
-//     }
-//   };
-
-//   return (
-//       <Paper className={classes.card}>
-//         <div className={classes.bio}>
-//           <Typography className={classes.title} variant='h2'>
-//             This is a Reflection
-//           </Typography>
-//           <Typography>This is the blog introduction</Typography>
-//           <input
-//               className={classes.hidden}
-//               type='file'
-//               ref={inputEl}
-//               accept='image/*'
-//               multiple
-//               onChange={handleChoseImg}
-//           />
-//           {getRecord(records)}
-//           {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-//           <ReflectionDialog records={records} setRecords={setRecords} />
-//           <div className={classes.upload}>
-//             <Button loading={loading} onClick={() => inputEl.current.click()}>
-//               Upload
-//             </Button>
-//           </div>
-//         </div>
-//       </Paper>
-//   );
-// };
 
 export default ReflectionCard;

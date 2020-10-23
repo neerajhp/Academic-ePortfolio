@@ -86,69 +86,6 @@ const useStyles = makeStyles((theme) => ({
     );
   };
   
-  //   return (
-  //     <React.Fragment>
-  //       {openButton}
-  //       <Dialog
-  //         fullWidth={true}
-  //         maxWidth={'md'}
-  //         open={open}
-  //         onClose={handleClose}
-  //         aria-labelledby='form-dialog-title'
-  //         // className={classes.dialog}
-  //       >
-  //         <DialogTitle disableTypography>
-  //           <Typography variant='h2'>Edit Bio</Typography>
-  //         </DialogTitle>
-  
-  //         <CharacterForm records={records} handleClose={handleClose} />
-  //       </Dialog>
-  //     </React.Fragment>
-  //   );
-  // };
-  
-  // export default CharacterDialog;
-  
-
-  // const CharacterDialog = ({ records, setRecords }) => {
-  //   const classes = useStyles();
-  //   // getModalStyle is not a pure function, we roll the style only on the first render
-  //   const [open, setOpen] = React.useState(false);
-  
-  //   const handleOpen = () => {
-  //     setOpen(true);
-  //   };
-  
-  //   const handleClose = () => {
-  //     API.getBio().then(({ data }) => {
-  //       setRecords(data);
-  //       setOpen(false);
-  //     });
-
-  //   };
-  
-  //   return (
-  //     <div className={classes.container}>
-  //       <IconButton onClick={handleOpen} data-testid = "bio">
-  //         <EditIcon />
-  //       </IconButton>
-  //       <Dialog
-  //         fullWidth={true}
-  //         maxWidth={'md'}
-  //         open={open}
-  //         onClose={handleClose}
-  //         aria-labelledby='form-dialog-title'
-  //       >
-  //         <DialogTitle disableTypography>
-  //           <Typography variant='h2'>Edit Bio</Typography>
-  //         </DialogTitle>
-  //         <DialogContent>
-  //           <CharacterForm records={records} handleClose={handleClose} />
-  //         </DialogContent>
-  //       </Dialog>
-  //     </div>
-  //   );
-  // };
   
   export default CharacterDialog;
   

@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Field, FieldArray, Formik } from 'formik';
+import { Field, Formik } from 'formik';
 import {
   DialogContent,
   DialogActions,
@@ -8,7 +8,6 @@ import {
   Button,
   TextField
 } from '@material-ui/core';
-import FormikField from '../../../utils/FormikField';
 import API from '../../../../api/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -117,55 +116,5 @@ const CharacterForm = ({ handleClose, records }) => {
     </Formik>
   );
 };
-
-
-// const CharacterForm = ({ handleClose, records }) => {
-//   const classes = useStyles();
-
-//   return (
-//     <Formik
-//       initialValues={{
-//         reflections: records,
-//       }}
-//       onSubmit={(values, actions) => {}}
-//     >
-//       {(formikProps) => (
-//         <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
-//           <Divider className={classes.divider} />
-//           <FieldArray
-//             name='Bio'
-//             render={(fieldArrayProps) => (
-//               <React.Fragment>
-//                 <ContentField
-//                   type={'Content'}
-//                   rowsMax={4}
-//                   // record={reflections.title}
-//                 />
-//               </React.Fragment>
-//             )}
-//           />
-
-//           <div className={classes.buttonContainer}>
-//             <Button
-//               className={classes.button}
-//               onClick={() => handleClose()}
-//               color='primary'
-//             >
-//               <Typography>Cancel</Typography>
-//             </Button>
-//             <Button
-//               type='Submit'
-//               className={classes.button}
-//               disabled={!formikProps.isValid}
-//               color='primary'
-//             >
-//               <Typography>Update</Typography>
-//             </Button>
-//           </div>
-//         </form>
-//       )}
-//     </Formik>
-//   );
-// };
 
 export default CharacterForm;

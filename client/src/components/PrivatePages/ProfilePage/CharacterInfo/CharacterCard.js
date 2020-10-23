@@ -56,8 +56,7 @@ const CharacterCard = ({ user }) => {
   const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink);
   const [bio, setBio] = useState(user.bio);
 
-  const getRecord = (user) => {
-    console.log(bio)
+  const getRecord = () => {
     if (bio) {
       return <Typography> {bio} </Typography>;
     } else {
@@ -107,7 +106,7 @@ const CharacterCard = ({ user }) => {
         <Typography variant='h2'>
           {user.firstName} {user.lastName}
         </Typography>
-        <Typography>{getRecord(records)}</Typography>
+        {getRecord(bio)}
         <CharacterDialog records={bio} setRecords={setBio} />
       </div>
     </Paper>

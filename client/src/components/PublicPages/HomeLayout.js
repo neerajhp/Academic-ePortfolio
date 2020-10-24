@@ -99,7 +99,6 @@ const useStyles = makeStyles((theme) => {
       '& >*': { margin: '1em' },
     },
     buttonWrapper: {
-      margin: theme.spacing(1),
       position: 'relative',
       alignSelf: 'flex-end',
     },

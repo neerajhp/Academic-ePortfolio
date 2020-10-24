@@ -10,6 +10,7 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  CircularProgress,
 } from '@material-ui/core';
 import { authenticate } from '../../../helpers/auth';
 import { GoogleLogin } from 'react-google-login';
@@ -105,19 +106,6 @@ const LoginPage = ({ globalClasses }) => {
     sendFacebookToken(response.userID, response.accessToken);
   };
 
-  // const resendEmail = (email) => {
-  //   API.resendToken(email)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         setResendMessage(res.data);
-  //       }
-  //       setResendRqd(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response.data);
-  //     });
-  // };
-
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
@@ -208,15 +196,25 @@ const LoginPage = ({ globalClasses }) => {
                   </Grid>
 
                   {!resendRqd && (
-                    <Button
-                      type='Submit'
-                      fullWidth
-                      variant='contained'
-                      className={globalClasses.submit}
-                      disabled={!formikProps.isValid}
-                    >
-                      <Typography>Log In</Typography>
-                    </Button>
+                    <div className={globalClasses.buttonWrapper}>
+                      <Button
+                        type='Submit'
+                        fullWidth
+                        variant='contained'
+                        disabled={
+                          !formikProps.isValid || formikProps.isSubmitting
+                        }
+                        color='secondary'
+                      >
+                        <Typography>Log In</Typography>
+                      </Button>
+                      {formikProps.isSubmitting && (
+                        <CircularProgress
+                          size={24}
+                          className={globalClasses.buttonProgress}
+                        />
+                      )}
+                    </div>
                   )}
                   {resendRqd && (
                     <Button

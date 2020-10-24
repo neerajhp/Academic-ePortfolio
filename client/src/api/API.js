@@ -299,12 +299,17 @@ export default {
   },
   // Add skills to the user's skills array (At the moment there is no limit on the number of skills)
   addSkills: function (body) {
-    return axios.put("api/profile/skills", {
-      skills: body.skills,
-      headers: {
-        Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+    return axios.put(
+      "api/profile/skills",
+      {
+        skills: body.skills,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    );
   },
   // Removes specified skills from the user's skills array
   removeSkills: function (body) {
@@ -317,21 +322,26 @@ export default {
   },
   // Creates a featured work
   createFeaturedWork: function (body) {
-    return axios.post("api/profile/featured-work", {
-      title: body.title,
-      type: body.type,
-      description: body.description,
-      // attachedFile: {
-      //      documentID: "5f10kjipmd"
-      //      fileLink: "http/:www.random.com/"
-      //  }
-      attachedFile: body.attachedFile,
-      image: body.image,
-      url: body.url,
-      headers: {
-        Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+    return axios.post(
+      "api/profile/featured-work",
+      {
+        title: body.title,
+        type: body.type,
+        description: body.description,
+        // attachedFile: {
+        //      documentID: "5f10kjipmd"
+        //      fileLink: "http/:www.random.com/"
+        //  }
+        attachedFile: body.attachedFile,
+        image: body.image,
+        url: body.url,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    );
   },
   // Gets all of the user's featured works
   getAllFeaturedWorks: function () {
@@ -403,14 +413,19 @@ export default {
   },
   // Create a new blog post
   createBlog: function (body) {
-    return axios.post("api/blog", {
-      title: body.title,
-      dateCreated: body.dateCreated,
-      content: body.content,
-      headers: {
-        Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+    return axios.post(
+      "api/blog",
+      {
+        title: body.title,
+        dateCreated: body.dateCreated,
+        content: body.content,
       },
-    });
+      {
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    );
   },
   // Edit a specific blog post
   editBlog: function (body, recordID) {

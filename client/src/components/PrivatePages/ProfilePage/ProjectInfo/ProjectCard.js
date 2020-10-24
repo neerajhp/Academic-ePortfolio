@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
 import axios from "axios";
@@ -127,6 +127,14 @@ const ProjectCard = ({ type, project }) => {
     default:
       cardSize = classes.large;
   }
+
+  // useEffect(() => {
+  //   API.getFeaturedWork(recordID)
+  //       .then(({ data }) => {
+  //         setRecords({ features: data });
+  //       })
+  //       .catch();
+  // }, []);
 
   const handleChoseFile = (e) => {
     e.preventDefault();

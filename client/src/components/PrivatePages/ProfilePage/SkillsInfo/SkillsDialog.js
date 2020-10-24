@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AboutDialog = ({ getData, skills }) => {
+const AboutDialog = ({ getData, skills, setSkills }) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -40,10 +40,7 @@ const AboutDialog = ({ getData, skills }) => {
   };
 
   const handleClose = () => {
-    API.getAboutMe().then(({ data }) => {
-      getData();
-      setOpen(false);
-    });
+    setOpen(false);
   };
 
   return (
@@ -62,7 +59,11 @@ const AboutDialog = ({ getData, skills }) => {
           <Typography variant="h2">Add Skills</Typography>
         </DialogTitle>
         <DialogContent>
-          <SkillsForm skills={skills} handleClose={handleClose} />
+          <SkillsForm
+            skills={skills}
+            setSkills={setSkills}
+            handleClose={handleClose}
+          />
         </DialogContent>
       </Dialog>
     </div>

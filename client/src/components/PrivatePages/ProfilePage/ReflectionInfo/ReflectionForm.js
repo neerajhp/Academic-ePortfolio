@@ -5,7 +5,6 @@ import { Typography, Button, Divider, TextField } from "@material-ui/core";
 import API from "../../../../api/API";
 
 /* ================ Styling ================ */
-
 // Form Styles
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -83,11 +82,7 @@ const ContentField = ({ type, label, index, record }) => {
   );
 };
 
-//   const ContentField = ({ type, label, index, record })=>{
-//       return
-//   }
-
-const ReflectionForm = ({ handleClose, records }) => {
+const ReflectionForm = ({ handleClose, records, setRecords }) => {
   const classes = useStyles();
 
   return (
@@ -96,9 +91,9 @@ const ReflectionForm = ({ handleClose, records }) => {
         ...records,
       }}
       onSubmit={(values, actions) => {
-        console.log(values);
-        API.editBlog(values, records.recordID).then(({ data }) => {
+        API.editBlog(values, records._id).then(({ data }) => {
           handleClose();
+          setRecords(data);
         });
       }}
     >
@@ -110,23 +105,19 @@ const ReflectionForm = ({ handleClose, records }) => {
             render={(fieldArrayProps) => (
               <React.Fragment>
                 <Typography>Title</Typography>
-
                 <FormField
                   type={"title"}
-                  // record={reflections.title}
+                  record={formikProps.initialValues.title}
                 />
-
                 <Typography>Reflection</Typography>
-
                 <ContentField
                   type={"content"}
                   rowsMax={4}
-                  // record={reflections.title}
+                  record={formikProps.initialValues.content}
                 />
               </React.Fragment>
             )}
           />
-
           <div className={classes.buttonContainer}>
             <Button
               className={classes.button}

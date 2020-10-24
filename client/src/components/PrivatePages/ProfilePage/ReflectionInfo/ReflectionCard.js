@@ -34,29 +34,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const ReflectionCard = (reflection) => {
+const ReflectionCard = ({ reflection, setBlogs }) => {
   const classes = useStyles();
-
-  // const [records, setRecords] = useState(reflection);
+  const [records, setRecords] = useState(reflection);
+  const inputEl = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const getRecord = () => {
     return <Typography> Add your reflection!</Typography>;
   };
-
-  // return (
-  //   <Paper className={classes.card}>
-  //     <div className={classes.bio}>
-  //       <Typography className={classes.title} variant='h2'>
-  //         This is a Reflection
-  //       </Typography>
-  //       <Typography>{getRecord(records)}</Typography>
-  //       {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-  //       <ReflectionDialog records={records} setRecords={setRecords} />
-  //     </div>
-  //   </Paper>
-  const inputEl = useRef(null);
-  const [loading, setLoading] = useState(false);
-  const [records, setRecords] = useState(reflection);
 
   const handleChoseImg = (e) => {
     e.preventDefault();
@@ -92,7 +78,11 @@ const ReflectionCard = (reflection) => {
   const handleDel = (recordID) => {
     API.removeBlog(recordID).then((result) => {
       if (result.status === 200) {
-        console.log(123);
+        API.getAllBlogs()
+          .then(({ data }) => {
+            setBlogs(data);
+          })
+          .catch();
       }
     });
   };
@@ -101,9 +91,9 @@ const ReflectionCard = (reflection) => {
     <Paper className={classes.card}>
       <div className={classes.bio}>
         <Typography className={classes.title} variant="h2">
-          This is a Reflection
+          {records.title}
         </Typography>
-        <Typography>This is the blog introduction</Typography>
+        <Typography>{records.content}</Typography>
         <input
           className={classes.hidden}
           type="file"
@@ -114,7 +104,6 @@ const ReflectionCard = (reflection) => {
         />
         {getRecord(records)}
         {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-        {/* <ReflectionDialog records={records} setRecords={setRecords} /> */}
         <div className={classes.upload}>
           <ButtonGroup color="#fff">
             <Button>
@@ -123,7 +112,7 @@ const ReflectionCard = (reflection) => {
             <Button onClick={() => inputEl.current.click()}>
               <BackupIcon />
             </Button>
-            <Button onClick={() => handleDel(records?.recordID)}>
+            <Button onClick={() => handleDel(records?._id)}>
               <DeleteIcon />
             </Button>
           </ButtonGroup>

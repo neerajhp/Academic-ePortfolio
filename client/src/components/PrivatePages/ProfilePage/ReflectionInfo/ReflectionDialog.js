@@ -38,10 +38,7 @@ const ReflectionDialog = ({ records, setRecords }) => {
   };
 
   const handleClose = () => {
-    API.getAllBlogs().then(({ data }) => {
-      setRecords(data);
-      setOpen(false);
-    });
+    setOpen(false);
   };
 
   return (
@@ -58,7 +55,11 @@ const ReflectionDialog = ({ records, setRecords }) => {
           <Typography variant="h2">Edit Reflection</Typography>
         </DialogTitle>
         <DialogContent>
-          <ReflectionForm records={records} handleClose={handleClose} />
+          <ReflectionForm
+            records={records}
+            setRecords={setRecords}
+            handleClose={handleClose}
+          />
         </DialogContent>
       </Dialog>
     </>

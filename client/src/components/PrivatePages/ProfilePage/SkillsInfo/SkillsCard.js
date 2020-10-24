@@ -105,7 +105,7 @@ const SkillsCard = () => {
         What I'm Good At
       </Typography>
       {getSkills()}
-      <SkillsDialog getData={getData} skills={skills} />
+      <SkillsDialog setSkills={setSkills} skills={skills} />
     </Paper>
   );
 };

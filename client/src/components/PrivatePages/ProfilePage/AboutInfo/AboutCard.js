@@ -23,6 +23,7 @@ const AboutCard = () => {
   const classes = useStyles();
   const [records, setRecords] = useState({});
 
+
   useEffect(() => {
     API.getAboutMe()
       .then(({ data }) => {
@@ -30,6 +31,8 @@ const AboutCard = () => {
       })
       .catch();
   }, []);
+
+
 
   return (
     <Paper className={classes.characterCard}>

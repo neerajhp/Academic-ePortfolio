@@ -500,6 +500,24 @@ const addSocialMedia = async (req, res) => {
   
 }
 
+// Get the social media field in the user object
+const getSocialMedia = async (req, res) => {
+  try{
+    await User.findById(req.user.id, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        res.status(200).json(result.socialMedia);
+      }else{
+        res.status(404).json("User not found");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Error while trying to get user");
+  }
+}
+
 // Creates the json that will be stored in the user's account
 const createSocialMediaJSON = (accounts, original) => {
   //var links = {};
@@ -580,6 +598,7 @@ module.exports = {
   addSkills,
   removeSkills,
   deleteProfile,
+  getSocialMedia,
   addSocialMedia,
   changePrivacy,
   getPrivacy

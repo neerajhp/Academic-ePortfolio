@@ -22,7 +22,8 @@ test("Should sign up a user", async () =>{
         lastName: "test",
         email: "test@gmail.com",
         userName: "testing123",
-        password: "test123"
+        password: "test123",
+        isVerified: true
     })
     .expect(200)
     

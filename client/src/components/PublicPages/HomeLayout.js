@@ -1,12 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Background from '../../assets/Background/bkg-alt.jpg';
 import LoginPage from './LoginPage/LoginPage';
 import ResetPage from './ResetPage/ResetPage';
 import SignupPage from './SignUpPage/SignUpPage';
 import LandingPage from './LandingPage/LandingPage';
+import AccountVerifiedPage from './AccountVerifiedPage/AccountVerifiedPage.js';
 import SearchPage from './SearchPage/SearchPage';
 import { Fade } from '@material-ui/core';
 
@@ -88,7 +89,7 @@ const useStyles = makeStyles((theme) => {
     },
     successBoard: {
       color: theme.palette.text.secondary,
-      width: '25%',
+      width: '30%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -108,6 +109,9 @@ const HomeLayout = () => {
     <div className={classes.root}>
       <Fade>
         <Switch>
+          <Route exact path='/home'>
+            <Redirect to='/home/landing' />
+          </Route>
           <Route
             exact
             path='/home/landing'
@@ -132,6 +136,13 @@ const HomeLayout = () => {
             exact
             path='/home/reset'
             render={(props) => <ResetPage {...props} globalClasses={classes} />}
+          />
+          <Route
+            exact
+            path='/home/signup/confirmation/:token'
+            render={(props) => (
+              <AccountVerifiedPage {...props} globalClasses={classes} />
+            )}
           />
           <Route
             exact

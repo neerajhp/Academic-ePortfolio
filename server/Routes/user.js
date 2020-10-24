@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../Controllers/userController.js');
 
-const authenticate = require('../Middleware/authenticate');
+const { authenticateToken } = require("../Middleware/authenticate");
+
 
 router.get('/', (req, res) => {
   res.send('You are in the users page');
@@ -32,22 +33,22 @@ router.post('/facebooklogin', (req, res) => {
   userController.facebookLogin(req, res);
 });
 
-router.get('/userInfo', authenticate.authenticateToken, async (req, res) => {
+router.get('/userInfo', authenticateToken, async (req, res) => {
   userController.getUserInformation(req, res);
 });
 
-router.put('/userInfo', authenticate.authenticateToken, async (req, res) => {
+router.put('/userInfo', authenticateToken, async (req, res) => {
   userController.editUserInformation(req, res);
 });
 
-router.get('/getID', authenticate.authenticateToken, async (req, res) => {
+router.get('/getID', authenticateToken, async (req, res) => {
   userController.getUserID(req, res);
 });
 
 // Update email (logged in user only)
 router.put(
   '/update/email',
-  authenticate.authenticateToken,
+  authenticateToken,
   async (req, res) => {
     userController.updateEmail(req, res);
   }
@@ -55,7 +56,7 @@ router.put(
 
 router.put(
   '/update/username',
-  authenticate.authenticateToken,
+  authenticateToken,
   async (req, res) => {
     userController.changeUserName(req, res);
   }
@@ -64,15 +65,16 @@ router.put(
 // Change password (logged in user only)
 router.put(
   '/update/password',
-  authenticate.authenticateToken,
+  authenticateToken,
   async (req, res) => {
     userController.changePassword(req, res);
   }
 );
 
+// Finish tutorial
 router.put(
   '/update/tutorial',
-  authenticate.authenticateToken,
+  authenticateToken,
   async (req, res) => {
     userController.finishTutorial(req, res);
   }

@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import WorkIcon from '@material-ui/icons/Work';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import AddIcon from '@material-ui/icons/Add';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import validationSchema from './Validation';
 import API from '../../../../api/API';
@@ -25,6 +25,7 @@ import API from '../../../../api/API';
 // Form Styles
 const useStyles = makeStyles((theme) => ({
   expEntry: {
+    marginTop: theme.spacing(2),
     display: 'flex',
     paddingLeft: '5%',
   },
@@ -41,15 +42,12 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     width: '100%',
     backgroundColor: theme.palette.tertiary.main,
-    marginBottom: theme.spacing(3),
   },
 
-  addButton: {
-    marginTop: theme.spacing(3),
-  },
+  addButton: { marginTop: theme.spacing(1) },
   addButtonContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   buttonWrapper: {
     margin: theme.spacing(1),
@@ -323,7 +321,7 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                               index={i}
                               record={exp.description}
                               multiline
-                              rows={8}
+                              rows={6}
                             />
                           </div>
 
@@ -345,8 +343,8 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                     ))}
 
                     <div className={classes.addButtonContainer}>
-                      <IconButton
-                        className={classes.button}
+                      <Button
+                        className={classes.addButton}
                         onClick={() =>
                           fieldArrayProps.push({
                             type: expType,
@@ -360,10 +358,11 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                             description: '',
                           })
                         }
-                        color='primary'
+                        color='secondary'
+                        startIcon={<AddIcon style={{ fontSize: 30 }} />}
                       >
-                        <AddBoxIcon style={{ fontSize: 30 }} />
-                      </IconButton>
+                        Add an experience
+                      </Button>
                     </div>
                   </React.Fragment>
                 )}

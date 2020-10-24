@@ -7,9 +7,11 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Button
 } from '@material-ui/core';
 import API from '../../../../api/API';
 import CharacterForm from './CharacterForm';
+import AddIcon from '@material-ui/icons/Add';
 
 
 
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-  const CharacterDialog = ({ records, setRecords }) => {
+  const CharacterDialog = ({ records, setRecords, empty }) => {
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [open, setOpen] = React.useState(false);
@@ -40,17 +42,30 @@ const useStyles = makeStyles((theme) => ({
     };
   
     const handleClose = () => {
-      API.getProfilePic().then(({ data }) => {
+      API.getBio().then(({ data }) => {
+        console.log(data);
         setRecords(data);
+        console.log(records);
         setOpen(false);
       });
     };
   
-    return (
+    const openButton = empty ? (
+      <Button onClick={handleOpen} className={classes.newButton}>
+        <Typography variant='h2'>
+          <AddIcon /> Add Bio
+        </Typography>
+      </Button>
+    ) : (
+      <IconButton onClick={handleOpen}>
+        <EditIcon />
+      </IconButton>
+    );
+
+        return (
+        <React.Fragment>
       <div className={classes.container}>
-        <IconButton onClick={handleOpen}>
-          <EditIcon />
-        </IconButton>
+        {openButton}
         <Dialog
           fullWidth={true}
           maxWidth={'md'}
@@ -66,8 +81,11 @@ const useStyles = makeStyles((theme) => ({
           </DialogContent>
         </Dialog>
       </div>
+       </React.Fragment>
+
     );
   };
+  
   
   export default CharacterDialog;
   

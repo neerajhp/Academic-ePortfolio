@@ -312,6 +312,6 @@ test("Should not delete all education records if they dont exist", async () =>{
 // searchAllEdu
 test("Should get all education will return null ", async () =>{
     const result = await searchAllEdu(ID)
-    expect(result).toEqual([])
+    expect(result).toEqual([]);
 
 })

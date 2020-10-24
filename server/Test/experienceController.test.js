@@ -137,7 +137,7 @@ test("Should add extracurricular experience to database", async () =>{
 
 // Should update the specified experience object
 test("Should update the specified experience object", async () =>{
-    await request.put(`/api/experience/${objectID}`)
+    await request.put(`/api/experience/edit/${objectID}`)
     .set('Authorization', 'bearer ' + token)
     .send({
         organization: "FC Barcelona",
@@ -183,7 +183,7 @@ test("Should get the specified experience object", async () =>{
 
 // Should delete the specified experience object
 test("Should delete the specified experience object", async () => {
-    await request.delete(`/api/experience/${objectID}`)
+    await request.delete(`/api/experience/delete/${objectID}`)
     .set('Authorization', 'bearer ' + token)
     .expect(200)
     .then(data => {
@@ -193,7 +193,7 @@ test("Should delete the specified experience object", async () => {
 
 // Should fail to delete something that does not exist
 test("Should fail to delete something that does not exist", async () => {
-    await request.delete(`/api/experience/${1234}`)
+    await request.delete(`/api/experience/delete/${objectID}`)
     .set('Authorization', 'bearer ' + token)
     .expect(400)
     .then(data => {

@@ -20,6 +20,8 @@ router.get("/cv", profileController.getCV);
 // Gets the user's profile picture
 router.get("/profile-pic", profileController.getProfilePic);
 
+// Gets the user's social media
+router.get("/social-media", profileController.getSocialMedia);
 // Edits the user's social media links
 router.put("/social-media", profileController.addSocialMedia);
 

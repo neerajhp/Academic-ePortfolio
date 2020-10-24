@@ -144,7 +144,7 @@ test('Should update social media JSON', async () => {
 
 // Should remove unwanted social media links
 test('Should remove unwanted social media links', async () => {
-    await request.put("api/profile/social-media")
+    await request.put("/api/profile/social-media")
     .set('Authorization', 'bearer ' + token)
     .send([{"site": "youtube", "link": ""}])
     .expect(200)

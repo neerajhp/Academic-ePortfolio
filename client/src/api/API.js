@@ -536,6 +536,27 @@ export default {
       }
     );
   },
+  // Get social media
+  getSocialMedia: function (body) {
+    return axios.get('api/profile/social-media', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Edit social media links
+  editSocialMedia: function (body) {
+    return axios.put('api/profile/social-media',
+    {
+      // e.g. [{site: "facebook", link: "www.facebook.com"}, {site: "linkedIn", link: "www.linkedIn.com"}]
+      body
+    },
+    {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    });
+  },
   // Get user information
   getUserInformation: function () {
     return axios.get('api/user/userInfo', {
@@ -572,6 +593,25 @@ export default {
         },
       }
     );
+  },
+  // Get user privacy option
+  getPrivacy: function() {
+    return axios.get('api/profile/private', {
+      headers: {
+        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+      },
+    })
+  },
+  // Change user privacy 
+  changePrivacy: function (body) {
+    return axios.put(
+      'api/profile/private',
+      { private: body.private },
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      })
   },
   changePassword: function (body) {
     return axios.put(

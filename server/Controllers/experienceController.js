@@ -56,16 +56,16 @@ const addExperience = async (req, res) => {
 const editExperience = async (req, res, next) => {
   try {
     await Experience.findByIdAndUpdate(
-      { _id: req.params.id },
+     req.params.id,
       req.body,
       (err, result) => {
         if (err) {
-          next();
+          //next();
           throw err;
         }
         if (result) {
           console.log('Updated');
-          Experience.findById({ _id: req.params.id }, (err, exp) => {
+          Experience.findById(req.params.id, (err, exp) => {
             if (err) {
               throw err;
             }
@@ -275,32 +275,12 @@ const deleteExperience = async (req, res, next) => {
       if (err) {
         throw err;
       }
-      if (result) {
+      if (result.deletedCount == 1) {
         res.status(200).json(result);
       } else {
         res.status(400).json('Failed to delete experience');
       }
     });
-    // await Experience.findByIdAndDelete(
-    //   { _id: req.params.id },
-    //   (err, result) => {
-    //     console.log(req.params.id);
-    //     if (err) {
-    //       //next();
-    //       throw err;
-    //     }
-    //     if (result) {
-    //       res.status(200).json(result);
-    //       // if (result.deleteCount == 0) {
-    //       //   res.status(400).json('Nothing was deleted');
-    //       // } else {
-    //       //   res.status(200).json(result);
-    //       // }
-    //     } else {
-    //       res.status(404).json('Failed to delete experience');
-    //     }
-    //   }
-    // );
   } catch (error) {
     res.status(400).send('Error occured while deleting');
   }

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
+import { validationSchema } from './Validation';
 import API from '../../../api/API';
 
 /* ================ Component ================ */
@@ -12,13 +13,16 @@ const ResetPage = ({ globalClasses }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
+  const [resubmitting, setResubmitting] = useState(false);
   const [email, setEmail] = useState('');
   const [resendMessage, setResendMessage] = useState(false);
   const [resendError, setResendError] = useState(false);
 
   const resendEmail = (email) => {
+    setResubmitting(true);
     API.emailresetPassword(email)
       .then((res) => {
+        setResubmitting(false);
         setResendMessage(true);
       })
       .catch((err) => {
@@ -41,17 +45,28 @@ const ResetPage = ({ globalClasses }) => {
           <Typography variant='h4' align='center'>
             Click the link in your email to reset your password
           </Typography>
-          <Button
-            fullWidth
-            variant='contained'
-            className={classes.submit}
-            color='primary'
-            onClick={() => resendEmail(email)}
-          >
-            <Typography>
-              Didn't recieve an email? Click Here to Resend.
-            </Typography>
-          </Button>
+
+          <div className={globalClasses.buttonWrapper}>
+            <Button
+              type='Submit'
+              fullWidth
+              variant='contained'
+              className={classes.submit}
+              disabled={resubmitting}
+              color='secondary'
+              onClick={() => resendEmail(email)}
+            >
+              <Typography>
+                Didn't recieve an email? Click here to resend.
+              </Typography>
+            </Button>
+            {resubmitting && (
+              <CircularProgress
+                size={24}
+                className={globalClasses.buttonProgress}
+              />
+            )}
+          </div>
           {resendMessage && (
             <Typography color='secondary'>Email has been resent</Typography>
           )}
@@ -109,16 +124,23 @@ const ResetPage = ({ globalClasses }) => {
                   className={classes.inputField}
                 />
 
-                <Button
-                  type='Submit'
-                  fullWidth
-                  variant='contained'
-                  className={classes.submit}
-                  disabled={!formikProps.isValid}
-                  color='primary'
-                >
-                  <Typography>Reset</Typography>
-                </Button>
+                <div className={globalClasses.buttonWrapper}>
+                  <Button
+                    type='Submit'
+                    fullWidth
+                    variant='contained'
+                    disabled={!formikProps.isValid || formikProps.isSubmitting}
+                    color='secondary'
+                  >
+                    <Typography>Reset</Typography>
+                  </Button>
+                  {formikProps.isSubmitting && (
+                    <CircularProgress
+                      size={24}
+                      className={globalClasses.buttonProgress}
+                    />
+                  )}
+                </div>
                 <Grid container>
                   <Grid item xs>
                     <Link href='./login' variant='body2' color='textSecondary'>

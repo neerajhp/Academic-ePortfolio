@@ -302,9 +302,9 @@ const sendResetPost = async (req, res) => {
             subject: 'Account Reset Link',
             text:
               'Hello,\n\n' +
-              'Please reset your account by clicking the link: \nhttp://' +
+              'Please reset your account by clicking the link: \n' +
               req.headers.referer +
-              '/reset/' +
+              '/' +
               token.token +
               '\n',
           };

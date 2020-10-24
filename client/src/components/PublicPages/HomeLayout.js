@@ -5,6 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Background from '../../assets/Background/bkg-alt.jpg';
 import LoginPage from './LoginPage/LoginPage';
 import ResetPage from './ResetPage/ResetPage';
+import ResetPasswordPage from './ResetPage/ResetPasswordPage';
 import SignupPage from './SignUpPage/SignUpPage';
 import LandingPage from './LandingPage/LandingPage';
 import AccountVerifiedPage from './AccountVerifiedPage/AccountVerifiedPage.js';
@@ -97,6 +98,19 @@ const useStyles = makeStyles((theme) => {
       padding: '2%',
       '& >*': { margin: '1em' },
     },
+    buttonWrapper: {
+      margin: theme.spacing(1),
+      position: 'relative',
+      alignSelf: 'flex-end',
+    },
+    buttonProgress: {
+      color: theme.palette.secondary.main,
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12,
+    },
   };
 });
 
@@ -136,6 +150,13 @@ const HomeLayout = () => {
             exact
             path='/home/reset'
             render={(props) => <ResetPage {...props} globalClasses={classes} />}
+          />
+          <Route
+            exact
+            path='/home/reset/:token'
+            render={(props) => (
+              <ResetPasswordPage {...props} globalClasses={classes} />
+            )}
           />
           <Route
             exact

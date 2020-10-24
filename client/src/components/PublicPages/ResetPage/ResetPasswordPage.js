@@ -1,69 +1,35 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import MailIcon from '@material-ui/icons/Mail';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
+import { passwordValidationSchema } from './Validation';
 import API from '../../../api/API';
 
 /* ================ Component ================ */
 
-const ResetPasswordPage = ({ globalClasses }) => {
+const ResetPasswordPage = ({ globalClasses, match }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
-  const [email, setEmail] = useState('');
-  const [resendMessage, setResendMessage] = useState(false);
-  const [resendError, setResendError] = useState(false);
-
-  const resendEmail = (email) => {
-    API.emailresetPassword(email)
-      .then((res) => {
-        setResendMessage(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setResendError(err.response.data);
-      });
-  };
 
   if (Submitted) {
     return (
       <div className={classes.formContainer}>
         <div className={classes.successBoard}>
           <Avatar className={classes.avatar}>
-            <MailIcon className={classes.icon} />
+            <ThumbUpIcon className={classes.icon} />
           </Avatar>
-          <Typography variant='h5' align='center'>
-            An email has been sent to {email}
-          </Typography>
+
           <Typography variant='h4' align='center'>
-            Click the link in your email to reset your password
+            Your password has been reset
           </Typography>
-          <Button
-            fullWidth
-            variant='contained'
-            className={classes.submit}
-            color='primary'
-            onClick={() => resendEmail(email)}
-          >
-            <Typography>
-              Didn't recieve an email? Click Here to Resend.
-            </Typography>
-          </Button>
-          {resendMessage && (
-            <Typography color='secondary'>Email has been resent</Typography>
-          )}
-          {resendError && (
-            <React.Fragment>
-              <Typography color='error'>{resendError}</Typography>
-              <Typography>
-                <Link href='./signup' color='textSecondary'>
-                  Click here to signup{' '}
-                </Link>
-              </Typography>
-            </React.Fragment>
-          )}
+
+          <Typography variant='h4' align='center'>
+            <Link href='/home/login' variant='h4' color='textSecondary'>
+              Log In Here!
+            </Link>
+          </Typography>
         </div>
       </div>
     );
@@ -73,27 +39,27 @@ const ResetPasswordPage = ({ globalClasses }) => {
     <React.Fragment>
       <div className={globalClasses.banner}>
         <Typography variant='h1' color='textSecondary'>
-          Reset your new Portfolio
+          Reset your password
         </Typography>
       </div>
       <div className={classes.formContainer}>
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              email: '',
+              password: '',
+              confirmPassword: '',
             }}
             onSubmit={(values, actions) => {
-              API.emailresetPassword(values.email)
+              API.resetPassword(match.params.token, values.password)
                 .then((res) => {
                   setSubmitted(true);
-                  setEmail(values.email);
                 })
                 .catch((err) => {
-                  actions.setFieldError('email', err.response.data);
+                  actions.setFieldError('password', err.response.data);
                   actions.setSubmitting(false);
                 });
             }}
-            validationSchema={validationSchema}
+            validationSchema={passwordValidationSchema}
           >
             {(formikProps) => (
               <form
@@ -101,13 +67,21 @@ const ResetPasswordPage = ({ globalClasses }) => {
                 onSubmit={formikProps.handleSubmit}
               >
                 <FormikField
-                  label='Email'
+                  label='Password'
                   formikProps={formikProps}
-                  formikKey='email'
+                  formikKey='password'
+                  type='password'
                   required
                   className={classes.inputField}
                 />
-
+                <FormikField
+                  label='Confirm Password'
+                  formikProps={formikProps}
+                  formikKey='confirmPassword'
+                  type='password'
+                  required
+                  className={classes.inputField}
+                />
                 <Button
                   type='Submit'
                   fullWidth
@@ -120,7 +94,11 @@ const ResetPasswordPage = ({ globalClasses }) => {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href='./login' variant='body2' color='textSecondary'>
+                    <Link
+                      href='/home/login'
+                      variant='body2'
+                      color='textSecondary'
+                    >
                       Back to Log In
                     </Link>
                   </Grid>

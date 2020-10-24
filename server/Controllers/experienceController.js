@@ -276,6 +276,7 @@ const deleteExperience = async (req, res, next) => {
         throw err;
       }
       if (result) {
+        console.log(result)
         res.status(200).json(result);
       } else {
         res.status(400).json('Failed to delete experience');

@@ -141,7 +141,7 @@ test("Should get specific blog", async () => {
 
 // Should get viewed user's blogs
 test("Should get viewed user's blogs", async () => {
-    await request.get("/view/blog/test")
+    await request.get("/api/view/blog/test")
     .set('Authorization', 'bearer ' + token)
     .expect(200)
     .then(data => {

@@ -56,16 +56,16 @@ const addExperience = async (req, res) => {
 const editExperience = async (req, res, next) => {
   try {
     await Experience.findByIdAndUpdate(
-      { _id: req.params.id },
+     req.params.id,
       req.body,
       (err, result) => {
         if (err) {
-          next();
+          //next();
           throw err;
         }
         if (result) {
           console.log('Updated');
-          Experience.findById({ _id: req.params.id }, (err, exp) => {
+          Experience.findById(req.params.id, (err, exp) => {
             if (err) {
               throw err;
             }

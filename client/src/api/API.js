@@ -23,6 +23,16 @@ export default {
       email: userEmail,
     });
   },
+  emailresetPassword: function (userEmail) {
+    return axios.post('/api/confirmation/reset', {
+      email: userEmail,
+    });
+  },
+  resetPassword: function (token, userPassword) {
+    return axios.post(`/api/confirmation/reset/${token}`, {
+      password: userPassword,
+    });
+  },
   userLogin: function (user) {
     return axios.post('/api/user/login', {
       email: user.email,

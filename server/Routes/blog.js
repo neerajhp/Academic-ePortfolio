@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const blogController = require("../Controllers/blogController");
-const authenticate = require("../Middleware/authenticate");
+const { authenticateToken } = require("../Middleware/authenticate");
 
-router.use(authenticate.authenticateToken);
+router.use(authenticateToken);
+
 
 router.post("/", blogController.postBlog);
 

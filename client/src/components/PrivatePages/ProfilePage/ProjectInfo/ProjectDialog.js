@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 const ProjectDialog = ({ records, setRecords }) => {
   // const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -44,7 +44,7 @@ const ProjectDialog = ({ records, setRecords }) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <EditIcon onClick={handleOpen} />
       <Dialog
         fullWidth={true}
@@ -60,7 +60,7 @@ const ProjectDialog = ({ records, setRecords }) => {
           <ProjectForm records={records} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
-    </>
+    </React.Fragment>
   );
 };
 

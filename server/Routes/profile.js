@@ -5,9 +5,10 @@ const profileController = require("../Controllers/profileController");
 const showcaseController = require("../Controllers/showcaseController");
 const eduController = require("../Controllers/eduController");
 
-const authenticate = require("../Middleware/authenticate")
+const { authenticateToken } = require("../Middleware/authenticate");
 
-router.use(authenticate.authenticateToken);
+router.use(authenticateToken);
+
 
 // Gets everything needed for the user's profile display
 router.get("/", profileController.getProfile);

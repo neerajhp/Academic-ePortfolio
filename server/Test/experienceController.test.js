@@ -145,6 +145,7 @@ test("Should update the specified experience object", async () =>{
     })
     .expect(200)
     .then(data => {
+        
         expect(data.body).toBeDefined()
         expect(data.body).toEqual(expect.objectContaining({
             "type": "employment",

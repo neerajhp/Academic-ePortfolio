@@ -8,13 +8,6 @@ const { clearDB } = require('./clearDB');
 
 clearDB();
 
-test("Should return signup page", async () =>{
-    await request.get("/api/user/signup")
-    .expect(200)
-    
-
-})
-
 test("Should sign up a user", async () =>{
     await request.post("/api/user/signup")
     .send({
@@ -69,8 +62,7 @@ test("Should not login user that has not signed up", async () =>{
     .expect(409)
 })
 
-
-
+let token
 test("Should return JWT Token", async () =>{
     await request.post("/api/user/login")
     .send({
@@ -80,5 +72,31 @@ test("Should return JWT Token", async () =>{
     .expect(200)
     .then((response) => {
         expect(response.body.token).toBeTruthy()
+        token = response.body.token
+    })
+})
+
+test("Should return information on the user", async () => {
+    await request.get("/api/user/userInfo")
+    .set('Authorization', 'bearer ' + token)
+    .expect(200)
+    .then((response) => {
+        expect(response.body).toBeDefined
+        expect(response.body.userName).toEqual("test")
+        expect(response.body.firstName).toEqual("test")
+        expect(response.body.lastName).toEqual("test")
+    })
+})
+
+test("Should change the username", async () => {
+    await request.put("/api/user/update/username")
+    .set('Authorization', 'bearer ' + token)
+    .send({
+        userName: "testing"
+    })
+    .expect(200)
+    .then((response) => {
+        expect(response.body).toBeDefined
+        expect(response.body).toEqual("testing")
     })
 })

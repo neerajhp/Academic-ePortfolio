@@ -3,16 +3,18 @@ const supertest = require('supertest');
 const request = supertest(server);
 
 const { clearDB } = require('./clearDB');
-const { setupUser, loginUser,idUser } = require('./login');
+const { setupUser, loginUser, idUser, getuserName } = require('./login');
 
 clearDB();
 setupUser();
 
 let token;
 let ID;
+let userName;
 beforeAll(async () => {
     token = await loginUser();
     ID = await idUser();
+    userName = await getuserName();
 })
 
 // Should return an empty list when getting blogs

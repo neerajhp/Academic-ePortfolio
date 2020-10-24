@@ -46,11 +46,21 @@ const idUser = async () =>{
     return ID
 }
 
+const getuserName = async () => {
+    let userName
+    await request.get("/api/user/userInfo")
+    .set('Authorization', 'bearer ' + token)
+    .then((response) => {
+        userName = response.body.userName
+    })
+    return userName
+}
+
 module.exports = {
     async setupUser () {
         beforeAll(async () => {
         await signupUser()
      })
       
-    }, loginUser, idUser
+    }, loginUser, idUser, getuserName
 }

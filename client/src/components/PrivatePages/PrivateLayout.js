@@ -73,12 +73,12 @@ const PrivateLayout = ({ match }) => {
 
       <div className={classes.contentContainer}>
         <Switch>
-          <PrivateRoute exact path='/'>
-            <Redirect to='/myprofile' />
-          </PrivateRoute>
           <PrivateRoute exact path='/myprofile' component={ProfilePage} />
           <PrivateRoute exact path='/myaccount' component={AccountPage} />
           <PrivateRoute path='/view/:userId' component={PublicProfilePage} />
+          <PrivateRoute path='/'>
+            <Redirect to='/myprofile' />
+          </PrivateRoute>
         </Switch>
       </div>
     </div>

@@ -1,15 +1,14 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
 import {
-  Button,
   Typography,
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@material-ui/core";
-import ProjectForm from "./ProjectForm";
-import API from "../../../../api/API";
+} from '@material-ui/core';
+import ProjectForm from './ProjectForm';
+import API from '../../../../api/API';
 
 const useStyles = makeStyles((theme) => ({
   // container: {
@@ -19,19 +18,19 @@ const useStyles = makeStyles((theme) => ({
   //   position: "relative",
   // },
   paper: {
-    position: "absolute",
-    width: "40%",
+    position: 'absolute',
+    width: '40%',
     backgroundColor: theme.palette.neutral.main,
-    border: "2px solid #000",
+    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
 }));
 
 const ProjectDialog = ({ records, setRecords }) => {
-  const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
-  const [open, setOpen] = React.useState(false);
+  // const classes = useStyles();
+
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,23 +44,23 @@ const ProjectDialog = ({ records, setRecords }) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <EditIcon onClick={handleOpen} />
       <Dialog
         fullWidth={true}
-        maxWidth={"md"}
+        maxWidth={'md'}
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
         <DialogTitle disableTypography>
-          <Typography variant="h2">Edit Project</Typography>
+          <Typography variant='h2'>Edit Project</Typography>
         </DialogTitle>
         <DialogContent>
           <ProjectForm records={records} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
-    </>
+    </React.Fragment>
   );
 };
 

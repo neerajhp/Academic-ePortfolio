@@ -5,11 +5,14 @@ const path = require("path");
 const AWS = require("aws-sdk");
 
 const parse = require("../Middleware/upload");
-const authenticate = require("../Middleware/authenticate");
+const { authenticateToken } = require("../Middleware/authenticate");
 const uploadController = require("../Controllers/uploadController");
 
 // Use authentication
-router.use(authenticate.authenticateToken);
+
+
+router.use(authenticateToken);
+
 
 // Sends a form for testing purposes
 router.get("/", (req, res) => {

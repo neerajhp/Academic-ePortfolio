@@ -17,25 +17,29 @@ import smallProjectPic from "../../../../assets/ProjectPic/smallProPic.png";
 import Switch from "@material-ui/core/Switch";
 import Collapse from "@material-ui/core/Collapse";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 /* ================ Styling ================ */
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    margin: "0 0 1% 1%",
+    margin: '0 0 1% 1%',
     background: theme.palette.primary.light,
     color: theme.palette.text.secondary,
+
     padding: "5%",
     display: "inline",
+
     //alignItems: "center",
-    justifyContent: "flex-start",
-    position: "relative",
+    justifyContent: 'flex-start',
+    position: 'relative',
   },
   description: {
-    marginLeft: "5%",
-    color: "white !important ",
+    marginLeft: '5%',
+    color: 'white !important ',
   },
   large: {
     background: theme.palette.secondary.light,
+
     width: "100%",
     height: "auto",
   },
@@ -48,29 +52,33 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     width: "49%",
     height: "auto",
+
   },
   upload: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 40,
     right: 20,
   },
   hidden: {
-    display: "none",
+    display: 'none',
   },
   titleLarge: {
+
     marginTop: "0px",
+
   },
   title: {
-    marginBottom: "50px",
+    marginBottom: '50px',
   },
   fileTitle: {
-    cursor: "pointer",
+    cursor: 'pointer',
   },
   fileList: {
-    display: "flex",
-    paddingTop: "10px",
+    display: 'flex',
+    paddingTop: '10px',
   },
   fileItem: {
+
     textAlign: "center",
     margin: "0 10px",
     fontWeight: "bolder",
@@ -102,6 +110,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     margin: theme.spacing(1),
+
   },
 }));
 /* ================ Component ================ */
@@ -115,13 +124,13 @@ const ProjectCard = ({ type, project }) => {
   var cardSize;
 
   switch (type) {
-    case "large":
+    case 'large':
       cardSize = classes.large;
       break;
-    case "medium":
+    case 'medium':
       cardSize = classes.medium;
       break;
-    case "small":
+    case 'small':
       cardSize = classes.small;
       break;
     default:
@@ -147,20 +156,20 @@ const ProjectCard = ({ type, project }) => {
       for (const key in file) {
         if (file.hasOwnProperty(key)) {
           const item = file[key];
-          param.append("document", item);
+          param.append('document', item);
         }
       }
       axios({
-        method: "post",
-        url: "/api/upload/files",
+        method: 'post',
+        url: '/api/upload/files',
         data: param,
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-        responseType: "blob",
+        responseType: 'blob',
       }).then((result) => {});
     } else {
-      alert("the max number is 5");
+      alert('the max number is 5');
     }
   };
 
@@ -204,8 +213,9 @@ const ProjectCard = ({ type, project }) => {
   return (
     <Paper className={`${classes.card}  ${cardSize}`}>
       <div className={classes.bio}>
-        {type === "small" && (
+        {type === 'small' && (
           <>
+
             <Typography className={classes.titleLarge} variant="h6">
               Small Project
             </Typography>
@@ -250,11 +260,13 @@ const ProjectCard = ({ type, project }) => {
                   </ButtonGroup>
                 </div>
               </Collapse>
+
             </div>
           </>
         )}
-        {type === "medium" && (
+        {type === 'medium' && (
           <>
+
             <Typography className={classes.titleLarge} variant="h6">
               Medium Project
             </Typography>
@@ -305,6 +317,7 @@ const ProjectCard = ({ type, project }) => {
         {type === "large" && (
           <>
             <Typography className={classes.titleLarge} variant="h1">
+
               Showcase
             </Typography>
 
@@ -312,7 +325,7 @@ const ProjectCard = ({ type, project }) => {
               <Typography
                 onClick={() => onFinish()}
                 className={classes.fileTitle}
-                variant="h4"
+                variant='h4'
               >
                 Click here to see Uploaded Files
               </Typography>
@@ -320,7 +333,9 @@ const ProjectCard = ({ type, project }) => {
                 {allFiles.map((item) => (
                   <div className={classes.fileItem} key={item.id}>
                     <AssignmentIcon style={{ fontSize: 60 }} />
+
                     <div>{item.s3_key.replace(`user-${item.user_id}/`, "")}</div>
+
                   </div>
                 ))}
               </div>
@@ -329,7 +344,7 @@ const ProjectCard = ({ type, project }) => {
               <Typography
                 onClick={() => onIdFinish()}
                 className={classes.fileTitle}
-                variant="h4"
+                variant='h4'
               >
                 Click here and Choose to Download Uploaded Files
               </Typography>

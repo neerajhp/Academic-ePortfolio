@@ -1,13 +1,16 @@
 const express = require('express');
-const router = express.Router();
 const User = require('../Models/User.js');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 require('dotenv').config();
 const { OAuth2Client } = require('google-auth-library');
 const fetch = require('node-fetch');
 
+const { sendTokenPost } = require('./confirmationController')
+
 const saltRounds = 10;
+
 
 //SIGNUP
 const postSignup = async (req, res) => {
@@ -22,8 +25,11 @@ const postSignup = async (req, res) => {
       //Format: YYYY-MM-DD
       birthDate: req.body.birthDate,
       mobileNumber: req.body.mobileNumber,
+      socialMedia: req.body.socialMedia,
       biography: req.body.biography,
       skills: req.body.skills,
+      // remove for development 
+      isVerified: req.body.isVerified
     });
     // Look for duplicate email
     await User.findOne({ email: newUser.email }, (err, account) => {
@@ -35,10 +41,15 @@ const postSignup = async (req, res) => {
       if (!account) {
         console.log('email is unique');
         let userName = generateUniqueUserName(newUser.email);
-        userName.then(function (result) {
-          newUser.userName = result;
-          newUser.save();
-          res.status(200).json('New user saved');
+        userName.then(async (result) => {
+          try {
+            newUser.userName = result;
+            await newUser.save();
+            res.status(200).json('New user saved');
+            await sendTokenPost(req, res);
+          } catch {
+            res.status(400).json('User not saved');
+          }
         });
       } else {
         res.status(400).json('An account with this email already exists');
@@ -86,8 +97,13 @@ const postLogin = async (req, res) => {
   })
     .then((profile) => {
       //Email does not exist
-      if (!profile) {
-        res.status(409).send('Email does not match our records');
+      if (!profile)
+        return res.status(409).send('Email does not match our records');
+      // Account is not verified
+      if (!profile.isVerified) {
+        res
+          .status(401)
+          .send('The account is not verified, please check your email');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -126,13 +142,13 @@ const postLogin = async (req, res) => {
     });
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // Google Login
 const googleLogin = (req, res) => {
   const { idToken } = req.body;
 
   client
-    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT })
+    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
     .then((response) => {
       // console.log('GOOGLE LOGIN RESPONSE', response);
       const {
@@ -157,38 +173,47 @@ const googleLogin = (req, res) => {
               user: { id, email },
             });
           } else {
-            let password = email + process.env.SECRET_OR_KEY;
-            const randomID = Math.floor(Math.random() * Math.floor(999));
-            newUser = new User({
-              firstName: given_name,
-              lastName: family_name,
-              email: email,
-              userName: `${given_name}.${family_name}.${randomID}`,
-              password: password,
-              //Format: YYYY-MM-DD
-              birthDate: '',
-              mobileNumber: '',
-              biography: '',
-              skills: '',
+            // Might be a better way to call the function
+            let userName = generateUniqueUserName(email);
+            userName.then((result) => {
+              console.log(result);
+              userName = result;
             });
-            newUser.save((err, data) => {
-              if (err) {
-                console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
-                return res.status(400).json({
-                  error: 'User signup failed with google',
-                });
-              }
-              const token = jwt.sign(
-                { id: data._id },
-                process.env.SECRET_OR_KEY,
-                {
-                  expiresIn: '7d',
+            let password = email + process.env.SECRET_OR_KEY;
+            bcrypt.hash(password, saltRounds, async (err, hash) => {
+              newUser = new User({
+                firstName: given_name,
+                lastName: family_name,
+                email: email,
+                userName: userName,
+                password: hash,
+                //Format: YYYY-MM-DD
+                birthDate: '',
+                mobileNumber: '',
+                biography: '',
+                skills: '',
+                isVerified: true,
+              });
+
+              newUser.save((err, data) => {
+                if (err) {
+                  console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
+                  return res.status(400).json({
+                    error: 'User signup failed with google',
+                  });
                 }
-              );
-              const { id, email } = data;
-              return res.json({
-                token,
-                user: { id, email },
+                const token = jwt.sign(
+                  { id: data._id },
+                  process.env.SECRET_OR_KEY,
+                  {
+                    expiresIn: '7d',
+                  }
+                );
+                const { id, email } = data;
+                return res.json({
+                  token,
+                  user: { id, email },
+                });
               });
             });
           }
@@ -233,37 +258,44 @@ const facebookLogin = (req, res) => {
             let given_name = name.split(' ')[0];
             let family_name = name.split(' ')[1];
             let password = email + process.env.SECRET_OR_KEY;
-            const randomID = Math.floor(Math.random() * Math.floor(999));
-            newUser = new User({
-              firstName: given_name,
-              lastName: family_name,
-              email: email,
-              userName: `${given_name}.${family_name}.${randomID}`,
-              password: password,
-              //Format: YYYY-MM-DD
-              birthDate: '',
-              mobileNumber: '',
-              biography: '',
-              skills: '',
+            let userName = generateUniqueUserName(email);
+            userName.then((result) => {
+              console.log(result);
+              userName = result;
             });
-            newUser.save((err, data) => {
-              if (err) {
-                console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
-                return res.status(400).json({
-                  error: 'User signup failed with facebook',
-                });
-              }
-              const token = jwt.sign(
-                { id: data._id },
-                process.env.SECRET_OR_KEY,
-                {
-                  expiresIn: '7d',
+            bcrypt.hash(password, saltRounds, async (err, hash) => {
+              newUser = new User({
+                firstName: given_name,
+                lastName: family_name,
+                email: email,
+                userName: userName,
+                password: hash,
+                //Format: YYYY-MM-DD
+                birthDate: '',
+                mobileNumber: '',
+                biography: '',
+                skills: '',
+                isVerified: true,
+              });
+              newUser.save((err, data) => {
+                if (err) {
+                  console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
+                  return res.status(400).json({
+                    error: 'User signup failed with facebook',
+                  });
                 }
-              );
-              const { id, email } = data;
-              return res.json({
-                token,
-                user: { id, email },
+                const token = jwt.sign(
+                  { id: data._id },
+                  process.env.SECRET_OR_KEY,
+                  {
+                    expiresIn: '7d',
+                  }
+                );
+                const { id, email } = data;
+                return res.json({
+                  token,
+                  user: { id, email },
+                });
               });
             });
           }
@@ -302,8 +334,12 @@ const changeUserName = async (req, res) => {
           }
         );
       } else {
-        // Suggest a new username
-        res.status(400).json('Username not unique');
+        if(result._id == req.user.id){
+          res.status(200).json("User inputted the same username");
+        }else{
+          // Suggest a new username
+          res.status(400).json('Username not unique');
+        }
       }
     });
   } catch (error) {
@@ -311,7 +347,7 @@ const changeUserName = async (req, res) => {
   }
 };
 
-// Function to find the info associated with the given id
+// Function to find the user info associated with the given id
 const findInfo = async (userID) => {
   let userInfo;
   await User.findById(userID, (err, result) => {
@@ -322,8 +358,10 @@ const findInfo = async (userID) => {
       userInfo = {
         firstName: result.firstName,
         lastName: result.lastName,
+        userName: result.userName,
         email: result.email,
         mobileNumber: result.mobileNumber,
+        socialMedia: result.socialMedia,
         birthDate: result.birthDate,
       };
     } else {
@@ -343,8 +381,10 @@ const getUserInformation = async (req, res) => {
         userInfo = {
           firstName: result.firstName,
           lastName: result.lastName,
+          userName: result.userName,
           email: result.email,
           mobileNumber: result.mobileNumber,
+          socialMedia: result.socialMedia,
           birthDate: result.birthDate,
         };
         res.status(200).json(userInfo);
@@ -378,7 +418,7 @@ const viewerGetUserInformation = async (req, res) => {
   }
 };
 
-// Edits the user's personal information (except email and password)
+// Edits the user's personal information (except email,password and social media)
 
 const editUserInformation = async (req, res) => {
   try {
@@ -503,6 +543,8 @@ const finishTutorial = async (req, res) => {
     res.status(400).json('Error while trying to update tutorial field');
   }
 };
+
+
 
 module.exports = {
   postSignup,

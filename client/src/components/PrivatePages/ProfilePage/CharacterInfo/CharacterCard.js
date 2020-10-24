@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
   },
   profilePicture: {
-    height: '5em',
-    width: '5em',
+    height: '7em',
+    width: '7em',
     cursor: 'pointer',
   },
   bio: {
@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     color: 'white !important ',
   },
+
 }));
 
 /* ================ function ================ */
@@ -92,6 +93,7 @@ const CharacterCard = ({ user }) => {
         }}
       >
         <Avatar
+
           src={imageUrl}
           alt='avatar'
           className={classes.profilePicture}

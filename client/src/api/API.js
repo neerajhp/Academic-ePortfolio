@@ -570,6 +570,18 @@ export default {
       }
     );
   },
+
+  changePrivacy: function (body) {
+    return axios.put(
+      'api/user/update/privacy',
+      { private: body.private},
+      {
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
+  },
   changeUserName: function (body) {
     return axios.put(
       'api/user/update/username',

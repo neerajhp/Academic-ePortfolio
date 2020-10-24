@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { Paper, Typography, Button } from '@material-ui/core';
+import { Paper, Typography, Button, Switch, FormControlLabel} from '@material-ui/core';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -10,9 +10,17 @@ import API from '../../../../api/API';
 
 /* ================ Component ================ */
 
+
+
 const ProfileSettingsForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
+  const [checked, setChecked] = useState(false);
   const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
+
+
+  // const handleChange = (event) => {
+  // setChecked({ ...checked, [event.target.name]: event.target.checked });
+  // };
 
   return (
     <Paper className={globalClasses.card}>
@@ -55,6 +63,20 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                 className={`${globalClasses.field} ${fieldSubmitted}`}
               />
 
+              <FormControlLabel
+                      // control={<Switch checked={checked.checkedA} onChange={handleChange} name="checkedA" />}
+                      control={<Switch checked={checked.checkedA} name="checkedA" />}
+                      label="Set Profile To Private Mode" labelPlacement="start"
+                    />
+              {/* <Switch
+                label = "Set Page To Private Mode"
+                checked={checked}
+                onChange={handleChange}
+                color="primary"
+                name="checked"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+              /> */}
+
               <div className={globalClasses.buttonWrapper}>
                 <Button
                   type='Submit'
@@ -72,6 +94,8 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                   />
                 )}
               </div>
+
+
             </form>
           )}
         </Formik>

@@ -86,6 +86,8 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [userEducation, setEducation] = useState(null);
   const [userExperience, setExperience] = useState(null);
+  const [userReflection, setReflection] = useState(null);
+
 
   //Load user data
 
@@ -101,6 +103,12 @@ const ProfilePage = () => {
         setEducation(data);
       })
       .catch();
+    
+    API.getAllBlogs()
+      .then(({ data }) => {
+        setReflection(data);
+      })
+      .catch();
 
     API.getAllExperience()
       .then(({ data }) => {
@@ -111,7 +119,7 @@ const ProfilePage = () => {
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (!(user && userEducation && userExperience)) {
+  if (!(user && userEducation && userExperience && userReflection)) {
     pageContent = (
       <div>
         <div className={classes.loading}>
@@ -170,7 +178,7 @@ const ProfilePage = () => {
               <SkillsCard skills={user.skills} />
             </div>
             <div className={classes.section}>
-              <ReflectionCard />
+              <ReflectionCard reflection={userReflection}/>
               <ReflectionCard />
               <ReflectionCard />
             </div>

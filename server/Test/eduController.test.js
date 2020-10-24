@@ -12,10 +12,11 @@ setupUser();
 
 let token;
 let ID;
-
+let userName;
 beforeAll(async () => {
     token = await loginUser();
     ID = await idUser();
+    userName = await getuserName();
 })
 
 // beforeEach( (callback) => {

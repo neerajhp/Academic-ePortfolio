@@ -10,9 +10,11 @@ setupUser();
 
 let token;
 let ID;
+let userName;
 beforeAll(async () => {
     token = await loginUser();
     ID = await idUser();
+    userName = await getuserName();
 })
 
 // Should get nothing when attempting to get the experience

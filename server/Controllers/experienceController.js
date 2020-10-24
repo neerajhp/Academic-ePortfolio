@@ -281,26 +281,6 @@ const deleteExperience = async (req, res, next) => {
         res.status(400).json('Failed to delete experience');
       }
     });
-    // await Experience.findByIdAndDelete(
-    //   { _id: req.params.id },
-    //   (err, result) => {
-    //     console.log(req.params.id);
-    //     if (err) {
-    //       //next();
-    //       throw err;
-    //     }
-    //     if (result) {
-    //       res.status(200).json(result);
-    //       // if (result.deleteCount == 0) {
-    //       //   res.status(400).json('Nothing was deleted');
-    //       // } else {
-    //       //   res.status(200).json(result);
-    //       // }
-    //     } else {
-    //       res.status(404).json('Failed to delete experience');
-    //     }
-    //   }
-    // );
   } catch (error) {
     res.status(400).send('Error occured while deleting');
   }

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => {
     banner: {
       color: theme.palette.text.secondary,
     },
-    contentContainer: {},
+    form: { width: '100%' },
     formContainer: {
       paddingLeft: theme.spacing(3),
     },

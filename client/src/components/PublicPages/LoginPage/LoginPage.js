@@ -25,6 +25,11 @@ const useStyles = makeStyles((theme) => {
     rememberMe: {
       color: theme.palette.text.secondary,
     },
+    forgotPassword: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+    },
     loginDivider: {
       margin: `${theme.spacing(2)}px 0`,
       backgroundColor: '#FFFFFF',
@@ -177,11 +182,30 @@ const LoginPage = ({ globalClasses }) => {
                     disabled={resendRqd}
                     className={globalClasses.inputField}
                   />
-                  <FormControlLabel
-                    className={classes.rememberMe}
-                    control={<Checkbox value='remember' color='default' />}
-                    label='Remember me'
-                  />
+                  <Grid container>
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel
+                        className={classes.rememberMe}
+                        control={<Checkbox value='remember' color='default' />}
+                        label='Remember me'
+                      />
+                    </Grid>
+
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      className={classes.forgotPassword}
+                    >
+                      <Link
+                        href='./reset'
+                        variant='body2'
+                        color='textSecondary'
+                      >
+                        Forgot Password?
+                      </Link>
+                    </Grid>
+                  </Grid>
 
                   {!resendRqd && (
                     <Button

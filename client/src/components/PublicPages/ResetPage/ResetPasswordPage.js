@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
@@ -8,32 +8,21 @@ import API from '../../../api/API';
 
 /* ================ Component ================ */
 
-const SignUpPage = ({ globalClasses, location }) => {
+const ResetPasswordPage = ({ globalClasses }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
-  const [email, setEmail] = useState(
-    'No email has been provided. Return to the signup page.'
-  );
-  const [resendMessage, setResendMessage] = useState(null);
-  const [resendError, setResendError] = useState(null);
-
-  useEffect(() => {
-    if (location.state !== undefined) {
-      setEmail(location.state.email);
-      setSubmitted(true);
-    }
-  }, [location.state]);
+  const [email, setEmail] = useState('');
+  const [resendMessage, setResendMessage] = useState(false);
+  const [resendError, setResendError] = useState(false);
 
   const resendEmail = (email) => {
-    API.resendToken(email)
+    API.emailresetPassword(email)
       .then((res) => {
-        if (res.status === 200) {
-          setResendMessage(res.data);
-        }
+        setResendMessage(true);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err);
         setResendError(err.response.data);
       });
   };
@@ -45,19 +34,11 @@ const SignUpPage = ({ globalClasses, location }) => {
           <Avatar className={classes.avatar}>
             <MailIcon className={classes.icon} />
           </Avatar>
-          <Typography variant='h2'>Congratulations!</Typography>
-          <Typography variant='h4' align='center'>
-            You're on your way to getting started with your own academic
-            ePorfolio!
-          </Typography>
           <Typography variant='h5' align='center'>
             An email has been sent to {email}
           </Typography>
           <Typography variant='h4' align='center'>
-            Verify your email and then{' '}
-            <Link href='./login' variant='h4' color='textSecondary'>
-              Log In!
-            </Link>
+            Click the link in your email to reset your password
           </Typography>
           <Button
             fullWidth
@@ -67,7 +48,7 @@ const SignUpPage = ({ globalClasses, location }) => {
             onClick={() => resendEmail(email)}
           >
             <Typography>
-              Didn't recieve a token? Click Here to Resend.
+              Didn't recieve an email? Click Here to Resend.
             </Typography>
           </Button>
           {resendMessage && (
@@ -77,8 +58,8 @@ const SignUpPage = ({ globalClasses, location }) => {
             <React.Fragment>
               <Typography color='error'>{resendError}</Typography>
               <Typography>
-                <Link href='./landing' color='textSecondary'>
-                  Click here to begin process again{' '}
+                <Link href='./signup' color='textSecondary'>
+                  Click here to signup{' '}
                 </Link>
               </Typography>
             </React.Fragment>
@@ -92,26 +73,17 @@ const SignUpPage = ({ globalClasses, location }) => {
     <React.Fragment>
       <div className={globalClasses.banner}>
         <Typography variant='h1' color='textSecondary'>
-          Create your new Portfolio
+          Reset your new Portfolio
         </Typography>
       </div>
       <div className={classes.formContainer}>
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              firstName: '',
-              lastName: '',
               email: '',
-              password: '',
-              confirmPassword: '',
             }}
             onSubmit={(values, actions) => {
-              API.userSignup({
-                firstName: values.firstName,
-                lastName: values.lastName,
-                email: values.email,
-                password: values.password,
-              })
+              API.emailresetPassword(values.email)
                 .then((res) => {
                   setSubmitted(true);
                   setEmail(values.email);
@@ -128,46 +100,10 @@ const SignUpPage = ({ globalClasses, location }) => {
                 className={classes.form}
                 onSubmit={formikProps.handleSubmit}
               >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <FormikField
-                      label='FirstName'
-                      formikProps={formikProps}
-                      formikKey='firstName'
-                      required
-                      className={classes.inputField}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormikField
-                      label='LastName'
-                      formikProps={formikProps}
-                      formikKey='lastName'
-                      required
-                      className={classes.inputField}
-                    />
-                  </Grid>
-                </Grid>
                 <FormikField
                   label='Email'
                   formikProps={formikProps}
                   formikKey='email'
-                  required
-                  className={classes.inputField}
-                />
-                <FormikField
-                  label='Password'
-                  formikProps={formikProps}
-                  formikKey='password'
-                  type='password'
-                  required
-                  className={classes.inputField}
-                />
-                <FormikField
-                  label='Confirm Password'
-                  formikProps={formikProps}
-                  formikKey='confirmPassword'
-                  type='password'
                   required
                   className={classes.inputField}
                 />
@@ -180,12 +116,12 @@ const SignUpPage = ({ globalClasses, location }) => {
                   disabled={!formikProps.isValid}
                   color='primary'
                 >
-                  <Typography>Sign Up</Typography>
+                  <Typography>Reset</Typography>
                 </Button>
                 <Grid container>
                   <Grid item xs>
                     <Link href='./login' variant='body2' color='textSecondary'>
-                      Log In
+                      Back to Log In
                     </Link>
                   </Grid>
                 </Grid>
@@ -198,4 +134,4 @@ const SignUpPage = ({ globalClasses, location }) => {
   );
 };
 
-export default SignUpPage;
+export default ResetPasswordPage;

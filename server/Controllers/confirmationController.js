@@ -255,12 +255,16 @@ const resetPut = async (req, res) => {
 
 // Sending reset password link
 const sendResetPost = async (req, res) => {
+  console.log(req);
   await User.findOne(
     {
       email: req.body.email,
     },
     (err, user) => {
-      if (err) return res.status(400).send('An error has occured');
+      if (err) {
+        console.log(err);
+        return res.status(400).send('An error has occured');
+      }
       if (!user) {
         return res
           .status(400)

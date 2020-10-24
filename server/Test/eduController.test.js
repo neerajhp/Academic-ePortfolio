@@ -4,7 +4,7 @@ const request = supertest(server);
 const mongoose = require('mongoose');
 
 const { clearDB } = require('./clearDB');
-const { setupUser, loginUser,idUser } = require('./login');
+const { setupUser, loginUser, idUser, getuserName } = require('./login');
 const { searchAllEdu } = require('../Controllers/eduController')
 
 clearDB();

@@ -3,7 +3,7 @@ const supertest = require('supertest');
 const request = supertest(server);
 
 const { clearDB } = require('./clearDB');
-const { setupUser, loginUser,idUser } = require('./login');
+const { setupUser, loginUser, idUser, getuserName } = require('./login');
 
 clearDB();
 setupUser();

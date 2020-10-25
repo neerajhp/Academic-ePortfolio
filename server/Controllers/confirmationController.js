@@ -30,14 +30,12 @@ const confirmationPost = async (req, res) => {
     },
     function (err, token) {
       if (!token) {
-        console.log(token);
         return res
           .status(400)
           .send(
             'We were unable to find a valid token. Your token my have expired.'
           );
       } else {
-        console.log(token);
         // If we found a token, find a matching user
         User.findOne(
           {
@@ -184,7 +182,6 @@ const resendTokenPost = async (req, res) => {
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
-              console.log(mailOptions);
               return res.status(500).send({
                 msg: err.message,
               });
@@ -255,7 +252,6 @@ const resetPut = async (req, res) => {
 
 // Sending reset password link
 const sendResetPost = async (req, res) => {
-  console.log(req);
   await User.findOne(
     {
       email: req.body.email,
@@ -310,7 +306,6 @@ const sendResetPost = async (req, res) => {
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
-              console.log(mailOptions);
               return res.status(500).send({
                 msg: err.message,
               });

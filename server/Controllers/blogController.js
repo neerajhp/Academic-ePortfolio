@@ -8,7 +8,7 @@ const postBlog = async (req, res) => {
             title: req.body.title,
             date_created: req.body.date_created,
             content: req.body.content,
-            //images: req.body.images
+            images: req.body.images
         });
         await Blog.find({user_id: req.user.id, title: newBlog.title}, (err, result) => {
             if(err){
@@ -116,13 +116,9 @@ const getBlog = async (req, res) => {
 // Update the blog specified by params.id
 const updateBlog = async (req, res) => {
     try{
-        await Blog.updateOne({_id: req.params.id, user_id: req.user.id}, {
-            $set: {
-                title: req.body.title,
-                content: req.body.content,
-                dateCreated: req.body.dateCreated
-            }
-        }, (err, result) => {
+        await Blog.updateOne({_id: req.params.id, user_id: req.user.id},
+            req.body
+        , (err, result) => {
             if(err){
                 console.log("something's up");
                 res.status(404).send(err);
@@ -146,20 +142,68 @@ const updateBlog = async (req, res) => {
     }
 }
 
+// Add images to the reflection
+const addImages = async (req, res) => {
+    try{
+        await Blog.findByIdAndUpdate(req.params.id, {
+            $addToSet: { images: req.body.images }
+        }, {new: true}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("Blog entry not found");
+            }
+        })
+    }catch(error){
+        res.status(400).json("Error while trying to add images");
+    }
+}
+
+// Removes the images specified in the body from the blog's images array
+const removeImages = async (req, res) => {
+    try{
+        await Blog.findByIdAndUpdate(req.params.id, {$pull: { images: { $in: req.body.images}}}, {new: true}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                res.status(200).json(result);
+            }else{
+                res.status(404).json("Blog not found");
+            }
+        })
+    }catch(error){
+        res.status(400).json("Failed to remove specified images");
+    }
+  };
+
 // Deletes the blog specified by params.id
 const deleteBlog = async (req, res) => {
     try{
-        await Blog.deleteOne({_id: req.params.id, user_id: req.user.id}, (err, result) => {
+        await Blog.findOneAndDelete({_id: req.params.id, user_id: req.user.id}, (err, result) => {
             if(err){
                 throw err;
+            }
+            if(result){
+                res.status(200).json(result);
             }else{
-                if(!result){
-                    res.status(400).json("Nothing was deleted");
-                }else{
-                    res.status(200).json("The blog has been deleted");
-                }
+                res.status(400).json("Nothing was deleted");
             }
         })
+        // await Blog.findByIdAndDelete(req.params.id, (err, result) => {
+        //     if(err){
+        //         throw err;
+        //     }else{
+        //         if(!result){
+        //             res.status(400).json("Nothing was deleted");
+        //         }else{
+        //             res.status(200).json(result);
+        //         }
+        //     }
+        // })
     }catch(error){
         res.status(400).json("Error occured while deleting the blog");
     }
@@ -169,7 +213,6 @@ const deleteBlog = async (req, res) => {
 const clearBlogs = async (req, res) => {
     try{
         let deleteCount = await removeAllBlogs(req.user.id);
-        console.log(deleteCount);
         if(deleteCount > 0){
             res.status(200).json(`${deleteCount} entries have been deleted`);
         }else{
@@ -187,11 +230,11 @@ const removeAllBlogs = async (userID) => {
         console.log("About to delete");
         if(err){
             console.log("error occured");
-            res.status(400).json("Failed to delete blogs")
+            throw err;
         }else{
             if(!result){
                 console.log("Somehow there's no result");
-                throw new Error();
+                deleteCount = 0;
             }else{
                 console.log("The user's blogs have been cleared");
                 deleteCount = result.deletedCount;
@@ -201,15 +244,6 @@ const removeAllBlogs = async (userID) => {
     return deleteCount;
 }
 
-// const dateFormatter = (dateStr) => {
-//     var date = new Date(dateStr);
-//     console.log(date.toString());
-//     console.log(date.getDate());
-//     console.log(date.getFullYear());
-//     console.log(date.getDay());
-//     console.log(date.toDateString());
-// }
-
 module.exports = {
     postBlog,
     getAllBlogs,
@@ -218,5 +252,7 @@ module.exports = {
     deleteBlog,
     clearBlogs,
     removeAllBlogs,
-    updateBlog
+    updateBlog,
+    addImages,
+    removeImages
 }

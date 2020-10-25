@@ -51,8 +51,6 @@ function beforeUpload(file) {
 
 const CharacterCard = ({ user }) => {
   const classes = useStyles();
-  const [records, setRecords] = useState(user);
-  // const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink);
   const [bio, setBio] = useState(user.bio);
 

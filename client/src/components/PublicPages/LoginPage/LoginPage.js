@@ -93,7 +93,6 @@ const LoginPage = ({ globalClasses }) => {
   const sendFacebookToken = (userID, accessToken) => {
     API.facebookLogin(userID, accessToken)
       .then((res) => {
-        console.log(res.data);
         authenticate(res.data.token);
         setLoggedIn(true);
       })
@@ -119,8 +118,10 @@ const LoginPage = ({ globalClasses }) => {
               initialValues={{
                 email: '',
                 password: '',
+                rememberMe: false,
               }}
               onSubmit={(values, actions) => {
+                console.log(values.rememberMe);
                 // Submit login information
                 API.userLogin({
                   email: values.email,
@@ -129,7 +130,7 @@ const LoginPage = ({ globalClasses }) => {
                   .then((result) => {
                     if (result.status === 200) {
                       //Login information matches records
-                      authenticate(result.data.token);
+                      authenticate(result.data.token, values.rememberMe);
                       setLoggedIn(true);
                     }
                   })
@@ -174,7 +175,13 @@ const LoginPage = ({ globalClasses }) => {
                     <Grid item xs={12} sm={6}>
                       <FormControlLabel
                         className={classes.rememberMe}
-                        control={<Checkbox value='remember' color='default' />}
+                        control={
+                          <Checkbox
+                            value='remember'
+                            color='default'
+                            onChange={formikProps.handleChange('rememberMe')}
+                          />
+                        }
                         label='Remember me'
                       />
                     </Grid>

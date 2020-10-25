@@ -10,6 +10,7 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  CircularProgress,
 } from '@material-ui/core';
 import { authenticate } from '../../../helpers/auth';
 import { GoogleLogin } from 'react-google-login';
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme) => {
   return {
     rememberMe: {
       color: theme.palette.text.secondary,
+    },
+    forgotPassword: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
     },
     loginDivider: {
       margin: `${theme.spacing(2)}px 0`,
@@ -100,19 +106,6 @@ const LoginPage = ({ globalClasses }) => {
     sendFacebookToken(response.userID, response.accessToken);
   };
 
-  // const resendEmail = (email) => {
-  //   API.resendToken(email)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         setResendMessage(res.data);
-  //       }
-  //       setResendRqd(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response.data);
-  //     });
-  // };
-
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
@@ -177,22 +170,51 @@ const LoginPage = ({ globalClasses }) => {
                     disabled={resendRqd}
                     className={globalClasses.inputField}
                   />
-                  <FormControlLabel
-                    className={classes.rememberMe}
-                    control={<Checkbox value='remember' color='default' />}
-                    label='Remember me'
-                  />
+                  <Grid container>
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel
+                        className={classes.rememberMe}
+                        control={<Checkbox value='remember' color='default' />}
+                        label='Remember me'
+                      />
+                    </Grid>
+
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      className={classes.forgotPassword}
+                    >
+                      <Link
+                        href='./reset'
+                        variant='body2'
+                        color='textSecondary'
+                      >
+                        Forgot Password?
+                      </Link>
+                    </Grid>
+                  </Grid>
 
                   {!resendRqd && (
-                    <Button
-                      type='Submit'
-                      fullWidth
-                      variant='contained'
-                      className={globalClasses.submit}
-                      disabled={!formikProps.isValid}
-                    >
-                      <Typography>Log In</Typography>
-                    </Button>
+                    <div className={globalClasses.buttonWrapper}>
+                      <Button
+                        type='Submit'
+                        fullWidth
+                        variant='contained'
+                        disabled={
+                          !formikProps.isValid || formikProps.isSubmitting
+                        }
+                        color='secondary'
+                      >
+                        <Typography>Log In</Typography>
+                      </Button>
+                      {formikProps.isSubmitting && (
+                        <CircularProgress
+                          size={24}
+                          className={globalClasses.buttonProgress}
+                        />
+                      )}
+                    </div>
                   )}
                   {resendRqd && (
                     <Button

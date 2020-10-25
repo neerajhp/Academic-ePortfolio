@@ -9,7 +9,7 @@ const validationSchema = yup.object().shape({
       return value && value.length > 2;
     })
     .test('alphabets', 'Name must only contain alphabets', (value) => {
-      return /^[A-Za-z\-\ ]+$/.test(value);
+      return /^[A-Za-z\- ]+$/.test(value);
     }),
   lastName: yup
     .string()
@@ -19,7 +19,7 @@ const validationSchema = yup.object().shape({
       return value && value.length > 2;
     })
     .test('alphabets', 'Name must only contain alphabets', (value) => {
-      return /^[A-Za-z\-\ ]+$/.test(value);
+      return /^[A-Za-z\- ]+$/.test(value);
     }),
   email: yup.string().label('Email').email().required(),
   password: yup

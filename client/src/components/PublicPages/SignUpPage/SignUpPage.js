@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
 import API from '../../../api/API';
@@ -78,7 +79,7 @@ const SignUpPage = ({ globalClasses, location }) => {
               <Typography color='error'>{resendError}</Typography>
               <Typography>
                 <Link href='./landing' color='textSecondary'>
-                  Click here to begin process agian{' '}
+                  Click here to begin process again{' '}
                 </Link>
               </Typography>
             </React.Fragment>
@@ -172,16 +173,23 @@ const SignUpPage = ({ globalClasses, location }) => {
                   className={classes.inputField}
                 />
 
-                <Button
-                  type='Submit'
-                  fullWidth
-                  variant='contained'
-                  className={classes.submit}
-                  disabled={!formikProps.isValid}
-                  color='primary'
-                >
-                  <Typography>Sign Up</Typography>
-                </Button>
+                <div className={globalClasses.buttonWrapper}>
+                  <Button
+                    type='Submit'
+                    fullWidth
+                    variant='contained'
+                    disabled={!formikProps.isValid || formikProps.isSubmitting}
+                    color='secondary'
+                  >
+                    <Typography>Sign Up</Typography>
+                  </Button>
+                  {formikProps.isSubmitting && (
+                    <CircularProgress
+                      size={24}
+                      className={globalClasses.buttonProgress}
+                    />
+                  )}
+                </div>
                 <Grid container>
                   <Grid item xs>
                     <Link href='./login' variant='body2' color='textSecondary'>

@@ -29,7 +29,7 @@ export default {
     });
   },
   resetPassword: function (token, userPassword) {
-    return axios.post(`/api/confirmation/reset/${token}`, {
+    return axios.put(`/api/confirmation/reset/${token}`, {
       password: userPassword,
     });
   },
@@ -185,40 +185,45 @@ export default {
   // Single upload of file
   uploadFile: function (body) {
     return axios.post(
-      "/api/upload/file",
+      '/api/upload/file',
       {
-        file: body.file
+        file: body.file,
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
       }
-    )
+    );
   },
   uploadFiles: function (body) {
     return axios.post(
-      "/api/upload/files", {
-      // The files key must be "document"
-      files: body.files
+      '/api/upload/files',
+      {
+        // The files key must be "document"
+        files: body.files,
       },
-      { // This is an array of files (current limit: 5 files)
+      {
+        // This is an array of files (current limit: 5 files)
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-    });
+      }
+    );
   },
   uploadCV: function (body) {
     return axios.post(
-      "/api/upload/cv", {
-        file:body.file // This is a single file
+      '/api/upload/cv',
+      {
+        file: body.file, // This is a single file
       },
       // The file key must be "cv"
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   deleteCV: function () {
     return axios.delete('/api/files/cv', {
@@ -229,15 +234,17 @@ export default {
   },
   uploadProfilePic: function (body) {
     return axios.post(
-      "/api/upload/profile-pic", {
+      '/api/upload/profile-pic',
+      {
         // The file key is "profile-pic"
         file: body.file,
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   deleteProfilePic: function () {
     return axios.delete('/api/files/profile-pic', {
@@ -249,27 +256,31 @@ export default {
   // Single upload of image
   uploadImage: function (body) {
     return axios.post(
-      "/api/upload/image", {
+      '/api/upload/image',
+      {
         file: body.file,
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   // Multiple uploads of images
   uploadImages: function (body) {
     return axios.post(
-      "/api/upload/images", {
+      '/api/upload/images',
+      {
         // The file key is "image"
         files: body.files, // This is an array of images (current limit: 5 files)
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   // Gets a file based on its objectID
   // getFile: function () {
@@ -315,14 +326,16 @@ export default {
   // Deletes multiple files
   deleteFiles: function (body) {
     return axios.delete(
-      "/api/files/delete", {
+      '/api/files/delete',
+      {
         IDs: body.IDs,
       },
       {
-      headers: {
-        Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-      },
-    });
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+      }
+    );
   },
   // Deletes all of the user's files (documents, images, profile picture and cv)
   // Its probably best if this api is only used for deleting a profile
@@ -344,31 +357,36 @@ export default {
   // Add skills to the user's skills array (At the moment there is no limit on the number of skills)
   addSkills: function (body) {
     return axios.put(
-      "api/profile/skills", {
+      'api/profile/skills',
+      {
         skills: body.skills,
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   // Removes specified skills from the user's skills array
   removeSkills: function (body) {
     return axios.delete(
-      "api/profile/skills", {
+      'api/profile/skills',
+      {
         skills: body.skills,
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   // Creates a featured work
   createFeaturedWork: function (body) {
     return axios.post(
-      "api/profile/featured-work", {
+      'api/profile/featured-work',
+      {
         title: body.title,
         type: body.type,
         description: body.description,
@@ -382,9 +400,10 @@ export default {
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   // Gets all of the user's featured works
   getAllFeaturedWorks: function () {
@@ -457,16 +476,18 @@ export default {
   // Create a new blog post
   createBlog: function (body) {
     return axios.post(
-      "api/blog", {
+      'api/blog',
+      {
         title: body.title,
         dateCreated: body.dateCreated,
         content: body.content,
       },
       {
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-      });
+      }
+    );
   },
   // Edit a specific blog post
   editBlog: function (body, recordID) {
@@ -531,6 +552,14 @@ export default {
         Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
       },
     });
+  },
+  // Get tutorial
+  getTutorial: function () {
+    return axios.get('api/user/tutorial', {});
+  },
+  // Finish tutorial
+  finishTutorial: function () {
+    return axios.put('api/user/update/tutorial', {});
   },
   // Edit about me
   editAboutMe: function (body) {
@@ -770,40 +799,26 @@ export default {
   },
 
   /* =========== Confirmation =========== */
-    // Resends account confirmation token
-    resendTokenPost: function (body) {
-      return axios.post(
-        "/api/confirmation/resend",
-        {
-
-        },
-      );
-    },
-    // Verifies account
-    confirmationPost: function (body, token) {
-      return axios.post(
-        `/api/confirmation/verify/${token}`,
-        {
-          email: body.email,
-        },
-      );
-    },
-    // Sends reset password email
-    sendResetPost: function (body, token) {
-      return axios.post(
-        "/api/confirmation/reset",
-        {
-          email: body.email,
-        },
-      );
-    },
-    // Verifies account
-    resetPut: function (body, token) {
-      return axios.put(
-        `/api/confirmation/reset/${token}`,
-        {
-          password: body.password,
-        },
-      );
-    },
+  // Resends account confirmation token
+  resendTokenPost: function (body) {
+    return axios.post('/api/confirmation/resend', {});
+  },
+  // Verifies account
+  confirmationPost: function (body, token) {
+    return axios.post(`/api/confirmation/verify/${token}`, {
+      email: body.email,
+    });
+  },
+  // Sends reset password email
+  sendResetPost: function (body, token) {
+    return axios.post('/api/confirmation/reset', {
+      email: body.email,
+    });
+  },
+  // Verifies account
+  resetPut: function (body, token) {
+    return axios.put(`/api/confirmation/reset/${token}`, {
+      password: body.password,
+    });
+  },
 };

@@ -521,6 +521,23 @@ const changePassword = async (req, res) => {
   }
 };
 
+const getTutorial = async (req, res) => {
+  try{
+    await User.findById(req.user.id, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        res.status(200).json(result.tutorial);
+      }else{
+        res.status(404).json("user not found");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Failed to get tutorial value");
+  }
+}
+
 // Disables the tutorial
 const finishTutorial = async (req, res) => {
   try {
@@ -557,6 +574,7 @@ module.exports = {
   updateEmail,
   changePassword,
   getUserID,
+  getTutorial,
   finishTutorial,
   changeUserName,
 };

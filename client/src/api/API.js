@@ -529,6 +529,14 @@ export default {
       },
     });
   },
+  // Get tutorial
+  getTutorial: function () {
+    return axios.get('api/user/tutorial', {});
+  },
+  // Finish tutorial
+  finishTutorial: function () {
+    return axios.put('api/user/update/tutorial', {});
+  },
   // Edit about me
   editAboutMe: function (body) {
     return axios.put(

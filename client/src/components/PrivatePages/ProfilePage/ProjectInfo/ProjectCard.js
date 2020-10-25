@@ -226,7 +226,7 @@ const ProjectCard = ({ type, project }) => {
                 {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
                 {/* <ProjectDialog records={records} setRecords={setRecords} />*/}
                 <div className={classes.upload}>
-                  <ButtonGroup color='#fff'>
+                  <ButtonGroup>
                     <Button>
                       <ProjectDialog
                         records={records}
@@ -275,7 +275,7 @@ const ProjectCard = ({ type, project }) => {
                 {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
                 {/* <ProjectDialog records={records} setRecords={setRecords} /> */}
                 <div className={classes.upload}>
-                  <ButtonGroup color='#fff'>
+                  <ButtonGroup>
                     <Button>
                       <ProjectDialog
                         records={records}

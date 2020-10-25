@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import API from '../../../api/API';
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
   CircularProgress,
+  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -11,6 +13,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
 import CharacterCard from './CharacterInfo/PublicCharacterCard';
@@ -76,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   title: { width: '100%' },
+  icon: { fontSize: 80 },
 }));
 
 /* ================ Component ================ */
@@ -93,6 +98,8 @@ const PublicProfilePage = ({ match, location }) => {
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
   const [userExperience, setExperience] = useState(null);
+  const [profileNotFound, setProfileNotFound] = useState(false);
+  const [profilePrivate, setProfilePrivate] = useState(false);
 
   //Load user data
 
@@ -101,7 +108,14 @@ const PublicProfilePage = ({ match, location }) => {
       .then(({ data }) => {
         setUser(data);
       })
-      .catch();
+      .catch((err) => {
+        if (err.response.status === 404) {
+          console.log('Not Found');
+          setProfileNotFound(true);
+        } else if (err.response.status === 403) {
+          setProfilePrivate(true);
+        }
+      });
 
     API.viewerGetAllExperience(userId)
       .then(({ data }) => {
@@ -127,9 +141,35 @@ const PublicProfilePage = ({ match, location }) => {
     return user.skills.length === 0;
   };
 
-  //If profile hasn't been fetched yet
   var pageContent;
-  if (!(user && userExperience)) {
+
+  if (profileNotFound) {
+    pageContent = (
+      <div>
+        <div className={classes.loading}>
+          <SentimentDissatisfiedIcon className={classes.icon} />
+          <Typography variant='h2'>Profile Not Found</Typography>
+          <Link variant='h2' component={RouterLink} to='/home/landing'>
+            Click here to return Home
+          </Link>
+        </div>
+      </div>
+    );
+  } //If Private profile
+  else if (profilePrivate) {
+    pageContent = (
+      <div>
+        <div className={classes.loading}>
+          <VisibilityOffIcon className={classes.icon} />
+          <Typography variant='h2'>This profile is private</Typography>
+          <Link variant='h2' component={RouterLink} to='/home/landing'>
+            Click here to return Home
+          </Link>
+        </div>
+      </div>
+    );
+  } //If profile hasn't been fetched yet
+  else if (!(user && userExperience)) {
     pageContent = (
       <div>
         <div className={classes.loading}>
@@ -138,7 +178,9 @@ const PublicProfilePage = ({ match, location }) => {
         </div>
       </div>
     );
-  } else {
+  } //If username doesn't match existing profile
+  else {
+    // Profile content
     pageContent = (
       <div>
         <div className={classes.container}>

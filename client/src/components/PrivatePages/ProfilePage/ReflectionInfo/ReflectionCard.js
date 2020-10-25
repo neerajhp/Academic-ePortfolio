@@ -112,7 +112,7 @@ const ReflectionCard = (reflection) => {
         {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
         {/* <ReflectionDialog records={records} setRecords={setRecords} /> */}
         <div className={classes.upload}>
-          <ButtonGroup color='#fff'>
+          <ButtonGroup>
             <Button>
               <ReflectionDialog records={records} setRecords={setRecords} />
             </Button>

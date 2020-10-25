@@ -75,6 +75,7 @@ const getAllInfo = async (userID) => {
       profilePic: profilePic,
       showcase: featuredWorks,
       education: allEducation,
+      tutorial: userRecord.tutorial,
     };
 
     return profile;
@@ -165,7 +166,7 @@ const deleteProfile = async (req, res) => {
         _id: req.user.id,
       },
       (err, result) => {
-        console.log("About to delete user")
+        console.log('About to delete user');
         if (err) {
           throw err;
         } else {
@@ -291,26 +292,24 @@ const getProfilePic = async (req, res) => {
 
 // Biography
 const getBio = async (req, res) => {
-  try{
+  try {
     await User.findById(
       {
         _id: req.user.id,
       },
       function (err, result) {
-        if(err){
+        if (err) {
           throw err;
         }
-        if(result){
+        if (result) {
           res.status(200).json(result.biography);
-        }else{
-          res.status(404).json(
-            'biography not found'
-          );
+        } else {
+          res.status(404).json('biography not found');
         }
       }
     );
-  }catch(error){
-    res.status(400).json("Error while trying to get bio");
+  } catch (error) {
+    res.status(400).json('Error while trying to get bio');
   }
 };
 
@@ -327,7 +326,7 @@ const getAboutMe = async (req, res) => {
         if (result) {
           res.status(200).json(result.aboutMe);
         } else {
-          res.status(404).json("Not found");
+          res.status(404).json('Not found');
         }
       }
     }
@@ -473,117 +472,124 @@ const getSkills = async (req, res) => {
 
 // Add available social media links to the user model
 const addSocialMedia = async (req, res) => {
-  try{
-      await User.findById(req.user.id, (err, result) => {
-        if(err){
-          throw err;
-        }
-        if(result){
-          const links = createSocialMediaJSON(req.body, result.socialMedia);
-          User.findByIdAndUpdate(req.user.id, {socialMedia: links}, {new: true}, (err, result) => {
-            if(err){
+  try {
+    await User.findById(req.user.id, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        const links = createSocialMediaJSON(req.body, result.socialMedia);
+        User.findByIdAndUpdate(
+          req.user.id,
+          { socialMedia: links },
+          { new: true },
+          (err, result) => {
+            if (err) {
               throw err;
             }
-            if(result){
+            if (result) {
               res.status(200).json(result.socialMedia);
-            }else{
-              res.status(400).json("Failed to find and update the user");
+            } else {
+              res.status(400).json('Failed to find and update the user');
             }
-          });
-        }else{
-          res.status(404).json("User not found");
-        }
-      });
-  }catch(error){
+          }
+        );
+      } else {
+        res.status(404).json('User not found');
+      }
+    });
+  } catch (error) {
     res.status(400).json("Failed to update the user's social media links");
   }
-  
-}
+};
 
 // Get the social media field in the user object
 const getSocialMedia = async (req, res) => {
-  try{
+  try {
     await User.findById(req.user.id, (err, result) => {
-      if(err){
+      if (err) {
         throw err;
       }
-      if(result){
+      if (result) {
         res.status(200).json(result.socialMedia);
-      }else{
-        res.status(404).json("User not found");
+      } else {
+        res.status(404).json('User not found');
       }
-    })
-  }catch(error){
-    res.status(400).json("Error while trying to get user");
+    });
+  } catch (error) {
+    res.status(400).json('Error while trying to get user');
   }
-}
+};
 
 // Creates the json that will be stored in the user's account
 const createSocialMediaJSON = (accounts, original) => {
   //var links = {};
-  for(const account of accounts){
+  for (const account of accounts) {
     console.log(account);
-    switch(account.site){
-      case "facebook":
-        original["facebook"] = account.link;
+    switch (account.site) {
+      case 'facebook':
+        original['facebook'] = account.link;
         break;
-      case "linkedIn":
-        original["linkedIn"] = account.link;
+      case 'linkedIn':
+        original['linkedIn'] = account.link;
         break;
-      case "instagram":
-        original["instagram"] = account.link;
+      case 'instagram':
+        original['instagram'] = account.link;
         break;
-      case "youtube":
-        original["youtube"] = account.link;
+      case 'youtube':
+        original['youtube'] = account.link;
         break;
-      case "twitter":
-        original["twitter"] = account.link;
+      case 'twitter':
+        original['twitter'] = account.link;
         break;
       default:
         break;
     }
   }
   return original;
-  
-}
+};
 
 // Change the privacy setting
 const changePrivacy = async (req, res) => {
-  try{
-    await User.findByIdAndUpdate(req.user.id, {private: req.body.private}, {new: true}, (err, result) => {
-      if(err){
-        throw err;
+  try {
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { private: req.body.private },
+      { new: true },
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        if (result) {
+          console.log('Change privacy value');
+          res.status(200).json(result.private);
+        } else {
+          res.status(404).json('Failed to find user record');
+        }
       }
-      if(result){
-        console.log("Change privacy value");
-        res.status(200).json(result.private);
-      }else{
-        res.status(404).json("Failed to find user record");
-      }
-    })
-  }catch(error){
-    res.status(400).json("Failed to change privacy value");
+    );
+  } catch (error) {
+    res.status(400).json('Failed to change privacy value');
   }
-}
+};
 
 const getPrivacy = async (req, res) => {
-  try{
-    await User.findById(req.user.id, (err, result) =>{
+  try {
+    await User.findById(req.user.id, (err, result) => {
       if (err) {
         throw err;
       }
       if (result) {
-        console.log("Send privacy value")
-        res.status(200).send(result.private)
+        console.log('Send privacy value');
+        res.status(200).send(result.private);
       } else {
-        res.status(404).send("Failed to find user record")
+        res.status(404).send('Failed to find user record');
       }
-    })
+    });
   } catch (error) {
-    res.status(400).send("Failed to get privacy value")
+    res.status(400).send('Failed to get privacy value');
   }
-  
-}
+};
 
 module.exports = {
   getProfile,
@@ -601,5 +607,5 @@ module.exports = {
   getSocialMedia,
   addSocialMedia,
   changePrivacy,
-  getPrivacy
+  getPrivacy,
 };

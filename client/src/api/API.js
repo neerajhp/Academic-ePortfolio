@@ -123,6 +123,11 @@ export default {
       biography: body.bio,
     });
   },
+
+  // Update tutorial boolean
+  updateTutorial: function (body) {
+    return axios.put('/api/user/update/tutorial');
+  },
   // Single upload of file
   uploadFile: function (body) {
     return axios.post('/api/upload/file', {

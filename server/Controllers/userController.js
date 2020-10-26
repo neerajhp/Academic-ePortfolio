@@ -559,9 +559,8 @@ const searchUsers = async (req, res) => {
         throw err;
       }
       if (result) {
-        console.log(result);
         res.status(200).json(result);
-      } else if (result == []) {
+      } else {
         res.status(404).json('The user was not found');
       }
     });

@@ -1,14 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Typography,
-  IconButton,
-  TextField,
-  InputAdornment,
-} from '@material-ui/core';
+import { Typography, IconButton, InputAdornment } from '@material-ui/core';
 import { Formik } from 'formik';
 import FormikField from '../../utils/FormikField';
 import validationSchema from './Validation';
+import API from '../../../api/API';
 import SearchIcon from '@material-ui/icons/Search';
 import SearchCard from './SearchCard';
 
@@ -56,6 +52,9 @@ const SearchPage = ({ globalClasses }) => {
           }}
           onSubmit={(values, actions) => {
             console.log(values.search);
+            API.userSearch(values.search)
+              .then((res) => console.log(res))
+              .catch((err) => console.log(err));
           }}
           validationSchema={validationSchema}
         >
@@ -66,9 +65,6 @@ const SearchPage = ({ globalClasses }) => {
                 formikKey='search'
                 required
                 className={globalClasses.inputField}
-                variant='outlined'
-                margin='dense'
-                fullWidth
                 label='Search for someone'
                 InputProps={{
                   endAdornment: (

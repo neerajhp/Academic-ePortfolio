@@ -6,6 +6,9 @@ import {
   TextField,
   InputAdornment,
 } from '@material-ui/core';
+import { Formik } from 'formik';
+import FormikField from '../../utils/FormikField';
+import validationSchema from './Validation';
 import SearchIcon from '@material-ui/icons/Search';
 import SearchCard from './SearchCard';
 
@@ -47,27 +50,45 @@ const SearchPage = ({ globalClasses }) => {
         </Typography>
       </div>
       <div className={classes.searchBar}>
-        <TextField
-          className={globalClasses.inputField}
-          variant='outlined'
-          margin='dense'
-          fullWidth
-          label='Search for someone'
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton
-                  type='submit'
-                  className={classes.iconButton}
-                  aria-label='search'
-                >
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
+        <Formik
+          initialValues={{
+            search: '',
           }}
-        />
+          onSubmit={(values, actions) => {
+            console.log(values.search);
+          }}
+          validationSchema={validationSchema}
+        >
+          {(formikProps) => (
+            <form className={classes.form} onSubmit={formikProps.handleSubmit}>
+              <FormikField
+                formikProps={formikProps}
+                formikKey='search'
+                required
+                className={globalClasses.inputField}
+                variant='outlined'
+                margin='dense'
+                fullWidth
+                label='Search for someone'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        type='submit'
+                        className={classes.iconButton}
+                        aria-label='search'
+                      >
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </form>
+          )}
+        </Formik>
       </div>
+
       <div className={classes.searchResults}>
         <SearchCard />
       </div>

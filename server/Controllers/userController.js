@@ -7,10 +7,9 @@ require('dotenv').config();
 const { OAuth2Client } = require('google-auth-library');
 const fetch = require('node-fetch');
 
-const { sendTokenPost } = require('./confirmationController')
+const { sendTokenPost } = require('./confirmationController');
 
 const saltRounds = 10;
-
 
 //SIGNUP
 const postSignup = async (req, res) => {
@@ -28,8 +27,8 @@ const postSignup = async (req, res) => {
       socialMedia: req.body.socialMedia,
       biography: req.body.biography,
       skills: req.body.skills,
-      // remove for development 
-      isVerified: req.body.isVerified
+      // remove for development
+      isVerified: req.body.isVerified,
     });
     // Look for duplicate email
     await User.findOne({ email: newUser.email }, (err, account) => {
@@ -334,9 +333,9 @@ const changeUserName = async (req, res) => {
           }
         );
       } else {
-        if(result._id == req.user.id){
-          res.status(200).json("User inputted the same username");
-        }else{
+        if (result._id == req.user.id) {
+          res.status(200).json('User inputted the same username');
+        } else {
           // Suggest a new username
           res.status(400).json('Username not unique');
         }
@@ -544,7 +543,33 @@ const finishTutorial = async (req, res) => {
   }
 };
 
-
+//User Search
+const searchUsers = async (req, res) => {
+  try {
+    let name = {};
+    if (req.body.name.split(' ')[0]) {
+      name.firstName = req.body.name.split(' ')[0];
+    }
+    if (req.body.name.split(' ')[1]) {
+      name.lastName = req.body.name.split(' ')[1];
+    }
+    console.log(name);
+    await User.find(name, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log(result);
+        res.status(200).json(result);
+      } else if (result == []) {
+        res.status(404).json('The user was not found');
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json('Error while trying to find user');
+  }
+};
 
 module.exports = {
   postSignup,
@@ -559,4 +584,5 @@ module.exports = {
   getUserID,
   finishTutorial,
   changeUserName,
+  searchUsers,
 };

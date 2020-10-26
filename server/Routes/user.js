@@ -32,6 +32,10 @@ router.post('/facebooklogin', (req, res) => {
   userController.facebookLogin(req, res);
 });
 
+router.get('/search', (req, res) => {
+  userController.searchUsers(req, res);
+});
+
 router.get('/userInfo', authenticate.authenticateToken, async (req, res) => {
   userController.getUserInformation(req, res);
 });

@@ -183,26 +183,26 @@ const LoginPage = ({ globalClasses }) => {
                     </Button>
                   )}
                   {resendRqd && (
-                    <Button
-                      variant='contained'
-                      className={globalClasses.landingButton}
-                      color='primary'
-                      fullWidth
-                      underline='none'
+                    <RouterLink
+                      to={{
+                        pathname: '/home/signup',
+                        state: {
+                          email: formikProps.values.email,
+                        },
+                      }}
+                      style={{ color: '#FFFFFF', textDecoration: 'none' }}
                     >
-                      {' '}
-                      <RouterLink
-                        to={{
-                          pathname: '/home/signup',
-                          state: {
-                            email: formikProps.values.email,
-                          },
-                        }}
-                        style={{ color: '#FFFFFF', textDecoration: 'none' }}
+                      <Button
+                        variant='contained'
+                        className={globalClasses.landingButton}
+                        color='primary'
+                        fullWidth
+                        underline='none'
                       >
+                        {' '}
                         <Typography>Get a new link</Typography>
-                      </RouterLink>
-                    </Button>
+                      </Button>
+                    </RouterLink>
                   )}
 
                   <Divider className={classes.loginDivider} />

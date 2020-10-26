@@ -93,10 +93,6 @@ const CharacterCard = ({ user }) => {
           src={imageUrl}
           alt='avatar'
           className={classes.profilePicture}
-          headers={{
-            Authorization:
-              'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-          }}
         />
       </Upload>
 

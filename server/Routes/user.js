@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../Controllers/userController.js');
 
-const { authenticateToken } = require("../Middleware/authenticate");
+const { authenticateToken } = require('../Middleware/authenticate');
 
 router.post('/signup', async (req, res) => {
   userController.postSignup(req, res);
@@ -24,6 +24,10 @@ router.post('/facebooklogin', (req, res) => {
   userController.facebookLogin(req, res);
 });
 
+router.get('/search', (req, res) => {
+  userController.searchUsers(req, res);
+});
+
 router.get('/userInfo', authenticateToken, async (req, res) => {
   userController.getUserInformation(req, res);
 });
@@ -37,43 +41,27 @@ router.get('/getID', authenticateToken, async (req, res) => {
 });
 
 // Update email (logged in user only)
-router.put(
-  '/update/email',
-  authenticateToken,
-  async (req, res) => {
-    userController.updateEmail(req, res);
-  }
-);
+router.put('/update/email', authenticateToken, async (req, res) => {
+  userController.updateEmail(req, res);
+});
 
-router.put(
-  '/update/username',
-  authenticateToken,
-  async (req, res) => {
-    userController.changeUserName(req, res);
-  }
-);
+router.put('/update/username', authenticateToken, async (req, res) => {
+  userController.changeUserName(req, res);
+});
 
 // Change password (logged in user only)
-router.put(
-  '/update/password',
-  authenticateToken,
-  async (req, res) => {
-    userController.changePassword(req, res);
-  }
-);
+router.put('/update/password', authenticateToken, async (req, res) => {
+  userController.changePassword(req, res);
+});
 
 // Get tutorial
 router.get('/tutorial', authenticateToken, async (req, res) => {
   userController.getTutorial(req, res);
-})
+});
 
 // Finish tutorial
-router.put(
-  '/update/tutorial',
-  authenticateToken,
-  async (req, res) => {
-    userController.finishTutorial(req, res);
-  }
-);
+router.put('/update/tutorial', authenticateToken, async (req, res) => {
+  userController.finishTutorial(req, res);
+});
 
 module.exports = router;

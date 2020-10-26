@@ -54,6 +54,10 @@ export default {
     });
   },
 
+  userSearch: function (searchName) {
+    return axios.get('api/user/search', { params: { name: searchName } });
+  },
+
   /* ================ Authorised Calls ================ */
   getUserInfo: () => {
     return axios.get('/api/user/userInfo');

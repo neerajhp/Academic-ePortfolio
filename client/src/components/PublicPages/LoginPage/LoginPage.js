@@ -100,19 +100,6 @@ const LoginPage = ({ globalClasses }) => {
     sendFacebookToken(response.userID, response.accessToken);
   };
 
-  // const resendEmail = (email) => {
-  //   API.resendToken(email)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         setResendMessage(res.data);
-  //       }
-  //       setResendRqd(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response.data);
-  //     });
-  // };
-
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
@@ -152,6 +139,7 @@ const LoginPage = ({ globalClasses }) => {
                         password: err.response.data,
                       });
                     }
+                    actions.setSubmitting(false);
                   });
               }}
               validationSchema={validationSchema}

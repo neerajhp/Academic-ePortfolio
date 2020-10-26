@@ -76,6 +76,19 @@ test("Should return JWT Token", async () =>{
     })
 })
 
+test("Should edit information on the user", async () => {
+    await request.put("/api/user/userInfo")
+    .set('Authorization', 'bearer ' + token)
+    .send({
+        mobileNumber: "0123456789",
+        birthDate: new Date("2000/01/01")
+    })
+    .expect(200)
+    .then((response) => {
+        expect(response.body).toBeDefined
+    })
+})
+
 test("Should return information on the user", async () => {
     await request.get("/api/user/userInfo")
     .set('Authorization', 'bearer ' + token)
@@ -85,6 +98,9 @@ test("Should return information on the user", async () => {
         expect(response.body.userName).toEqual("test")
         expect(response.body.firstName).toEqual("test")
         expect(response.body.lastName).toEqual("test")
+        expect(response.body.email).toEqual("test@gmail.com")
+        expect(response.body.mobileNumber).toEqual("0123456789")
+        expect(response.body.birthDate).toEqual(expect.objectContaining(new Date("2000/01/01")))
     })
 })
 

@@ -102,9 +102,9 @@ const sendTokenPost = async (req, res) => {
         var mailOptions = {
           from: 'homealone30022@gmail.com',
           to: user.email,
-          subject: 'Account Verification Token',
+          subject: 'Account Verification',
           text:
-            'Hello,\n\n' +
+            'Hello from Team Home Alone,\n\n' +
             'Please verify your account by clicking the link: \n' +
             req.headers.referer +
             '/confirmation/' +
@@ -171,9 +171,9 @@ const resendTokenPost = async (req, res) => {
           var mailOptions = {
             from: 'homealone30022@gmail.com',
             to: user.email,
-            subject: 'Account Verification Token',
+            subject: 'Account Verification',
             text:
-              'Hello,\n\n' +
+              'Hello from Team Home Alone,\n\n' +
               'Please verify your account by clicking the link: \n' +
               req.headers.referer +
               '/confirmation/' +
@@ -295,9 +295,9 @@ const sendResetPost = async (req, res) => {
           var mailOptions = {
             from: 'homealone30022@gmail.com',
             to: user.email,
-            subject: 'Account Reset Link',
+            subject: 'Account Reset',
             text:
-              'Hello,\n\n' +
+              'Hello from Team Home Alone,\n\n' +
               'Please reset your account by clicking the link: \n' +
               req.headers.referer +
               '/' +

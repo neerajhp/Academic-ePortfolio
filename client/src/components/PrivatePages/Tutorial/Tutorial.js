@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles,
   IconButton,
@@ -8,7 +8,7 @@ import {
   DialogContent,
   Slide,
 } from '@material-ui/core';
-
+import API from '../../../api/API';
 import HelpIcon from '@material-ui/icons/Help';
 import TutorialStepper from './TutorialStepper';
 
@@ -27,17 +27,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-const Tutorial = () => {
+const Tutorial = ({ firstVisit }) => {
   //Styling
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(firstVisit);
 
   const handleClose = () => {
-    setOpen(false);
+    API.updateTutorial().then(setOpen(false)).catch();
   };
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
     if (activeStep < 4) {

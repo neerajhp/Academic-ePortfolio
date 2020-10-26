@@ -30,14 +30,12 @@ const confirmationPost = async (req, res) => {
     },
     function (err, token) {
       if (!token) {
-        console.log(token);
         return res
           .status(400)
           .send(
             'We were unable to find a valid token. Your token my have expired.'
           );
       } else {
-        console.log(token);
         // If we found a token, find a matching user
         User.findOne(
           {
@@ -104,9 +102,9 @@ const sendTokenPost = async (req, res) => {
         var mailOptions = {
           from: 'homealone30022@gmail.com',
           to: user.email,
-          subject: 'Account Verification Token',
+          subject: 'Account Verification',
           text:
-            'Hello,\n\n' +
+            'Hello from Team Home Alone,\n\n' +
             'Please verify your account by clicking the link: \n' +
             req.headers.referer +
             '/confirmation/' +
@@ -173,9 +171,9 @@ const resendTokenPost = async (req, res) => {
           var mailOptions = {
             from: 'homealone30022@gmail.com',
             to: user.email,
-            subject: 'Account Verification Token',
+            subject: 'Account Verification',
             text:
-              'Hello,\n\n' +
+              'Hello from Team Home Alone,\n\n' +
               'Please verify your account by clicking the link: \n' +
               req.headers.referer +
               '/confirmation/' +
@@ -184,7 +182,6 @@ const resendTokenPost = async (req, res) => {
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
-              console.log(mailOptions);
               return res.status(500).send({
                 msg: err.message,
               });
@@ -260,7 +257,10 @@ const sendResetPost = async (req, res) => {
       email: req.body.email,
     },
     (err, user) => {
-      if (err) return res.status(400).send('An error has occured');
+      if (err) {
+        console.log(err);
+        return res.status(400).send('An error has occured');
+      }
       if (!user) {
         return res
           .status(400)
@@ -295,18 +295,17 @@ const sendResetPost = async (req, res) => {
           var mailOptions = {
             from: 'homealone30022@gmail.com',
             to: user.email,
-            subject: 'Account Reset Link',
+            subject: 'Account Reset',
             text:
-              'Hello,\n\n' +
-              'Please reset your account by clicking the link: \nhttp://' +
+              'Hello from Team Home Alone,\n\n' +
+              'Please reset your account by clicking the link: \n' +
               req.headers.referer +
-              '/reset/' +
+              '/' +
               token.token +
               '\n',
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
-              console.log(mailOptions);
               return res.status(500).send({
                 msg: err.message,
               });

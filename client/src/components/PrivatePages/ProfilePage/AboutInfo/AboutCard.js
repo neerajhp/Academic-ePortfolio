@@ -39,7 +39,6 @@ const AboutCard = () => {
     API.getAboutMe()
       .then(({ data }) => {
         setRecords(data);
-        console.log(records);
       })
       .catch();
   });

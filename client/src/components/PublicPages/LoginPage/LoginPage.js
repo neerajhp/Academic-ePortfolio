@@ -10,6 +10,7 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  CircularProgress,
 } from '@material-ui/core';
 import { authenticate } from '../../../helpers/auth';
 import { GoogleLogin } from 'react-google-login';
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme) => {
   return {
     rememberMe: {
       color: theme.palette.text.secondary,
+    },
+    forgotPassword: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
     },
     loginDivider: {
       margin: `${theme.spacing(2)}px 0`,
@@ -87,7 +93,6 @@ const LoginPage = ({ globalClasses }) => {
   const sendFacebookToken = (userID, accessToken) => {
     API.facebookLogin(userID, accessToken)
       .then((res) => {
-        console.log(res.data);
         authenticate(res.data.token);
         setLoggedIn(true);
       })
@@ -113,8 +118,10 @@ const LoginPage = ({ globalClasses }) => {
               initialValues={{
                 email: '',
                 password: '',
+                rememberMe: false,
               }}
               onSubmit={(values, actions) => {
+                console.log(values.rememberMe);
                 // Submit login information
                 API.userLogin({
                   email: values.email,
@@ -123,7 +130,7 @@ const LoginPage = ({ globalClasses }) => {
                   .then((result) => {
                     if (result.status === 200) {
                       //Login information matches records
-                      authenticate(result.data.token);
+                      authenticate(result.data.token, values.rememberMe);
                       setLoggedIn(true);
                     }
                   })
@@ -165,22 +172,57 @@ const LoginPage = ({ globalClasses }) => {
                     disabled={resendRqd}
                     className={globalClasses.inputField}
                   />
-                  <FormControlLabel
-                    className={classes.rememberMe}
-                    control={<Checkbox value='remember' color='default' />}
-                    label='Remember me'
-                  />
+                  <Grid container>
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel
+                        className={classes.rememberMe}
+                        control={
+                          <Checkbox
+                            value='remember'
+                            color='default'
+                            onChange={formikProps.handleChange('rememberMe')}
+                          />
+                        }
+                        label='Remember me'
+                      />
+                    </Grid>
+
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      className={classes.forgotPassword}
+                    >
+                      <Link
+                        href='./reset'
+                        variant='body2'
+                        color='textSecondary'
+                      >
+                        Forgot Password?
+                      </Link>
+                    </Grid>
+                  </Grid>
 
                   {!resendRqd && (
-                    <Button
-                      type='Submit'
-                      fullWidth
-                      variant='contained'
-                      className={globalClasses.submit}
-                      disabled={!formikProps.isValid}
-                    >
-                      <Typography>Log In</Typography>
-                    </Button>
+                    <div className={globalClasses.buttonWrapper}>
+                      <Button
+                        type='Submit'
+                        fullWidth
+                        variant='contained'
+                        disabled={
+                          !formikProps.isValid || formikProps.isSubmitting
+                        }
+                        color='secondary'
+                      >
+                        <Typography>Log In</Typography>
+                      </Button>
+                      {formikProps.isSubmitting && (
+                        <CircularProgress
+                          size={24}
+                          className={globalClasses.buttonProgress}
+                        />
+                      )}
+                    </div>
                   )}
                   {resendRqd && (
                     <RouterLink

@@ -51,13 +51,12 @@ function beforeUpload(file) {
 
 const CharacterCard = ({ user }) => {
   const classes = useStyles();
-  const [records, setRecords] = useState(user);
-  // const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink);
+  const [bio, setBio] = useState(user.bio);
 
-  const getRecord = (user) => {
-    if (user.biography) {
-      return <Typography> user.biography </Typography>;
+  const getRecord = () => {
+    if (bio) {
+      return <Typography> {bio} </Typography>;
     } else {
       return <Typography> add your bio </Typography>;
     }
@@ -105,9 +104,8 @@ const CharacterCard = ({ user }) => {
         <Typography variant='h2'>
           {user.firstName} {user.lastName}
         </Typography>
-        {getRecord(records)}
-        <Typography>{user.bio}</Typography>
-        <CharacterDialog records={records} setRecords={setRecords} />
+        {getRecord(bio)}
+        <CharacterDialog records={bio} setRecords={setBio} />
       </div>
     </Paper>
   );

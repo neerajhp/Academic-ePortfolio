@@ -153,7 +153,7 @@ const ProfilePage = () => {
                 </ListItem>
               </List>
             </Paper>
-            <Tutorial />
+            <Tutorial firstVisit={user.tutorial} />
           </div>
 
           <div className={classes.sectionContainer}>

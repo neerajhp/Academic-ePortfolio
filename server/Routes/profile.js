@@ -5,9 +5,10 @@ const profileController = require("../Controllers/profileController");
 const showcaseController = require("../Controllers/showcaseController");
 const eduController = require("../Controllers/eduController");
 
-const authenticate = require("../Middleware/authenticate")
+const { authenticateToken } = require("../Middleware/authenticate");
 
-router.use(authenticate.authenticateToken);
+router.use(authenticateToken);
+
 
 // Gets everything needed for the user's profile display
 router.get("/", profileController.getProfile);
@@ -20,6 +21,8 @@ router.get("/cv", profileController.getCV);
 // Gets the user's profile picture
 router.get("/profile-pic", profileController.getProfilePic);
 
+// Gets the user's social media
+router.get("/social-media", profileController.getSocialMedia);
 // Edits the user's social media links
 router.put("/social-media", profileController.addSocialMedia);
 

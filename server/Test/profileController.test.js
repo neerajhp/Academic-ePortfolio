@@ -4,7 +4,7 @@ const request = supertest(server);
 const mongoose = require('mongoose');
 
 const { clearDB } = require('./clearDB');
-const { setupUser, loginUser,idUser } = require('./login');
+const { setupUser, loginUser, idUser, getuserName } = require('./login');
 
 
 clearDB();
@@ -12,9 +12,11 @@ setupUser();
 
 let token;
 let ID;
+let userName;
 beforeAll(async () => {
     token = await loginUser();
     ID = await idUser();
+    userName = await getuserName();
 })
 
 
@@ -144,7 +146,7 @@ test('Should update social media JSON', async () => {
 
 // Should remove unwanted social media links
 test('Should remove unwanted social media links', async () => {
-    await request.put("api/profile/social-media")
+    await request.put("/api/profile/social-media")
     .set('Authorization', 'bearer ' + token)
     .send([{"site": "youtube", "link": ""}])
     .expect(200)

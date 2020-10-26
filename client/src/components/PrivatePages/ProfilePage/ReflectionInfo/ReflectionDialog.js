@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import {
-  IconButton,
   Typography,
   Dialog,
   DialogContent,
@@ -11,27 +9,9 @@ import {
 import ReflectionForm from './ReflectionForm';
 import API from '../../../../api/API';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    position: 'relative',
-  },
-  paper: {
-    position: 'absolute',
-    width: '40%',
-    backgroundColor: theme.palette.neutral.main,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-}));
-
 const ReflectionDialog = ({ records, setRecords }) => {
-  const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,10 +25,8 @@ const ReflectionDialog = ({ records, setRecords }) => {
   };
 
   return (
-    <div className={classes.container}>
-      <IconButton onClick={handleOpen}>
-        <EditIcon />
-      </IconButton>
+    <>
+      <EditIcon onClick={handleOpen} />
       <Dialog
         fullWidth={true}
         maxWidth={'md'}
@@ -63,7 +41,7 @@ const ReflectionDialog = ({ records, setRecords }) => {
           <ReflectionForm records={records} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 

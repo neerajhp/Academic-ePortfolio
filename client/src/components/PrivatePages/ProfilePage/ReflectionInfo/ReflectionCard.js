@@ -1,9 +1,11 @@
 import ReflectionDialog from './ReflectionDialog';
 import React, { useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Typography } from '@material-ui/core';
-import { Button, message } from 'antd';
+import { Paper, Typography, ButtonGroup, Button } from '@material-ui/core';
 import axios from 'axios';
+import API from '../../../../api/API';
+import BackupIcon from '@material-ui/icons/Backup';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +55,6 @@ const ReflectionCard = (reflection) => {
   //     </div>
   //   </Paper>
   const inputEl = useRef(null);
-  const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState(reflection);
 
   const handleChoseImg = (e) => {
@@ -63,7 +64,6 @@ const ReflectionCard = (reflection) => {
       return false;
     }
     if (file.length < 6) {
-      setLoading(true);
       let param = new FormData();
       for (const key in file) {
         if (file.hasOwnProperty(key)) {
@@ -79,39 +79,53 @@ const ReflectionCard = (reflection) => {
           Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
         responseType: 'blob',
-      }).then((result) => {
-        setLoading(false);
-      });
+      }).then((result) => {});
     } else {
-      message.info('the max number is 5');
+      alert.info('the max number is 5');
     }
   };
 
+  const handleDel = (recordID) => {
+    API.removeBlog(recordID).then((result) => {
+      if (result.status === 200) {
+        console.log(123);
+      }
+    });
+  };
+
   return (
-      <Paper className={classes.card}>
-        <div className={classes.bio}>
-          <Typography className={classes.title} variant='h2'>
-            This is a Reflection
-          </Typography>
-          <Typography>This is the blog introduction</Typography>
-          <input
-              className={classes.hidden}
-              type='file'
-              ref={inputEl}
-              accept='image/*'
-              multiple
-              onChange={handleChoseImg}
-          />
-          {getRecord(records)}
-          {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-          <ReflectionDialog records={records} setRecords={setRecords} />
-          <div className={classes.upload}>
-            <Button loading={loading} onClick={() => inputEl.current.click()}>
-              Upload
+    <Paper className={classes.card}>
+      <div className={classes.bio}>
+        <Typography className={classes.title} variant='h2'>
+          This is a Reflection
+        </Typography>
+        <Typography>This is the blog introduction</Typography>
+        <input
+          className={classes.hidden}
+          type='file'
+          ref={inputEl}
+          accept='image/*'
+          multiple
+          onChange={handleChoseImg}
+        />
+        {getRecord(records)}
+        {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
+        {/* <ReflectionDialog records={records} setRecords={setRecords} /> */}
+        <div className={classes.upload}>
+          <ButtonGroup>
+            <Button>
+              <ReflectionDialog records={records} setRecords={setRecords} />
             </Button>
-          </div>
+            <Button onClick={() => inputEl.current.click()}>
+              <BackupIcon />
+            </Button>
+            <Button onClick={() => handleDel(records?.recordID)}>
+              <DeleteIcon />
+            </Button>
+          </ButtonGroup>
         </div>
-      </Paper>
+      </div>
+    </Paper>
   );
 };
 

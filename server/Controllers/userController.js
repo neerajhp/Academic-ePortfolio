@@ -29,6 +29,7 @@ const postSignup = async (req, res) => {
       skills: req.body.skills,
       // remove for development
       isVerified: req.body.isVerified,
+      tutorial: true,
     });
     // Look for duplicate email
     await User.findOne({ email: newUser.email }, (err, account) => {
@@ -192,6 +193,7 @@ const googleLogin = (req, res) => {
                 biography: '',
                 skills: '',
                 isVerified: true,
+                tutorial: true,
               });
 
               newUser.save((err, data) => {
@@ -275,6 +277,7 @@ const facebookLogin = (req, res) => {
                 biography: '',
                 skills: '',
                 isVerified: true,
+                tutorial: true,
               });
               newUser.save((err, data) => {
                 if (err) {
@@ -520,13 +523,29 @@ const changePassword = async (req, res) => {
   }
 };
 
+const getTutorial = async (req, res) => {
+  try {
+    await User.findById(req.user.id, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        res.status(200).json(result.tutorial);
+      } else {
+        res.status(404).json('user not found');
+      }
+    });
+  } catch (error) {
+    res.status(400).json('Failed to get tutorial value');
+  }
+};
+
 // Disables the tutorial
 const finishTutorial = async (req, res) => {
   try {
     await User.findByIdAndUpdate(
       req.user.id,
       { tutorial: false },
-      { new: true },
       (err, result) => {
         if (err) {
           throw err;
@@ -581,6 +600,7 @@ module.exports = {
   updateEmail,
   changePassword,
   getUserID,
+  getTutorial,
   finishTutorial,
   changeUserName,
   searchUsers,

@@ -565,24 +565,27 @@ const finishTutorial = async (req, res) => {
 //User Search
 const searchUsers = async (req, res) => {
   try {
+    console.log(req);
     let name = {};
-    if (req.body.name.split(' ')[0]) {
-      name.firstName = req.body.name.split(' ')[0];
+    if (req.query.name.split(' ')[0]) {
+      name.firstName = req.query.name.split(' ')[0];
     }
-    if (req.body.name.split(' ')[1]) {
-      name.lastName = req.body.name.split(' ')[1];
+    if (req.query.name.split(' ')[1]) {
+      name.lastName = req.query.name.split(' ')[1];
     }
     console.log(name);
-    await User.find(name, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        res.status(404).json('The user was not found');
-      }
-    });
+    await User.find(name)
+      .select('userName')
+      .exec((err, result) => {
+        if (err) {
+          throw err;
+        }
+        if (result) {
+          res.status(200).json(result);
+        } else {
+          res.status(404).json('The user was not found');
+        }
+      });
   } catch (error) {
     console.log(error);
     res.status(400).json('Error while trying to find user');

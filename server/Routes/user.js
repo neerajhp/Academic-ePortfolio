@@ -28,7 +28,7 @@ router.get('/search', (req, res) => {
   userController.searchUsers(req, res);
 });
 
-router.get('/userInfo', authenticate.authenticateToken, async (req, res) => {
+router.get('/userInfo', authenticateToken, async (req, res) => {
   userController.getUserInformation(req, res);
 });
 

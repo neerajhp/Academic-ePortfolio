@@ -55,7 +55,7 @@ export default {
   },
 
   userSearch: function (searchName) {
-    return axios.get('api/user/search', { name: searchName });
+    return axios.get('api/user/search', { params: { name: searchName } });
   },
 
   /* ================ Authorised Calls ================ */

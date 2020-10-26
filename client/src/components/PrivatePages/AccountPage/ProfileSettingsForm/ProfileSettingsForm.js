@@ -14,13 +14,14 @@ import API from '../../../../api/API';
 
 const ProfileSettingsForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(user.private);
   const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
 
 
-  // const handleChange = (event) => {
-  // setChecked({ ...checked, [event.target.name]: event.target.checked });
-  // };
+  const handleChange = () => {
+    console.log('this was ran');
+    setChecked(true);
+  };
 
   return (
     <Paper className={globalClasses.card}>
@@ -31,9 +32,14 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
         <Formik
           initialValues={{
             url: user.url,
+            private: user.private,
           }}
           onSubmit={(values, actions) => {
             setSubmitted(false);
+            console.log(values)
+            API.changePrivacy({
+              private: values.private,
+            })
             API.editUserInformation({
               url: values.url,
             })
@@ -58,24 +64,15 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                 label='Custom URL'
                 formikProps={formikProps}
                 formikKey='url'
-                required
+                // required
                 value={user.url}
                 className={`${globalClasses.field} ${fieldSubmitted}`}
               />
 
               <FormControlLabel
-                      // control={<Switch checked={checked.checkedA} onChange={handleChange} name="checkedA" />}
-                      control={<Switch checked={checked.checkedA} name="checkedA" />}
+                      control={<Switch checked={checked} name = 'private' formikKey='private' onchange={handleChange}/>}
                       label="Set Profile To Private Mode" labelPlacement="start"
                     />
-              {/* <Switch
-                label = "Set Page To Private Mode"
-                checked={checked}
-                onChange={handleChange}
-                color="primary"
-                name="checked"
-                inputProps={{ 'aria-label': 'primary checkbox' }}
-              /> */}
 
               <div className={globalClasses.buttonWrapper}>
                 <Button

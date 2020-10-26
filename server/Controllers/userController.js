@@ -7,10 +7,9 @@ require('dotenv').config();
 const { OAuth2Client } = require('google-auth-library');
 const fetch = require('node-fetch');
 
-const { sendTokenPost } = require('./confirmationController')
+const { sendTokenPost } = require('./confirmationController');
 
 const saltRounds = 10;
-
 
 //SIGNUP
 const postSignup = async (req, res) => {
@@ -28,8 +27,9 @@ const postSignup = async (req, res) => {
       socialMedia: req.body.socialMedia,
       biography: req.body.biography,
       skills: req.body.skills,
-      // remove for development 
-      isVerified: req.body.isVerified
+      // remove for development
+      isVerified: req.body.isVerified,
+      tutorial: true,
     });
     // Look for duplicate email
     await User.findOne({ email: newUser.email }, (err, account) => {
@@ -193,6 +193,7 @@ const googleLogin = (req, res) => {
                 biography: '',
                 skills: '',
                 isVerified: true,
+                tutorial: true,
               });
 
               newUser.save((err, data) => {
@@ -276,6 +277,7 @@ const facebookLogin = (req, res) => {
                 biography: '',
                 skills: '',
                 isVerified: true,
+                tutorial: true,
               });
               newUser.save((err, data) => {
                 if (err) {
@@ -334,9 +336,9 @@ const changeUserName = async (req, res) => {
           }
         );
       } else {
-        if(result._id == req.user.id){
-          res.status(200).json("User inputted the same username");
-        }else{
+        if (result._id == req.user.id) {
+          res.status(200).json('User inputted the same username');
+        } else {
           // Suggest a new username
           res.status(400).json('Username not unique');
         }
@@ -521,13 +523,29 @@ const changePassword = async (req, res) => {
   }
 };
 
+const getTutorial = async (req, res) => {
+  try{
+    await User.findById(req.user.id, (err, result) => {
+      if(err){
+        throw err;
+      }
+      if(result){
+        res.status(200).json(result.tutorial);
+      }else{
+        res.status(404).json("user not found");
+      }
+    })
+  }catch(error){
+    res.status(400).json("Failed to get tutorial value");
+  }
+}
+
 // Disables the tutorial
 const finishTutorial = async (req, res) => {
   try {
     await User.findByIdAndUpdate(
       req.user.id,
       { tutorial: false },
-      { new: true },
       (err, result) => {
         if (err) {
           throw err;
@@ -544,8 +562,6 @@ const finishTutorial = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   postSignup,
   postLogin,
@@ -557,6 +573,7 @@ module.exports = {
   updateEmail,
   changePassword,
   getUserID,
+  getTutorial,
   finishTutorial,
   changeUserName,
 };

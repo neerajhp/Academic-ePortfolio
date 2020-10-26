@@ -2,12 +2,16 @@ import cookie from 'js-cookie';
 
 // import { GoogleLogout } from 'react-google-login';
 
-export const setCookie = (key, value) => {
+export const setCookie = (key, value, rememberMe) => {
   if (window !== 'undefined') {
-    cookie.set(key, value, {
-      // 1 Day
-      expires: 1,
-    });
+    if (rememberMe) {
+      cookie.set(key, value, {
+        // 1 Day
+        expires: 1,
+      });
+    } else {
+      cookie.set(key, value);
+    }
   }
 };
 // remove from cookie
@@ -42,9 +46,8 @@ export const removeLocalStorage = (key) => {
 };
 
 // Auth enticate user by passing data to cookie and localstorage during signin
-export const authenticate = (response) => {
-  setCookie('token', response);
-  setLocalStorage('token', response);
+export const authenticate = (response, rememberMe = false) => {
+  setCookie('token', response, rememberMe);
 };
 
 // Access user info from localstorage
@@ -52,26 +55,14 @@ export const isAuth = () => {
   if (window !== 'undefined') {
     const cookieChecked = getCookie('token');
     if (cookieChecked) {
-      if (localStorage.getItem('token')) {
-        return true;
-      } else {
-        return false;
-      }
+      return true;
+    } else {
+      return false;
     }
   }
 };
 
 export const logout = (next) => {
   removeCookie('token');
-  removeLocalStorage('token');
   next();
-};
-
-export const updateUser = (response, next) => {
-  console.log('UPDATE USER IN LOCALSTORAGE HELPERS', response);
-  if (typeof window !== 'undefined') {
-    let auth = JSON.parse(localStorage.getItem('token'));
-    auth = response.data;
-    localStorage.setItem('token', JSON.stringify(auth));
-  }
 };

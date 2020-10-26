@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
-import { Typography, Avatar, Grid, Link, Button } from "@material-ui/core";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
-import FormikField from "../../utils/FormikField";
-import validationSchema from "./Validation";
-import API from "../../../api/API";
+import React, { useState } from 'react';
+import { Formik } from 'formik';
+import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
+import MailIcon from '@material-ui/icons/Mail';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormikField from '../../utils/FormikField';
+import { validationSchema } from './Validation';
+import API from '../../../api/API';
 
 /* ================ Component ================ */
 
@@ -12,28 +13,73 @@ const ResetPage = ({ globalClasses }) => {
   const classes = globalClasses;
 
   const [Submitted, setSubmitted] = useState(false);
+  const [resubmitting, setResubmitting] = useState(false);
+  const [email, setEmail] = useState('');
+  const [resendMessage, setResendMessage] = useState(false);
+  const [resendError, setResendError] = useState(false);
+
+  const resendEmail = (email) => {
+    setResubmitting(true);
+    API.emailresetPassword(email)
+      .then((res) => {
+        setResubmitting(false);
+        setResendMessage(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setResendError(err.response.data);
+      });
+  };
 
   if (Submitted) {
     return (
       <div className={classes.formContainer}>
         <div className={classes.successBoard}>
           <Avatar className={classes.avatar}>
-            <ThumbUpIcon className={classes.icon} />
+            <MailIcon className={classes.icon} />
           </Avatar>
-          <Typography variant="h2">Congratulations!</Typography>
-          <Typography>
-            You now have an academic ePorfolio, login and start editing!
+          <Typography variant='h5' align='center'>
+            An email has been sent to <br />
+            {email}
           </Typography>
-          <Button
-            type="Submit"
-            fullWidth
-            variant="contained"
-            className={classes.landingButton}
-          >
-            <Link href="./login" variant="body2" color="inherit">
-              Click here to login
-            </Link>
-          </Button>
+          <Typography variant='h4' align='center'>
+            Click the link in your email to reset your password
+          </Typography>
+
+          <div className={globalClasses.buttonWrapper}>
+            <Button
+              type='Submit'
+              fullWidth
+              variant='contained'
+              className={classes.submit}
+              disabled={resubmitting}
+              color='secondary'
+              onClick={() => resendEmail(email)}
+            >
+              <Typography>
+                Didn't recieve an email? Click here to resend.
+              </Typography>
+            </Button>
+            {resubmitting && (
+              <CircularProgress
+                size={24}
+                className={globalClasses.buttonProgress}
+              />
+            )}
+          </div>
+          {resendMessage && (
+            <Typography color='secondary'>Email has been resent</Typography>
+          )}
+          {resendError && (
+            <React.Fragment>
+              <Typography color='error'>{resendError}</Typography>
+              <Typography>
+                <Link href='./signup' color='textSecondary'>
+                  Click here to signup{' '}
+                </Link>
+              </Typography>
+            </React.Fragment>
+          )}
         </div>
       </div>
     );
@@ -42,7 +88,7 @@ const ResetPage = ({ globalClasses }) => {
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
-        <Typography variant="h1" color="textSecondary">
+        <Typography variant='h1' color='textSecondary'>
           Reset your new Portfolio
         </Typography>
       </div>
@@ -50,22 +96,16 @@ const ResetPage = ({ globalClasses }) => {
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              email: "",
-              password: "",
-              confirmPassword: "",
+              email: '',
             }}
             onSubmit={(values, actions) => {
-              API.userSignup({
-                firstName: values.firstName,
-                lastName: values.lastName,
-                email: values.email,
-                password: values.password,
-              })
+              API.emailresetPassword(values.email)
                 .then((res) => {
                   setSubmitted(true);
+                  setEmail(values.email);
                 })
                 .catch((err) => {
-                  actions.setFieldError("email", err.response.data);
+                  actions.setFieldError('email', err.response.data);
                   actions.setSubmitting(false);
                 });
             }}
@@ -77,43 +117,34 @@ const ResetPage = ({ globalClasses }) => {
                 onSubmit={formikProps.handleSubmit}
               >
                 <FormikField
-                  label="Email"
+                  label='Email'
                   formikProps={formikProps}
-                  formikKey="email"
-                  required
-                  className={classes.inputField}
-                />
-                <FormikField
-                  label="Password"
-                  formikProps={formikProps}
-                  formikKey="password"
-                  type="password"
-                  required
-                  className={classes.inputField}
-                />
-                <FormikField
-                  label="Confirm Password"
-                  formikProps={formikProps}
-                  formikKey="confirmPassword"
-                  type="password"
+                  formikKey='email'
                   required
                   className={classes.inputField}
                 />
 
-                <Button
-                  type="Submit"
-                  fullWidth
-                  variant="contained"
-                  className={classes.submit}
-                  disabled={!formikProps.isValid}
-                  color="primary"
-                >
-                  <Typography>Reset</Typography>
-                </Button>
+                <div className={globalClasses.buttonWrapper}>
+                  <Button
+                    type='Submit'
+                    fullWidth
+                    variant='contained'
+                    disabled={!formikProps.isValid || formikProps.isSubmitting}
+                    color='secondary'
+                  >
+                    <Typography>Reset</Typography>
+                  </Button>
+                  {formikProps.isSubmitting && (
+                    <CircularProgress
+                      size={24}
+                      className={globalClasses.buttonProgress}
+                    />
+                  )}
+                </div>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="./login" variant="body2" color="textSecondary">
-                      Log In
+                    <Link href='./login' variant='body2' color='textSecondary'>
+                      Back to Log In
                     </Link>
                   </Grid>
                 </Grid>

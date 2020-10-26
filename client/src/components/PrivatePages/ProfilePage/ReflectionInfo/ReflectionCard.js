@@ -1,36 +1,36 @@
-import ReflectionDialog from "./ReflectionDialog";
-import React, { useRef, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Paper, Typography, ButtonGroup, Button } from "@material-ui/core";
-import axios from "axios";
-import API from "../../../../api/API";
-import BackupIcon from "@material-ui/icons/Backup";
-import DeleteIcon from "@material-ui/icons/Delete";
+import ReflectionDialog from './ReflectionDialog';
+import React, { useRef, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Paper, Typography, ButtonGroup, Button } from '@material-ui/core';
+import axios from 'axios';
+import API from '../../../../api/API';
+import BackupIcon from '@material-ui/icons/Backup';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   card: {
-    margin: "0 0 1% 1%",
-    width: "100%",
+    margin: '0 0 1% 1%',
+    width: '100%',
     background: theme.palette.primary.light,
     color: theme.palette.text.secondary,
-    padding: "5%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    position: "relative",
+    padding: '5%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    position: 'relative',
   },
   description: {
-    marginLeft: "5%",
-    color: "white !important ",
+    marginLeft: '5%',
+    color: 'white !important ',
   },
   upload: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 10,
     right: 10,
   },
   hidden: {
-    display: "none",
+    display: 'none',
   },
 }));
 /* ================ Component ================ */
@@ -55,7 +55,6 @@ const ReflectionCard = (reflection) => {
   //     </div>
   //   </Paper>
   const inputEl = useRef(null);
-  const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState(reflection);
 
   const handleChoseImg = (e) => {
@@ -65,27 +64,24 @@ const ReflectionCard = (reflection) => {
       return false;
     }
     if (file.length < 6) {
-      setLoading(true);
       let param = new FormData();
       for (const key in file) {
         if (file.hasOwnProperty(key)) {
           const item = file[key];
-          param.append("image", item);
+          param.append('image', item);
         }
       }
       axios({
-        method: "post",
-        url: "/api/upload/images",
+        method: 'post',
+        url: '/api/upload/images',
         data: param,
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-        responseType: "blob",
-      }).then((result) => {
-        setLoading(false);
-      });
+        responseType: 'blob',
+      }).then((result) => {});
     } else {
-      alert.info("the max number is 5");
+      alert.info('the max number is 5');
     }
   };
 
@@ -100,15 +96,15 @@ const ReflectionCard = (reflection) => {
   return (
     <Paper className={classes.card}>
       <div className={classes.bio}>
-        <Typography className={classes.title} variant="h2">
+        <Typography className={classes.title} variant='h2'>
           This is a Reflection
         </Typography>
         <Typography>This is the blog introduction</Typography>
         <input
           className={classes.hidden}
-          type="file"
+          type='file'
           ref={inputEl}
-          accept="image/*"
+          accept='image/*'
           multiple
           onChange={handleChoseImg}
         />
@@ -116,7 +112,7 @@ const ReflectionCard = (reflection) => {
         {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
         {/* <ReflectionDialog records={records} setRecords={setRecords} /> */}
         <div className={classes.upload}>
-          <ButtonGroup color="#fff">
+          <ButtonGroup>
             <Button>
               <ReflectionDialog records={records} setRecords={setRecords} />
             </Button>

@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-// const cors = require("cors");
+const cookieParser = require('cookie-parser');
+
 require('dotenv').config({ path: './Config/dev.env' });
 
 const server = express();
 
 // Middlewares
+server.use(cookieParser());
 server.use(express.json());
 server.use(
   express.urlencoded({
@@ -24,7 +26,6 @@ const blogRoute = require('./server/Routes/blog');
 const expRoute = require('./server/Routes/experience');
 const viewRoute = require('./server/Routes/view');
 const confirmationRoute = require('./server/Routes/confirmation');
-
 
 // Attach the routes
 server.use('/api/user', userRoute);

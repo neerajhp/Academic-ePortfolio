@@ -62,6 +62,11 @@ router.put(
   }
 );
 
+// Get tutorial
+router.get('/tutorial', authenticateToken, async (req, res) => {
+  userController.getTutorial(req, res);
+})
+
 // Finish tutorial
 router.put(
   '/update/tutorial',

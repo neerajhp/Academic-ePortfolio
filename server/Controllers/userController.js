@@ -546,12 +546,19 @@ const finishTutorial = async (req, res) => {
     await User.findByIdAndUpdate(
       req.user.id,
       { tutorial: false },
-      (err, result) => {
+      async (err, result) => {
         if (err) {
           throw err;
         }
         if (result) {
-          res.status(200).json(result.tutorial);
+          await User.findById(req.user.id, (err ,result) => {
+            if (err) {
+              throw err
+            } else {
+              res.status(200).json(result.tutorial);
+            }
+            
+          })
         } else {
           res.status(404).json('User not found');
         }
@@ -565,7 +572,7 @@ const finishTutorial = async (req, res) => {
 //User Search
 const searchUsers = async (req, res) => {
   try {
-    console.log(req);
+    // console.log(req)
     let name = {};
     if (req.query.name.split(' ')[0]) {
       name.firstName = req.query.name.split(' ')[0];

@@ -78,7 +78,7 @@ test("Should return JWT Token", async () =>{
 
 test("Should edit information on the user", async () => {
     await request.put("/api/user/userInfo")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token)
     .send({
         mobileNumber: "0123456789",
         birthDate: new Date("2000/01/01")
@@ -91,7 +91,7 @@ test("Should edit information on the user", async () => {
 
 test("Should return information on the user", async () => {
     await request.get("/api/user/userInfo")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token)
     .expect(200)
     .then((response) => {
         expect(response.body).toBeDefined
@@ -106,7 +106,7 @@ test("Should return information on the user", async () => {
 
 test("Should change the username", async () => {
     await request.put("/api/user/update/username")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token)
     .send({
         userName: "testing"
     })

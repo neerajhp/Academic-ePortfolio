@@ -97,7 +97,7 @@ const getAllInfo = async (userID) => {
 const viewerGetProfile = async (req, res) => {
   try {
     let userID = req.viewID;
-    console.log(req);
+    // console.log(req);
     let profile = await getAllInfo(userID);
     if (profile) {
       res.status(200).json(profile);

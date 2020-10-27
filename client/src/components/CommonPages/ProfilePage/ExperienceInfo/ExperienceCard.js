@@ -118,7 +118,7 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const ExperienceCard = ({ experience }) => {
+const ExperienceCard = ({ experience, editable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(experience);
@@ -146,14 +146,16 @@ const ExperienceCard = ({ experience }) => {
             <Typography className={classes.subTitle} variant='h3'>
               {capitaliseFirstLetter(type)}
             </Typography>{' '}
-            <div className={classes.editDialogContainer}>
-              <ExperienceDialog
-                type={type}
-                records={experience}
-                setRecords={setRecords}
-                empty={false}
-              />
-            </div>
+            {editable && (
+              <div className={classes.editDialogContainer}>
+                <ExperienceDialog
+                  type={type}
+                  records={experience}
+                  setRecords={setRecords}
+                  empty={false}
+                />
+              </div>
+            )}
           </div>
           <div className={classes.tableContainer}>
             <Table className={classes.table}>

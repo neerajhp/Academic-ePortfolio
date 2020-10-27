@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AboutCard = () => {
+const AboutCard = ({ editable }) => {
   const classes = useStyles();
   const [records, setRecords] = useState('');
 
@@ -52,11 +52,13 @@ const AboutCard = () => {
         <Typography>{records}</Typography>
       </div>
       <div className={classes.editDialogContainer}>
-        <AboutDialog
-          records={records}
-          setRecords={setRecords}
-          empty={records === '' || records === undefined}
-        />
+        {editable && (
+          <AboutDialog
+            records={records}
+            setRecords={setRecords}
+            empty={records === '' || records === undefined}
+          />
+        )}
       </div>
     </Paper>
   );

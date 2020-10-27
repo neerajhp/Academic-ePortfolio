@@ -68,7 +68,7 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const EducationCard = ({ education }) => {
+const EducationCard = ({ education, editable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(education);
@@ -122,13 +122,15 @@ const EducationCard = ({ education }) => {
         Education{' '}
       </Typography>
       {getRecord(records)}
-      <div className={classes.editDialogContainer}>
-        <EducationDialog
-          records={records}
-          setRecords={setRecords}
-          empty={false}
-        />
-      </div>
+      {editable && (
+        <div className={classes.editDialogContainer}>
+          <EducationDialog
+            records={records}
+            setRecords={setRecords}
+            empty={false}
+          />
+        </div>
+      )}
     </Paper>
   );
 };

@@ -49,10 +49,11 @@ function beforeUpload(file) {
 
 /* ================ Component ================ */
 
-const CharacterCard = ({ user }) => {
+const CharacterCard = ({ user, editable }) => {
   const classes = useStyles();
   const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink);
   const [bio, setBio] = useState(user.bio);
+  var profilePic;
 
   const getRecord = () => {
     if (bio) {
@@ -76,8 +77,12 @@ const CharacterCard = ({ user }) => {
     }
   };
 
-  return (
-    <Paper className={classes.characterCard}>
+  profilePic = (
+    <Avatar src={imageUrl} alt='avatar' className={classes.profilePicture} />
+  );
+  //Upload interface if owner
+  if (editable) {
+    profilePic = (
       <Upload
         name='profile-pic'
         accept='image/*'
@@ -95,13 +100,19 @@ const CharacterCard = ({ user }) => {
           className={classes.profilePicture}
         />
       </Upload>
+    );
+  }
+
+  return (
+    <Paper className={classes.characterCard}>
+      {profilePic}
 
       <div className={classes.bio}>
         <Typography variant='h2'>
           {user.firstName} {user.lastName}
         </Typography>
         {getRecord(bio)}
-        <CharacterDialog records={bio} setRecords={setBio} />
+        {editable && <CharacterDialog records={bio} setRecords={setBio} />}
       </div>
     </Paper>
   );

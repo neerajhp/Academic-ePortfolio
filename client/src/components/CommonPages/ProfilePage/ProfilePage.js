@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import { Link as RouterLink } from 'react-router-dom';
 import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
   CircularProgress,
+  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -16,6 +17,8 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import InfoIcon from '@material-ui/icons/Info';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import CharacterCard from './CharacterInfo/CharacterCard';
 import EducationCard from './EducationInfo/EducationCard';
 import ExperienceCard from './ExperienceInfo/ExperienceCard';
@@ -72,68 +75,79 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
+  icon: { fontSize: 80 },
 }));
 
 /* ================ Component ================ */
 
-const ProfilePage = ({ viewer = false }) => {
+const ProfilePage = ({ owner = true, match }) => {
   // Styling
   const classes = useStyles();
   const [section, setSection] = useState(1);
 
   //Profile Information
-  //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
+  //If public view a username is required from the url
+  const {
+    params: { userName },
+  } = match;
+
   const [user, setUser] = useState(null);
-  // const [userEducation, setEducation] = useState(null);
-  // const [userExperience, setExperience] = useState(null);
   const [profileNotFound, setProfileNotFound] = useState(false);
   const [profilePrivate, setProfilePrivate] = useState(false);
 
   //Load user data
 
   useEffect(() => {
-    if (viewer) {
-      // API.viewerGetProfile(userId)
-      //   .then(({ data }) => {
-      //     setUser(data);
-      //   })
-      //   .catch((err) => {
-      //     if (err.response.status === 404) {
-      //       console.log('Not Found');
-      //       setProfileNotFound(true);
-      //     } else if (err.response.status === 403) {
-      //       setProfilePrivate(true);
-      //     }
-      //   });
-      // API.viewerGetAllExperience(userId)
-      //   .then(({ data }) => {
-      //     setExperience(data);
-      //   })
-      //   .catch();
+    if (!owner) {
+      API.viewerGetProfile(userName)
+        .then(({ data }) => {
+          setUser(data);
+        })
+        .catch((err) => {
+          if (err.response.status === 404) {
+            console.log('Not Found');
+            setProfileNotFound(true);
+          } else if (err.response.status === 403) {
+            setProfilePrivate(true);
+          }
+        });
     } else {
       API.getUserProfile()
         .then(({ data }) => {
           setUser(data);
         })
         .catch();
-
-      // API.getEducation()
-      //   .then(({ data }) => {
-      //     setEducation(data);
-      //   })
-      //   .catch();
-
-      // API.getAllExperience()
-      //   .then(({ data }) => {
-      //     setExperience(data);
-      //   })
-      //   .catch();
     }
   }, []);
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (!user) {
+  if (profileNotFound) {
+    pageContent = (
+      <div>
+        <div className={classes.loading}>
+          <SentimentDissatisfiedIcon className={classes.icon} />
+          <Typography variant='h2'>Profile Not Found</Typography>
+          <Link variant='h2' component={RouterLink} to='/home/landing'>
+            Click here to return Home
+          </Link>
+        </div>
+      </div>
+    );
+  } //If Private profile
+  else if (profilePrivate) {
+    pageContent = (
+      <div>
+        <div className={classes.loading}>
+          <VisibilityOffIcon className={classes.icon} />
+          <Typography variant='h2'>This profile is private</Typography>
+          <Link variant='h2' component={RouterLink} to='/home/landing'>
+            Click here to return Home
+          </Link>
+        </div>
+      </div>
+    );
+  } else if (!user) {
     pageContent = (
       <div>
         <div className={classes.loading}>
@@ -186,10 +200,10 @@ const ProfilePage = ({ viewer = false }) => {
               Placeholder section
             </div>
             <div className={classes.section}>
-              <CharacterCard user={user} />
-              <ExperienceCard experience={user.experience} />
-              <EducationCard education={user.education} />
-              <SkillsCard skills={user.skills} />
+              <CharacterCard user={user} editable={owner} />
+              <ExperienceCard experience={user.experience} editable={owner} />
+              <EducationCard education={user.education} editable={owner} />
+              <SkillsCard skills={user.skills} editable={owner} />
             </div>
             <div className={classes.section}>
               <ReflectionCard />
@@ -203,7 +217,7 @@ const ProfilePage = ({ viewer = false }) => {
               <ProjectCard type={'medium'} />
             </div>
             <div className={classes.section}>
-              <AboutCard />
+              <AboutCard editable={owner} />
             </div>
           </div>
         </div>

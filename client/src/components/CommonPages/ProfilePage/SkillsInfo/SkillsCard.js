@@ -49,9 +49,10 @@ const useStyles = makeStyles((theme) => ({
 const COLOURS = ['primary', 'secondary'];
 
 /* ================ Component ================ */
-const SkillsCard = ({ editable }) => {
+const SkillsCard = ({ isEditable }) => {
   const classes = useStyles();
   const [skills, setSkills] = useState([]);
+  const [editable, setEditable] = useState(isEditable);
 
   const handleDel = (skill) => {
     API.removeSkills({ skills: [skill] })

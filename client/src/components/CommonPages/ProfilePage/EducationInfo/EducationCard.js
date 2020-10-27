@@ -68,10 +68,11 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const EducationCard = ({ education, editable }) => {
+const EducationCard = ({ education, isEditable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(education);
+  const [editable] = useState(isEditable);
 
   const getRecord = (education) => {
     if (!(Array.isArray(education) && education.length)) {

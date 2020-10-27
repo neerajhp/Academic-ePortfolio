@@ -118,10 +118,11 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const ExperienceCard = ({ experience, editable }) => {
+const ExperienceCard = ({ experience, isEditable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(experience);
+  const [editable] = useState(isEditable);
 
   function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);

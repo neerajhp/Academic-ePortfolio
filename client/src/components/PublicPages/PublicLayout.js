@@ -2,8 +2,7 @@ import React from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
-import PublicProfilePage from './ProfilePage/PublicProfilePage';
-import ProfilePage from '../PrivatePages/ProfilePage/ProfilePage';
+import ProfilePage from '../CommonPages/ProfilePage/ProfilePage';
 import Background from '../../assets/Background/bkg-private.svg';
 
 /* ================ Styling ================ */
@@ -65,7 +64,7 @@ const PublicLayout = ({ match }) => {
           </Route>
           <Route
             path={`/view/:userName`}
-            render={(props) => <ProfilePage {...props} owner={false} />}
+            render={(props) => <ProfilePage {...props} isOwner={false} />}
           />
         </Switch>
       </div>

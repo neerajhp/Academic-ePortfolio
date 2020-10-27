@@ -25,7 +25,7 @@ import ExperienceCard from './ExperienceInfo/ExperienceCard';
 import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
-import Tutorial from '../Tutorial/Tutorial';
+import Tutorial from '../../PrivatePages/Tutorial/Tutorial';
 import AboutCard from './AboutInfo/AboutCard';
 
 /* ================ Styling ================ */
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const ProfilePage = ({ owner = true, match }) => {
+const ProfilePage = ({ isOwner = true, match }) => {
   // Styling
   const classes = useStyles();
   const [section, setSection] = useState(1);
@@ -94,6 +94,7 @@ const ProfilePage = ({ owner = true, match }) => {
   const [user, setUser] = useState(null);
   const [profileNotFound, setProfileNotFound] = useState(false);
   const [profilePrivate, setProfilePrivate] = useState(false);
+  const [owner, setOwner] = useState(isOwner);
 
   //Load user data
 
@@ -118,7 +119,7 @@ const ProfilePage = ({ owner = true, match }) => {
         })
         .catch();
     }
-  }, []);
+  });
 
   //If profile hasn't been fetched yet
   var pageContent;
@@ -200,10 +201,10 @@ const ProfilePage = ({ owner = true, match }) => {
               Placeholder section
             </div>
             <div className={classes.section}>
-              <CharacterCard user={user} editable={owner} />
-              <ExperienceCard experience={user.experience} editable={owner} />
-              <EducationCard education={user.education} editable={owner} />
-              <SkillsCard skills={user.skills} editable={owner} />
+              <CharacterCard user={user} isEditable={owner} />
+              <ExperienceCard experience={user.experience} isEditable={owner} />
+              <EducationCard education={user.education} isEditable={owner} />
+              <SkillsCard skills={user.skills} isEditable={owner} />
             </div>
             <div className={classes.section}>
               <ReflectionCard />
@@ -217,7 +218,7 @@ const ProfilePage = ({ owner = true, match }) => {
               <ProjectCard type={'medium'} />
             </div>
             <div className={classes.section}>
-              <AboutCard editable={owner} />
+              <AboutCard about={user.aboutMe} isEditable={owner} />
             </div>
           </div>
         </div>

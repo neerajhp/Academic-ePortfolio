@@ -175,10 +175,7 @@ const ProfilePage = () => {
               <ReflectionCard />
             </div>
             <div className={classes.section}>
-              <ProjectCard type={'large'} />
-              <ProjectCard type={'small'} />
-              <ProjectCard type={'small'} />
-              <ProjectCard type={'medium'} />
+              <ProjectCard />
             </div>
             <div className={classes.section}>
               <AboutCard />

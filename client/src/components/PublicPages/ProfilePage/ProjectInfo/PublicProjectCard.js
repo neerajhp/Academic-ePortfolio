@@ -19,19 +19,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '5%',
     color: 'white !important ',
   },
-  large: {
-    background: theme.palette.secondary.light,
-    width: '100%',
-    height: '60%',
-  },
-  medium: {
-    width: '100%',
-    height: '30%',
-  },
-  small: {
-    width: '49%',
-    height: '30%',
-  },
   upload: {
     position: 'absolute',
     bottom: 10,
@@ -49,29 +36,18 @@ const ProjectCard = ({ type }) => {
   // const [allFiles, setAllFiles] = useState([]);
   // const [file, setFile] = useState('');
   //Default  card size is large
-  var cardSize;
 
-  switch (type) {
-    case 'large':
-      cardSize = classes.large;
-      break;
-    case 'medium':
-      cardSize = classes.medium;
-      break;
-    case 'small':
-      cardSize = classes.small;
-      break;
-    default:
-      cardSize = classes.large;
-  }
 
   return (
-    <Paper className={`${classes.card}  ${cardSize}`}>
+    <Paper className={classes.card}>
       <div className={classes.bio}>
         <Typography className={classes.title} variant='h2'>
-          This is a {type} Project Card
+          This is a Project Card
         </Typography>
         <Typography>This is the project description</Typography>
+        <Typography className={classes.title} variant='h2'>
+          Showcase
+        </Typography>
       </div>
     </Paper>
   );

@@ -118,11 +118,10 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const ExperienceCard = ({ experience, isEditable }) => {
+const ExperienceCard = ({ experience, editable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(experience);
-  const [editable] = useState(isEditable);
 
   function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -132,12 +131,14 @@ const ExperienceCard = ({ experience, isEditable }) => {
     if (!(Array.isArray(experience) && experience.length)) {
       return (
         <div className={classes.emptySection}>
-          <ExperienceDialog
-            type={type}
-            records={experience}
-            setRecords={setRecords}
-            empty={true}
-          />
+          {editable && (
+            <ExperienceDialog
+              type={type}
+              records={experience}
+              setRecords={setRecords}
+              empty={true}
+            />
+          )}
         </div>
       );
     } else {

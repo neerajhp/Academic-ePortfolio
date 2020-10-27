@@ -49,11 +49,11 @@ function beforeUpload(file) {
 
 /* ================ Component ================ */
 
-const CharacterCard = ({ user, isEditable }) => {
+const CharacterCard = ({ user, editable }) => {
   const classes = useStyles();
   const [imageUrl, setImageUrl] = useState(user.profilePic.fileLink);
   const [bio, setBio] = useState(user.bio);
-  const [editable] = useState(isEditable);
+
   var profilePic;
 
   const getRecord = () => {

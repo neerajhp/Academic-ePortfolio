@@ -68,21 +68,22 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const EducationCard = ({ education, isEditable }) => {
+const EducationCard = ({ education, editable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(education);
-  const [editable] = useState(isEditable);
 
   const getRecord = (education) => {
     if (!(Array.isArray(education) && education.length)) {
       return (
         <div className={classes.emptySection}>
-          <EducationDialog
-            records={records}
-            setRecords={setRecords}
-            empty={true}
-          />
+          {editable && (
+            <EducationDialog
+              records={records}
+              setRecords={setRecords}
+              empty={true}
+            />
+          )}
         </div>
       );
     } else {

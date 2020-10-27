@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const ProfilePage = () => {
+const ProfilePage = ({ viewer = false }) => {
   // Styling
   const classes = useStyles();
   const [section, setSection] = useState(1);
@@ -84,34 +84,56 @@ const ProfilePage = () => {
   //Profile Information
   //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
   const [user, setUser] = useState(null);
-  const [userEducation, setEducation] = useState(null);
-  const [userExperience, setExperience] = useState(null);
+  // const [userEducation, setEducation] = useState(null);
+  // const [userExperience, setExperience] = useState(null);
+  const [profileNotFound, setProfileNotFound] = useState(false);
+  const [profilePrivate, setProfilePrivate] = useState(false);
 
   //Load user data
 
   useEffect(() => {
-    API.getUserProfile()
-      .then(({ data }) => {
-        setUser(data);
-      })
-      .catch();
+    if (viewer) {
+      // API.viewerGetProfile(userId)
+      //   .then(({ data }) => {
+      //     setUser(data);
+      //   })
+      //   .catch((err) => {
+      //     if (err.response.status === 404) {
+      //       console.log('Not Found');
+      //       setProfileNotFound(true);
+      //     } else if (err.response.status === 403) {
+      //       setProfilePrivate(true);
+      //     }
+      //   });
+      // API.viewerGetAllExperience(userId)
+      //   .then(({ data }) => {
+      //     setExperience(data);
+      //   })
+      //   .catch();
+    } else {
+      API.getUserProfile()
+        .then(({ data }) => {
+          setUser(data);
+        })
+        .catch();
 
-    API.getEducation()
-      .then(({ data }) => {
-        setEducation(data);
-      })
-      .catch();
+      // API.getEducation()
+      //   .then(({ data }) => {
+      //     setEducation(data);
+      //   })
+      //   .catch();
 
-    API.getAllExperience()
-      .then(({ data }) => {
-        setExperience(data);
-      })
-      .catch();
+      // API.getAllExperience()
+      //   .then(({ data }) => {
+      //     setExperience(data);
+      //   })
+      //   .catch();
+    }
   }, []);
 
   //If profile hasn't been fetched yet
   var pageContent;
-  if (!(user && userEducation && userExperience)) {
+  if (!user) {
     pageContent = (
       <div>
         <div className={classes.loading}>
@@ -165,8 +187,8 @@ const ProfilePage = () => {
             </div>
             <div className={classes.section}>
               <CharacterCard user={user} />
-              <ExperienceCard experience={userExperience} />
-              <EducationCard education={userEducation} />
+              <ExperienceCard experience={user.experience} />
+              <EducationCard education={user.education} />
               <SkillsCard skills={user.skills} />
             </div>
             <div className={classes.section}>

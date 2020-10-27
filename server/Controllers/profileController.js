@@ -54,6 +54,14 @@ const getAllInfo = async (userID) => {
       console.log('Education found');
     }
 
+    let allExperience = await expController.findAll(userID);
+    if (!allExperience || allExperience.length === 0) {
+      console.log('Experience not found');
+      allExperience = [];
+    } else {
+      console.log('Experience found');
+    }
+
     let featuredWorks = await searchFeaturedWorks(userID);
     if (!featuredWorks || featuredWorks.length === 0) {
       console.log('featured works not found');
@@ -75,6 +83,7 @@ const getAllInfo = async (userID) => {
       profilePic: profilePic,
       showcase: featuredWorks,
       education: allEducation,
+      experience: allExperience,
       tutorial: userRecord.tutorial,
     };
 

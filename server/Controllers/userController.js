@@ -98,12 +98,12 @@ const postLogin = async (req, res) => {
     .then((profile) => {
       //Email does not exist
       if (!profile)
-        return res.status(409).send('Email does not match our records');
+        return res.status(409).json('Email does not match our records');
       // Account is not verified
       if (!profile.isVerified) {
         res
           .status(401)
-          .send('The account is not verified, please check your email');
+          .json('The account is not verified, please check your email');
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -132,7 +132,7 @@ const postLogin = async (req, res) => {
               }
             );
           } else {
-            res.status(409).send('Email and Password do not match our records');
+            res.status(409).json('Email and Password do not match our records');
           }
         });
       }
@@ -402,7 +402,7 @@ const getUserInformation = async (req, res) => {
     //   res.status(400).json("User not found");
     // }
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
@@ -416,7 +416,7 @@ const viewerGetUserInformation = async (req, res) => {
       res.status(400).json('User not found');
     }
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
@@ -445,7 +445,7 @@ const editUserInformation = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
@@ -458,7 +458,7 @@ const getUserID = async (req, res) => {
       res.status(400).json('User not found');
     }
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 

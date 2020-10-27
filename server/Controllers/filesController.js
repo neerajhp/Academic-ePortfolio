@@ -95,7 +95,7 @@ const getDocument = async (req, res, next) => {
         }else{
             // res.setHeader('Content-Type', 'image/png');
             // res.setHeader('Content-Disposition', "inline");
-            res.send(doc.fileLink);
+            res.json(doc.fileLink);
             console.log("File found");
         }
         
@@ -130,7 +130,7 @@ const displayPicture = async (req, res, next) => {
             }
         });
     }catch(error){
-        res.status(400).send("Error while trying to display picture");
+        res.status(400).json("Error while trying to display picture");
     }
   
 }
@@ -159,7 +159,7 @@ const displayProfilePic = async (req, res) => {
             }
         });
     }catch(error){
-        res.status(400).send("Error while trying to display picture");
+        res.status(400).json("Error while trying to display picture");
     }
    
 }
@@ -188,7 +188,7 @@ const downloadFile = async (req, res) => {
                 //     console.log("File Stream:", err);
                 // }).on('close', function() {
                 //     console.log("Done");
-                //     res.status(200).send("File downloaded");
+                //     res.status(200).json("File downloaded");
                 // });
                 //res.redirect(doc.fileLink);
 

@@ -121,7 +121,7 @@ const updateBlog = async (req, res) => {
         , (err, result) => {
             if(err){
                 console.log("something's up");
-                res.status(404).send(err);
+                res.status(404).json(err);
             }else{
                 if(!result){
                     res.status(400).json("Nothing was changed");
@@ -219,7 +219,7 @@ const clearBlogs = async (req, res) => {
             res.status(400).json("There were no blogs to delete");
         }
     }catch(error){
-        res.status(400).send(error);
+        res.status(400).json(error);
     }
 }
 

@@ -48,7 +48,7 @@ const addExperience = async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(400).send('Error while trying to save new experience');
+    res.status(400).json('Error while trying to save new experience');
   }
 };
 
@@ -79,7 +79,7 @@ const editExperience = async (req, res, next) => {
   } catch (error) {
     res
       .status(400)
-      .send("Error occured while looking for the user's experiences");
+      .json("Error occured while looking for the user's experiences");
   }
 };
 
@@ -96,7 +96,7 @@ const editExperience = async (req, res, next) => {
 //             res.status(200).json(exp);
 //         }
 //     }catch(error){
-//         res.status(400).send("Error occured while looking for the user's experiences");
+//         res.status(400).json("Error occured while looking for the user's experiences");
 //     }
 // };
 
@@ -112,7 +112,7 @@ const getAllExperience = async (req, res) => {
 
         const orgExp = sortExp(result);
 
-        res.status(200).send(orgExp);
+        res.status(200).json(orgExp);
       } else {
         console.log('Not found');
         res.status(404).json('No experience found');
@@ -122,7 +122,7 @@ const getAllExperience = async (req, res) => {
     // Check for empty list too later
   } catch (error) {
     console.log(error);
-    res.status(400).send('Error while looking for experience');
+    res.status(400).json('Error while looking for experience');
   }
 };
 
@@ -131,14 +131,14 @@ const viewerGetAllExperience = async (req, res) => {
     let userID = req.viewID;
     let exp = await findAll(userID);
     if (exp == null) {
-      res.send([]);
+      res.json([]);
     } else {
       res.status(200).json(exp);
     }
   } catch (error) {
     res
       .status(400)
-      .send("Error occured while looking for the user's experiences");
+      .json("Error occured while looking for the user's experiences");
   }
 };
 
@@ -230,7 +230,7 @@ const getExperience = async (req, res, next) => {
       }
     });
   } catch (error) {
-    res.status(400).send('Error occured while looking for experience');
+    res.status(400).json('Error occured while looking for experience');
   }
 };
 
@@ -244,7 +244,7 @@ const deleteAllExperience = async (req, res) => {
       res.status(200).json('Experience cleared');
     }
   } catch (error) {
-    res.status(400).send("Error occured while deleting the user's experiences");
+    res.status(400).json("Error occured while deleting the user's experiences");
   }
 };
 
@@ -282,7 +282,7 @@ const deleteExperience = async (req, res, next) => {
       }
     });
   } catch (error) {
-    res.status(400).send('Error occured while deleting');
+    res.status(400).json('Error occured while deleting');
   }
 };
 
@@ -311,7 +311,7 @@ const getEmploymentHistory = async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .send("Error while trying to find user's employment history");
+      .json("Error while trying to find user's employment history");
   }
 };
 
@@ -328,7 +328,7 @@ const viewEmploymentHistory = async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .send("Error while trying to find the user's employment history");
+      .json("Error while trying to find the user's employment history");
   }
 };
 
@@ -344,7 +344,7 @@ const getVolunteeringHistory = async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .send("Error while trying to find user's volunteering history");
+      .json("Error while trying to find user's volunteering history");
   }
 };
 
@@ -361,7 +361,7 @@ const viewVolunteeringHistory = async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .send("Error while trying to find the user's volunteering history");
+      .json("Error while trying to find the user's volunteering history");
   }
 };
 
@@ -375,7 +375,7 @@ const getExtracurriculars = async (req, res) => {
       res.status(200).json(result);
     }
   } catch (error) {
-    res.status(400).send("Error while trying to find user's extracurriculars");
+    res.status(400).json("Error while trying to find user's extracurriculars");
   }
 };
 
@@ -392,7 +392,7 @@ const viewExtracurriculars = async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .send("Error while trying to find the user's extracurriculars");
+      .json("Error while trying to find the user's extracurriculars");
   }
 };
 

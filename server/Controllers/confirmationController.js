@@ -32,7 +32,7 @@ const confirmationPost = async (req, res) => {
       if (!token) {
         return res
           .status(400)
-          .send(
+          .json(
             'We were unable to find a valid token. Your token my have expired.'
           );
       } else {
@@ -46,23 +46,23 @@ const confirmationPost = async (req, res) => {
             if (!user)
               return res
                 .status(400)
-                .send('We were unable to find a user for this token.');
+                .json('We were unable to find a user for this token.');
             if (user.isVerified)
               return res
                 .status(400)
-                .send('This user has already been verified.');
+                .json('This user has already been verified.');
 
             // Verify and save the user
             user.isVerified = true;
             user.save(function (err) {
               if (err) {
-                return res.status(500).send({
+                return res.status(500).json({
                   msg: err.message,
                 });
               }
               res
                 .status(200)
-                .send('The account has been verified. Please log in.');
+                .json('The account has been verified. Please log in.');
             });
           }
         );
@@ -84,7 +84,7 @@ const sendTokenPost = async (req, res) => {
       });
       token.save(function (err) {
         if (err) {
-          return res.status(500).send({
+          return res.status(500).json({
             msg: err.message,
           });
         }
@@ -113,13 +113,13 @@ const sendTokenPost = async (req, res) => {
         };
         transporter.sendMail(mailOptions, function (err) {
           if (err) {
-            return res.status(500).send({
+            return res.status(500).json({
               msg: err.message,
             });
           }
           res
             .status(200)
-            .send('A verification email has been sent to ' + user.email + '.');
+            .json('A verification email has been sent to ' + user.email + '.');
         });
       });
     }
@@ -136,11 +136,11 @@ const resendTokenPost = async (req, res) => {
       if (!user)
         return res
           .status(400)
-          .send('We were unable to find a user with that email.');
+          .json('We were unable to find a user with that email.');
       if (user.isVerified) {
         return res
           .status(400)
-          .send('This account has already been verified. Please log in.');
+          .json('This account has already been verified. Please log in.');
       } else {
         // Create a verification token, save it, and send email
         var token = new Token({
@@ -151,7 +151,7 @@ const resendTokenPost = async (req, res) => {
         // Save the token
         token.save(function (err) {
           if (err) {
-            return res.status(500).send({
+            return res.status(500).json({
               msg: err.message,
             });
           }
@@ -182,13 +182,13 @@ const resendTokenPost = async (req, res) => {
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
-              return res.status(500).send({
+              return res.status(500).json({
                 msg: err.message,
               });
             }
             res
               .status(200)
-              .send(
+              .json(
                 'A verification email has been sent to ' + user.email + '.'
               );
           });
@@ -210,7 +210,7 @@ const resetPut = async (req, res) => {
       if (!token) {
         return res
           .status(400)
-          .send(
+          .json(
             'We were unable to find a valid token. Your token my have expired.'
           );
       } else {
@@ -221,13 +221,13 @@ const resetPut = async (req, res) => {
             { password: hash },
             (err, user) => {
               if (err)
-                return res.status(500).send({
+                return res.status(500).json({
                   msg: err.message,
                 });
               if (!user)
                 return res
                   .status(400)
-                  .send('We were unable to find a user for this token.');
+                  .json('We were unable to find a user for this token.');
             }
           );
         });
@@ -239,7 +239,7 @@ const resetPut = async (req, res) => {
             if (result) {
               return res
                 .status(200)
-                .send('The password has been reset. Please log in.');
+                .json('The password has been reset. Please log in.');
             } else {
               console.log('not deleted');
             }
@@ -259,12 +259,12 @@ const sendResetPost = async (req, res) => {
     (err, user) => {
       if (err) {
         console.log(err);
-        return res.status(400).send('An error has occured');
+        return res.status(400).json('An error has occured');
       }
       if (!user) {
         return res
           .status(400)
-          .send('We were unable to find a user with that email.');
+          .json('We were unable to find a user with that email.');
       } else {
         // Create a verification token, save it, and send email
         var token = new Reset({
@@ -275,7 +275,7 @@ const sendResetPost = async (req, res) => {
         // Save the token
         token.save(function (err) {
           if (err) {
-            return res.status(500).send({
+            return res.status(500).json({
               msg: err.message,
             });
           }
@@ -306,13 +306,13 @@ const sendResetPost = async (req, res) => {
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
-              return res.status(500).send({
+              return res.status(500).json({
                 msg: err.message,
               });
             }
             res
               .status(200)
-              .send('A reset email has been sent to ' + user.email + '.');
+              .json('A reset email has been sent to ' + user.email + '.');
           });
         });
       }

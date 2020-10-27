@@ -43,7 +43,7 @@ const uploadSingle = async (req, res) => {
             throw Error();
         }
     }catch(err){
-        res.status(400).send({error: "Unable to upload file."});
+        res.status(400).json({error: "Unable to upload file."});
         console.log(err);
     }
 };
@@ -74,7 +74,7 @@ const uploadMultiple = async (req, res) => {
     try{
         console.log("Attempting to upload new files")
         if(req.files.length <= 0){
-            res.status(400).send("You must select at least 1 file");
+            res.status(400).json("You must select at least 1 file");
         }else{
             // Creates a document reference for each file 
         // These references are then saved to mongoDB
@@ -118,7 +118,7 @@ const uploadMultiple = async (req, res) => {
 
             await Document.insertMany(newFiles, (err, result) => {
                 if(err){
-                    res.status(400).send(err);
+                    res.status(400).json(err);
                 }else{
                     if(result){
                         res.status(200).json({
@@ -137,7 +137,7 @@ const uploadMultiple = async (req, res) => {
             // }else{
             //     await Document.insertMany(newFiles, (err, result) => {
             //         if(err){
-            //             res.status(400).send(err);
+            //             res.status(400).json(err);
             //         }else{
             //             if(result){
             //                 res.status(200).json({
@@ -154,7 +154,7 @@ const uploadMultiple = async (req, res) => {
 
         
     }catch(err){
-        res.status(400).send({error: "Unable to upload files."});
+        res.status(400).json({error: "Unable to upload files."});
         console.log(err);
     }
 };

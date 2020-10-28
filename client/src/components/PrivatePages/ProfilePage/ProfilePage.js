@@ -170,9 +170,7 @@ const ProfilePage = () => {
               <SkillsCard skills={user.skills} />
             </div>
             <div className={classes.section}>
-              <ReflectionCard />
-              <ReflectionCard />
-              <ReflectionCard />
+              <ReflectionCard type='medium'/>
             </div>
             <div className={classes.section}>
               <ProjectCard type={'large'} />

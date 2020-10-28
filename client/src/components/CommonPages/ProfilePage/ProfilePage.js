@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../../api/API';
 import { Link as RouterLink } from 'react-router-dom';
+import API from '../../../api/API';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -12,17 +12,22 @@ import {
   ListItemText,
   Typography,
 } from '@material-ui/core';
+
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import InfoIcon from '@material-ui/icons/Info';
 import FaceIcon from '@material-ui/icons/Face';
 import CreateIcon from '@material-ui/icons/Create';
-import CharacterCard from './CharacterInfo/PublicCharacterCard';
-import EducationCard from './EducationInfo/PublicEducationCard';
-import ExperienceCard from './ExperienceInfo/PublicExperienceCard';
-import SkillsCard from './SkillsInfo/PublicSkillsCard';
-import ReflectionCard from './ReflectionInfo/PublicReflectionCard';
-import ProjectCard from './ProjectInfo/PublicProjectCard';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import CharacterCard from './CharacterInfo/CharacterCard';
+import EducationCard from './EducationInfo/EducationCard';
+import ExperienceCard from './ExperienceInfo/ExperienceCard';
+import SkillsCard from './SkillsInfo/SkillsCard';
+import ReflectionCard from './ReflectionInfo/ReflectionCard';
+import ProjectCard from './ProjectInfo/ProjectCard';
+import Tutorial from '../../PrivatePages/Tutorial/Tutorial';
+import AboutCard from './AboutInfo/AboutCard';
+import EmptyCard from './EmptyCard/EmptyCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   navSection: {
     position: 'fixed',
     width: '25vw',
+    height: '100vh',
     marginTop: '1%',
     zIndex: '100',
   },
@@ -52,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     color: '#FFFFFF',
   },
+
   sectionContainer: {
     position: 'absolute',
     display: 'flex',
@@ -69,80 +76,81 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
-  card: {
-    margin: '0 0 1% 1%',
-    width: '100%',
-
-    padding: '5%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: { width: '100%' },
   icon: { fontSize: 80 },
 }));
 
 /* ================ Component ================ */
 
-const PublicProfilePage = ({ match, location }) => {
-  const {
-    params: { userId },
-  } = match;
-
+const ProfilePage = ({ isOwner = true, match }) => {
   // Styling
   const classes = useStyles();
   const [section, setSection] = useState(1);
 
   //Profile Information
-  //!! NEED TO MANAGE ERROR MESSAGE AT SOME POINT
+  //If public view a username is required from the url
+  const {
+    params: { userName },
+  } = match;
+
   const [user, setUser] = useState(null);
-  const [userExperience, setExperience] = useState(null);
   const [profileNotFound, setProfileNotFound] = useState(false);
   const [profilePrivate, setProfilePrivate] = useState(false);
+  const [owner, setOwner] = useState(isOwner);
 
   //Load user data
-
   useEffect(() => {
-    API.viewerGetProfile(userId)
-      .then(({ data }) => {
-        setUser(data);
-      })
-      .catch((err) => {
-        if (err.response.status === 404) {
-          console.log('Not Found');
-          setProfileNotFound(true);
-        } else if (err.response.status === 403) {
-          setProfilePrivate(true);
-        }
-      });
+    //Unauthorised API call if user is a public viewer
+    if (!owner) {
+      API.viewerGetProfile(userName)
+        .then(({ data }) => {
+          setUser(data);
+        })
+        .catch((err) => {
+          if (err.response.status === 404) {
+            console.log('Not Found');
+            setProfileNotFound(true);
+          } else if (err.response.status === 403) {
+            setProfilePrivate(true);
+          }
+        });
+    } else {
+      //Authorised API call if user logged in
+      API.getUserProfile()
+        .then(({ data }) => {
+          setUser(data);
+        })
+        .catch();
+    }
+  }, [userName]);
 
-    API.viewerGetAllExperience(userId)
-      .then(({ data }) => {
-        setExperience(data);
-      })
-      .catch();
-  }, [userId]);
-
-  const checkExperience = () => {
-    console.log(userExperience);
-    return (
-      userExperience.volunteering.length === 0 &&
-      userExperience.employment.length === 0 &&
-      userExperience.extracurricular.length === 0
-    );
+  //Functions to return UI for empty records
+  const getExperience = () => {
+    if (user.experience === undefined || user.experience.length === 0) {
+      return <EmptyCard name={user.firstName} prompt={'Experience'} />;
+    } else {
+      return <ExperienceCard experience={user.experience} editable={owner} />;
+    }
   };
 
-  const checkEducation = () => {
-    return user.education.length === 0;
+  const getEducation = () => {
+    if (user.education === undefined || user.experience.length === 0) {
+      return <EmptyCard name={user.firstName} prompt={'Education'} />;
+    } else {
+      return <EducationCard education={user.education} editable={owner} />;
+    }
   };
 
-  const checkSkills = () => {
-    return user.skills.length === 0;
+  const getSkills = () => {
+    console.log(user.skills);
+    if (user.skills === undefined || user.skills.length === 0) {
+      return <EmptyCard name={user.firstName} prompt={'Skills'} />;
+    } else {
+      return <SkillsCard skills={user.skills} editable={owner} />;
+    }
   };
 
+  //If profile hasn't been fetched yet
   var pageContent;
-
   if (profileNotFound) {
     pageContent = (
       <div>
@@ -168,19 +176,16 @@ const PublicProfilePage = ({ match, location }) => {
         </div>
       </div>
     );
-  } //If profile hasn't been fetched yet
-  else if (!(user && userExperience)) {
+  } else if (!user) {
     pageContent = (
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2'>Fetching this Portfolio</Typography>
+          <Typography variant='h2'>Fetching User Data</Typography>
         </div>
       </div>
     );
-  } //If username doesn't match existing profile
-  else {
-    // Profile content
+  } else {
     pageContent = (
       <div>
         <div className={classes.container}>
@@ -205,8 +210,15 @@ const PublicProfilePage = ({ match, location }) => {
                   </ListItemIcon>
                   <ListItemText primary='My Projects'></ListItemText>
                 </ListItem>
+                <ListItem button onClick={() => setSection(4)}>
+                  <ListItemIcon>
+                    <InfoIcon className={classes.navBarIcon} />
+                  </ListItemIcon>
+                  <ListItemText primary='About'></ListItemText>
+                </ListItem>
               </List>
             </Paper>
+            {owner && <Tutorial firstVisit={user.tutorial} />}
           </div>
 
           <div className={classes.sectionContainer}>
@@ -217,23 +229,10 @@ const PublicProfilePage = ({ match, location }) => {
               Placeholder section
             </div>
             <div className={classes.section}>
-              <CharacterCard user={user} globalClasses={classes} />
-
-              {!checkExperience() && (
-                <ExperienceCard
-                  experience={userExperience}
-                  globalClasses={classes}
-                />
-              )}
-              {!checkEducation() && (
-                <EducationCard
-                  education={user.education}
-                  globalClasses={classes}
-                />
-              )}
-              {!checkSkills() && (
-                <SkillsCard skills={user.skills} globalClasses={classes} />
-              )}
+              <CharacterCard user={user} editable={owner} />
+              {getExperience()}
+              {getEducation()}
+              {getSkills()}
             </div>
             <div className={classes.section}>
               <ReflectionCard />
@@ -246,6 +245,9 @@ const PublicProfilePage = ({ match, location }) => {
               <ProjectCard type={'small'} />
               <ProjectCard type={'medium'} />
             </div>
+            <div className={classes.section}>
+              <AboutCard about={user.aboutMe} editable={owner} />
+            </div>
           </div>
         </div>
       </div>
@@ -255,4 +257,4 @@ const PublicProfilePage = ({ match, location }) => {
   return pageContent;
 };
 
-export default PublicProfilePage;
+export default ProfilePage;

@@ -1,11 +1,10 @@
 import React from 'react';
-import { Switch, useHistory, Redirect, Link } from 'react-router-dom';
+import { Switch, useHistory, Redirect, Link, Route } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';
 import { logout } from '../../helpers/auth';
 import PrivateRoute from '../Routes/PrivateRoute';
-import ProfilePage from './ProfilePage/ProfilePage';
-import PublicProfilePage from '../PublicPages/ProfilePage/PublicProfilePage';
+import ProfilePage from '../CommonPages/ProfilePage/ProfilePage';
 import AccountPage from './AccountPage/AccountPage';
 import Background from '../../assets/Background/bkg-private.svg';
 
@@ -75,7 +74,10 @@ const PrivateLayout = ({ match }) => {
         <Switch>
           <PrivateRoute exact path='/myprofile' component={ProfilePage} />
           <PrivateRoute exact path='/myaccount' component={AccountPage} />
-          <PrivateRoute path='/view/:userId' component={PublicProfilePage} />
+          <Route
+            path='/view/:userId'
+            render={(props) => <ProfilePage {...props} isOwner={false} />}
+          />
           <PrivateRoute path='/'>
             <Redirect to='/myprofile' />
           </PrivateRoute>

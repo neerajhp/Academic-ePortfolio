@@ -1,22 +1,25 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import {
   Typography,
   Dialog,
   DialogContent,
-  DialogTitle, Button, IconButton, ButtonGroup,
+  DialogTitle,
+  Button,
+  IconButton,
+  ButtonGroup,
 } from '@material-ui/core';
 import ProjectForm from './ProjectForm';
 import API from '../../../../api/API';
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
-import Collapse from "@material-ui/core/Collapse";
-import FormatListBulletedIcon from "@material-ui/icons/List";
-import BackupIcon from "@material-ui/icons/Backup";
-import DeleteIcon from "@material-ui/icons/Delete";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import AboutForm from "../AboutInfo/AboutForm";
-import axios from "axios";
+import Collapse from '@material-ui/core/Collapse';
+import FormatListBulletedIcon from '@material-ui/icons/List';
+import BackupIcon from '@material-ui/icons/Backup';
+import DeleteIcon from '@material-ui/icons/Delete';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import AboutForm from '../AboutInfo/AboutForm';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProjectDialog = ({ records, setRecords, empty}) => {
+const ProjectDialog = ({ records, setRecords, empty }) => {
   const classes = useStyles();
   const inputEl = useRef(null);
   const [open, setOpen] = React.useState(false);
@@ -79,10 +82,10 @@ const ProjectDialog = ({ records, setRecords, empty}) => {
     API.removeFeaturedWork(recordID).then((result) => {
       if (result.status === 200) {
         API.getAllFeaturedWorks()
-            .then(({ data }) => {
-              setRecords(data);
-            })
-            .catch();
+          .then(({ data }) => {
+            setRecords(data);
+          })
+          .catch();
       }
     });
   };
@@ -94,7 +97,7 @@ const ProjectDialog = ({ records, setRecords, empty}) => {
     return <Typography> Add your project!</Typography>;
   };
 
-//file function
+  //file function
   const handleChoseFile = (e) => {
     e.preventDefault();
     const file = e.target.files;
@@ -106,20 +109,20 @@ const ProjectDialog = ({ records, setRecords, empty}) => {
       for (const key in file) {
         if (file.hasOwnProperty(key)) {
           const item = file[key];
-          param.append("document", item);
+          param.append('document', item);
         }
       }
       axios({
-        method: "post",
-        url: "/api/upload/files",
+        method: 'post',
+        url: '/api/upload/files',
         data: param,
         headers: {
-          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
         },
-        responseType: "blob",
+        responseType: 'blob',
       }).then((result) => {});
     } else {
-      alert("the max number is 5");
+      alert('the max number is 5');
     }
   };
 
@@ -141,7 +144,7 @@ const ProjectDialog = ({ records, setRecords, empty}) => {
       }
     });
   };
-//getAllFeatureWork instead of getAboutMe
+  //getAllFeatureWork instead of getAboutMe
   const handleClose = () => {
     API.getAboutMe().then(({ data }) => {
       setRecords(data);
@@ -150,38 +153,35 @@ const ProjectDialog = ({ records, setRecords, empty}) => {
   };
 
   const openButton = empty ? (
-      <Button onClick={handleOpen} className={classes.newButton}>
-        <Typography variant='h2'>
-          <AddIcon /> Add Project
-        </Typography>
-      </Button>
+    <Button onClick={handleOpen} className={classes.newButton}>
+      <Typography variant='h2'>
+        <AddIcon /> Add Project
+      </Typography>
+    </Button>
   ) : (
-      <IconButton onClick={handleOpen}>
-        <EditIcon />
-      </IconButton>
+    <IconButton onClick={handleOpen}>
+      <EditIcon />
+    </IconButton>
   );
 
-
   return (
-      <React.Fragment>
-        {openButton}
-        <Dialog
-            fullWidth={true}
-            maxWidth={'md'}
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='form-dialog-title'
-            className={classes.dialog}
-        >
-          <DialogContent>
-            <ProjectForm
-                records={records}
-                setRecords={setRecords}
-                handleClose={handleClose}
-            />
-          </DialogContent>
-        </Dialog>
-      </React.Fragment>
+    <React.Fragment>
+      {openButton}
+      <Dialog
+        fullWidth={true}
+        maxWidth={'md'}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='form-dialog-title'
+        className={classes.dialog}
+      >
+        <ProjectForm
+          records={records}
+          setRecords={setRecords}
+          handleClose={handleClose}
+        />
+      </Dialog>
+    </React.Fragment>
   );
 };
 

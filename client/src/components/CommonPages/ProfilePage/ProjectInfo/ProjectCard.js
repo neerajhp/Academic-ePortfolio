@@ -14,6 +14,7 @@ import axios from 'axios';
 import API from '../../../../api/API';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ProjectDialog from './ProjectDialog';
+import serialize from '../../../utils/serializer';
 
 /* ================ Styling ================ */
 
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     marginLeft: '5%',
-    color: 'white !important ',
+    display: 'block',
   },
 
   upload: {
@@ -98,71 +99,8 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 const ProjectCard = ({ content }) => {
   const classes = useStyles();
-  const inputEl = useRef(null);
-  const [allFiles, setAllFiles] = useState([]);
-  const [allId, setAllId] = useState([]);
-  const [checked, setChecked] = React.useState(false);
 
-  console.log(content);
-
-  const handleChoseFile = (e) => {
-    e.preventDefault();
-    const file = e.target.files;
-    if (!file.length) {
-      return false;
-    }
-    if (file.length < 6) {
-      let param = new FormData();
-      for (const key in file) {
-        if (file.hasOwnProperty(key)) {
-          const item = file[key];
-          param.append('document', item);
-        }
-      }
-      axios({
-        method: 'post',
-        url: '/api/upload/files',
-        data: param,
-        headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
-        },
-        responseType: 'blob',
-      }).then((result) => {});
-    } else {
-      alert('the max number is 5');
-    }
-  };
-
-  const onFinish = () => {
-    API.getAllFiles().then((result) => {
-      if (result.status === 200) {
-        setAllFiles(result.data);
-      }
-    });
-  };
-
-  const onIdFinish = () => {
-    // test data
-    // ['url1','url2','url3','url4']
-    API.getAllFiles().then((result) => {
-      if (result.status === 200) {
-        setAllId(result.data);
-        console.log(123, allFiles);
-      }
-    });
-  };
-
-  const handleDel = (recordID) => {
-    API.removeFeaturedWork(recordID).then((result) => {
-      if (result.status === 200) {
-        console.log(123);
-      }
-    });
-  };
-
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
+  const [record, setRecord] = useState(content);
 
   return (
     <Accordion className={classes.card}>
@@ -170,14 +108,32 @@ const ProjectCard = ({ content }) => {
         expandIcon={<ExpandMoreIcon />}
         className={classes.summary}
       >
-        <Typography variant='h2'>{content.title}</Typography>
+        <Typography variant='h2'>{record.title}</Typography>
       </AccordionSummary>
-      <AccordionDetails className={classes.details}>
-        {content.description}
+      <AccordionDetails className={classes.description}>
+        {serialize(record.description)}
       </AccordionDetails>
-      <ProjectDialog empty={false} project={content} />
+      <ProjectDialog empty={false} project={record} setProject={setRecord} />
     </Accordion>
   );
 };
+
+const InitialValue = [
+  {
+    type: 'paragraph',
+    children: [
+      { text: 'body.description. ', bold: true },
+      { text: 'Apppp. ' },
+      { text: 'badfakcje', underlined: true },
+    ],
+  },
+  { type: 'paragraph', children: [{ text: '', underlined: true }] },
+  { type: 'paragraph', children: [{ text: 'adscaeca.', underlined: true }] },
+  { type: 'paragraph', children: [{ text: '', underlined: true }] },
+  {
+    type: 'bulleted-list',
+    children: [{ type: 'list-item', children: [{ text: 'asdcaec' }] }],
+  },
+];
 
 export default ProjectCard;

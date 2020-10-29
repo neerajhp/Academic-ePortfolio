@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProjectDialog = ({ project, empty }) => {
+const ProjectDialog = ({ project, updateProfile, empty }) => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
@@ -76,7 +76,12 @@ const ProjectDialog = ({ project, empty }) => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    API.getUserProfile()
+      .then(({ data }) => {
+        updateProfile(data);
+        setOpen(false);
+      })
+      .catch();
   };
 
   const openButton = empty ? (
@@ -98,6 +103,7 @@ const ProjectDialog = ({ project, empty }) => {
         fullWidth={true}
         maxWidth={'md'}
         open={open}
+        scroll={'paper'}
         onClose={handleClose}
         className={classes.dialog}
         aria-labelledby='form-dialog-title'
@@ -105,9 +111,12 @@ const ProjectDialog = ({ project, empty }) => {
         <DialogTitle disableTypography>
           <Typography variant='h2'>Edit Project</Typography>
         </DialogTitle>
-        <DialogContent>
-          <ProjectForm records={project} handleClose={handleClose} />
-        </DialogContent>
+
+        <ProjectForm
+          records={project}
+          handleClose={handleClose}
+          newWork={empty}
+        />
       </Dialog>
     </React.Fragment>
   );

@@ -5,6 +5,11 @@ import {
   MaterialEditable,
   createMaterialEditor,
   Toolbar,
+  BoldButton,
+  ItalicButton,
+  UnderlinedButton,
+  BulletedListButton,
+  NumberedListButton,
 } from '@unicef/material-slate';
 
 export default function RTE({ defaultValue, setValue }) {
@@ -17,7 +22,13 @@ export default function RTE({ defaultValue, setValue }) {
       value={defaultValue}
       onChange={(newValue) => setValue(newValue)}
     >
-      <Toolbar />
+      <Toolbar>
+        <BoldButton />
+        <ItalicButton />
+        <UnderlinedButton />
+        <BulletedListButton />
+        <NumberedListButton />
+      </Toolbar>
       <MaterialEditable />
     </MaterialSlate>
   );

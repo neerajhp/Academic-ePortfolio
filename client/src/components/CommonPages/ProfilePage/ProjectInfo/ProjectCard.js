@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const ProjectCard = ({ content }) => {
+const ProjectCard = ({ content, updateProfile }) => {
   const classes = useStyles();
 
   const [record, setRecord] = useState(content);
@@ -113,27 +113,13 @@ const ProjectCard = ({ content }) => {
       <AccordionDetails className={classes.description}>
         {serialize(record.description)}
       </AccordionDetails>
-      <ProjectDialog empty={false} project={record} setProject={setRecord} />
+      <ProjectDialog
+        empty={false}
+        project={record}
+        updateProfile={updateProfile}
+      />
     </Accordion>
   );
 };
-
-const InitialValue = [
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'body.description. ', bold: true },
-      { text: 'Apppp. ' },
-      { text: 'badfakcje', underlined: true },
-    ],
-  },
-  { type: 'paragraph', children: [{ text: '', underlined: true }] },
-  { type: 'paragraph', children: [{ text: 'adscaeca.', underlined: true }] },
-  { type: 'paragraph', children: [{ text: '', underlined: true }] },
-  {
-    type: 'bulleted-list',
-    children: [{ type: 'list-item', children: [{ text: 'asdcaec' }] }],
-  },
-];
 
 export default ProjectCard;

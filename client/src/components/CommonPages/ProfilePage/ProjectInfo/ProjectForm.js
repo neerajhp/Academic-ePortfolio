@@ -143,6 +143,15 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
               <div className={classes.buttonWrapper}>
                 <Button
                   className={classes.button}
+                  onClick={() => console.log('Delete')}
+                  color='primary'
+                >
+                  <Typography>Delete</Typography>
+                </Button>
+              </div>
+              <div className={classes.buttonWrapper}>
+                <Button
+                  className={classes.button}
                   onClick={() => handleClose()}
                   color='primary'
                 >

@@ -1,54 +1,45 @@
 import React, { useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Typography } from '@material-ui/core';
+import {
+  Paper,
+  Typography,
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Divider,
+} from '@material-ui/core';
 import axios from 'axios';
 import API from '../../../../api/API';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ProjectDialog from './ProjectDialog';
-import BackupIcon from '@material-ui/icons/Backup';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import { ButtonGroup, Button } from '@material-ui/core';
-import mediumProjectPic from '../../../../assets/ProjectPic/mediumProPic.png';
-import smallProjectPic from '../../../../assets/ProjectPic/smallProPic.png';
-import Switch from '@material-ui/core/Switch';
-import Collapse from '@material-ui/core/Collapse';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 /* ================ Styling ================ */
 
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: '0 0 1% 1%',
-    background: theme.palette.primary.light,
-    color: theme.palette.text.secondary,
-
-    padding: '5%',
-    display: 'inline',
-
-    //alignItems: "center",
-    justifyContent: 'flex-start',
-    position: 'relative',
+    width: '100%',
+    height: 'fit-content',
+    '&.Mui-expanded': {
+      margin: '1%',
+      height: 'fit-content',
+    },
+  },
+  summary: {
+    '& .MuiAccordionSummary-content': {
+      margin: `${theme.spacing(4)}px 0`,
+      '& .Mui-expanded': {
+        margin: `${theme.spacing(4)}px 0`,
+      },
+    },
   },
   description: {
     marginLeft: '5%',
     color: 'white !important ',
   },
-  large: {
-    background: theme.palette.secondary.light,
 
-    width: '100%',
-    height: 'auto',
-  },
-  medium: {
-    alignItems: 'center',
-    width: '100%',
-    height: 'auto',
-  },
-  small: {
-    alignItems: 'center',
-    width: '49%',
-    height: 'auto',
-  },
   upload: {
     position: 'absolute',
     bottom: 40,
@@ -105,28 +96,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const ProjectCard = ({ type, project }) => {
+const ProjectCard = ({ content }) => {
   const classes = useStyles();
   const inputEl = useRef(null);
   const [allFiles, setAllFiles] = useState([]);
   const [allId, setAllId] = useState([]);
   const [checked, setChecked] = React.useState(false);
-  //Default  card size is large
-  var cardSize;
 
-  switch (type) {
-    case 'large':
-      cardSize = classes.large;
-      break;
-    case 'medium':
-      cardSize = classes.medium;
-      break;
-    case 'small':
-      cardSize = classes.small;
-      break;
-    default:
-      cardSize = classes.large;
-  }
+  console.log(content);
 
   const handleChoseFile = (e) => {
     e.preventDefault();
@@ -187,160 +164,19 @@ const ProjectCard = ({ type, project }) => {
     setChecked((prev) => !prev);
   };
 
-  const getRecord = () => {
-    return <Typography> Add your project!</Typography>;
-  };
-
-  const [records, setRecords] = useState(project);
-
   return (
-    <Paper className={`${classes.card}  ${cardSize}`}>
-      <div className={classes.bio}>
-        {type === 'small' && (
-          <>
-            <Typography className={classes.titleLarge} variant='h6'>
-              Small Project
-            </Typography>
-
-            <FormControlLabel
-              control={<Switch checked={checked} onChange={handleChange} />}
-              label='Show'
-            />
-            <div className={classes.container}>
-              <Collapse in={checked}>
-                <img
-                  alt='smallPic'
-                  src={smallProjectPic}
-                  className={classes.pic}
-                />
-                <Typography>This is the project description</Typography>
-                <input
-                  className={classes.hidden}
-                  type='file'
-                  ref={inputEl}
-                  accept='.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx'
-                  multiple
-                  onChange={handleChoseFile}
-                />
-                {getRecord(records)}
-                {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-                {/* <ProjectDialog records={records} setRecords={setRecords} />*/}
-                <div className={classes.upload}>
-                  <ButtonGroup>
-                    <Button>
-                      <ProjectDialog
-                        records={records}
-                        setRecords={setRecords}
-                      />
-                    </Button>
-                    <Button onClick={() => inputEl.current.click()}>
-                      <BackupIcon />
-                    </Button>
-                    <Button onClick={() => handleDel(records?.recordID)}>
-                      <DeleteIcon />
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </Collapse>
-            </div>
-          </>
-        )}
-        {type === 'medium' && (
-          <>
-            <Typography className={classes.titleLarge} variant='h6'>
-              Medium Project
-            </Typography>
-            <FormControlLabel
-              control={<Switch checked={checked} onChange={handleChange} />}
-              label='Show'
-            />
-            <div className={classes.container}>
-              <Collapse in={checked}>
-                <img
-                  alt='mediumPic'
-                  src={mediumProjectPic}
-                  className={classes.pic}
-                />
-
-                <Typography>This is the project description</Typography>
-                <input
-                  className={classes.hidden}
-                  type='file'
-                  ref={inputEl}
-                  accept='.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx'
-                  multiple
-                  onChange={handleChoseFile}
-                />
-                {getRecord(records)}
-                {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-                {/* <ProjectDialog records={records} setRecords={setRecords} /> */}
-                <div className={classes.upload}>
-                  <ButtonGroup>
-                    <Button>
-                      <ProjectDialog
-                        records={records}
-                        setRecords={setRecords}
-                      />
-                    </Button>
-                    <Button onClick={() => inputEl.current.click()}>
-                      <BackupIcon />
-                    </Button>
-                    <Button onClick={() => handleDel(records?.recordID)}>
-                      <DeleteIcon />
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </Collapse>
-            </div>
-          </>
-        )}
-        {type === 'large' && (
-          <>
-            <Typography className={classes.titleLarge} variant='h1'>
-              Showcase
-            </Typography>
-
-            <div style={{ marginTop: 70 }}>
-              <Typography
-                onClick={() => onFinish()}
-                className={classes.fileTitle}
-                variant='h4'
-              >
-                Click here to see Uploaded Files
-              </Typography>
-              <div className={classes.fileList}>
-                {allFiles.map((item) => (
-                  <div className={classes.fileItem} key={item.id}>
-                    <AssignmentIcon style={{ fontSize: 60 }} />
-
-                    <div>
-                      {item.s3_key.replace(`user-${item.user_id}/`, '')}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{ marginTop: 50 }}>
-              <Typography
-                onClick={() => onIdFinish()}
-                className={classes.fileTitle}
-                variant='h4'
-              >
-                Click here and Choose to Download Uploaded Files
-              </Typography>
-              {allId &&
-                allId.map((item) => (
-                  <div key={item._id}>
-                    <a className={classes.fileLink} href={item.fileLink}>
-                      {item.s3_key}
-                    </a>
-                  </div>
-                ))}
-            </div>
-          </>
-        )}
-      </div>
-    </Paper>
+    <Accordion className={classes.card}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        className={classes.summary}
+      >
+        <Typography variant='h2'>{content.title}</Typography>
+      </AccordionSummary>
+      <AccordionDetails className={classes.details}>
+        {content.description}
+      </AccordionDetails>
+      <ProjectDialog empty={false} project={content} />
+    </Accordion>
   );
 };
 

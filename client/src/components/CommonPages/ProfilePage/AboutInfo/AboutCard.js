@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import API from '../../../../api/API';
 import AboutDialog from './AboutDialog';
 
 const useStyles = makeStyles((theme) => ({

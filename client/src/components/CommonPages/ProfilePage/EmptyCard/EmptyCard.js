@@ -47,10 +47,6 @@ const useStyles = makeStyles((theme) => ({
 const EmptyCard = ({ name, prompt }) => {
   const classes = useStyles();
 
-  function capitaliseFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   return (
     <Paper className={classes.card}>
       <Typography className={classes.title} variant='h2'>

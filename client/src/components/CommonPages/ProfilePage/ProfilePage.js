@@ -25,6 +25,7 @@ import ExperienceCard from './ExperienceInfo/ExperienceCard';
 import SkillsCard from './SkillsInfo/SkillsCard';
 import ReflectionCard from './ReflectionInfo/ReflectionCard';
 import ProjectCard from './ProjectInfo/ProjectCard';
+import ProjectDialog from './ProjectInfo/ProjectDialog';
 import Tutorial from '../../PrivatePages/Tutorial/Tutorial';
 import AboutCard from './AboutInfo/AboutCard';
 import EmptyCard from './EmptyCard/EmptyCard';
@@ -68,11 +69,11 @@ const useStyles = makeStyles((theme) => ({
   section: {
     width: '100vw',
     minHeight: '100vh',
-    display: 'flex',
+
     flexGrow: 1,
     paddingLeft: '25vw',
-    paddingRight: '0.5em',
-    flexFlow: 'row wrap',
+    paddingRight: '1.5em',
+
     alignItems: 'stretch',
     transition: 'all 700ms',
   },
@@ -125,7 +126,10 @@ const ProfilePage = ({ isOwner = true, match }) => {
 
   //Functions to return UI for empty records
   const getExperience = () => {
-    if (user.experience === undefined || user.experience.length === 0) {
+    if (
+      !isOwner &&
+      (user.experience === undefined || user.experience.length === 0)
+    ) {
       return <EmptyCard name={user.firstName} prompt={'Experience'} />;
     } else {
       return <ExperienceCard experience={user.experience} editable={owner} />;
@@ -133,7 +137,10 @@ const ProfilePage = ({ isOwner = true, match }) => {
   };
 
   const getEducation = () => {
-    if (user.education === undefined || user.experience.length === 0) {
+    if (
+      !isOwner &&
+      (user.education === undefined || user.experience.length === 0)
+    ) {
       return <EmptyCard name={user.firstName} prompt={'Education'} />;
     } else {
       return <EducationCard education={user.education} editable={owner} />;
@@ -141,11 +148,33 @@ const ProfilePage = ({ isOwner = true, match }) => {
   };
 
   const getSkills = () => {
-    console.log(user.skills);
-    if (user.skills === undefined || user.skills.length === 0) {
+    if (!isOwner && (user.skills === undefined || user.skills.length === 0)) {
       return <EmptyCard name={user.firstName} prompt={'Skills'} />;
     } else {
       return <SkillsCard skills={user.skills} editable={owner} />;
+    }
+  };
+
+  const getProjects = () => {
+    if (
+      !isOwner &&
+      (user.showcase === undefined || user.showcase.length === 0)
+    ) {
+      return <EmptyCard name={user.firstName} prompt={'Project'} />;
+    } else {
+      return (
+        <React.Fragment>
+          {user.showcase.map((project, i) => (
+            <React.Fragment key={i}>
+              <ProjectCard content={project} editable={owner} />
+            </React.Fragment>
+          ))}
+          <ProjectDialog
+            empty={true}
+            project={{ title: '', description: '' }}
+          />
+        </React.Fragment>
+      );
     }
   };
 
@@ -239,12 +268,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
               <ReflectionCard />
               <ReflectionCard />
             </div>
-            <div className={classes.section}>
-              <ProjectCard type={'large'} />
-              <ProjectCard type={'small'} />
-              <ProjectCard type={'small'} />
-              <ProjectCard type={'medium'} />
-            </div>
+            <div className={classes.section}>{getProjects()}</div>
             <div className={classes.section}>
               <AboutCard about={user.aboutMe} editable={owner} />
             </div>

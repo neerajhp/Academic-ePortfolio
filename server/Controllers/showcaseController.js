@@ -46,43 +46,84 @@ const createFeaturedWork = async (req, res) => {
         if(result){
             res.status(400).json("A project with the same title already exists");
             return;
+        }else{
+            if(req.file){
+                (async () => {
+                    let savedFile;
+                    let uploadedFile = await uploadController.saveFile(req);
+                    console.log(uploadedFile);
+                    if(uploadedFile){
+                        savedFile = {
+                            documentID: uploadedFile._id,
+                            fileLink: uploadedFile.fileLink
+                        }
+                        console.log(savedFile);
+                        featuredWork["attachedFile"] = savedFile;
+                    }else{
+                        console.log("fuck");
+                    }
+                    
+                    featuredWork.save((err, result) => {
+                        if(err){
+                            throw err;
+                        }else{
+                            res.status(200).json(result);
+                        }
+                    })
+                })();
+                // let uploadedFile = uploadController.saveFile(req);
+                // uploadedFile.then(async (response) => {
+                //     console.log(response)
+                //     if(response){
+                //         savedFile = {
+                //             documentID: response._id,
+                //             fileLink: response.fileLink
+                //         }
+                //         console.log(savedFile);
+                //         featuredWork[attachedFile] = savedFile;
+                //     }else{
+                //         console.log("Ah shit here we go again");
+                //     }
+
+                //     await featuredWork.save((err, result) => {
+                //         if(err){
+                //             throw err;
+                //         }else{
+                //             res.status(200).json(result);
+                //         }
+                //     })
+                // });
+
+            }
         }
     });
 
-    (async () => {
-        if(req.file){
-            let savedFile;
-            let uploadedFile = await uploadController.saveFile(req);
-            if(uploadedFile){
-                savedFile = {
-                    documentID: uploadedFile._id,
-                    fileLink: uploadedFile.fileLink
-                }
-                featuredWork[attachedFile] = savedFile;
-                console.log("saved file added to featured work");
-            }
-        }
+    // (async () => {
+    //     if(req.file){
+    //         let savedFile;
+    //         const uploadedFile = await uploadController.saveFile(req);
+    //         if(uploadedFile){
+    //             savedFile = {
+    //                 documentID: uploadedFile._id,
+    //                 fileLink: uploadedFile.fileLink
+    //             }
+    //             featuredWork[attachedFile] = savedFile;
+    //             console.log("saved file added to featured work");
+    //         }else{
+    //             console.log("Somehow no saved file");
+    //         }
+    //     }
 
-        featuredWork.save((err, result) => {
-            if(err){
-                throw err;
-            }else{
-                res.status(200).json(result);
-            }
-        });
-    })();
+    //     console.log("Time to save featured work");
+    //     featuredWork.save((err, result) => {
+    //         if(err){
+    //             throw err;
+    //         }else{
+    //             res.status(200).json(result);
+    //         }
+    //     });
+    // })();
 }
-
-    // featuredWork.save((err, result) => {
-    //     if(err){
-    //         throw err;
-    //     }
-    //     if(result){
-    //         res.status(200).json(result);
-    //     }else{
-    //         res.status(400).json("Failed to save featured work");
-    //     }
-    // })
 
 
 

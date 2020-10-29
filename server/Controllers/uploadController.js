@@ -49,38 +49,44 @@ const uploadSingle = async (req, res) => {
 };
 
 const saveFile = async (req) => {
-    //const saveStatus = false;
-    if(req.file){
-        var newFile = new Document({
-            user_id: req.user.id,
-            fieldName: req.file.fieldname,
-            fileType: req.file.mimetype,
-            fileLink: req.file.location,
-            s3_key: `user-${req.user.id}/${req.file.originalname}`,
-        });
+    let savedFile;
+    
+    var newFile = new Document({
+        user_id: req.user.id,
+        fieldName: req.file.fieldname,
+        fileType: req.file.mimetype,
+        fileLink: req.file.location,
+        s3_key: `user-${req.user.id}/${req.file.originalname}`,
+    });
 
+    (async () => {
         await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
+            console.log("Looking for file");
             if(err){
                 throw err;
-            }else{
-                if(result){
-                    return null;
-                }else{
-                    console.log(newFile);
-                    newFile.save((err, result) => {
-                        if(err){
-                            throw err;
-                        }else{
-                            console.log("File to be saved");
-                            return result;
-                        }
-                    });
-                }
             }
+            if(result){
+                console.log("Document already exists");
+                savedFile = null;
+            }else{
+                console.log("abt to save");
+                
+                newFile.save((err, result) => {
+                    if(err){
+                        throw err;
+                    }else{
+                        console.log(result);
+                        savedFile = result;
+                    }
+                });
+            }
+            // console.log("I'm abt to return " + savedFile);
+            // return savedFile;
         });
-    }
-
-    return null;
+        
+        console.log("I'm abt to return " + savedFile)
+        return savedFile;
+    })();
     
 }
 

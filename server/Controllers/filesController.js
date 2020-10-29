@@ -271,14 +271,23 @@ const deleteMultiple = async (req, res, next) => {
 // I don't think users should be able to access this unless they want to delete their profile
 const deleteAllFiles = async (req, res) => {
     try{
-        let result = await clearFiles(req.user.id);
-        console.log(result);
-        if(result){
-            console.log("Files have been deleted");
-            res.status(200).json("All files have been deleted");
-        }else{
-            res.status(400).json("No files were found");
-        }
+        let result = clearFiles(req.user.id);
+        result.then(async (result) => {
+            if(result){
+                console.log("Files have been deleted");
+                res.status(200).json("All files have been deleted");
+            }else{
+                res.status(400).json("No files were found");
+            }
+        })
+        // let result = await clearFiles(req.user.id);
+        // console.log(result);
+        // if(result){
+        //     console.log("Files have been deleted");
+        //     res.status(200).json("All files have been deleted");
+        // }else{
+        //     res.status(400).json("No files were found");
+        // }
     }catch(err){
         res.status(400).json("Files were not deleted");
     }

@@ -103,13 +103,14 @@ const viewerGetProfile = async (req, res) => {
 // Gets the user's profile
 const getProfile = async (req, res) => {
   try {
-    let profile = await getAllInfo(req.user.id);
-    if (profile) {
-      //console.log(profile);
-      res.status(200).json(profile);
-    } else {
-      res.status(400).json('No profile found');
-    }
+    let profile = getAllInfo(req.user.id);
+    profile.then(async (result) => {
+      if(result){
+        res.status(200).json(result);
+      }else{
+        res.status(404).json('No profile found');
+      }
+    })
   } catch (error) {
     res.status(400).json(error);
   }

@@ -62,7 +62,7 @@ const fileUpload = multer({
     limits: {fileSize: maxFileSize}
 })
 
-// Allows the upload of pdf or jpeg
+// Allows the upload of pdf or docx
 const documentUpload = multer({
     // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
     storage: createStorage,

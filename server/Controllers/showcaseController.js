@@ -30,12 +30,25 @@ const initShowcase = async (req, res) => {
 }
 
 const createFeaturedWork = async (req, res) => {
+    let uploadedFile;
+    let savedFile;
+    if(req.file){
+        uploadedFile = uploadController.saveFile(req.file);
+        uploadedFile.then(async (result) => {
+            if(result != null){
+                savedFile = {
+                    documentID: uploadedFile._id,
+                    fileLink: uploadedFile.fileLink
+                }
+            }
+        });
+    }
     const featuredWork = new FeaturedWork({
         user_id: req.user.id,
         title: req.body.title,
         type: req.body.type,
         description: req.body.description,
-        attachedFiles: req.body.attachedFiles,
+        attachedFile: savedFile,
         image: req.body.image,
         url: req.body.url
     });
@@ -59,6 +72,7 @@ const createFeaturedWork = async (req, res) => {
         }
     });
 }
+
 
 const addFiles = async (req, res) => {
     try{

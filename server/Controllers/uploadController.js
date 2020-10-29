@@ -48,6 +48,42 @@ const uploadSingle = async (req, res) => {
     }
 };
 
+const saveFile = async (req) => {
+    //const saveStatus = false;
+    if(req.file){
+        var newFile = new Document({
+            user_id: req.user.id,
+            fieldName: req.file.fieldname,
+            fileType: req.file.mimetype,
+            fileLink: req.file.location,
+            s3_key: `user-${req.user.id}/${req.file.originalname}`,
+        });
+
+        await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
+            if(err){
+                throw err;
+            }else{
+                if(result){
+                    return null;
+                }else{
+                    console.log(newFile);
+                    newFile.save((err, result) => {
+                        if(err){
+                            throw err;
+                        }else{
+                            console.log("File to be saved");
+                            return result;
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    return null;
+    
+}
+
 // Upload cv API
 const uploadCV = async (req, res) => {
     await filesController.deleteExclusiveFile(req.user.id, "cv");
@@ -164,5 +200,6 @@ module.exports = {
     uploadSingle,
     uploadMultiple,
     uploadCV,
-    uploadProfilePic
+    uploadProfilePic,
+    saveFile
 };

@@ -3,7 +3,9 @@ const router = express.Router();
 
 const profileController = require("../Controllers/profileController");
 const showcaseController = require("../Controllers/showcaseController");
+const uploadController = require("../Controllers/uploadController");
 const eduController = require("../Controllers/eduController");
+const parse = require("../Middleware/upload");
 
 const { authenticateToken } = require("../Middleware/authenticate");
 
@@ -55,7 +57,19 @@ router.delete("/skills", profileController.removeSkills);
 
 // Showcase tab
 
-router.post("/featured-work", showcaseController.createFeaturedWork);
+// Handles a single document upload (pdf, docx)
+const singleFile = parse.documentUpload.single("document");
+router.post("/featured-work", (req, res) => {
+    singleFile(req, res, (err) => {
+        if(err){
+            console.log(err);
+        }else{
+            //await uploadController.uploadSingle(req, res);
+            showcaseController.createFeaturedWork(req, res);
+        }
+
+    })
+});
 
 // Gets all of the users' featured works
 router.get("/featured-work", showcaseController.getAllFeaturedWorks);

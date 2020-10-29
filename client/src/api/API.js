@@ -232,11 +232,11 @@ export default {
       title: body.title,
       type: body.type,
       description: body.description,
-      // attachedFile: {
-      //      documentID: "5f10kjipmd"
-      //      fileLink: "http/:www.random.com/"
-      //  }
-      attachedFile: body.attachedFile,
+      // // attachedFile: {
+      // //      documentID: "5f10kjipmd"
+      // //      fileLink: "http/:www.random.com/"
+      // //  }
+      // attachedFile: body.attachedFile,
       image: body.image,
       url: body.url,
     });

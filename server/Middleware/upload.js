@@ -56,7 +56,7 @@ const fileUpload = multer({
             cb(null, true);
         }else{
             cb(null, false);
-            return cb(new Error("Only .pdf, .docx, .mp4 are allowed"));
+            return cb(new Error("Only .pdf, .docx, .mp4, .png and .jpeg are allowed"));
         }
     },
     limits: {fileSize: maxFileSize}

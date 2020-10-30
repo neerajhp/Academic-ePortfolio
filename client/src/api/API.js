@@ -255,9 +255,21 @@ export default {
       title: body.title,
       type: body.type,
       description: body.description,
-      attachedFile: body.attachedFile,
-      image: body.image,
+      //attachedFile: body.attachedFile,
+      //image: body.image,
       url: body.url,
+    });
+  },
+  // Attach a file to a featured work
+  attachFilesFeaturedWork: function (body, recordID) {
+    return axios.put(`api/profile/featured-work/${recordID}`, {
+      // Idk if I'm doing this right
+      files: body.files
+    });
+  },
+  removeAttachedFilesFeaturedWork: function (body, recordID){
+    return axios.delete(`api/profile/featured-work/${recordID}`, {
+      attachedFiles: body.attacheFiles
     });
   },
   // Removes a specific featured work

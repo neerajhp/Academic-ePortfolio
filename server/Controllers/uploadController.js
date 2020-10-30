@@ -50,6 +50,7 @@ const uploadSingle = async (req, res) => {
 
 const saveFile = async (req) => {
     let savedFile;
+    let savedStatus = false;
     
     var newFile = new Document({
         user_id: req.user.id,
@@ -60,6 +61,7 @@ const saveFile = async (req) => {
     });
 
     await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
+        let savedFile;
         console.log("Looking for file");
         if(err){
             throw err;
@@ -67,52 +69,31 @@ const saveFile = async (req) => {
         if(result){
             console.log("Document already exists");
             savedFile = null;
+            savedStatus = false;
+            // return savedFile;
+            //return null;
         }else{
             console.log("abt to save");
-            savedFile = newFile.save();
+            savedStatus = true;
             // newFile.save((err, result) => {
             //     if(err){
             //         throw err;
             //     }else{
-            //         console.log(result);
+            //         console.log("File saved");
             //         savedFile = result;
             //     }
-            // })
+            // });
         }
     });
 
+    if(savedStatus){
+        savedFile = await newFile.save()
+    }else{
+        savedFile = null;
+    }
+
     console.log("I'm abt to return " + savedFile)
     return savedFile
-
-    // (async () => {
-    //     let savedFile;
-    //     await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
-    //         console.log("Looking for file");
-    //         if(err){
-    //             throw err;
-    //         }
-    //         if(result){
-    //             console.log("Document already exists");
-    //             savedFile = null;
-    //         }else{
-    //             console.log("abt to save");
-                
-    //             newFile.save((err, result) => {
-    //                 if(err){
-    //                     throw err;
-    //                 }else{
-    //                     console.log(result);
-    //                     savedFile = result;
-    //                 }
-    //             });
-    //         }
-    //         // console.log("I'm abt to return " + savedFile);
-    //         // return savedFile;
-    //     });
-        
-    //     console.log("I'm abt to return " + savedFile)
-    //     return savedFile;
-    // })();
     
 }
 

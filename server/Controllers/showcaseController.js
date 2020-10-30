@@ -34,7 +34,6 @@ const createFeaturedWork = async (req, res) => {
         title: req.body.title,
         type: req.body.type,
         description: req.body.description,
-        //attachedFile: savedFile,
         image: req.body.image,
         url: req.body.url
     })
@@ -58,7 +57,7 @@ const createFeaturedWork = async (req, res) => {
                             fileLink: uploadedFile.fileLink
                         }
                         console.log(savedFile);
-                        featuredWork["attachedFile"] = savedFile;
+                        featuredWork["attachedFiles"].push(savedFile);
                     }else{
                         console.log("fuck");
                     }
@@ -71,58 +70,18 @@ const createFeaturedWork = async (req, res) => {
                         }
                     })
                 })();
-                // let uploadedFile = uploadController.saveFile(req);
-                // uploadedFile.then(async (response) => {
-                //     console.log(response)
-                //     if(response){
-                //         savedFile = {
-                //             documentID: response._id,
-                //             fileLink: response.fileLink
-                //         }
-                //         console.log(savedFile);
-                //         featuredWork[attachedFile] = savedFile;
-                //     }else{
-                //         console.log("Ah shit here we go again");
-                //     }
 
-                //     await featuredWork.save((err, result) => {
-                //         if(err){
-                //             throw err;
-                //         }else{
-                //             res.status(200).json(result);
-                //         }
-                //     })
-                // });
-
+            }else{
+                featuredWork.save((err, result) => {
+                    if(err){
+                        throw err;
+                    }else{
+                        res.status(200).json(result);
+                    }
+                })
             }
         }
     });
-
-    // (async () => {
-    //     if(req.file){
-    //         let savedFile;
-    //         const uploadedFile = await uploadController.saveFile(req);
-    //         if(uploadedFile){
-    //             savedFile = {
-    //                 documentID: uploadedFile._id,
-    //                 fileLink: uploadedFile.fileLink
-    //             }
-    //             featuredWork[attachedFile] = savedFile;
-    //             console.log("saved file added to featured work");
-    //         }else{
-    //             console.log("Somehow no saved file");
-    //         }
-    //     }
-
-    //     console.log("Time to save featured work");
-    //     featuredWork.save((err, result) => {
-    //         if(err){
-    //             throw err;
-    //         }else{
-    //             res.status(200).json(result);
-    //         }
-    //     });
-    // })();
 }
 
 
@@ -131,18 +90,62 @@ const createFeaturedWork = async (req, res) => {
 
 const addFiles = async (req, res) => {
     try{
-        await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { attachedFiles: req.body.attachedFiles },}, {new: true}, (err, result) => {
+        if(req.file){
+            let newFiles = [];
+            await (async () => {
+                let savedFile;
+                let uploadedFile = await uploadController.saveFile(req);
+                console.log(uploadedFile);
+                if(uploadedFile){
+                    savedFile = {
+                        //documentID: uploadedFile._id,
+                        fileLink: uploadedFile.fileLink
+                    }
+                    console.log(savedFile);
+                    newFiles.push(savedFile);
+                }else{
+                    console.log("fuck");
+                    res.status(400).json("Failed to save file");
+                    return;
+                }
+            })();
+
+            await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { attachedFiles: newFiles },}, {new: true}, (err, result) => {
+                console.log("abt to update");
+                if(err){
+                    throw err;
+                }
+                if(result){
+                    console.log("sending response")
+                    res.status(200).json(result);
+                }else{
+                    res.status(404).json("Featured work not found");
+                }
+            })
+        }else{
+            console.log("No file");
+            res.status(400).json("No file to add");
+        }
+    }catch(err){
+        res.status(400).json("Failed to add attached files to the featured work model");
+    }
+}
+
+const removeFiles = async (req, res) => {
+    try{
+        await featuredWork.findByIdAndUpdate(req.params.id, {
+            $pull: { attachedFiles: { $in: req.body.attachedFiles }}
+        }, {new: true}, (err, result) => {
             if(err){
                 throw err;
             }
             if(result){
-                res.status(200).json(result.attachedFiles);
-            }else{
-                res.status(404).json("Featured work not found");
+                res.status(200).json(result);
+                // Maybe call delete files api after calling this api?
             }
         })
-    }catch(err){
-        res.status(400).json("Failed to add attached files to the featured work model");
+    }catch(error){
+        res.status(400).json("Failed to remove attached files");
     }
 }
 
@@ -246,21 +249,9 @@ const editFeaturedWork = async (req, res) => {
                 res.status(404).json(err);
             }else{
                 if(result){
-                    //console.log("successfully updated");
-                    //res.status(200).json("featured work updated");
+                    console.log("Abt to send a response");
                     res.status(200).json(result);
                 }
-                // if(result.nModified === 0){
-                //     res.status(400).json("Nothing was changed");
-                // }else{
-                //     console.log("successfully updated");
-                //     //res.status(200).json("featured work updated");
-                //     FeaturedWork.findById({
-                //         _id: req.params.id
-                //     }, function (err, updated) {
-                //         res.status(200).json(updated);
-                //     });
-                // }
             }
         });
     }catch(error){
@@ -436,6 +427,7 @@ module.exports = {
     getAllFeaturedWorks,
     viewerGetFeaturedWorks,
     addFiles,
+    removeFiles,
     addUrl,
     removeUrl,
     removeFeaturedWork,

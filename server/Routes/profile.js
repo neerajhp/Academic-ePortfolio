@@ -79,7 +79,20 @@ router.delete("/featured-work", showcaseController.clearShowcase);
 // Edits a specific featured work
 router.put("/featured-work/:id", showcaseController.editFeaturedWork);
 // Attach files to specific featured work
-router.put("/featured-work/files/:id", showcaseController.addFiles);
+router.put("/featured-work/files/:id", (req, res) => {
+    singleFile(req, res, (err) => {
+        if(err){
+            console.log(err);
+        }else{
+            showcaseController.addFiles(req, res);
+        }
+    })
+});
+
+// Removes specified attached files
+router.delete("/featured-work/files/:id", showcaseController.removeFiles);
+
+
 
 // Add urls to specific featured work
 //router.put("/featured-work/url/:id", showcaseController.addUrl);

@@ -41,7 +41,8 @@ const getAllBlogs = async (req, res) => {
                 throw err;
             }
             if(result){
-                res.status(200).json(result);
+                let sortedBlogs = result.sort(customDateSort);
+                res.status(200).json(sortedBlogs);
             }else{
                 res.status(400).json("Failed to find blogs");
             }
@@ -55,6 +56,10 @@ const getAllBlogs = async (req, res) => {
     }catch(error){
         res.status(400).json("Error occured while looking for blogs");
     }
+}
+
+const customDateSort = (a,b) => {
+    return new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(); 
 }
 
 // Gets all of the blogs pf the user that's being viewed

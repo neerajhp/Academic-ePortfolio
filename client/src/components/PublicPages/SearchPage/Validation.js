@@ -6,7 +6,7 @@ const validationSchema = yup.object().shape({
     .required()
     .label('Search for someone')
     .test('alphabets', 'Name must only contain alphabets', (value) => {
-      return /^[A-Za-z\-\ ]+$/.test(value);
+      return /^[A-Za-z\- ]+$/.test(value);
     }),
 });
 

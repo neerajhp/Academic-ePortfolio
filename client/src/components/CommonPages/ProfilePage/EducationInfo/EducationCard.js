@@ -68,7 +68,7 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const EducationCard = ({ education }) => {
+const EducationCard = ({ education, editable }) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(education);
@@ -77,11 +77,13 @@ const EducationCard = ({ education }) => {
     if (!(Array.isArray(education) && education.length)) {
       return (
         <div className={classes.emptySection}>
-          <EducationDialog
-            records={records}
-            setRecords={setRecords}
-            empty={true}
-          />
+          {editable && (
+            <EducationDialog
+              records={records}
+              setRecords={setRecords}
+              empty={true}
+            />
+          )}
         </div>
       );
     } else {
@@ -122,13 +124,15 @@ const EducationCard = ({ education }) => {
         Education{' '}
       </Typography>
       {getRecord(records)}
-      <div className={classes.editDialogContainer}>
-        <EducationDialog
-          records={records}
-          setRecords={setRecords}
-          empty={false}
-        />
-      </div>
+      {editable && (
+        <div className={classes.editDialogContainer}>
+          <EducationDialog
+            records={records}
+            setRecords={setRecords}
+            empty={false}
+          />
+        </div>
+      )}
     </Paper>
   );
 };

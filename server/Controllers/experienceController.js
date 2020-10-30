@@ -56,7 +56,7 @@ const addExperience = async (req, res) => {
 const editExperience = async (req, res, next) => {
   try {
     await Experience.findByIdAndUpdate(
-     req.params.id,
+      req.params.id,
       req.body,
       (err, result) => {
         if (err) {
@@ -411,4 +411,5 @@ module.exports = {
   deleteAllExperience,
   deleteExperience,
   removeAll,
+  findAll,
 };

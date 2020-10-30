@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => {
         backgroundColor: '#1A4d94',
       },
     },
-    gitHubButton: {
+    facebookButton: {
       marginTop: `${theme.spacing(1)}px`,
       color: '#FFFFFF',
       backgroundColor: '#4168b1',
@@ -160,6 +160,7 @@ const LoginPage = ({ globalClasses }) => {
                     label='Email'
                     formikProps={formikProps}
                     formikKey='email'
+                    autoComplete='email'
                     required
                     className={globalClasses.inputField}
                   />
@@ -168,6 +169,7 @@ const LoginPage = ({ globalClasses }) => {
                     formikProps={formikProps}
                     formikKey='password'
                     type='password'
+                    autoComplete='current-password'
                     required
                     disabled={resendRqd}
                     className={globalClasses.inputField}
@@ -287,13 +289,13 @@ const LoginPage = ({ globalClasses }) => {
                     <Grid item xs={6}>
                       <FacebookLogin
                         appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
-                        autoLoad={false}
+                        autoLoad={true}
                         callback={responseFacebook}
                         render={(renderProps) => (
                           <Button
                             fullWidth
                             variant='contained'
-                            className={classes.gitHubButton}
+                            className={classes.facebookButton}
                             startIcon={
                               <FacebookIcon className={classes.buttonLogo} />
                             }

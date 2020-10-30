@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const ProjectForm = ({ handleClose, records, newWork }) => {
+const ProjectForm = ({ handleClose, records, newWork,existWork }) => {
   const classes = useStyles();
 
   //RTE
@@ -109,6 +109,14 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
             handleClose();
           });
         }
+        //remove
+        if (existWork) {
+          API.removeFeaturedWork(records._id).then(({res}) => {
+            //console.log(res);
+            handleClose();
+              }
+          )
+        }
         API.editFeaturedWork(featuredWork, records._id).then(({ res }) => {
           // console.log(res);
           handleClose();
@@ -143,7 +151,7 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
               <div className={classes.buttonWrapper}>
                 <Button
                   className={classes.button}
-                  onClick={() => console.log('Delete')}
+                  onClick={() => API.removeFeaturedWork(records._id)}
                   color='primary'
                 >
                   <Typography>Delete</Typography>

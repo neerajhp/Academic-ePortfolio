@@ -59,8 +59,9 @@ router.delete("/skills", profileController.removeSkills);
 
 // Handles a single document upload (pdf, docx)
 const singleFile = parse.documentUpload.single("document");
+const multipleFile = parse.documentUpload.array("document");
 router.post("/featured-work", (req, res) => {
-    singleFile(req, res, (err) => {
+    multipleFile(req, res, (err) => {
         if(err){
             console.log(err);
         }else{
@@ -80,7 +81,7 @@ router.delete("/featured-work", showcaseController.clearShowcase);
 router.put("/featured-work/:id", showcaseController.editFeaturedWork);
 // Attach files to specific featured work
 router.put("/featured-work/files/:id", (req, res) => {
-    singleFile(req, res, (err) => {
+    multipleFile(req, res, (err) => {
         if(err){
             console.log(err);
         }else{

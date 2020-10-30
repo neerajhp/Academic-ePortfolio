@@ -46,20 +46,33 @@ const createFeaturedWork = async (req, res) => {
             res.status(400).json("A project with the same title already exists");
             return;
         }else{
-            if(req.file){
+            if(req.files){
                 (async () => {
-                    let savedFile;
-                    let uploadedFile = await uploadController.saveFile(req);
-                    console.log(uploadedFile);
-                    if(uploadedFile){
-                        savedFile = {
-                            fileLink: uploadedFile.fileLink
+                    for(var i = 0; i < req.files.length; i++){
+                        let savedFile;
+                        let uploadedFile = await uploadController.saveFile(req.user.id, req.files[i]);
+                        if(uploadedFile){
+                            savedFile = {
+                                fileLink: uploadedFile.fileLink
+                            }
+                            console.log(savedFile);
+                            featuredWork["attachedFiles"].push(savedFile);
+                        }else{
+                            console.log("fuck");
                         }
-                        console.log(savedFile);
-                        featuredWork["attachedFiles"].push(savedFile);
-                    }else{
-                        console.log("fuck");
                     }
+                    // let savedFile;
+                    // let uploadedFile = await uploadController.saveFile(req);
+                    // console.log(uploadedFile);
+                    // if(uploadedFile){
+                    //     savedFile = {
+                    //         fileLink: uploadedFile.fileLink
+                    //     }
+                    //     console.log(savedFile);
+                    //     featuredWork["attachedFiles"].push(savedFile);
+                    // }else{
+                    //     console.log("fuck");
+                    // }
                     
                     featuredWork.save((err, result) => {
                         if(err){
@@ -89,24 +102,40 @@ const createFeaturedWork = async (req, res) => {
 
 const addFiles = async (req, res) => {
     try{
-        if(req.file){
+        if(req.files){
             let newFiles = [];
             await (async () => {
-                let savedFile;
-                let uploadedFile = await uploadController.saveFile(req);
-                console.log(uploadedFile);
-                if(uploadedFile){
-                    savedFile = {
-                        //documentID: uploadedFile._id,
-                        fileLink: uploadedFile.fileLink
+                for(var i = 0; i < req.files.length; i++){
+                    let savedFile;
+                    let uploadedFile = await uploadController.saveFile(req.user.id, req.files[i]);
+                    if(uploadedFile){
+                        savedFile = {
+                            //documentID: uploadedFile._id,
+                            fileLink: uploadedFile.fileLink
+                        }
+                        console.log(savedFile);
+                        newFiles.push(savedFile);
+                    }else{
+                        console.log("file not saved");
+                        //res.status(400).json("Failed to save file");
+                        //return;
                     }
-                    console.log(savedFile);
-                    newFiles.push(savedFile);
-                }else{
-                    console.log("fuck");
-                    res.status(400).json("Failed to save file");
-                    return;
                 }
+                // let savedFile;
+                // let uploadedFile = await uploadController.saveFile(req);
+                // console.log(uploadedFile);
+                // if(uploadedFile){
+                //     savedFile = {
+                //         //documentID: uploadedFile._id,
+                //         fileLink: uploadedFile.fileLink
+                //     }
+                //     console.log(savedFile);
+                //     newFiles.push(savedFile);
+                // }else{
+                //     console.log("fuck");
+                //     res.status(400).json("Failed to save file");
+                //     return;
+                // }
             })();
 
             await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { attachedFiles: newFiles },}, {new: true}, (err, result) => {

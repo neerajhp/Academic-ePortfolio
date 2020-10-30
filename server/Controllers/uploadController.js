@@ -48,19 +48,19 @@ const uploadSingle = async (req, res) => {
     }
 };
 
-const saveFile = async (req) => {
+const saveFile = async (userID, file) => {
     let savedFile;
     let savedStatus = false;
     
     var newFile = new Document({
-        user_id: req.user.id,
-        fieldName: req.file.fieldname,
-        fileType: req.file.mimetype,
-        fileLink: req.file.location,
-        s3_key: `user-${req.user.id}/${req.file.originalname}`,
+        user_id: userID,
+        fieldName: file.fieldname,
+        fileType: file.mimetype,
+        fileLink: file.location,
+        s3_key: `user-${userID}/${file.originalname}`,
     });
 
-    await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
+    await Document.findOne({user_id: userID, s3_key: newFile.s3_key}, (err, result) => {
         let savedFile;
         console.log("Looking for file");
         if(err){

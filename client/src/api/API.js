@@ -262,13 +262,13 @@ export default {
   },
   // Attach a file to a featured work
   attachFilesFeaturedWork: function (body, recordID) {
-    return axios.put(`api/profile/featured-work/${recordID}`, {
+    return axios.put(`api/profile/featured-work/files/${recordID}`, {
       // Idk if I'm doing this right
       files: body.files
     });
   },
   removeAttachedFilesFeaturedWork: function (body, recordID){
-    return axios.delete(`api/profile/featured-work/${recordID}`, {
+    return axios.delete(`api/profile/featured-work/files/${recordID}`, {
       attachedFiles: body.attacheFiles
     });
   },

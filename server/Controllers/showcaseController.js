@@ -53,7 +53,6 @@ const createFeaturedWork = async (req, res) => {
                     console.log(uploadedFile);
                     if(uploadedFile){
                         savedFile = {
-                            documentID: uploadedFile._id,
                             fileLink: uploadedFile.fileLink
                         }
                         console.log(savedFile);

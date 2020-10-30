@@ -3,6 +3,8 @@ import { Paper, Avatar, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import CharacterDialog from './CharacterDialog';
 import { Upload, message } from 'antd';
+import {DropzoneArea} from "material-ui-dropzone";
+import { Field, FieldArray } from "formik";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({

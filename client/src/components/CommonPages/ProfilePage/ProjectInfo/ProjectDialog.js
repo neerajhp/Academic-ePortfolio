@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProjectDialog = ({ project, updateProfile, empty }) => {
+const ProjectDialog = ({ project, updateProfile, empty, exist}) => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);

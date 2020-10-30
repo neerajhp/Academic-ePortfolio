@@ -13,6 +13,8 @@ import API from '../../../../api/API';
 import FormikField from '../../../utils/FormikField';
 import RTE from '../../../utils/RTE';
 import { DropzoneArea } from 'material-ui-dropzone';
+import axios from "axios";
+import { Upload, message } from 'antd';
 
 /* ================ Styling ================ */
 
@@ -68,11 +70,22 @@ const useStyles = makeStyles((theme) => ({
 
 /* ================ Component ================ */
 
-const ProjectForm = ({ handleClose, records, newWork,existWork }) => {
+const ProjectForm = ({ handleClose, records, newWork}) => {
   const classes = useStyles();
 
   //RTE
   const [rteValue, setRTEValue] = useState([]);
+
+ // const [attachedFiles, setAttachedFiles] = useState([]);
+
+ // remove
+  const handleDel = () => {
+    API.removeFeaturedWork(records._id).then((result) => {
+      if (result.status === 200) {
+        console.log(result);
+      }
+    })
+    };
 
   useEffect(() => {
     if (records.description === undefined || records.description.length === 0) {
@@ -85,6 +98,43 @@ const ProjectForm = ({ handleClose, records, newWork,existWork }) => {
     }
     setRTEValue(records.description);
   }, [records.description]);
+
+//upload files
+  const handleChooseFile = (e) => {
+    e.preventDefault();
+    const attachedFiles = e.target.files;
+    if (!attachedFiles.length) {
+      return false;
+    }
+    if (attachedFiles.length < 6) {
+      let param = new FormData();
+      for (const key in attachedFiles) {
+        if (attachedFiles.hasOwnProperty(key)) {
+          const item = attachedFiles[key];
+          param.append('document', item);
+        }
+      }
+      axios({
+        method: 'post',
+        url: '/api/upload/files',
+        data: param,
+        headers: {
+          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+        },
+        responseType: 'blob',
+      }).then((result) => {});
+      API.uploadFiles(attachedFiles,records._id).then((result) => {
+        if (result.status === 200) {
+          console.log(result);
+        }
+      })
+    }
+  };
+
+//test console
+  const attachedFiles = new File(["foo"], "file", {
+    type: ".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx",
+  });
 
   return (
     <Formik
@@ -108,14 +158,6 @@ const ProjectForm = ({ handleClose, records, newWork,existWork }) => {
             // console.log(res);
             handleClose();
           });
-        }
-        //remove
-        if (existWork) {
-          API.removeFeaturedWork(records._id).then(({res}) => {
-            //console.log(res);
-            handleClose();
-              }
-          )
         }
         API.editFeaturedWork(featuredWork, records._id).then(({ res }) => {
           // console.log(res);
@@ -141,7 +183,10 @@ const ProjectForm = ({ handleClose, records, newWork,existWork }) => {
 
             <div className={classes.dropzoneContainer}>
               <DropzoneArea
-                initialFiles={formikProps.attachedFiles}
+                attachedFiles={attachedFiles}
+                acceptedFiles={['.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx']}
+                dropzoneText={"Drag and drop an image here or click"}
+                filesLimit={5}
                 onChange={(files) => console.log('Files:', files)}
               />
             </div>
@@ -150,12 +195,19 @@ const ProjectForm = ({ handleClose, records, newWork,existWork }) => {
             <div className={classes.buttonContainer}>
               <div className={classes.buttonWrapper}>
                 <Button
+                  type='Submit'
                   className={classes.button}
-                  onClick={() => API.removeFeaturedWork(records._id)}
+                  onClick={() => handleDel(records._id)}
                   color='primary'
                 >
                   <Typography>Delete</Typography>
                 </Button>
+                {formikProps.isSubmitting && (
+                    <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                    />
+                )}
               </div>
               <div className={classes.buttonWrapper}>
                 <Button

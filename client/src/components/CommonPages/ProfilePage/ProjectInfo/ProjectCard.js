@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Paper,
   Typography,
   Accordion,
   AccordionActions,
@@ -15,6 +14,7 @@ import API from '../../../../api/API';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ProjectDialog from './ProjectDialog';
 import serialize from '../../../utils/serializer';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 /* ================ Styling ================ */
 
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '5%',
     display: 'block',
   },
-
   upload: {
     position: 'absolute',
     bottom: 40,
@@ -51,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   titleLarge: {
     marginTop: '0px',
+    fontSize:'2em',
   },
   title: {
     marginBottom: '50px',
@@ -69,38 +69,40 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1em',
   },
   fileLink: {
-    color: '#fff',
+    color: '#112940',
     fontWeight: 'bolder',
     marginTop: '15px',
     paddingTop: '15px',
-  },
-  pic: {
-    marginTop: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  img: {
-    width: '100%',
-    height: '100%',
-  },
-  root: {
-    height: 18,
-  },
-  container: {
-    display: 'flex',
-  },
-  paper: {
-    margin: theme.spacing(1),
   },
 }));
 /* ================ Component ================ */
 const ProjectCard = ({ content, updateProfile }) => {
   const classes = useStyles();
+  const [records, setRecords] = useState(content);
+  const [allFiles, setAllFiles] = useState([]);
+  const [allId, setAllId] = useState([]);
 
-  const [record, setRecord] = useState(content);
+
+
+  //showFiles
+  const onFinish = () => {
+    API.getFile(records._id).then((result) => {
+      if (result.status === 200) {
+        setAllFiles(result.data);
+      }
+    });
+  };
+
+  //download files
+  const onIdFinish = () => {
+    API.getFile(records._id).then((result) => {
+      if (result.status === 200) {
+        setAllId(result.data);
+        console.log(123, allFiles);
+      }
+    });
+  };
+
 
   return (
     <Accordion className={classes.card}>
@@ -108,14 +110,56 @@ const ProjectCard = ({ content, updateProfile }) => {
         expandIcon={<ExpandMoreIcon />}
         className={classes.summary}
       >
-        <Typography variant='h2'>{record.title}</Typography>
+        <Typography variant='h2'>{records.title}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.description}>
-        {serialize(record.description)}
+        {serialize(records.description)}
+      </AccordionDetails>
+      <AccordionSummary className={classes.titleLarge}>
+        Files
+      </AccordionSummary>
+      <AccordionDetails className={classes.description}>
+        <div style={{ marginTop: 50 }}>
+        <Typography
+            onClick={() => onFinish(records._id)}
+            className={classes.fileTitle}
+            variant='h4'
+        >
+          File List
+        </Typography>
+        <div className={classes.fileList}>
+          {allFiles.map((item) => (
+              <div className={classes.fileItem} key={item.id}>
+                <AssignmentIcon style={{ fontSize: 30 }} />
+
+                <div>
+                  {item.s3_key.replace(`user-${item.user_id}/`, '')}
+                </div>
+              </div>
+          ))}
+        </div>
+        </div>
+        <Typography
+            onClick={() => onIdFinish(records._id)}
+            className={classes.fileTitle}
+            variant='h4'
+        >
+          Load File
+        </Typography>
+        {allId &&
+        allId.map((item) => (
+            <div key={item._id}>
+              <a className={classes.fileLink} href={item.fileLink}>
+                {item.s3_key}
+              </a>
+            </div>
+        ))}
+
+
       </AccordionDetails>
       <ProjectDialog
         empty={false}
-        project={record}
+        project={records}
         updateProfile={updateProfile}
       />
     </Accordion>

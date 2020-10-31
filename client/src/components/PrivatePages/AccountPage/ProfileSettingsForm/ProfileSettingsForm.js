@@ -16,44 +16,33 @@ import API from '../../../../api/API';
 
 const ProfileSettingsForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(null);
   const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
 
-  
+  console.log(checked);
 
-  console.log(user.firstName);
-  console.log(user.email);
-  console.log(user.private);
-  console.log(user.isVerified);
-  console.log(user);
+  // API.getPrivacy().then(({data}) => {
+  //   console.log(data);
+  //   if(data == true){
+  //     setChecked(false);
+  //   }
+  //   if(data == false){
+  //     setChecked(true);
+  //   }
+  // })
 
-
-  // const handleToggle = () => {
-  //   console.log('hello')
-  //   API.getSkills().then(({data}) => {
-  //     console.log(data);
-  //     if(data){
-  //       setChecked(false);
-  //     }
-  //     else{
-  //       setChecked(true);
-  //     }
-  //   })
-  // };
-
-  const handleToggle = (data) => {
-    if(data){
-      console.log('true');
-      setChecked(false);
-      console.log(checked);
-      return false;
-    }
-    else{
-      setChecked(true);
-      console.log(checked);
-      return true;
-    }
-  }
+  const handleToggle = () => {
+    API.getPrivacy().then(({data}) => {
+      console.log(data);
+      if(data == true){
+        setChecked(false);
+      }
+      if(data == false){
+        setChecked(true);
+      }
+    })
+  };
+  console.log(checked);
 
   return (
     <Paper className={globalClasses.card}>
@@ -69,10 +58,18 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
           onSubmit={(values, actions) => {
             setSubmitted(false);
             console.log(values);
-            console.log(checked);
             API.changePrivacy({
-              private: values.private,
+              private: checked,
             })
+              .then((res) => {
+                // setSubmitted(true);
+                // actions.setSubmitting(false);
+              })
+              .catch((err) => {
+                console.log(err);
+                // actions.setSubmitting(false);
+              });
+
             API.editUserInformation({
               url: values.url,
             })

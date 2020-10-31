@@ -43,17 +43,6 @@ const ReflectionCard = (reflection) => {
     return <Typography> Add your reflection!</Typography>;
   };
 
-  // return (
-  //   <Paper className={classes.card}>
-  //     <div className={classes.bio}>
-  //       <Typography className={classes.title} variant='h2'>
-  //         This is a Reflection
-  //       </Typography>
-  //       <Typography>{getRecord(records)}</Typography>
-  //       {/* <div className={classes.tableContainer}>{getRecord(records)}</div> */}
-  //       <ReflectionDialog records={records} setRecords={setRecords} />
-  //     </div>
-  //   </Paper>
   const inputEl = useRef(null);
   const [records, setRecords] = useState(reflection);
 

@@ -56,13 +56,13 @@ const fileUpload = multer({
             cb(null, true);
         }else{
             cb(null, false);
-            return cb(new Error("Only .pdf, .docx, .mp4 are allowed"));
+            return cb(new Error("Only .pdf, .docx, .mp4, .png and .jpeg are allowed"));
         }
     },
     limits: {fileSize: maxFileSize}
 })
 
-// Allows the upload of pdf or jpeg
+// Allows the upload of pdf or docx
 const documentUpload = multer({
     // Need to somehow make a folder for every registered user and we need to link this folder to the userID somehow
     storage: createStorage,

@@ -95,7 +95,7 @@ const getDocument = async (req, res, next) => {
         }else{
             // res.setHeader('Content-Type', 'image/png');
             // res.setHeader('Content-Disposition', "inline");
-            res.send(doc.fileLink);
+            res.json(doc.fileLink);
             console.log("File found");
         }
         
@@ -130,7 +130,7 @@ const displayPicture = async (req, res, next) => {
             }
         });
     }catch(error){
-        res.status(400).send("Error while trying to display picture");
+        res.status(400).json("Error while trying to display picture");
     }
   
 }
@@ -159,7 +159,7 @@ const displayProfilePic = async (req, res) => {
             }
         });
     }catch(error){
-        res.status(400).send("Error while trying to display picture");
+        res.status(400).json("Error while trying to display picture");
     }
    
 }
@@ -188,7 +188,7 @@ const downloadFile = async (req, res) => {
                 //     console.log("File Stream:", err);
                 // }).on('close', function() {
                 //     console.log("Done");
-                //     res.status(200).send("File downloaded");
+                //     res.status(200).json("File downloaded");
                 // });
                 //res.redirect(doc.fileLink);
 
@@ -271,14 +271,23 @@ const deleteMultiple = async (req, res, next) => {
 // I don't think users should be able to access this unless they want to delete their profile
 const deleteAllFiles = async (req, res) => {
     try{
-        let result = await clearFiles(req.user.id);
-        console.log(result);
-        if(result){
-            console.log("Files have been deleted");
-            res.status(200).json("All files have been deleted");
-        }else{
-            res.status(400).json("No files were found");
-        }
+        let result = clearFiles(req.user.id);
+        result.then(async (result) => {
+            if(result){
+                console.log("Files have been deleted");
+                res.status(200).json("All files have been deleted");
+            }else{
+                res.status(400).json("No files were found");
+            }
+        })
+        // let result = await clearFiles(req.user.id);
+        // console.log(result);
+        // if(result){
+        //     console.log("Files have been deleted");
+        //     res.status(200).json("All files have been deleted");
+        // }else{
+        //     res.status(400).json("No files were found");
+        // }
     }catch(err){
         res.status(400).json("Files were not deleted");
     }

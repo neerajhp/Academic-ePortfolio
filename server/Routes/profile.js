@@ -3,7 +3,9 @@ const router = express.Router();
 
 const profileController = require("../Controllers/profileController");
 const showcaseController = require("../Controllers/showcaseController");
+const uploadController = require("../Controllers/uploadController");
 const eduController = require("../Controllers/eduController");
+const parse = require("../Middleware/upload");
 
 const { authenticateToken } = require("../Middleware/authenticate");
 
@@ -55,7 +57,20 @@ router.delete("/skills", profileController.removeSkills);
 
 // Showcase tab
 
-router.post("/featured-work", showcaseController.createFeaturedWork);
+// Handles a single document upload (pdf, docx)
+const singleFile = parse.documentUpload.single("document");
+const multipleFile = parse.documentUpload.array("document");
+router.post("/featured-work", (req, res) => {
+    multipleFile(req, res, (err) => {
+        if(err){
+            console.log(err);
+        }else{
+            //await uploadController.uploadSingle(req, res);
+            showcaseController.createFeaturedWork(req, res);
+        }
+
+    })
+});
 
 // Gets all of the users' featured works
 router.get("/featured-work", showcaseController.getAllFeaturedWorks);
@@ -65,7 +80,20 @@ router.delete("/featured-work", showcaseController.clearShowcase);
 // Edits a specific featured work
 router.put("/featured-work/:id", showcaseController.editFeaturedWork);
 // Attach files to specific featured work
-router.put("/featured-work/files/:id", showcaseController.addFiles);
+router.put("/featured-work/files/:id", (req, res) => {
+    multipleFile(req, res, (err) => {
+        if(err){
+            console.log(err);
+        }else{
+            showcaseController.addFiles(req, res);
+        }
+    })
+});
+
+// Removes specified attached files
+router.delete("/featured-work/files/:id", showcaseController.removeFiles);
+
+
 
 // Add urls to specific featured work
 //router.put("/featured-work/url/:id", showcaseController.addUrl);

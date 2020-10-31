@@ -59,7 +59,7 @@ const createFeaturedWork = async (req, res) => {
                             console.log(savedFile);
                             featuredWork["attachedFiles"].push(savedFile);
                         }else{
-                            console.log("fuck");
+                            console.log("file somehow didn't save");
                         }
                     }
                     // let savedFile;
@@ -342,29 +342,45 @@ const getFeaturedWork = async (req, res) => {
 // - Have the backend check if the featuredWork has an attachedFile, and if they do look for the document, then delete its s3 instance and record
 const removeFeaturedWork = async (req, res) => {
     try{
-        // await FeaturedWork.findById({_id: req.params.id}, (err, result) => {
-        //     if(err){
-        //         console.log("Error");
-        //     }else{
-        //         if(result.attachedFile){
-                    
-        //         }
-        //     }
-        // })
-        await FeaturedWork.findByIdAndDelete(req.params.id, (err, result) => {
+        await FeaturedWork.findById(req.params.id, (err, result) => {
             if(err){
-                console.log("failed to delete");
                 throw err;
             }
+            console.log(result);
             if(result){
-                
-                res.status(200).json({
-                    message: "Successfully deleted featured work",
-                    filesToDelete: result.attachedFiles
-                });
+                if(result.attachedFiles){
+                    (async () => {
+                        await filesController.deleteFiles(result.attachedFiles);
+                    })();
+                }
+                FeaturedWork.deleteOne({_id: req.params.id}, (err, doc) => {
+                    if(err){
+                        throw err;
+                    }else{
+                        res.status(200).json(doc);
+                    }
+                })
             }else{
-                res.status(404).json("Failed to find featured work");
+                res.status(404).json("Featured work not found");
             }
+        })
+        // await FeaturedWork.findByIdAndDelete(req.params.id, (err, result) => {
+        //     if(err){
+        //         console.log("failed to delete");
+        //         throw err;
+        //     }
+        //     console.log(result);
+        //     if(result){
+        //         //console.log(result);
+        //         if(result.attachedFiles){
+        //             (async () => {
+        //                 await filesController.deleteFiles(result.attachedFiles);
+        //             })();
+        //         }
+        //         res.status(200).json("successfuly deleted");
+        //     }else{
+        //         res.status(404).json("Failed to find featured work");
+        //     }
             
             
             // else{
@@ -376,7 +392,7 @@ const removeFeaturedWork = async (req, res) => {
             //         res.status(200).json("successfully deleted featured work");
             //     }
             // }
-        })
+        //})
     }catch(error){
         res.status(400).send(error);
     }

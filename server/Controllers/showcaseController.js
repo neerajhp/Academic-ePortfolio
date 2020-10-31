@@ -53,6 +53,7 @@ const createFeaturedWork = async (req, res) => {
                         let uploadedFile = await uploadController.saveFile(req.user.id, req.files[i]);
                         if(uploadedFile){
                             savedFile = {
+                                documentID: uploadedFile._id,
                                 fileLink: uploadedFile.fileLink
                             }
                             console.log(savedFile);
@@ -110,7 +111,7 @@ const addFiles = async (req, res) => {
                     let uploadedFile = await uploadController.saveFile(req.user.id, req.files[i]);
                     if(uploadedFile){
                         savedFile = {
-                            //documentID: uploadedFile._id,
+                            documentID: uploadedFile._id,
                             fileLink: uploadedFile.fileLink
                         }
                         console.log(savedFile);
@@ -159,20 +160,48 @@ const addFiles = async (req, res) => {
     }
 }
 
+// Remove attached files from featured work
 const removeFiles = async (req, res) => {
     try{
-        await featuredWork.findByIdAndUpdate(req.params.id, {
-            $pull: { attachedFiles: { $in: req.body.attachedFiles }}
-        }, {new: true}, (err, result) => {
-            if(err){
-                throw err;
-            }
-            if(result){
-                res.status(200).json(result);
-                // Maybe call delete files api after calling this api?
-            }
-        })
+        if(req.body.attachedFiles){
+            await filesController.deleteFiles(req.body.attachedFiles);
+            console.log(req.body.attachedFiles);
+            console.log("Time to update");
+            
+            let deleteIDs = req.body.attachedFiles.map((file) => {
+                return file._id;
+            })
+            await FeaturedWork.findByIdAndUpdate(req.params.id, {
+                $pull: { attachedFiles: { _id: {$in: deleteIDs }}}
+            }, {new: true}, (err, result) => {
+                if(err){
+                    throw err;
+                }
+                if(result){
+                    console.log(result);
+                    res.status(200).json(result);
+                    // Maybe call delete files api after calling this api?
+                }else{
+                    console.log("damn man");
+                }
+            })
+        }else{
+            res.status(400).json("No files specified");
+        }
+
+        // await featuredWork.findByIdAndUpdate(req.params.id, {
+        //     $pull: { attachedFiles: { $in: req.body.attachedFiles }}
+        // }, {new: true}, (err, result) => {
+        //     if(err){
+        //         throw err;
+        //     }
+        //     if(result){
+        //         res.status(200).json(result);
+        //         // Maybe call delete files api after calling this api?
+        //     }
+        // })
     }catch(error){
+        console.log("Something happened");
         res.status(400).json("Failed to remove attached files");
     }
 }

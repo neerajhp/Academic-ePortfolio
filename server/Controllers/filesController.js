@@ -223,11 +223,57 @@ const deleteDocument = async (req, res, next) => {
     });
 }
 
+const deleteFiles = async (attachedFiles) => {
+    try{
+        //let savedFile;
+        let deleteStatus = false;
+        let IDs = [];
+        for(var i = 0; i < attachedFiles.length; i++){
+            IDs.push(attachedFiles[i].documentID);
+        }
+
+        console.log(IDs);
+
+        await Document.find({
+            _id: {
+                $in: IDs
+            }
+        }, (err, result) => {
+            console.log("Finding document");
+            if(err){
+                throw err;
+            }
+            if(result){
+                console.log(result);
+                deleteS3Multiple(result);
+                Document.deleteMany({
+                    _id: {
+                        $in: IDs
+                    }
+                }, (err, result) => {
+                    if(err){
+                        throw err;
+                    }else{
+                        deleteStatus = true;
+                    }
+                })
+            }else{
+                console.log("Files not found");
+                deleteStatus = false;
+            }
+        });
+    }catch(error){
+        console.log("error in deleteFiles");
+        console.log(error);
+    }
+    
+}   
+
 // Deletes multiple files based on their ids
 const deleteMultiple = async (req, res, next) => {
     console.log("In search of docs");
     await Document.find({
-        "_id": {
+        _id: {
             $in: req.body.IDs
         }
     }, (err, docs) => {
@@ -450,6 +496,7 @@ module.exports = {
     displayPicture,
     displayProfilePic,
     downloadFile,
+    deleteFiles,
     deleteDocument,
     deleteMultiple,
     deleteCV,

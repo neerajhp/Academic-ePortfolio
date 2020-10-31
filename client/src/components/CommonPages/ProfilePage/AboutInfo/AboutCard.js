@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import API from '../../../../api/API';
 import AboutDialog from './AboutDialog';
 
@@ -31,17 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AboutCard = () => {
+const AboutCard = ({ about, isEditable }) => {
   const classes = useStyles();
-  const [records, setRecords] = useState('');
 
-  useEffect(() => {
-    API.getAboutMe()
-      .then(({ data }) => {
-        setRecords(data);
-      })
-      .catch();
-  });
+  const [records, setRecords] = useState(about);
+  const [editable] = useState(isEditable);
 
   return (
     <Paper className={classes.card}>
@@ -52,11 +46,13 @@ const AboutCard = () => {
         <Typography>{records}</Typography>
       </div>
       <div className={classes.editDialogContainer}>
-        <AboutDialog
-          records={records}
-          setRecords={setRecords}
-          empty={records === '' || records === undefined}
-        />
+        {editable && (
+          <AboutDialog
+            records={records}
+            setRecords={setRecords}
+            empty={records === '' || records === undefined}
+          />
+        )}
       </div>
     </Paper>
   );

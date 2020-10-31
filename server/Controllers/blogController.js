@@ -41,7 +41,8 @@ const getAllBlogs = async (req, res) => {
                 throw err;
             }
             if(result){
-                res.status(200).json(result);
+                let sortedBlogs = result.sort(customDateSort);
+                res.status(200).json(sortedBlogs);
             }else{
                 res.status(400).json("Failed to find blogs");
             }
@@ -55,6 +56,10 @@ const getAllBlogs = async (req, res) => {
     }catch(error){
         res.status(400).json("Error occured while looking for blogs");
     }
+}
+
+const customDateSort = (a,b) => {
+    return new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(); 
 }
 
 // Gets all of the blogs pf the user that's being viewed
@@ -121,7 +126,7 @@ const updateBlog = async (req, res) => {
         , (err, result) => {
             if(err){
                 console.log("something's up");
-                res.status(404).send(err);
+                res.status(404).json(err);
             }else{
                 if(!result){
                     res.status(400).json("Nothing was changed");
@@ -219,7 +224,7 @@ const clearBlogs = async (req, res) => {
             res.status(400).json("There were no blogs to delete");
         }
     }catch(error){
-        res.status(400).send(error);
+        res.status(400).json(error);
     }
 }
 

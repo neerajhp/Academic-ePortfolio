@@ -105,22 +105,23 @@ const viewerGetProfile = async (req, res) => {
       res.status(400).json('No profile found');
     }
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
 // Gets the user's profile
 const getProfile = async (req, res) => {
   try {
-    let profile = await getAllInfo(req.user.id);
-    if (profile) {
-      //console.log(profile);
-      res.status(200).json(profile);
-    } else {
-      res.status(400).json('No profile found');
-    }
+    let profile = getAllInfo(req.user.id);
+    profile.then(async (result) => {
+      if(result){
+        res.status(200).json(result);
+      }else{
+        res.status(404).json('No profile found');
+      }
+    })
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
@@ -191,7 +192,7 @@ const deleteProfile = async (req, res) => {
     res.status(200).json('User deleted');
   } catch (err) {
     console.log(err);
-    res.status(400).send(err);
+    res.status(400).json(err);
   }
 };
 
@@ -330,7 +331,7 @@ const getAboutMe = async (req, res) => {
     },
     function (err, result) {
       if (err) {
-        res.status(404).send(err);
+        res.status(404).json(err);
       } else {
         if (result) {
           res.status(200).json(result.aboutMe);
@@ -382,7 +383,7 @@ const updateAboutMe = async (req, res) => {
       },
       (err, result) => {
         if (err) {
-          res.status(404).send(err);
+          res.status(404).json(err);
         } else {
           console.log('successfully updated');
           getAboutMe(req, res);
@@ -590,13 +591,13 @@ const getPrivacy = async (req, res) => {
       }
       if (result) {
         console.log('Send privacy value');
-        res.status(200).send(result.private);
+        res.status(200).json(result.private);
       } else {
-        res.status(404).send('Failed to find user record');
+        res.status(404).json('Failed to find user record');
       }
     });
   } catch (error) {
-    res.status(400).send('Failed to get privacy value');
+    res.status(400).json('Failed to get privacy value');
   }
 };
 

@@ -20,7 +20,7 @@ beforeAll(async () => {
 // Should get nothing when attempting to get the experience
 test("Should get nothing when attempting to get the experience", async () =>{
     await request.get("/api/experience")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data).toBeDefined()
@@ -37,7 +37,7 @@ test("Should get nothing when attempting to get the experience", async () =>{
 let objectID
 test("Should add work experience to database", async () =>{
     await request.post("/api/experience")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         type: "employment",
         organization: "Real Madrid",
@@ -72,7 +72,7 @@ test("Should add work experience to database", async () =>{
 // Add volunteering experience to database
 test("Should add volunteering experience to database", async () =>{
     await request.post("/api/experience")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         type: "volunteering",
         organization: "UNICEF",
@@ -106,7 +106,7 @@ test("Should add volunteering experience to database", async () =>{
 // Add extracurricular experience to database
 test("Should add extracurricular experience to database", async () =>{
     await request.post("/api/experience")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         type: "extracurricular",
         organization: "Soccer club",
@@ -140,7 +140,7 @@ test("Should add extracurricular experience to database", async () =>{
 // Should update the specified experience object
 test("Should update the specified experience object", async () =>{
     await request.put(`/api/experience/edit/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         organization: "FC Barcelona",
         role: "Manager"
@@ -166,7 +166,7 @@ test("Should update the specified experience object", async () =>{
 // Should get the specified experience object
 test("Should get the specified experience object", async () =>{
     await request.get(`/api/experience/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -187,7 +187,7 @@ test("Should get the specified experience object", async () =>{
 // Should delete the specified experience object
 test("Should delete the specified experience object", async () => {
     await request.delete(`/api/experience/delete/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -197,7 +197,7 @@ test("Should delete the specified experience object", async () => {
 // Should fail to delete something that does not exist
 test("Should fail to delete something that does not exist", async () => {
     await request.delete(`/api/experience/delete/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(400)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -207,7 +207,7 @@ test("Should fail to delete something that does not exist", async () => {
 // Should delete all of the experiences
 test("Should delete everything", async () => {
     await request.delete("/api/experience/delete")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -218,7 +218,7 @@ test("Should delete everything", async () => {
 // Should get nothing when attempting to get the experience after deleting every experience
 test("Should get nothing when attempting to get the experience after deleting every experience", async () =>{
     await request.get("/api/experience")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data).toBeDefined()

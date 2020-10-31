@@ -28,7 +28,7 @@ beforeAll(async () => {
 // getEdu
 test("Should return error because there are no education histories ", async () =>{
     await request.get("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     // error handling issue here
     // .expect(404)
     .expect(200)
@@ -53,7 +53,7 @@ test("Should return viewer error because there are no education histories ", asy
 let objectID
 test("Should create new university education history", async () =>{
     await request.post("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         edu_type: "University",
         schoolName: "East Wood University",
@@ -87,7 +87,7 @@ test("Should create new university education history", async () =>{
 // postEdu
 test("Should not create education record with wrong edutype", async () =>{
     await request.post("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         edu_type: "Nonexistent",
         schoolName: "West Wood University",
@@ -108,7 +108,7 @@ test("Should not create education record with wrong edutype", async () =>{
 // postEdu
 test("Should not create education record that already exists ", async () =>{
     await request.post("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         edu_type: "University",
         schoolName: "East Wood University",
@@ -129,7 +129,7 @@ test("Should not create education record that already exists ", async () =>{
 // getEdu
 test("Should get all education ", async () =>{
     await request.get("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -160,7 +160,7 @@ test("Should get education for viewer", async () =>{
 // putEdu
 test("Should update education history of the user", async () =>{
     await request.put(`/api/profile/education/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         schoolName: "North Wood University",
         graduated: true
@@ -185,7 +185,7 @@ test("Should update education history of the user", async () =>{
 // deleteEdu
 test("Should delete education history of the user", async () =>{
     await request.delete(`/api/profile/education/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -196,7 +196,7 @@ test("Should delete education history of the user", async () =>{
 // putEdu
 test("Should not update education history if it does not exist", async () =>{
     await request.put(`/api/profile/education/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         schoolName: "North Wood University",
         graduated: true
@@ -211,7 +211,7 @@ test("Should not update education history if it does not exist", async () =>{
 //deleteEdu & clearEdu
 test("Should not delete a non existent education history", async () =>{
     await request.delete(`/api/profile/education/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(404)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -222,7 +222,7 @@ test("Should not delete a non existent education history", async () =>{
 test("Creating multiple education records", async () =>{
     // education record 1
     await request.post("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         edu_type: "University",
         schoolName: "East Wood University",
@@ -252,7 +252,7 @@ test("Creating multiple education records", async () =>{
 
     // education record 2
     await request.post("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         edu_type: "University",
         schoolName: "West Wood University",
@@ -291,7 +291,7 @@ test("Should get all education ", async () =>{
 // deleteEdu & ClearEdu
 test("Should delete all education records", async () =>{
     await request.delete("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -302,7 +302,7 @@ test("Should delete all education records", async () =>{
 //deleteEdu & ClearEdu
 test("Should not delete all education records if they dont exist", async () =>{
     await request.delete("/api/profile/education")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(400)
     .then(data => {
         expect(data.body).toBeDefined()

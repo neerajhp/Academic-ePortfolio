@@ -43,10 +43,59 @@ const uploadSingle = async (req, res) => {
             throw Error();
         }
     }catch(err){
-        res.status(400).send({error: "Unable to upload file."});
+        res.status(400).json({error: "Unable to upload file."});
         console.log(err);
     }
 };
+
+const saveFile = async (userID, file) => {
+    let savedFile;
+    let savedStatus = false;
+    
+    var newFile = new Document({
+        user_id: userID,
+        fieldName: file.fieldname,
+        fileType: file.mimetype,
+        fileLink: file.location,
+        s3_key: `user-${userID}/${file.originalname}`,
+    });
+
+    await Document.findOne({user_id: userID, s3_key: newFile.s3_key}, (err, result) => {
+        let savedFile;
+        console.log("Looking for file");
+        if(err){
+            throw err;
+        }
+        if(result){
+            console.log("Document already exists");
+            savedFile = null;
+            savedStatus = false;
+            // return savedFile;
+            //return null;
+        }else{
+            console.log("abt to save");
+            savedStatus = true;
+            // newFile.save((err, result) => {
+            //     if(err){
+            //         throw err;
+            //     }else{
+            //         console.log("File saved");
+            //         savedFile = result;
+            //     }
+            // });
+        }
+    });
+
+    if(savedStatus){
+        savedFile = await newFile.save()
+    }else{
+        savedFile = null;
+    }
+
+    console.log("I'm abt to return " + savedFile)
+    return savedFile
+    
+}
 
 // Upload cv API
 const uploadCV = async (req, res) => {
@@ -74,7 +123,7 @@ const uploadMultiple = async (req, res) => {
     try{
         console.log("Attempting to upload new files")
         if(req.files.length <= 0){
-            res.status(400).send("You must select at least 1 file");
+            res.status(400).json("You must select at least 1 file");
         }else{
             // Creates a document reference for each file 
         // These references are then saved to mongoDB
@@ -118,7 +167,7 @@ const uploadMultiple = async (req, res) => {
 
             await Document.insertMany(newFiles, (err, result) => {
                 if(err){
-                    res.status(400).send(err);
+                    res.status(400).json(err);
                 }else{
                     if(result){
                         res.status(200).json({
@@ -137,7 +186,7 @@ const uploadMultiple = async (req, res) => {
             // }else{
             //     await Document.insertMany(newFiles, (err, result) => {
             //         if(err){
-            //             res.status(400).send(err);
+            //             res.status(400).json(err);
             //         }else{
             //             if(result){
             //                 res.status(200).json({
@@ -154,7 +203,7 @@ const uploadMultiple = async (req, res) => {
 
         
     }catch(err){
-        res.status(400).send({error: "Unable to upload files."});
+        res.status(400).json({error: "Unable to upload files."});
         console.log(err);
     }
 };
@@ -164,5 +213,6 @@ module.exports = {
     uploadSingle,
     uploadMultiple,
     uploadCV,
-    uploadProfilePic
+    uploadProfilePic,
+    saveFile
 };

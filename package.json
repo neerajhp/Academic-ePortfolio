@@ -53,6 +53,7 @@
     "path": "^0.12.7",
     "react-avatar-edit": "^0.8.3",
     "react-google-login": "^5.1.21",
+    "react-social-icons": "^4.1.0",
     "yup": "^0.29.3"
   },
   "devDependencies": {

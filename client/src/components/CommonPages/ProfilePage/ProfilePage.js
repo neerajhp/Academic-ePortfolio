@@ -28,6 +28,7 @@ import ProjectCard from './ProjectInfo/ProjectCard';
 import Tutorial from '../../PrivatePages/Tutorial/Tutorial';
 import AboutCard from './AboutInfo/AboutCard';
 import EmptyCard from './EmptyCard/EmptyCard';
+import SocialMediaCard from './SocialMediaInfo/SocialMediaCard';
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
@@ -149,6 +150,16 @@ const ProfilePage = ({ isOwner = true, match }) => {
     }
   };
 
+  const getSocial = () => {
+    console.log(user.skills);
+    if (user.socialMedia === undefined || user.socialMedia.length === 0) {
+      return <EmptyCard name={user.firstName} prompt={'Skills'} />;
+    } else {
+      return <SocialMediaCard socialMedia={user.socialMedia} editable={owner} />;
+    }
+  };
+
+
   //If profile hasn't been fetched yet
   var pageContent;
   if (profileNotFound) {
@@ -233,6 +244,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
               {getExperience()}
               {getEducation()}
               {getSkills()}
+              {getSocial()}
             </div>
             <div className={classes.section}>
               <ReflectionCard />

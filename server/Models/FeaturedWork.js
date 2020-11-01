@@ -10,7 +10,6 @@ const featuredWorkSchema = mongoose.Schema({
     // This is a downloadable document that relates to the featured work
     // fileLink: {type: String, default: ""},
     attachedFiles: [{
-        documentID: {type: String},
         fileLink: {type: String}
     }],
     // attachedFile: {

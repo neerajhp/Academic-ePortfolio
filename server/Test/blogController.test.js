@@ -20,7 +20,7 @@ beforeAll(async () => {
 // Should return an empty list when getting blogs
 test("Should get nothing when attempting to get the experience", async () =>{
     await request.get("/api/blog")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data).toBeDefined()
@@ -32,7 +32,7 @@ test("Should get nothing when attempting to get the experience", async () =>{
 let objectID
 test("Should create a blog object", async () =>{
     await request.post("/api/blog")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         title: "My Blog",
         content: "Blah blah blah",
@@ -51,7 +51,7 @@ test("Should create a blog object", async () =>{
 // Should add image id to the blog
 test("Should add image id to the blog", async () => {
     await request.put(`/api/blog/images/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         images: ["5f6ghtyksoi"]
     })
@@ -67,7 +67,7 @@ test("Should add image id to the blog", async () => {
 // Should delete the image
 test("Should delete the image", async () => {
     await request.delete(`/api/blog/images/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         images: ["5f6ghtyksoi"]
     })
@@ -80,7 +80,7 @@ test("Should delete the image", async () => {
 // Should create another blog
 test("Should create another blog object", async () =>{
     await request.post("/api/blog")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         title: "My Blog 2",
         content: "Gorgonzola",
@@ -99,7 +99,7 @@ test("Should create another blog object", async () =>{
 // Should create another blog 2
 test("Should create another blog object 2", async () =>{
     await request.post("/api/blog")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         title: "My Blog 3",
         content: "Tortilla",
@@ -118,7 +118,7 @@ test("Should create another blog object 2", async () =>{
 // Should get every blog
 test("Should get every blog", async () => {
     await request.get("/api/blog")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -128,7 +128,7 @@ test("Should get every blog", async () => {
 // Should get specific blog
 test("Should get specific blog", async () => {
     await request.get(`/api/blog/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -142,7 +142,7 @@ test("Should get specific blog", async () => {
 // Should get viewed user's blogs
 test("Should get viewed user's blogs", async () => {
     await request.get("/api/view/blog/test")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -152,7 +152,7 @@ test("Should get viewed user's blogs", async () => {
 // Should update specified blog
 test("Should update specified blog", async () => {
     await request.put(`/api/blog/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .send({
         "content": "Parmesan cheese"
     })
@@ -171,7 +171,7 @@ test("Should update specified blog", async () => {
 // Should delete specified blog
 test("Should delete the specified blog object", async () => {
     await request.delete(`/api/blog/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -181,7 +181,7 @@ test("Should delete the specified blog object", async () => {
 // Should fail to delete a blog that does not exist
 test("Should fail to delete a blog that does not exist", async () => {
     await request.delete(`/api/blog/${objectID}`)
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(400)
     .then(data => {
         expect(data.body).toBeDefined()
@@ -191,7 +191,7 @@ test("Should fail to delete a blog that does not exist", async () => {
 // Should delete every blog
 test("Should delete every blog", async () => {
     await request.delete("/api/blog/")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .expect(200)
     .then(data => {
         expect(data.body).toBeDefined()

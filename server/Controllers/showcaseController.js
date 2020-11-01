@@ -28,52 +28,152 @@ const initShowcase = async (req, res) => {
         }
     })
 }
-
 const createFeaturedWork = async (req, res) => {
     const featuredWork = new FeaturedWork({
         user_id: req.user.id,
         title: req.body.title,
         type: req.body.type,
         description: req.body.description,
-        attachedFiles: req.body.attachedFiles,
         image: req.body.image,
         url: req.body.url
-    });
+    })
 
-    // Looks for an existing featured work with the same title
-    await FeaturedWork.findOne({
-        user_id: req.user.id,
-        title: req.body.title
-    }).then(async (work) => {
-        if(!work){
-            // If there is none, then the new featured work can be created
-            featuredWork.save((err, doc) => {
-                if(err){
-                    res.status(400).json(err);
-                }else{
-                    res.status(200).json(doc);
-                }
-            })
+    await FeaturedWork.findOne({user_id: req.user.id, title: req.body.title}, (err, result) => {
+        if(err){
+            throw err;
+        }
+        if(result){
+            res.status(400).json("A project with the same title already exists");
+            return;
         }else{
-            res.status(400).json("A featured work with the same title already exists");
+            if(req.files){
+                (async () => {
+                    for(var i = 0; i < req.files.length; i++){
+                        let savedFile;
+                        let uploadedFile = await uploadController.saveFile(req.user.id, req.files[i]);
+                        if(uploadedFile){
+                            savedFile = {
+                                fileLink: uploadedFile.fileLink
+                            }
+                            console.log(savedFile);
+                            featuredWork["attachedFiles"].push(savedFile);
+                        }else{
+                            console.log("fuck");
+                        }
+                    }
+                    // let savedFile;
+                    // let uploadedFile = await uploadController.saveFile(req);
+                    // console.log(uploadedFile);
+                    // if(uploadedFile){
+                    //     savedFile = {
+                    //         fileLink: uploadedFile.fileLink
+                    //     }
+                    //     console.log(savedFile);
+                    //     featuredWork["attachedFiles"].push(savedFile);
+                    // }else{
+                    //     console.log("fuck");
+                    // }
+                    
+                    featuredWork.save((err, result) => {
+                        if(err){
+                            throw err;
+                        }else{
+                            res.status(200).json(result);
+                        }
+                    })
+                })();
+
+            }else{
+                featuredWork.save((err, result) => {
+                    if(err){
+                        throw err;
+                    }else{
+                        res.status(200).json(result);
+                    }
+                })
+            }
         }
     });
 }
 
+
+
+
+
 const addFiles = async (req, res) => {
     try{
-        await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { attachedFiles: req.body.attachedFiles },}, {new: true}, (err, result) => {
+        if(req.files){
+            let newFiles = [];
+            await (async () => {
+                for(var i = 0; i < req.files.length; i++){
+                    let savedFile;
+                    let uploadedFile = await uploadController.saveFile(req.user.id, req.files[i]);
+                    if(uploadedFile){
+                        savedFile = {
+                            //documentID: uploadedFile._id,
+                            fileLink: uploadedFile.fileLink
+                        }
+                        console.log(savedFile);
+                        newFiles.push(savedFile);
+                    }else{
+                        console.log("file not saved");
+                        //res.status(400).json("Failed to save file");
+                        //return;
+                    }
+                }
+                // let savedFile;
+                // let uploadedFile = await uploadController.saveFile(req);
+                // console.log(uploadedFile);
+                // if(uploadedFile){
+                //     savedFile = {
+                //         //documentID: uploadedFile._id,
+                //         fileLink: uploadedFile.fileLink
+                //     }
+                //     console.log(savedFile);
+                //     newFiles.push(savedFile);
+                // }else{
+                //     console.log("fuck");
+                //     res.status(400).json("Failed to save file");
+                //     return;
+                // }
+            })();
+
+            await FeaturedWork.findOneAndUpdate({_id: req.params.id, user_id: req.user.id}, {$addToSet: { attachedFiles: newFiles },}, {new: true}, (err, result) => {
+                console.log("abt to update");
+                if(err){
+                    throw err;
+                }
+                if(result){
+                    console.log("sending response")
+                    res.status(200).json(result);
+                }else{
+                    res.status(404).json("Featured work not found");
+                }
+            })
+        }else{
+            console.log("No file");
+            res.status(400).json("No file to add");
+        }
+    }catch(err){
+        res.status(400).json("Failed to add attached files to the featured work model");
+    }
+}
+
+const removeFiles = async (req, res) => {
+    try{
+        await featuredWork.findByIdAndUpdate(req.params.id, {
+            $pull: { attachedFiles: { $in: req.body.attachedFiles }}
+        }, {new: true}, (err, result) => {
             if(err){
                 throw err;
             }
             if(result){
-                res.status(200).json(result.attachedFiles);
-            }else{
-                res.status(404).json("Featured work not found");
+                res.status(200).json(result);
+                // Maybe call delete files api after calling this api?
             }
         })
-    }catch(err){
-        res.status(400).json("Failed to add attached files to the featured work model");
+    }catch(error){
+        res.status(400).json("Failed to remove attached files");
     }
 }
 
@@ -177,21 +277,9 @@ const editFeaturedWork = async (req, res) => {
                 res.status(404).json(err);
             }else{
                 if(result){
-                    //console.log("successfully updated");
-                    //res.status(200).json("featured work updated");
+                    console.log("Abt to send a response");
                     res.status(200).json(result);
                 }
-                // if(result.nModified === 0){
-                //     res.status(400).json("Nothing was changed");
-                // }else{
-                //     console.log("successfully updated");
-                //     //res.status(200).json("featured work updated");
-                //     FeaturedWork.findById({
-                //         _id: req.params.id
-                //     }, function (err, updated) {
-                //         res.status(200).json(updated);
-                //     });
-                // }
             }
         });
     }catch(error){
@@ -268,12 +356,19 @@ const removeFeaturedWork = async (req, res) => {
 // Delete all featured works API
 const clearShowcase = async (req, res) => {
     try{
-        let result = await removeAllFeaturedWorks(req.user.id);
-        if(result > 0){
-            res.status(200).json("All featured works have been removed");
-        }else{
-            res.status(400).json("No featured works to remove");
-        }
+        let resultStatus = removeAllFeaturedWorks(req.user.id);
+        resultStatus.then(async (result) => {
+            if(result > 0){
+                res.status(200).json("All featured works have been removed");
+            }else{
+                res.status(400).json("No featured works to remove");
+            }
+        })
+        // if(result > 0){
+        //     res.status(200).json("All featured works have been removed");
+        // }else{
+        //     res.status(400).json("No featured works to remove");
+        // }
     }catch(error){
         console.log(error);
         res.status(400).json("An error occured while trying to delete the user's featured works");
@@ -360,6 +455,7 @@ module.exports = {
     getAllFeaturedWorks,
     viewerGetFeaturedWorks,
     addFiles,
+    removeFiles,
     addUrl,
     removeUrl,
     removeFeaturedWork,

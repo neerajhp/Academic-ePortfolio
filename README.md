@@ -67,7 +67,9 @@ Runs the backend tests
 ### Running the tests
 
 # Frontend Testing
-Explain how to run the automated tests for this system
+To run the frontend tests automatically, you need to first ensure the local server is running, then type "./node_modules/.bin/cypress run". 
+This should run all the tests automatically and show you the number of tests that passed and failed. 
+The tests are organised in a way such that all the tests in a file tests a specific  front end page. To see how the tests are run in real time in a browser, you can run "./node_modules/.bin/cypress open" which opens up the cypress app where you can select a test file see the tests run in real time in your browser. 
 
 ## Backend Testing
 To run the backend tests, a local instance of MongoDB will be required and can be downloaded from https://www.mongodb.com/try/download/community

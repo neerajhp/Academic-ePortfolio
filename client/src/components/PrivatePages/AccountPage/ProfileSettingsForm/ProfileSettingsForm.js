@@ -4,7 +4,6 @@ import { Formik } from 'formik';
 import { Paper, Typography, Button, Switch, FormControlLabel} from '@material-ui/core';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';
 import API from '../../../../api/API';
@@ -12,36 +11,20 @@ import API from '../../../../api/API';
 
 /* ================ Component ================ */
 
-
-
 const ProfileSettingsForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
-  const [checked, setChecked] = useState(null);
   const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
-
-  console.log(checked);
-
-  // API.getPrivacy().then(({data}) => {
-  //   console.log(data);
-  //   if(data == true){
-  //     setChecked(false);
-  //   }
-  //   if(data == false){
-  //     setChecked(true);
-  //   }
-  // })
-
-  const handleToggle = () => {
+  const [checked, setChecked] = useState(() => {
     API.getPrivacy().then(({data}) => {
-      console.log(data);
-      if(data == true){
-        setChecked(false);
-      }
-      if(data == false){
-        setChecked(true);
-      }
+      console.log(data)
+      return data
     })
+  });
+
+  const toggleChecked = () => {
+    setChecked((prev) => !prev);
   };
+
   console.log(checked);
 
   return (
@@ -61,15 +44,6 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
             API.changePrivacy({
               private: checked,
             })
-              .then((res) => {
-                // setSubmitted(true);
-                // actions.setSubmitting(false);
-              })
-              .catch((err) => {
-                console.log(err);
-                // actions.setSubmitting(false);
-              });
-
             API.editUserInformation({
               url: values.url,
             })
@@ -99,16 +73,13 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                 className={`${globalClasses.field} ${fieldSubmitted}`}
               />
               <FormControlLabel
-                      control={<Switch
-                        checked={checked}
-                        onClick={() => handleToggle()}
-                        value="privacy"
-                        inputProps={{ 'aria-label': 'secondary checkbox' }}
-                    />}
-                      // control={<Switch checked={checked} name = 'private' formikKey='private' onchange={handleChange}/>}
-                      label="Set Profile To Private Mode" labelPlacement="start"
-                    />
-
+                control={<Switch
+                checked={checked}
+                onChange={toggleChecked}
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                />}
+                label="Set Profile To Private Mode" labelPlacement="start"
+              />
               <div className={globalClasses.buttonWrapper}>
                 <Button
                   type='Submit'

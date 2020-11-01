@@ -15,6 +15,7 @@ beforeAll(async () => {
     token = await loginUser();
     ID = await idUser();
     userName = await getuserName();
+    console.log(userName)
 })
 
 // Should get nothing when attempting to get the experience
@@ -183,6 +184,54 @@ test("Should get the specified experience object", async () =>{
         }));
     });
 });
+
+
+test("Should get all experience as a viewer", async () =>{
+    await request.get(`/api/view/experience/${userName}`)
+    .set('Cookie', 'token='+ token) 
+    .expect(200)
+    .then(data => {
+        expect(data.body).toBeDefined()
+        expect(data.body.extracurricular[0]).toEqual(expect.objectContaining(
+        {
+        "type": "extracurricular",
+        "organization": "Soccer club",
+        "role": "Member",
+        "yearStart": 2013,
+        "yearEnd": 2015,
+        "monthStart": 6,
+        "monthEnd": 7,
+        "description": "kekl"
+        }
+        ))
+        expect(data.body.employment[0]).toEqual(expect.objectContaining(
+        {
+            "type": "employment",
+            "organization": "FC Barcelona",
+            "role": "Manager",
+            "employeeStatus": "Full Time",
+            "yearStart": 2011,
+            "yearEnd": 2013,
+            "monthStart": 10,
+            "monthEnd": 12,
+            "description": "Striker who scored 20 goals a season, and won the golden boot in 2012"
+        }))
+        expect(data.body.volunteering[0]).toEqual(expect.objectContaining(
+        {
+            "type": "volunteering",
+            "organization": "UNICEF",
+            "role": "Admin",
+            "employeeStatus": "Casual",
+            "yearStart": 2015,
+            "yearEnd": 2016,
+            "monthStart": 5,
+            "monthEnd": 5,
+            "description": "yadda yadda yadda"
+        }
+        ))
+    })
+})
+
 
 // Should delete the specified experience object
 test("Should delete the specified experience object", async () => {

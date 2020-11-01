@@ -38,7 +38,7 @@ const loginUser = async () =>{
 const idUser = async () =>{
     let ID;
     await request.get("/api/user/getID")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .then((response) =>{
         ID = response.body
     })
@@ -49,7 +49,7 @@ const idUser = async () =>{
 const getuserName = async () => {
     let userName
     await request.get("/api/user/userInfo")
-    .set('Authorization', 'bearer ' + token)
+    .set('Cookie', 'token='+ token) 
     .then((response) => {
         userName = response.body.userName
     })

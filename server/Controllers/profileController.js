@@ -483,16 +483,17 @@ const getSkills = async (req, res) => {
 // Add available social media links to the user model
 const addSocialMedia = async (req, res) => {
   try {
+    console.log("Hello");
     await User.findById(req.user.id, (err, result) => {
       if (err) {
         throw err;
       }
       if (result) {
         // const links = createSocialMediaJSON(req.body, result.socialMedia);
-        console.log(req.body);
+        console.log(req.body.socialMedia);
         User.findByIdAndUpdate(
           req.user.id,
-          { socialMedia: req.body },
+          { socialMedia: req.body.socialMedia },
           { new: true },
           (err, result) => {
             if (err) {

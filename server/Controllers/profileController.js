@@ -488,10 +488,11 @@ const addSocialMedia = async (req, res) => {
         throw err;
       }
       if (result) {
-        const links = createSocialMediaJSON(req.body, result.socialMedia);
+        // const links = createSocialMediaJSON(req.body, result.socialMedia);
+        console.log(req.body);
         User.findByIdAndUpdate(
           req.user.id,
-          { socialMedia: links },
+          { socialMedia: req.body },
           { new: true },
           (err, result) => {
             if (err) {
@@ -531,33 +532,6 @@ const getSocialMedia = async (req, res) => {
   }
 };
 
-// Creates the json that will be stored in the user's account
-const createSocialMediaJSON = (accounts, original) => {
-  //var links = {};
-  for (const account of accounts) {
-    console.log(account);
-    switch (account.site) {
-      case 'facebook':
-        original['facebook'] = account.link;
-        break;
-      case 'linkedIn':
-        original['linkedIn'] = account.link;
-        break;
-      case 'instagram':
-        original['instagram'] = account.link;
-        break;
-      case 'youtube':
-        original['youtube'] = account.link;
-        break;
-      case 'twitter':
-        original['twitter'] = account.link;
-        break;
-      default:
-        break;
-    }
-  }
-  return original;
-};
 
 // Change the privacy setting
 const changePrivacy = async (req, res) => {

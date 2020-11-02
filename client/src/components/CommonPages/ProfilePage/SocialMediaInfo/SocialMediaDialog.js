@@ -32,12 +32,14 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-  const SocialMediaDialog = ({ records, setRecords, empty }) => {
+  const SocialMediaDialog = ({ records, setRecords, empty, getRecords }) => {
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [open, setOpen] = React.useState(false);
   
+
     const handleOpen = () => {
+      console.log(records);
       setOpen(true);
     };
   

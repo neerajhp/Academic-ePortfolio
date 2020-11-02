@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const PublicLayout = ({ match }) => {
   // Styling
   const classes = useStyles();
+  
 
   return (
     <div className={classes.bkgContainer}>

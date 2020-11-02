@@ -1,13 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography,
   Accordion,
-  AccordionActions,
   AccordionDetails,
   AccordionSummary,
-  Button,
-  Divider,
 } from '@material-ui/core';
 import axios from 'axios';
 import API from '../../../../api/API';
@@ -76,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /* ================ Component ================ */
-const ProjectCard = ({ content, updateProfile }) => {
+const ProjectCard = ({ content, updateProfile, editable }) => {
   const classes = useStyles();
   const [records, setRecords] = useState(content);
   const [allFiles, setAllFiles] = useState([]);
@@ -148,11 +145,13 @@ const ProjectCard = ({ content, updateProfile }) => {
             </div>
           ))}
       </AccordionDetails>
-      <ProjectDialog
-        empty={false}
-        project={records}
-        updateProfile={updateProfile}
-      />
+      {editable && (
+        <ProjectDialog
+          empty={false}
+          project={records}
+          updateProfile={updateProfile}
+        />
+      )}
     </Accordion>
   );
 };

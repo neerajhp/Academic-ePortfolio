@@ -53,13 +53,7 @@ const TutorialStepper = ({ activeStep }) => {
   const steps = getSteps();
 
   function getSteps() {
-    return [
-      'Welcome',
-      'Editing your Portfolio',
-      'Your Account',
-      'Viewing other profiles',
-      'Get Started',
-    ];
+    return ['Welcome', 'Editing your Portfolio', 'Your Account', 'Get Started'];
   }
 
   function getTutorialPage(step) {
@@ -137,24 +131,11 @@ const TutorialStepper = ({ activeStep }) => {
       case 3:
         return (
           <React.Fragment>
-            <Typography variant='h1' className={classes.pageTitle}>
-              View other User Profiles
-            </Typography>
             <div className={classes.pageDescription}>
-              <Typography variant='h2'>Coming Soon..</Typography>
-              {/* <img
-                className={classes.pageImage}
-                src={require('../../../../assets/WelcomePage.png')}
-              /> */}
+              <Typography variant='h1' className={classes.pageTitle}>
+                Get Started with your Profile now!
+              </Typography>
             </div>
-          </React.Fragment>
-        );
-      case 4:
-        return (
-          <React.Fragment>
-            <Typography variant='h1' className={classes.pageTitle}>
-              Get Started with your Profile now!
-            </Typography>
           </React.Fragment>
         );
       default:

@@ -40,7 +40,7 @@ const Tutorial = ({ firstVisit }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
-    if (activeStep < 4) {
+    if (activeStep < 3) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
@@ -84,7 +84,7 @@ const Tutorial = ({ firstVisit }) => {
           <Button
             onClick={handleNext}
             color='primary'
-            disabled={activeStep === 4}
+            disabled={activeStep === 3}
           >
             Next
           </Button>

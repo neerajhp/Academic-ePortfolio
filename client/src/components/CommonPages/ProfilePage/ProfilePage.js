@@ -165,18 +165,21 @@ const ProfilePage = ({ isOwner = true, match }) => {
       return (
         <React.Fragment>
           {user.showcase.map((project, i) => (
-            <ProjectCard
-              key={i}
-              content={project}
-              editable={owner}
+            <React.Fragment key={i}>
+              <ProjectCard
+                content={project}
+                editable={owner}
+                updateProfile={setUser}
+              />
+            </React.Fragment>
+          ))}
+          {isOwner && (
+            <ProjectDialog
+              empty={true}
+              project={{ title: '', description: '' }}
               updateProfile={setUser}
             />
-          ))}
-          <ProjectDialog
-            empty={true}
-            project={{ title: '', description: '' }}
-            updateProfile={setUser}
-          />
+          )}
         </React.Fragment>
       );
     }

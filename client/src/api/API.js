@@ -138,7 +138,7 @@ export default {
       file: body.file,
     });
   },
-  uploadFiles: function (body,recordID) {
+  uploadFiles: function (body, recordID) {
     return axios.post('/api/upload/files/${recordID', {
       // The files key must be "document"
       files: body.files,
@@ -261,15 +261,14 @@ export default {
     });
   },
   // Attach a file to a featured work
-  attachFilesFeaturedWork: function (body, recordID) {
-    return axios.put(`api/profile/featured-work/files/${recordID}`, {
-      // Idk if I'm doing this right
-      files: body.files
+  attachFilesFeaturedWork: function (formData, recordID) {
+    return axios.put(`api/profile/featured-work/files/${recordID}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
-  removeAttachedFilesFeaturedWork: function (body, recordID){
+  removeAttachedFilesFeaturedWork: function (body, recordID) {
     return axios.delete(`api/profile/featured-work/files/${recordID}`, {
-      attachedFiles: body.attacheFiles
+      attachedFiles: body.attacheFiles,
     });
   },
   // Removes a specific featured work

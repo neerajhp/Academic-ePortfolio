@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Field, FieldArray, Formik } from 'formik';
+import { Formik } from 'formik';
 import {
   Typography,
   Button,
@@ -14,7 +14,6 @@ import FormikField from '../../../utils/FormikField';
 import RTE from '../../../utils/RTE';
 import { DropzoneArea } from 'material-ui-dropzone';
 import axios from 'axios';
-import { Upload, message } from 'antd';
 
 /* ================ Styling ================ */
 
@@ -156,7 +155,7 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
           url: values.url,
           fileUpload: values.fileUpload,
         };
-        console.log(va);
+        console.log(values.fileUpload);
         if (newWork) {
           API.createFeaturedWork(featuredWork).then(({ res }) => {
             console.log(res);
@@ -172,10 +171,20 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
           //     handleClose();
           //   });
         } else {
-          API.editFeaturedWork(featuredWork, records._id).then(({ res }) => {
-            // console.log(res);
-            handleClose();
-          });
+          API.editFeaturedWork(featuredWork, records._id)
+            .then((res) => {
+              let formData = new FormData();
+
+              values.fileUpload.map((fileMap) => {
+                formData.append('<NAME>', fileMap);
+              });
+
+              return API.attachFilesFeaturedWork(formData, res._id);
+            })
+            .then((res) => {
+              console.log(res);
+              handleClose();
+            });
         }
       }}
     >

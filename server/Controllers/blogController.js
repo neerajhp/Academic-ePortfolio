@@ -1,4 +1,4 @@
-const Blog = require('../Models/Blog');
+const Blog = require("../Models/Blog");
 
 // Post a new blog
 const postBlog = async (req, res) => {
@@ -14,7 +14,7 @@ const postBlog = async (req, res) => {
       { user_id: req.user.id, title: newBlog.title },
       (err, result) => {
         if (err) {
-          console.log('Error found');
+          console.log("Error found");
           throw err;
         } else {
           if (!result || result.length === 0) {
@@ -26,13 +26,13 @@ const postBlog = async (req, res) => {
               }
             });
           } else {
-            res.status(400).json('A blog with the same title already exists');
+            res.status(400).json("A blog with the same title already exists");
           }
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Failed to post blog');
+    res.status(400).json("Failed to post blog");
   }
 };
 
@@ -47,7 +47,7 @@ const getAllBlogs = async (req, res) => {
         let sortedBlogs = result.sort(customDateSort);
         res.status(200).json(sortedBlogs);
       } else {
-        res.status(400).json('Failed to find blogs');
+        res.status(400).json("Failed to find blogs");
       }
     });
     // let blogs = await findBlogs(req.user.id);
@@ -57,7 +57,7 @@ const getAllBlogs = async (req, res) => {
     //     res.status(200).json(blogs);
     // }
   } catch (error) {
-    res.status(400).json('Error occured while looking for blogs');
+    res.status(400).json("Error occured while looking for blogs");
   }
 };
 
@@ -75,7 +75,7 @@ const viewerGetAllBlogs = async (req, res) => {
       if (result) {
         res.status(200).json(result);
       } else {
-        res.status(400).json('Failed to find blogs');
+        res.status(400).json("Failed to find blogs");
       }
     });
     // let blogs = await findBlogs(userID);
@@ -85,7 +85,7 @@ const viewerGetAllBlogs = async (req, res) => {
     //     res.status(200).json(blogs);
     // }
   } catch (error) {
-    res.status(400).json('Error occured while looking for blogs');
+    res.status(400).json("Error occured while looking for blogs");
   }
 };
 
@@ -114,13 +114,13 @@ const getBlog = async (req, res) => {
           if (result) {
             res.status(200).json(result);
           } else {
-            res.status(404).json('Blog not found');
+            res.status(404).json("Blog not found");
           }
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Error occured while looking for the blog post');
+    res.status(400).json("Error occured while looking for the blog post");
   }
 };
 
@@ -136,9 +136,9 @@ const updateBlog = async (req, res) => {
           res.status(404).json(err);
         } else {
           if (!result) {
-            res.status(400).json('Nothing was changed');
+            res.status(400).json("Nothing was changed");
           } else {
-            console.log('successfully updated');
+            console.log("successfully updated");
             Blog.findById({ _id: req.params.id }, (err, result) => {
               if (err) {
                 throw err;
@@ -151,7 +151,7 @@ const updateBlog = async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(400).json('Something happened');
+    res.status(400).json("Something happened");
   }
 };
 
@@ -171,12 +171,12 @@ const addImages = async (req, res) => {
         if (result) {
           res.status(200).json(result);
         } else {
-          res.status(404).json('Blog entry not found');
+          res.status(404).json("Blog entry not found");
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Error while trying to add images');
+    res.status(400).json("Error while trying to add images");
   }
 };
 
@@ -194,12 +194,12 @@ const removeImages = async (req, res) => {
         if (result) {
           res.status(200).json(result);
         } else {
-          res.status(404).json('Blog not found');
+          res.status(404).json("Blog not found");
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Failed to remove specified images');
+    res.status(400).json("Failed to remove specified images");
   }
 };
 
@@ -215,7 +215,7 @@ const deleteBlog = async (req, res) => {
         if (result) {
           res.status(200).json(result);
         } else {
-          res.status(400).json('Nothing was deleted');
+          res.status(400).json("Nothing was deleted");
         }
       }
     );
@@ -231,7 +231,7 @@ const deleteBlog = async (req, res) => {
     //     }
     // })
   } catch (error) {
-    res.status(400).json('Error occured while deleting the blog');
+    res.status(400).json("Error occured while deleting the blog");
   }
 };
 
@@ -242,7 +242,7 @@ const clearBlogs = async (req, res) => {
     if (deleteCount > 0) {
       res.status(200).json(`${deleteCount} entries have been deleted`);
     } else {
-      res.status(400).json('There were no blogs to delete');
+      res.status(400).json("There were no blogs to delete");
     }
   } catch (error) {
     res.status(400).json(error);
@@ -253,9 +253,9 @@ const clearBlogs = async (req, res) => {
 const removeAllBlogs = async (userID) => {
   let deleteCount;
   await Blog.deleteMany({ user_id: userID }, (err, result) => {
-    console.log('About to delete');
+    console.log("About to delete");
     if (err) {
-      console.log('error occured');
+      console.log("error occured");
       throw err;
     } else {
       if (!result) {

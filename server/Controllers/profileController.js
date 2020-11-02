@@ -1,16 +1,16 @@
-const Document = require('../Models/Document');
-const User = require('../Models/User');
-const FeaturedWork = require('../Models/FeaturedWork').FeaturedWork;
+const Document = require("../Models/Document");
+const User = require("../Models/User");
+const FeaturedWork = require("../Models/FeaturedWork").FeaturedWork;
 
-const filesController = require('../Controllers/filesController');
-const showcaseController = require('../Controllers/showcaseController');
-const eduController = require('../Controllers/eduController');
-const blogController = require('../Controllers/blogController');
-const expController = require('../Controllers/experienceController');
+const filesController = require("../Controllers/filesController");
+const showcaseController = require("../Controllers/showcaseController");
+const eduController = require("../Controllers/eduController");
+const blogController = require("../Controllers/blogController");
+const expController = require("../Controllers/experienceController");
 //const { AccountTreeSharp } = require('@material-ui/icons');
 
 //const { ConfigurationServicePlaceholders } = require('aws-sdk/lib/config_service_placeholders');
-require('dotenv').config();
+require("dotenv").config();
 
 const getAllInfo = async (userID) => {
   // Get cv, featuredWorks, blogs, education, skills, profile picture
@@ -32,42 +32,42 @@ const getAllInfo = async (userID) => {
 
     let cv = await searchCV(userID);
     if (!cv) {
-      console.log('cv not found');
-      cv = '';
+      console.log("cv not found");
+      cv = "";
     } else {
-      console.log('cv found');
+      console.log("cv found");
     }
 
     let profilePic = await searchProfilePic(userID);
     if (!profilePic) {
-      console.log('profile picture not found');
-      profilePic = '';
+      console.log("profile picture not found");
+      profilePic = "";
     } else {
-      console.log('profile pic found');
+      console.log("profile pic found");
     }
 
     let allEducation = await eduController.searchAllEdu(userID);
     if (!allEducation || allEducation.length === 0) {
-      console.log('Education not found');
+      console.log("Education not found");
       allEducation = [];
     } else {
-      console.log('Education found');
+      console.log("Education found");
     }
 
     let allExperience = await expController.findAll(userID);
     if (!allExperience || allExperience.length === 0) {
-      console.log('Experience not found');
+      console.log("Experience not found");
       allExperience = [];
     } else {
-      console.log('Experience found');
+      console.log("Experience found");
     }
 
     let featuredWorks = await searchFeaturedWorks(userID);
     if (!featuredWorks || featuredWorks.length === 0) {
-      console.log('featured works not found');
+      console.log("featured works not found");
       featuredWorks = [];
     } else {
-      console.log('featured works found');
+      console.log("featured works found");
     }
 
     const profile = {
@@ -102,7 +102,7 @@ const viewerGetProfile = async (req, res) => {
     if (profile) {
       res.status(200).json(profile);
     } else {
-      res.status(400).json('No profile found');
+      res.status(400).json("No profile found");
     }
   } catch (error) {
     res.status(400).json(error);
@@ -114,12 +114,12 @@ const getProfile = async (req, res) => {
   try {
     let profile = getAllInfo(req.user.id);
     profile.then(async (result) => {
-      if(result){
+      if (result) {
         res.status(200).json(result);
-      }else{
-        res.status(404).json('No profile found');
+      } else {
+        res.status(404).json("No profile found");
       }
-    })
+    });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -134,40 +134,40 @@ const deleteProfile = async (req, res) => {
       req.user.id
     );
     if (showcaseCount > 0) {
-      console.log('showcase cleared');
+      console.log("showcase cleared");
     } else {
-      console.log('Failed to clear showcase');
+      console.log("Failed to clear showcase");
     }
     // Delete all Education
     let education = await eduController.clearEdu(req.user.id);
     if (!education) {
-      console.log('Failed to clear education history');
+      console.log("Failed to clear education history");
     } else {
-      console.log('Education history cleared');
+      console.log("Education history cleared");
     }
 
     // Delete all Experiences
     let expDelete = await expController.removeAll(req.user.id);
     if (!expDelete) {
-      console.log('Failed to clear experience');
+      console.log("Failed to clear experience");
     } else {
-      console.log('Experience cleared');
+      console.log("Experience cleared");
     }
     // Delete all Reflections
     let blogCount = await blogController.removeAllBlogs(req.user.id);
     if (blogCount > 0) {
-      console.log('Blogs deleted');
+      console.log("Blogs deleted");
     } else {
-      console.log('No blogs to delete');
+      console.log("No blogs to delete");
     }
 
     // Delete all files
     let filesDeleted = await filesController.clearFiles(req.user.id);
     if (!filesDeleted) {
-      console.log('Failed to delete files');
+      console.log("Failed to delete files");
       //throw new Error();
     } else {
-      console.log('All files deleted');
+      console.log("All files deleted");
     }
 
     // Delete userProfile
@@ -176,20 +176,20 @@ const deleteProfile = async (req, res) => {
         _id: req.user.id,
       },
       (err, result) => {
-        console.log('About to delete user');
+        console.log("About to delete user");
         if (err) {
           throw err;
         } else {
           if (result.deletedCount === 0) {
             throw err;
           } else {
-            console.log('User record deleted');
+            console.log("User record deleted");
           }
         }
       }
     );
 
-    res.status(200).json('User deleted');
+    res.status(200).json("User deleted");
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
@@ -213,7 +213,7 @@ const searchCV = async (userID) => {
   try {
     const cv = await Document.findOne({
       user_id: userID,
-      fieldName: 'cv',
+      fieldName: "cv",
     });
     return cv;
   } catch (error) {
@@ -226,7 +226,7 @@ const searchProfilePic = async (userID) => {
   try {
     const profilePic = await Document.findOne({
       user_id: userID,
-      fieldName: 'profile-pic',
+      fieldName: "profile-pic",
     });
     return profilePic;
   } catch (error) {
@@ -238,7 +238,7 @@ const searchProfilePic = async (userID) => {
 const getCV = async (req, res) => {
   try {
     await Document.findOne(
-      { user_id: req.user.id, fieldName: 'cv' },
+      { user_id: req.user.id, fieldName: "cv" },
       (err, result) => {
         if (err) {
           throw err;
@@ -246,7 +246,7 @@ const getCV = async (req, res) => {
         if (result) {
           res.status(200).json(result);
         } else {
-          res.status(404).json('CV not found');
+          res.status(404).json("CV not found");
         }
       }
     );
@@ -261,7 +261,7 @@ const getCV = async (req, res) => {
     // }
   } catch (err) {
     console.log(err);
-    res.status(400).json('Error while looking for cv');
+    res.status(400).json("Error while looking for cv");
   }
 };
 
@@ -271,7 +271,7 @@ const getProfilePic = async (req, res) => {
     await Document.findOne(
       {
         user_id: req.user.id,
-        fieldName: 'profile-pic',
+        fieldName: "profile-pic",
       },
       (err, result) => {
         if (err) {
@@ -280,7 +280,7 @@ const getProfilePic = async (req, res) => {
         if (result) {
           res.status(200).json(result);
         } else {
-          res.status(404).json('Profile picture not found');
+          res.status(404).json("Profile picture not found");
         }
       }
     );
@@ -314,12 +314,12 @@ const getBio = async (req, res) => {
         if (result) {
           res.status(200).json(result.biography);
         } else {
-          res.status(404).json('biography not found');
+          res.status(404).json("biography not found");
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Error while trying to get bio');
+    res.status(400).json("Error while trying to get bio");
   }
 };
 
@@ -336,7 +336,7 @@ const getAboutMe = async (req, res) => {
         if (result) {
           res.status(200).json(result.aboutMe);
         } else {
-          res.status(404).json('Not found');
+          res.status(404).json("Not found");
         }
       }
     }
@@ -357,7 +357,7 @@ const updateBio = async (req, res) => {
           res.status(403).json(err);
         } else {
           if (!result) {
-            res.status(404).json('User not found');
+            res.status(404).json("User not found");
           } else {
             User.findById(req.user.id, function (err, updated) {
               console.log(updated.biography);
@@ -385,22 +385,22 @@ const updateAboutMe = async (req, res) => {
         if (err) {
           res.status(404).json(err);
         } else {
-          console.log('successfully updated');
+          console.log("successfully updated");
           getAboutMe(req, res);
           //res.json(result);
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Failed to update about me');
+    res.status(400).json("Failed to update about me");
   }
 };
 
 // Add an array of skills to the user's skills array
 const addSkills = async (req, res) => {
   try {
-    if (req.body.skills.includes('') || req.body.skills.length == 0) {
-      res.status(400).json('Attempted to add nothing into skills');
+    if (req.body.skills.includes("") || req.body.skills.length == 0) {
+      res.status(400).json("Attempted to add nothing into skills");
     } else {
       await User.updateOne(
         {
@@ -414,7 +414,7 @@ const addSkills = async (req, res) => {
             res.status(404).json(err);
           } else {
             if (!result) {
-              res.status(400).json('Attempted to add nothing');
+              res.status(400).json("Attempted to add nothing");
             } else {
               getSkills(req, res);
             }
@@ -436,7 +436,7 @@ const addSkills = async (req, res) => {
       );
     }
   } catch (error) {
-    res.status(400).json('Error while trying to add skill');
+    res.status(400).json("Error while trying to add skill");
   }
 };
 
@@ -500,12 +500,12 @@ const addSocialMedia = async (req, res) => {
             if (result) {
               res.status(200).json(result.socialMedia);
             } else {
-              res.status(400).json('Failed to find and update the user');
+              res.status(400).json("Failed to find and update the user");
             }
           }
         );
       } else {
-        res.status(404).json('User not found');
+        res.status(404).json("User not found");
       }
     });
   } catch (error) {
@@ -523,11 +523,11 @@ const getSocialMedia = async (req, res) => {
       if (result) {
         res.status(200).json(result.socialMedia);
       } else {
-        res.status(404).json('User not found');
+        res.status(404).json("User not found");
       }
     });
   } catch (error) {
-    res.status(400).json('Error while trying to get user');
+    res.status(400).json("Error while trying to get user");
   }
 };
 
@@ -537,20 +537,20 @@ const createSocialMediaJSON = (accounts, original) => {
   for (const account of accounts) {
     console.log(account);
     switch (account.site) {
-      case 'facebook':
-        original['facebook'] = account.link;
+      case "facebook":
+        original["facebook"] = account.link;
         break;
-      case 'linkedIn':
-        original['linkedIn'] = account.link;
+      case "linkedIn":
+        original["linkedIn"] = account.link;
         break;
-      case 'instagram':
-        original['instagram'] = account.link;
+      case "instagram":
+        original["instagram"] = account.link;
         break;
-      case 'youtube':
-        original['youtube'] = account.link;
+      case "youtube":
+        original["youtube"] = account.link;
         break;
-      case 'twitter':
-        original['twitter'] = account.link;
+      case "twitter":
+        original["twitter"] = account.link;
         break;
       default:
         break;
@@ -571,15 +571,15 @@ const changePrivacy = async (req, res) => {
           throw err;
         }
         if (result) {
-          console.log('Change privacy value');
+          console.log("Change privacy value");
           res.status(200).json(result.private);
         } else {
-          res.status(404).json('Failed to find user record');
+          res.status(404).json("Failed to find user record");
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Failed to change privacy value');
+    res.status(400).json("Failed to change privacy value");
   }
 };
 
@@ -590,14 +590,14 @@ const getPrivacy = async (req, res) => {
         throw err;
       }
       if (result) {
-        console.log('Send privacy value');
+        console.log("Send privacy value");
         res.status(200).json(result.private);
       } else {
-        res.status(404).json('Failed to find user record');
+        res.status(404).json("Failed to find user record");
       }
     });
   } catch (error) {
-    res.status(400).json('Failed to get privacy value');
+    res.status(400).json("Failed to get privacy value");
   }
 };
 

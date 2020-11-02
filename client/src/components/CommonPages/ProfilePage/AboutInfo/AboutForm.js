@@ -1,15 +1,15 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   DialogContent,
   DialogActions,
   Typography,
   Button,
-} from '@material-ui/core';
-import FormikField from '../../../utils/FormikField';
-import { Formik } from 'formik';
-import API from '../../../../api/API';
-import CircularProgress from '@material-ui/core/CircularProgress';
+} from "@material-ui/core";
+import FormikField from "../../../utils/FormikField";
+import { Formik } from "formik";
+import API from "../../../../api/API";
+import CircularProgress from "@material-ui/core/CircularProgress";
 // import { Editor, EditorState } from 'draft-js';
 
 /* ================ Styling ================ */
@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 // Form Styles
 const useStyles = makeStyles((theme) => ({
   buttonContainer: {
-    textAlign: 'right',
+    textAlign: "right",
   },
   button: {
     marginLeft: 8,
@@ -44,9 +44,9 @@ const AboutForm = ({ handleClose, records }) => {
           <DialogContent dividers>
             <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
               <FormikField
-                label='Describe yourself'
-                type='description'
-                formikKey='aboutMe'
+                label="Describe yourself"
+                type="description"
+                formikKey="aboutMe"
                 formikProps={formikProps}
                 multiline
                 rows={6}
@@ -59,7 +59,7 @@ const AboutForm = ({ handleClose, records }) => {
             </Button>
             <div>
               <Button
-                type='Submit'
+                type="Submit"
                 className={classes.button}
                 onClick={() => formikProps.handleSubmit()}
                 disabled={!formikProps.isValid}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useState, useMemo } from 'react';
+import React from "react";
+import { useState, useMemo } from "react";
 import {
   MaterialSlate,
   MaterialEditable,
@@ -10,7 +10,7 @@ import {
   UnderlinedButton,
   BulletedListButton,
   NumberedListButton,
-} from '@unicef/material-slate';
+} from "@unicef/material-slate";
 
 export default function RTE({ defaultValue, setValue }) {
   // An instance of material editor. It is an slate editor with a few more functions

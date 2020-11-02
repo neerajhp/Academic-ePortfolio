@@ -1,33 +1,33 @@
-import React from 'react';
-import { Switch, Route, Link, Redirect } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
-import ProfilePage from '../CommonPages/ProfilePage/ProfilePage';
-import Background from '../../assets/Background/bkg-private.svg';
+import React from "react";
+import { Switch, Route, Link, Redirect } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import { AppBar, Toolbar, Typography } from "@material-ui/core";
+import ProfilePage from "../CommonPages/ProfilePage/ProfilePage";
+import Background from "../../assets/Background/bkg-private.svg";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   //Page container
   title: {
-    marginLeft: '5%',
+    marginLeft: "5%",
     flexGrow: 1,
   },
   banner: theme.mixins.toolbar,
   link: {
-    textDecoration: 'none',
+    textDecoration: "none",
     marginRight: theme.spacing(2),
   },
   bkgContainer: {
-    width: '100vw',
-    height: '100vh',
+    width: "100vw",
+    height: "100vh",
     zIndex: -1,
-    position: 'fixed',
+    position: "fixed",
     backgroundImage: `url(${Background})`,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundAttachment: 'fixed',
-    overflowY: 'auto',
-    overflowX: 'hidden',
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed",
+    overflowY: "auto",
+    overflowX: "hidden",
   },
   contentContainer: {
     zIndex: 10,
@@ -39,16 +39,15 @@ const useStyles = makeStyles((theme) => ({
 const PublicLayout = ({ match }) => {
   // Styling
   const classes = useStyles();
-  
 
   return (
     <div className={classes.bkgContainer}>
-      <AppBar position='fixed'>
+      <AppBar position="fixed">
         <Toolbar>
-          <Link to='/home/landing' className={classes.link}>
+          <Link to="/home/landing" className={classes.link}>
             <Typography
-              variant='h3'
-              color='textSecondary'
+              variant="h3"
+              color="textSecondary"
               className={classes.title}
             >
               ePortfolio
@@ -60,8 +59,8 @@ const PublicLayout = ({ match }) => {
 
       <div className={classes.contentContainer}>
         <Switch>
-          <Route exact path='/view'>
-            <Redirect to='/home/search' />
+          <Route exact path="/view">
+            <Redirect to="/home/search" />
           </Route>
           <Route
             path={`/view/:userName`}

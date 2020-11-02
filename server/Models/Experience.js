@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Represents employment history, volunteering experience and club experience
 const experienceSchema = mongoose.Schema({
   user_id: { type: String, required: true },
   type: {
     type: String,
-    enum: ['employment', 'volunteering', 'extracurricular'],
+    enum: ["employment", "volunteering", "extracurricular"],
     required: true,
   },
   // This could be the name of the company, volunteering organization or club/activity name
@@ -22,5 +22,5 @@ const experienceSchema = mongoose.Schema({
   description: { type: String },
 });
 
-const Experience = mongoose.model('Experience', experienceSchema);
+const Experience = mongoose.model("Experience", experienceSchema);
 module.exports = Experience;

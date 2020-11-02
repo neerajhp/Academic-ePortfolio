@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Field, FieldArray, Formik } from 'formik';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Field, FieldArray, Formik } from "formik";
 import {
   Box,
   DialogContent,
@@ -12,13 +12,13 @@ import {
   IconButton,
   MenuItem,
   Grid,
-} from '@material-ui/core';
-import WorkIcon from '@material-ui/icons/Work';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import validationSchema from './Validation';
-import API from '../../../../api/API';
+} from "@material-ui/core";
+import WorkIcon from "@material-ui/icons/Work";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import validationSchema from "./Validation";
+import API from "../../../../api/API";
 
 /* ================ Styling ================ */
 
@@ -26,38 +26,38 @@ import API from '../../../../api/API';
 const useStyles = makeStyles((theme) => ({
   expEntry: {
     marginTop: theme.spacing(2),
-    display: 'flex',
-    paddingLeft: '5%',
+    display: "flex",
+    paddingLeft: "5%",
   },
   form: {
     flexGrow: 1,
-    padding: '0 5% 0 5%',
-    '& .MuiFormLabel-root': {
+    padding: "0 5% 0 5%",
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary, // or black
     },
   },
   periodInfo: {
-    display: 'flex',
+    display: "flex",
   },
   divider: {
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.tertiary.main,
   },
 
   addButton: { marginTop: theme.spacing(1) },
   addButtonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
   },
   buttonWrapper: {
     margin: theme.spacing(1),
-    position: 'relative',
+    position: "relative",
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     marginTop: -12,
     marginLeft: -12,
   },
@@ -74,13 +74,13 @@ const FormField = ({ type, label, index, record, ...rest }) => {
       {({ field, meta }) => {
         return (
           <TextField
-            color='primary'
-            variant='outlined'
-            margin='dense'
+            color="primary"
+            variant="outlined"
+            margin="dense"
             fullWidth
             label={label}
             defaultValue={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
+            helperText={meta.touched && meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             onBlur={field.onBlur(field.name)}
             error={meta.touched && Boolean(meta.error)}
@@ -100,17 +100,17 @@ const FormStatusSelect = ({ record, index }) => {
           <TextField
             fullWidth
             select
-            variant='outlined'
-            margin='dense'
-            label='Status'
+            variant="outlined"
+            margin="dense"
+            label="Status"
             value={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
+            helperText={meta.touched && meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             error={meta.touched && Boolean(meta.error)}
           >
-            <MenuItem value={'Full Time'}>Full Time</MenuItem>
-            <MenuItem value={'Part Time'}>Part Time</MenuItem>
-            <MenuItem value={'Casual'}>Casual</MenuItem>
+            <MenuItem value={"Full Time"}>Full Time</MenuItem>
+            <MenuItem value={"Part Time"}>Part Time</MenuItem>
+            <MenuItem value={"Casual"}>Casual</MenuItem>
           </TextField>
         );
       }}
@@ -120,18 +120,18 @@ const FormStatusSelect = ({ record, index }) => {
 
 const FormMonthSelect = ({ record, index, milestone }) => {
   const MONTHS = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   return (
@@ -141,11 +141,11 @@ const FormMonthSelect = ({ record, index, milestone }) => {
           <TextField
             fullWidth
             select
-            variant='outlined'
-            margin='dense'
-            label='Month'
+            variant="outlined"
+            margin="dense"
+            label="Month"
             value={record}
-            helperText={meta.error ? meta.error : ' '}
+            helperText={meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             error={Boolean(meta.error)}
           >
@@ -164,7 +164,7 @@ const FormMonthSelect = ({ record, index, milestone }) => {
 const FormYearSelect = ({ record, index, milestone }) => {
   var years = Array.from(new Array(20), (val, index) => YEAR - index);
 
-  if (milestone === 'yearEnd') {
+  if (milestone === "yearEnd") {
     const year = record.yearStart;
     years = Array.from(new Array(20), (val, index) => year + index);
   }
@@ -176,11 +176,11 @@ const FormYearSelect = ({ record, index, milestone }) => {
           <TextField
             fullWidth
             select
-            variant='outlined'
-            margin='dense'
-            label='Year'
+            variant="outlined"
+            margin="dense"
+            label="Year"
             value={
-              milestone === 'yearStart' ? record.yearStart : record.yearEnd
+              milestone === "yearStart" ? record.yearStart : record.yearEnd
             }
             onChange={field.onChange(field.name)}
           >
@@ -244,24 +244,24 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
           <DialogContent dividers>
             <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
               <FieldArray
-                name='experiences'
+                name="experiences"
                 render={(fieldArrayProps) => (
                   <React.Fragment>
                     {formikProps.values.experiences.map((exp, i) => (
                       <React.Fragment key={i}>
                         <div className={classes.expEntry}>
-                          <WorkIcon color='primary' style={{ fontSize: 40 }} />
+                          <WorkIcon color="primary" style={{ fontSize: 40 }} />
                           <div className={classes.form}>
                             <FormField
-                              type={'organization'}
-                              label={'Organization'}
+                              type={"organization"}
+                              label={"Organization"}
                               index={i}
                               record={exp.organization}
                               required
                             />
                             <FormField
-                              type={'role'}
-                              label={'Role'}
+                              type={"role"}
+                              label={"Role"}
                               index={i}
                               record={exp.role}
                               required
@@ -276,14 +276,14 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                                   <FormMonthSelect
                                     record={exp.monthStart}
                                     index={i}
-                                    milestone={'monthStart'}
+                                    milestone={"monthStart"}
                                   />
                                 </Grid>
                                 <Grid item xs={12} sm={5}>
                                   <FormYearSelect
                                     record={exp}
                                     index={i}
-                                    milestone={'yearStart'}
+                                    milestone={"yearStart"}
                                   />
                                 </Grid>
                               </Grid>
@@ -297,14 +297,14 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                                   <FormMonthSelect
                                     record={exp.monthEnd}
                                     index={i}
-                                    milestone={'monthEnd'}
+                                    milestone={"monthEnd"}
                                   />
                                 </Grid>
                                 <Grid item xs={12} sm={5}>
                                   <FormYearSelect
                                     record={exp}
                                     index={i}
-                                    milestone={'yearEnd'}
+                                    milestone={"yearEnd"}
                                   />
                                 </Grid>
                               </Grid>
@@ -316,8 +316,8 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                               />
                             </div>
                             <FormField
-                              type={'description'}
-                              label={'Describe your experience'}
+                              type={"description"}
+                              label={"Describe your experience"}
                               index={i}
                               record={exp.description}
                               multiline
@@ -348,17 +348,17 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
                         onClick={() =>
                           fieldArrayProps.push({
                             type: expType,
-                            organization: '',
-                            role: '',
-                            employeeStatus: '',
+                            organization: "",
+                            role: "",
+                            employeeStatus: "",
                             monthStart: 1,
                             yearStart: YEAR,
                             monthEnd: 12,
                             yearEnd: YEAR,
-                            description: '',
+                            description: "",
                           })
                         }
-                        color='secondary'
+                        color="secondary"
                         startIcon={<AddIcon style={{ fontSize: 30 }} />}
                       >
                         Add an experience
@@ -376,7 +376,7 @@ const ExperienceForm = ({ handleClose, records, open, expType }) => {
               </Button>
               <div>
                 <Button
-                  type='Submit'
+                  type="Submit"
                   className={classes.button}
                   onClick={() => formikProps.handleSubmit()}
                   disabled={!formikProps.isValid}

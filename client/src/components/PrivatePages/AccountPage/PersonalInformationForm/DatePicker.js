@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Formik } from 'formik';
-import { Paper, Typography, Grid, Button, Divider } from '@material-ui/core';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Formik } from "formik";
+import { Paper, Typography, Grid, Button, Divider } from "@material-ui/core";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+} from "@material-ui/pickers";
 
 const DatePickerField = ({ field, form, ...other }) => {
   const currentError = form.errors[field.name];
@@ -16,7 +16,7 @@ const DatePickerField = ({ field, form, ...other }) => {
       disablePast
       name={field.name}
       value={field.value}
-      format='dd/MM/yyyy'
+      format="dd/MM/yyyy"
       helperText={currentError}
       error={Boolean(currentError)}
       onError={(error) => {

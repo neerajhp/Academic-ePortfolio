@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import FormikField from '../../utils/FormikField';
-import { passwordValidationSchema } from './Validation';
-import API from '../../../api/API';
+import React, { useState } from "react";
+import { Formik } from "formik";
+import { Typography, Avatar, Grid, Link, Button } from "@material-ui/core";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import FormikField from "../../utils/FormikField";
+import { passwordValidationSchema } from "./Validation";
+import API from "../../../api/API";
 
 /* ================ Component ================ */
 
@@ -21,12 +21,12 @@ const ResetPasswordPage = ({ globalClasses, match }) => {
             <ThumbUpIcon className={classes.icon} />
           </Avatar>
 
-          <Typography variant='h4' align='center'>
+          <Typography variant="h4" align="center">
             Your password has been reset
           </Typography>
 
-          <Typography variant='h4' align='center'>
-            <Link href='/home/login' variant='h4' color='textSecondary'>
+          <Typography variant="h4" align="center">
+            <Link href="/home/login" variant="h4" color="textSecondary">
               Log In Here!
             </Link>
           </Typography>
@@ -38,7 +38,7 @@ const ResetPasswordPage = ({ globalClasses, match }) => {
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
-        <Typography variant='h1' color='textSecondary'>
+        <Typography variant="h1" color="textSecondary">
           Reset your password
         </Typography>
       </div>
@@ -46,8 +46,8 @@ const ResetPasswordPage = ({ globalClasses, match }) => {
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              password: '',
-              confirmPassword: '',
+              password: "",
+              confirmPassword: "",
             }}
             onSubmit={(values, actions) => {
               API.resetPassword(match.params.token, values.password)
@@ -55,7 +55,7 @@ const ResetPasswordPage = ({ globalClasses, match }) => {
                   setSubmitted(true);
                 })
                 .catch((err) => {
-                  actions.setFieldError('password', err.response.data);
+                  actions.setFieldError("password", err.response.data);
                   actions.setSubmitting(false);
                 });
             }}
@@ -67,37 +67,37 @@ const ResetPasswordPage = ({ globalClasses, match }) => {
                 onSubmit={formikProps.handleSubmit}
               >
                 <FormikField
-                  label='Password'
+                  label="Password"
                   formikProps={formikProps}
-                  formikKey='password'
-                  type='password'
+                  formikKey="password"
+                  type="password"
                   required
                   className={classes.inputField}
                 />
                 <FormikField
-                  label='Confirm Password'
+                  label="Confirm Password"
                   formikProps={formikProps}
-                  formikKey='confirmPassword'
-                  type='password'
+                  formikKey="confirmPassword"
+                  type="password"
                   required
                   className={classes.inputField}
                 />
                 <Button
-                  type='Submit'
+                  type="Submit"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   className={classes.submit}
                   disabled={!formikProps.isValid}
-                  color='primary'
+                  color="primary"
                 >
                   <Typography>Reset</Typography>
                 </Button>
                 <Grid container>
                   <Grid item xs>
                     <Link
-                      href='/home/login'
-                      variant='body2'
-                      color='textSecondary'
+                      href="/home/login"
+                      variant="body2"
+                      color="textSecondary"
                     >
                       Back to Log In
                     </Link>

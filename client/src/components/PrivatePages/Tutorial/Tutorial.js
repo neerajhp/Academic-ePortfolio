@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   makeStyles,
   IconButton,
@@ -7,15 +7,15 @@ import {
   DialogActions,
   DialogContent,
   Slide,
-} from '@material-ui/core';
-import API from '../../../api/API';
-import HelpIcon from '@material-ui/icons/Help';
-import TutorialStepper from './TutorialStepper';
+} from "@material-ui/core";
+import API from "../../../api/API";
+import HelpIcon from "@material-ui/icons/Help";
+import TutorialStepper from "./TutorialStepper";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   tutorialButton: {
-    position: 'fixed',
+    position: "fixed",
     bottom: 0,
     fontSize: 40,
   },
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 /* ================ Component ================ */
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction='up' ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const Tutorial = ({ firstVisit }) => {
@@ -61,7 +61,7 @@ const Tutorial = ({ firstVisit }) => {
       </IconButton>
       <Dialog
         fullWidth
-        maxWidth='md'
+        maxWidth="md"
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -71,19 +71,19 @@ const Tutorial = ({ firstVisit }) => {
           <TutorialStepper activeStep={activeStep} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color='primary'>
+          <Button onClick={handleClose} color="primary">
             Close
           </Button>
           <Button
             onClick={handleBack}
-            color='primary'
+            color="primary"
             disabled={activeStep === 0}
           >
             Previous
           </Button>
           <Button
             onClick={handleNext}
-            color='primary'
+            color="primary"
             disabled={activeStep === 3}
           >
             Next

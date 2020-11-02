@@ -11,7 +11,6 @@ const { authenticateToken } = require("../Middleware/authenticate");
 
 router.use(authenticateToken);
 
-
 // Gets everything needed for the user's profile display
 router.get("/", profileController.getProfile);
 
@@ -61,15 +60,14 @@ router.delete("/skills", profileController.removeSkills);
 const singleFile = parse.documentUpload.single("document");
 const multipleFile = parse.documentUpload.array("document");
 router.post("/featured-work", (req, res) => {
-    multipleFile(req, res, (err) => {
-        if(err){
-            console.log(err);
-        }else{
-            //await uploadController.uploadSingle(req, res);
-            showcaseController.createFeaturedWork(req, res);
-        }
-
-    })
+  multipleFile(req, res, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      //await uploadController.uploadSingle(req, res);
+      showcaseController.createFeaturedWork(req, res);
+    }
+  });
 });
 
 // Gets all of the users' featured works
@@ -81,19 +79,17 @@ router.delete("/featured-work", showcaseController.clearShowcase);
 router.put("/featured-work/:id", showcaseController.editFeaturedWork);
 // Attach files to specific featured work
 router.put("/featured-work/files/:id", (req, res) => {
-    multipleFile(req, res, (err) => {
-        if(err){
-            console.log(err);
-        }else{
-            showcaseController.addFiles(req, res);
-        }
-    })
+  multipleFile(req, res, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      showcaseController.addFiles(req, res);
+    }
+  });
 });
 
 // Removes specified attached files
 router.delete("/featured-work/files/:id", showcaseController.removeFiles);
-
-
 
 // Add urls to specific featured work
 //router.put("/featured-work/url/:id", showcaseController.addUrl);
@@ -105,8 +101,5 @@ router.delete("/featured-work/files/:id", showcaseController.removeFiles);
 router.get("/featured-work/:id", showcaseController.getFeaturedWork);
 // Removes a specific featured work by its object id
 router.delete("/featured-work/:id", showcaseController.removeFeaturedWork);
-
-
-
 
 module.exports = router;

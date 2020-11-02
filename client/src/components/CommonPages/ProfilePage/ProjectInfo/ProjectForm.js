@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Formik } from 'formik';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Formik } from "formik";
 import {
   Typography,
   Button,
   CircularProgress,
   DialogActions,
   DialogContent,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import API from '../../../../api/API';
-import FormikField from '../../../utils/FormikField';
-import RTE from '../../../utils/RTE';
-import { DropzoneArea } from 'material-ui-dropzone';
-import axios from 'axios';
+import API from "../../../../api/API";
+import FormikField from "../../../utils/FormikField";
+import RTE from "../../../utils/RTE";
+import { DropzoneArea } from "material-ui-dropzone";
+import axios from "axios";
 
 /* ================ Styling ================ */
 
@@ -21,32 +21,32 @@ import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
   form: {
     flexGrow: 1,
-    padding: '0 5% 0 5%',
-    '& .MuiFormLabel-root': {
+    padding: "0 5% 0 5%",
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary,
     },
   },
   divider: {
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.secondary.main,
   },
   addButton: {
     marginTop: theme.spacing(3),
   },
   buttonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
   addButtonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
   },
   inputField: {
-    '& .MuiInputBase-input': {
+    "& .MuiInputBase-input": {
       color: theme.palette.text.primary,
     },
-    '& .MuiFormLabel-root': {
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary,
     },
   },
@@ -55,13 +55,13 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonWrapper: {
     margin: theme.spacing(1),
-    position: 'relative',
+    position: "relative",
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     marginTop: -12,
     marginLeft: -12,
   },
@@ -89,8 +89,8 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
     if (records.description === undefined || records.description.length === 0) {
       records.description = [
         {
-          type: 'paragraph',
-          children: [{ text: 'Describe your project here' }],
+          type: "paragraph",
+          children: [{ text: "Describe your project here" }],
         },
       ];
     }
@@ -111,17 +111,17 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
       for (const key in attachedFiles) {
         if (attachedFiles.hasOwnProperty(key)) {
           const item = attachedFiles[key];
-          param.append('document', item);
+          param.append("document", item);
         }
       }
       axios({
-        method: 'post',
-        url: '/api/upload/files',
+        method: "post",
+        url: "/api/upload/files",
         data: param,
         headers: {
-          Authorization: 'Bearer: ' + JSON.parse(localStorage.getItem('token')),
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
         },
-        responseType: 'blob',
+        responseType: "blob",
       }).then((result) => {});
       API.uploadFiles(attachedFiles, records._id).then((result) => {
         if (result.status === 200) {
@@ -142,8 +142,8 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
         title: records.title,
         description: rteValue,
         attachedFiles: records.attachedFiles,
-        image: '',
-        url: '',
+        image: "",
+        url: "",
         fileUpload: [],
       }}
       onSubmit={(values, actions) => {
@@ -176,7 +176,7 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
               let formData = new FormData();
 
               values.fileUpload.map((fileMap) => {
-                formData.append('<NAME>', fileMap);
+                formData.append("<NAME>", fileMap);
               });
 
               return API.attachFilesFeaturedWork(formData, res._id);
@@ -193,9 +193,9 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
           <DialogContent dividers>
             <FormikField
               className={classes.inputField}
-              label='Project Title'
+              label="Project Title"
               formikProps={formikProps}
-              formikKey='title'
+              formikKey="title"
               defaultValue={records.title}
               required
             />
@@ -208,13 +208,13 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
               <DropzoneArea
                 attachedFiles={attachedFiles}
                 acceptedFiles={[
-                  '.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx',
+                  ".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx",
                 ]}
-                dropzoneText={'Drag and drop an image here or click'}
+                dropzoneText={"Drag and drop an image here or click"}
                 filesLimit={5}
                 onDrop={(file) => {
                   formikProps.setFieldValue(
-                    'fileUpload',
+                    "fileUpload",
                     formikProps.values.fileUpload.concat(file)
                   );
                 }}
@@ -225,10 +225,10 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
             <div className={classes.buttonContainer}>
               <div className={classes.buttonWrapper}>
                 <Button
-                  type='Submit'
+                  type="Submit"
                   className={classes.button}
                   onClick={() => handleDel(records._id)}
-                  color='primary'
+                  color="primary"
                 >
                   <Typography>Delete</Typography>
                 </Button>
@@ -243,18 +243,18 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
                 <Button
                   className={classes.button}
                   onClick={() => handleClose()}
-                  color='primary'
+                  color="primary"
                 >
                   <Typography>Cancel</Typography>
                 </Button>
               </div>
               <div className={classes.buttonWrapper}>
                 <Button
-                  type='Submit'
+                  type="Submit"
                   className={classes.button}
                   disabled={!formikProps.isValid}
                   onClick={() => formikProps.handleSubmit()}
-                  color='primary'
+                  color="primary"
                 >
                   <Typography>Update</Typography>
                 </Button>

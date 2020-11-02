@@ -1,75 +1,75 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
-} from '@material-ui/core';
-import axios from 'axios';
-import API from '../../../../api/API';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ProjectDialog from './ProjectDialog';
-import serialize from '../../../utils/serializer';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+} from "@material-ui/core";
+import axios from "axios";
+import API from "../../../../api/API";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ProjectDialog from "./ProjectDialog";
+import serialize from "../../../utils/serializer";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 
 /* ================ Styling ================ */
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    margin: '0 0 1% 1%',
-    width: '100%',
-    height: 'fit-content',
-    '&.Mui-expanded': {
-      margin: '1%',
-      height: 'fit-content',
+    margin: "0 0 1% 1%",
+    width: "100%",
+    height: "fit-content",
+    "&.Mui-expanded": {
+      margin: "1%",
+      height: "fit-content",
     },
   },
   summary: {
-    '& .MuiAccordionSummary-content': {
+    "& .MuiAccordionSummary-content": {
       margin: `${theme.spacing(4)}px 0`,
-      '& .Mui-expanded': {
+      "& .Mui-expanded": {
         margin: `${theme.spacing(4)}px 0`,
       },
     },
   },
   description: {
-    marginLeft: '5%',
-    display: 'block',
+    marginLeft: "5%",
+    display: "block",
   },
   upload: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
     right: 20,
   },
   hidden: {
-    display: 'none',
+    display: "none",
   },
   titleLarge: {
-    marginTop: '0px',
-    fontSize: '2em',
+    marginTop: "0px",
+    fontSize: "2em",
   },
   title: {
-    marginBottom: '50px',
+    marginBottom: "50px",
   },
   fileTitle: {
-    cursor: 'pointer',
+    cursor: "pointer",
   },
   fileList: {
-    display: 'flex',
-    paddingTop: '10px',
+    display: "flex",
+    paddingTop: "10px",
   },
   fileItem: {
-    textAlign: 'center',
-    margin: '0 10px',
-    fontWeight: 'bolder',
-    fontSize: '1em',
+    textAlign: "center",
+    margin: "0 10px",
+    fontWeight: "bolder",
+    fontSize: "1em",
   },
   fileLink: {
-    color: '#112940',
-    fontWeight: 'bolder',
-    marginTop: '15px',
-    paddingTop: '15px',
+    color: "#112940",
+    fontWeight: "bolder",
+    marginTop: "15px",
+    paddingTop: "15px",
   },
 }));
 /* ================ Component ================ */
@@ -104,7 +104,7 @@ const ProjectCard = ({ content, updateProfile, editable }) => {
         expandIcon={<ExpandMoreIcon />}
         className={classes.summary}
       >
-        <Typography variant='h2'>{records.title}</Typography>
+        <Typography variant="h2">{records.title}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.description}>
         {serialize(records.description)}
@@ -115,7 +115,7 @@ const ProjectCard = ({ content, updateProfile, editable }) => {
           <Typography
             onClick={() => onFinish(records._id)}
             className={classes.fileTitle}
-            variant='h4'
+            variant="h4"
           >
             File List
           </Typography>
@@ -124,7 +124,7 @@ const ProjectCard = ({ content, updateProfile, editable }) => {
               <div className={classes.fileItem} key={item.id}>
                 <AssignmentIcon style={{ fontSize: 30 }} />
 
-                <div>{item.s3_key.replace(`user-${item.user_id}/`, '')}</div>
+                <div>{item.s3_key.replace(`user-${item.user_id}/`, "")}</div>
               </div>
             ))}
           </div>
@@ -132,7 +132,7 @@ const ProjectCard = ({ content, updateProfile, editable }) => {
         <Typography
           onClick={() => onIdFinish(records._id)}
           className={classes.fileTitle}
-          variant='h4'
+          variant="h4"
         >
           Load File
         </Typography>

@@ -1,36 +1,36 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Avatar, Typography, CircularProgress } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import API from '../../../api/API';
+import { makeStyles } from "@material-ui/core/styles";
+import { Paper, Avatar, Typography, CircularProgress } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import API from "../../../api/API";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   searchCard: {
-    width: '100%',
-    background: '#FFFFF',
+    width: "100%",
+    background: "#FFFFF",
     color: theme.palette.tertiary.main,
     marginTop: theme.spacing(2),
-    padding: '5%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    padding: "5%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   clickable: {
-    '&:hover': {
+    "&:hover": {
       background: theme.palette.secondary.main,
     },
-    '&:active': {
+    "&:active": {
       background: theme.palette.secondary.overlay,
     },
   },
   profilePicture: {
-    height: '2.5em',
-    width: '2.5em',
-    cursor: 'pointer',
+    height: "2.5em",
+    width: "2.5em",
+    cursor: "pointer",
   },
   bio: {
-    marginLeft: '5%',
+    marginLeft: "5%",
     flexGrow: 1,
   },
 }));
@@ -49,7 +49,7 @@ const SearchCard = ({ user }) => {
       })
       .catch((err) => {
         if (err.response.status === 404) {
-          console.log('Not Found');
+          console.log("Not Found");
           // setProfileNotFound(true);
         } else if (err.response.status === 403) {
           // setProfilePrivate(true);
@@ -75,12 +75,12 @@ const SearchCard = ({ user }) => {
       >
         <Avatar
           src={records.profilePic.fileLink}
-          alt='avatar'
+          alt="avatar"
           className={classes.profilePicture}
         />
 
         <div className={classes.bio}>
-          <Typography variant='h3'>
+          <Typography variant="h3">
             {records.firstName} {records.lastName}
           </Typography>
           <Typography>{records.bio}</Typography>

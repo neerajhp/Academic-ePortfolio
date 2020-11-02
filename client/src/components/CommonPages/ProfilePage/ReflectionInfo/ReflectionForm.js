@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Field, FieldArray, Formik } from 'formik';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Field, FieldArray, Formik } from "formik";
 import {
   Typography,
   Button,
@@ -9,34 +9,34 @@ import {
   IconButton,
   DialogContent,
   DialogActions,
-} from '@material-ui/core';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import API from '../../../../api/API';
+} from "@material-ui/core";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import API from "../../../../api/API";
 
 /* ================ Styling ================ */
 
 // Form Styles
 const useStyles = makeStyles((theme) => ({
   blogEntry: {
-    display: 'flex',
-    paddingLeft: '5%',
+    display: "flex",
+    paddingLeft: "5%",
     marginTop: theme.spacing(2),
   },
   form: {
     flexGrow: 1,
-    padding: '0 5% 0 5%',
-    '& .MuiFormLabel-root': {
+    padding: "0 5% 0 5%",
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary, // or black
     },
   },
   periodInfo: {
-    display: 'flex',
+    display: "flex",
   },
   divider: {
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.tertiary.main,
   },
 
@@ -44,13 +44,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   buttonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
   addButtonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
   },
   graduatedButton: {
     marginBottom: theme.spacing(3),
@@ -67,14 +67,14 @@ const FormField = ({ type, label, index, record }) => {
       {({ field, meta }) => {
         return (
           <TextField
-            color='primary'
-            variant='outlined'
-            margin='dense'
+            color="primary"
+            variant="outlined"
+            margin="dense"
             fullWidth
             label={label}
             defaultValue={record}
             // value={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
+            helperText={meta.touched && meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             onBlur={field.onBlur(field.name)}
             error={meta.touched && Boolean(meta.error)}
@@ -115,8 +115,7 @@ const ReflectionForm = ({ handleClose, records }) => {
   const classes = useStyles();
 
   console.log(records);
-  console.log('records');
-
+  console.log("records");
 
   return (
     <Formik
@@ -155,31 +154,29 @@ const ReflectionForm = ({ handleClose, records }) => {
           <DialogContent dividers>
             <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
               <FieldArray
-                name='blogs'
+                name="blogs"
                 render={(fieldArrayProps) => (
                   <React.Fragment>
                     {formikProps.values.blogs.map((blog, i) => (
                       <React.Fragment key={i}>
                         <div className={classes.blogEntry}>
                           <MenuBookIcon
-                            color='primary'
+                            color="primary"
                             style={{ fontSize: 30 }}
                           />
                           <div className={classes.form}>
-
                             <FormField
-                              type={'title'}
-                              label={'Title'}
+                              type={"title"}
+                              label={"Title"}
                               index={i}
                               record={blog.title}
                             />
                             <ContentField
-                              type={'content'}
-                              label={'Content'}
+                              type={"content"}
+                              label={"Content"}
                               index={i}
                               record={blog.content}
                             />
-                            
                           </div>
                           <div>
                             <IconButton
@@ -206,12 +203,11 @@ const ReflectionForm = ({ handleClose, records }) => {
                         className={classes.button}
                         onClick={() =>
                           fieldArrayProps.push({
-                            title: '',
-                            content: '', 
-
+                            title: "",
+                            content: "",
                           })
                         }
-                        color='secondary'
+                        color="secondary"
                         startIcon={<AddIcon style={{ fontSize: 30 }} />}
                       >
                         Add a Reflection
@@ -227,17 +223,17 @@ const ReflectionForm = ({ handleClose, records }) => {
             <Button
               className={classes.button}
               onClick={() => handleClose()}
-              color='primary'
+              color="primary"
             >
               <Typography>Cancel</Typography>
             </Button>
             <div className={classes.buttonWrapper}>
               <Button
-                type='Submit'
+                type="Submit"
                 className={classes.submit}
                 onClick={() => formikProps.handleSubmit()}
                 disabled={!formikProps.isValid || formikProps.isSubmitting}
-                color='primary'
+                color="primary"
               >
                 <Typography>Update</Typography>
               </Button>

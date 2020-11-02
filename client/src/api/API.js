@@ -269,7 +269,7 @@ export default {
   },
   removeAttachedFilesFeaturedWork: function (body, recordID){
     return axios.delete(`api/profile/featured-work/files/${recordID}`, {
-      attachedFiles: body.attacheFiles
+      attachedFiles: body.attachedFiles
     });
   },
   // Removes a specific featured work

@@ -349,7 +349,7 @@ export default {
   },
   // Edit social media links
   editSocialMedia: function (body) {
-    return axios.put('api/profile/social-media', 
+    return axios.put('api/profile/social-media',
       // e.g. [{site: "facebook", link: "www.facebook.com"}, {site: "linkedIn", link: "www.linkedIn.com"}]
       body
       // linkedIn: body.linkedIn,

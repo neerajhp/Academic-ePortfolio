@@ -76,13 +76,21 @@ const SocialMediaForm = ({ handleClose, records }) => {
   return (
     <Formik
         initialValues={{
-         'socialMedia' : records,
+          
+          'linkedIn': records.linkedIn,
+          'twitter': records.twitter,
+          'instagram': records.instagram,
+          'youtube': records.youtube,
+          'facebook': records.facebook,
+
+        //  'socialMedia' : records,
         }}
       onSubmit={(values, actions) => {
         console.log(values)
         // API.editSocialMedia(values).then(handleClose())
         API.editSocialMedia(values)
         .then((res) => {
+          console.log(res);
           handleClose();
         })
         .catch((err) => {
@@ -96,12 +104,18 @@ const SocialMediaForm = ({ handleClose, records }) => {
             <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
               {/* <ContentField record = {records}/> */}
               {/* // e.g. [{site: "facebook", link: "www.facebook.com"}, {site: "linkedIn", link: "www.linkedIn.com"}] */}
-
+{/* 
               <FormField label='Linkedin url' type='socialMedia.linkedIn'/>
               <FormField label='Twitter url' type='socialMedia.twitter'/>
               <FormField label='Instagram url' type='socialMedia.instagram'/>
               <FormField label='Youtube url' type='socialMedia.youtube'/>
-              <FormField label='Facebook url' type='socialMedia.facebook'/>
+              <FormField label='Facebook url' type='socialMedia.facebook'/> */}
+
+              <FormField label='Linkedin url' type='linkedIn'/>
+              <FormField label='Facebook url' type='facebook'/> 
+              <FormField label='Instagram url' type='instagram'/>
+              <FormField label='Youtube url' type='youtube'/>
+              <FormField label='Twitter url' type='twitter'/>
 
 
             </form>

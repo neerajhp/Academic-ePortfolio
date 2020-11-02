@@ -482,6 +482,7 @@ const getSkills = async (req, res) => {
 
 // Add available social media links to the user model
 const addSocialMedia = async (req, res) => {
+  console.log(req.body);
   try {
     console.log("Hello");
     await User.findById(req.user.id, (err, result) => {
@@ -500,6 +501,7 @@ const addSocialMedia = async (req, res) => {
               throw err;
             }
             if (result) {
+              console.log(req.body);
               res.status(200).json(result.socialMedia);
             } else {
               res.status(400).json('Failed to find and update the user');

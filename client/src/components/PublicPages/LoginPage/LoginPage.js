@@ -289,7 +289,7 @@ const LoginPage = ({ globalClasses }) => {
                     <Grid item xs={6}>
                       <FacebookLogin
                         appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
-                        autoLoad={true}
+                        autoLoad={false}
                         callback={responseFacebook}
                         render={(renderProps) => (
                           <Button

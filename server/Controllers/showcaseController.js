@@ -23,197 +23,162 @@ const initShowcase = async (req, res) => {
           res.status(200).json(doc);
         }
       });
+    } else {
+      res.status(400).json('User already has a showcase');
     }
-    const createFeaturedWork = async (req, res) => {
-      const featuredWork = new FeaturedWork({
-        user_id: req.user.id,
-        title: req.body.title,
-        type: req.body.type,
-        description: req.body.description,
-        image: req.body.image,
-        url: req.body.url,
-      });
+  });
+};
+const createFeaturedWork = async (req, res) => {
+  const featuredWork = new FeaturedWork({
+    user_id: req.user.id,
+    title: req.body.title,
+    type: req.body.type,
+    description: req.body.description,
+    image: req.body.image,
+    url: req.body.url,
+  });
 
-      await FeaturedWork.findOne(
-        { user_id: req.user.id, title: req.body.title },
-        (err, result) => {
-          if (err) {
-            throw err;
-          }
-          if (result) {
-            res
-              .status(400)
-              .json('A project with the same title already exists');
-            return;
-          } else {
-            if (req.files) {
-              (async () => {
-                for (var i = 0; i < req.files.length; i++) {
-                  let savedFile;
-                  let uploadedFile = await uploadController.saveFile(
-                    req.user.id,
-                    req.files[i]
-                  );
-                  if (uploadedFile) {
-                    savedFile = {
-                      fileLink: uploadedFile.fileLink,
-                    };
-                    console.log(savedFile);
-                    featuredWork['attachedFiles'].push(savedFile);
-                  } else {
-                    console.log('fuck');
-                  }
-                }
-                // let savedFile;
-                // let uploadedFile = await uploadController.saveFile(req);
-                // console.log(uploadedFile);
-                // if(uploadedFile){
-                //     savedFile = {
-                //         fileLink: uploadedFile.fileLink
-                //     }
-                //     console.log(savedFile);
-                //     featuredWork["attachedFiles"].push(savedFile);
-                // }else{
-                //     console.log("fuck");
-                // }
-
-                featuredWork.save((err, result) => {
-                  if (err) {
-                    throw err;
-                  } else {
-                    res.status(200).json(result);
-                  }
-                });
-              })();
-            } else {
-              featuredWork.save((err, result) => {
-                if (err) {
-                  throw err;
-                } else {
-                  res.status(200).json(result);
-                }
-              });
-            }
-          }
-        }
-      );
-    };
-
-    const addFiles = async (req, res) => {
-      try {
-        if (req.files) {
-          let newFiles = [];
-          await (async () => {
-            for (var i = 0; i < req.files.length; i++) {
+  await FeaturedWork.findOne(
+    { user_id: req.user.id, title: req.body.title },
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        res.status(400).json('A project with the same title already exists');
+        return;
+      } else {
+        console.log(req.body);
+        if (req.body.attachedFiles) {
+          (async () => {
+            for (var i = 0; i < req.body.attachedFiles.length; i++) {
               let savedFile;
               let uploadedFile = await uploadController.saveFile(
                 req.user.id,
-                req.files[i]
+                req.body.attachedFiles[i]
               );
               if (uploadedFile) {
                 savedFile = {
-                  //documentID: uploadedFile._id,
                   fileLink: uploadedFile.fileLink,
                 };
                 console.log(savedFile);
-                newFiles.push(savedFile);
+                featuredWork['attachedFiles'].push(savedFile);
               } else {
-                console.log('file not saved');
-                //res.status(400).json("Failed to save file");
-                //return;
+                console.log('fuck');
               }
             }
-            // let savedFile;
-            // let uploadedFile = await uploadController.saveFile(req);
-            // console.log(uploadedFile);
-            // if(uploadedFile){
-            //     savedFile = {
-            //         //documentID: uploadedFile._id,
-            //         fileLink: uploadedFile.fileLink
-            //     }
-            //     console.log(savedFile);
-            //     newFiles.push(savedFile);
-            // }else{
-            //     console.log("fuck");
-            //     res.status(400).json("Failed to save file");
-            //     return;
-            // }
-          })();
 
-          await FeaturedWork.findOneAndUpdate(
-            { _id: req.params.id, user_id: req.user.id },
-            { $addToSet: { attachedFiles: newFiles } },
-            { new: true },
-            (err, result) => {
-              console.log('abt to update');
+            featuredWork.save((err, result) => {
               if (err) {
                 throw err;
-              }
-              if (result) {
-                console.log('sending response');
-                res.status(200).json(result);
               } else {
-                res.status(404).json('Featured work not found');
+                res.status(200).json(result);
               }
-            }
-          );
+            });
+          })();
         } else {
-          console.log('No file');
-          res.status(400).json('No file to add');
-        }
-      } catch (err) {
-        res
-          .status(400)
-          .json('Failed to add attached files to the featured work model');
-      }
-    };
-
-    const removeFiles = async (req, res) => {
-      try {
-        await featuredWork.findByIdAndUpdate(
-          req.params.id,
-          {
-            $pull: { attachedFiles: { $in: req.body.attachedFiles } },
-          },
-          { new: true },
-          (err, result) => {
+          featuredWork.save((err, result) => {
             if (err) {
               throw err;
-            }
-            if (result) {
+            } else {
               res.status(200).json(result);
-              // Maybe call delete files api after calling this api?
             }
-          }
-        );
-      } catch (error) {
-        res.status(400).json('Failed to remove attached files');
+          });
+        }
       }
-    };
-  });
+    }
+  );
 };
 
 const addFiles = async (req, res) => {
   try {
-    await FeaturedWork.findOneAndUpdate(
-      { _id: req.params.id, user_id: req.user.id },
-      { $addToSet: { attachedFiles: req.body.attachedFiles } },
+    if (req.files) {
+      let newFiles = [];
+      await (async () => {
+        for (var i = 0; i < req.files.length; i++) {
+          let savedFile;
+          let uploadedFile = await uploadController.saveFile(
+            req.user.id,
+            req.files[i]
+          );
+          if (uploadedFile) {
+            savedFile = {
+              //documentID: uploadedFile._id,
+              fileLink: uploadedFile.fileLink,
+            };
+            console.log(savedFile);
+            newFiles.push(savedFile);
+          } else {
+            console.log('file not saved');
+            //res.status(400).json("Failed to save file");
+            //return;
+          }
+        }
+        // let savedFile;
+        // let uploadedFile = await uploadController.saveFile(req);
+        // console.log(uploadedFile);
+        // if(uploadedFile){
+        //     savedFile = {
+        //         //documentID: uploadedFile._id,
+        //         fileLink: uploadedFile.fileLink
+        //     }
+        //     console.log(savedFile);
+        //     newFiles.push(savedFile);
+        // }else{
+        //     console.log("fuck");
+        //     res.status(400).json("Failed to save file");
+        //     return;
+        // }
+      })();
+
+      await FeaturedWork.findOneAndUpdate(
+        { _id: req.params.id, user_id: req.user.id },
+        { $addToSet: { attachedFiles: newFiles } },
+        { new: true },
+        (err, result) => {
+          console.log('abt to update');
+          if (err) {
+            throw err;
+          }
+          if (result) {
+            console.log('sending response');
+            res.status(200).json(result);
+          } else {
+            res.status(404).json('Featured work not found');
+          }
+        }
+      );
+    } else {
+      console.log('No file');
+      res.status(400).json('No file to add');
+    }
+  } catch (err) {
+    res
+      .status(400)
+      .json('Failed to add attached files to the featured work model');
+  }
+};
+
+const removeFiles = async (req, res) => {
+  try {
+    await featuredWork.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: { attachedFiles: { $in: req.body.attachedFiles } },
+      },
       { new: true },
       (err, result) => {
         if (err) {
           throw err;
         }
         if (result) {
-          res.status(200).json(result.attachedFiles);
-        } else {
-          res.status(404).json('Featured work not found');
+          res.status(200).json(result);
+          // Maybe call delete files api after calling this api?
         }
       }
     );
-  } catch (err) {
-    res
-      .status(400)
-      .json('Failed to add attached files to the featured work model');
+  } catch (error) {
+    res.status(400).json('Failed to remove attached files');
   }
 };
 

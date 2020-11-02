@@ -75,8 +75,7 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
 
   //RTE
   const [rteValue, setRTEValue] = useState([]);
-
-  // const [attachedFiles, setAttachedFiles] = useState([]);
+  const [attachedFiles, setAttachedFiles] = useState([]);
 
   // remove
   const handleDel = () => {
@@ -96,7 +95,9 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
         },
       ];
     }
+
     setRTEValue(records.description);
+    // setAttachedFiles(records.attachedFiles);
   }, [records.description]);
 
   //upload files
@@ -132,9 +133,9 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
   };
 
   //test console
-  const attachedFiles = new File(['foo'], 'file', {
-    type: '.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx',
-  });
+  // const attachedFiles = new File(['foo'], 'file', {
+  //   type: '.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx',
+  // });
 
   return (
     <Formik
@@ -144,6 +145,7 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
         attachedFiles: records.attachedFiles,
         image: '',
         url: '',
+        fileUpload: [],
       }}
       onSubmit={(values, actions) => {
         let featuredWork = {
@@ -152,12 +154,23 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
           attachedFiles: values.attachedFiles,
           image: values.image,
           url: values.url,
+          fileUpload: values.fileUpload,
         };
+        console.log(va);
         if (newWork) {
           API.createFeaturedWork(featuredWork).then(({ res }) => {
             console.log(res);
             handleClose();
           });
+          // API.createFeaturedWork(featuredWork)
+          //   .then(({ res }) => {
+          //     console.log(res);
+          //     return API.attachFilesFeaturedWork(values.attachedFiles, res._id);
+          //   })
+          //   .then((res) => {
+          //     console.log(res);
+          //     handleClose();
+          //   });
         } else {
           API.editFeaturedWork(featuredWork, records._id).then(({ res }) => {
             // console.log(res);
@@ -190,7 +203,12 @@ const ProjectForm = ({ handleClose, records, newWork }) => {
                 ]}
                 dropzoneText={'Drag and drop an image here or click'}
                 filesLimit={5}
-                onChange={(files) => console.log('Files:', files)}
+                onDrop={(file) => {
+                  formikProps.setFieldValue(
+                    'fileUpload',
+                    formikProps.values.fileUpload.concat(file)
+                  );
+                }}
               />
             </div>
           </DialogContent>

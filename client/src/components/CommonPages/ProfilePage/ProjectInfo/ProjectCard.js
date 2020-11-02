@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   titleLarge: {
     marginTop: '0px',
-    fontSize:'2em',
+    fontSize: '2em',
   },
   title: {
     marginBottom: '50px',
@@ -82,8 +82,6 @@ const ProjectCard = ({ content, updateProfile }) => {
   const [allFiles, setAllFiles] = useState([]);
   const [allId, setAllId] = useState([]);
 
-
-
   //showFiles
   const onFinish = () => {
     API.getFile(records._id).then((result) => {
@@ -103,7 +101,6 @@ const ProjectCard = ({ content, updateProfile }) => {
     });
   };
 
-
   return (
     <Accordion className={classes.card}>
       <AccordionSummary
@@ -115,47 +112,41 @@ const ProjectCard = ({ content, updateProfile }) => {
       <AccordionDetails className={classes.description}>
         {serialize(records.description)}
       </AccordionDetails>
-      <AccordionSummary className={classes.titleLarge}>
-        Files
-      </AccordionSummary>
+      <AccordionSummary className={classes.titleLarge}>Files</AccordionSummary>
       <AccordionDetails className={classes.description}>
         <div style={{ marginTop: 50 }}>
-        <Typography
+          <Typography
             onClick={() => onFinish(records._id)}
             className={classes.fileTitle}
             variant='h4'
-        >
-          File List
-        </Typography>
-        <div className={classes.fileList}>
-          {allFiles.map((item) => (
+          >
+            File List
+          </Typography>
+          <div className={classes.fileList}>
+            {allFiles.map((item) => (
               <div className={classes.fileItem} key={item.id}>
                 <AssignmentIcon style={{ fontSize: 30 }} />
 
-                <div>
-                  {item.s3_key.replace(`user-${item.user_id}/`, '')}
-                </div>
+                <div>{item.s3_key.replace(`user-${item.user_id}/`, '')}</div>
               </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>
         <Typography
-            onClick={() => onIdFinish(records._id)}
-            className={classes.fileTitle}
-            variant='h4'
+          onClick={() => onIdFinish(records._id)}
+          className={classes.fileTitle}
+          variant='h4'
         >
           Load File
         </Typography>
         {allId &&
-        allId.map((item) => (
+          allId.map((item) => (
             <div key={item._id}>
               <a className={classes.fileLink} href={item.fileLink}>
                 {item.s3_key}
               </a>
             </div>
-        ))}
-
-
+          ))}
       </AccordionDetails>
       <ProjectDialog
         empty={false}

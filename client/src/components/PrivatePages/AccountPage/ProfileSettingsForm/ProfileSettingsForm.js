@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { Formik } from 'formik';
-import { Paper, Typography, Button } from '@material-ui/core';
+import { Paper, Typography, Button, Switch, FormControlLabel} from '@material-ui/core';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import FormikField from '../../../utils/FormikField';
 import validationSchema from './Validation';
 import API from '../../../../api/API';
+
 
 /* ================ Component ================ */
 
 const ProfileSettingsForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
   const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
+  const [checked, setChecked] = useState(() => {
+    API.getPrivacy().then(({data}) => {
+      console.log(data)
+      return data
+    })
+  });
+
+  const toggleChecked = () => {
+    setChecked((prev) => !prev);
+  };
+
+  console.log(checked);
 
   return (
     <Paper className={globalClasses.card}>
@@ -23,9 +36,14 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
         <Formik
           initialValues={{
             url: user.url,
+            private: user.private,
           }}
           onSubmit={(values, actions) => {
             setSubmitted(false);
+            console.log(values);
+            API.changePrivacy({
+              private: checked,
+            })
             API.editUserInformation({
               url: values.url,
             })
@@ -50,11 +68,18 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                 label='Custom URL'
                 formikProps={formikProps}
                 formikKey='url'
-                required
+                // required
                 value={user.url}
                 className={`${globalClasses.field} ${fieldSubmitted}`}
               />
-
+              <FormControlLabel
+                control={<Switch
+                checked={checked}
+                onChange={toggleChecked}
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                />}
+                label="Set Profile To Private Mode" labelPlacement="start"
+              />
               <div className={globalClasses.buttonWrapper}>
                 <Button
                   type='Submit'
@@ -72,6 +97,8 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                   />
                 )}
               </div>
+
+
             </form>
           )}
         </Formik>

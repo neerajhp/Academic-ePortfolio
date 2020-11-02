@@ -69,9 +69,11 @@ Runs the backend tests
 
 ### Running the tests
 
-## Frontend Testing
+# Frontend Testing
+To run the frontend tests automatically, you need to first ensure the local server is running, then type "./node_modules/.bin/cypress run". 
+This should run all the tests automatically and show you the number of tests that passed and failed. 
+The tests are organised in a way such that all the tests in a file tests a specific  front end page. To see how the tests are run in real time in a browser, you can run "./node_modules/.bin/cypress open" which opens up the cypress app where you can select a test file see the tests run in real time in your browser. 
 
-Explain how to run the automated tests for this system
 
 ## Backend Testing
 
@@ -161,14 +163,14 @@ A production deployment of this project exists at https://homealone30022.herokua
 
 ## Authors
 
-- **Denzel Tano** - [Github](https://github.com/dtano)
-- **Jinxin Tian** - [Github](https://github.com/JinxinT)
-- **Kai Ying Lim** - [Github](https://github.com/LKY1999)
-- **Neeraj Patel** - [Github](https://github.com/neerajhp)
-- **Polo Chiu** - [Github](https://github.com/polopineapple)
+- [**Denzel Tano**](https://github.com/dtano)
+- [**Jinxin Tian**](https://github.com/JinxinT)
+- [**Kai Ying Lim**](https://github.com/LKY1999)
+- [**Neeraj Patel**](https://github.com/neerajhp)
+- [**Polo Chiu**](https://github.com/polopineapple)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
+

@@ -272,8 +272,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
             </div>
             <div className={classes.section}>
               <ReflectionCard />
-              <ReflectionCard />
-              <ReflectionCard />
+
             </div>
             <div className={classes.section}>{getProjects()}</div>
             <div className={classes.section}>

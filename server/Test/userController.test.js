@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 
 const { clearDB } = require('./clearDB');
 
-
 clearDB();
+
 
 test("Should sign up a user", async () =>{
     await request.post("/api/user/signup")

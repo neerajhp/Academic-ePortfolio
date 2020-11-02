@@ -48,25 +48,37 @@ const createFeaturedWork = async (req, res) => {
         res.status(400).json('A project with the same title already exists');
         return;
       } else {
-        console.log(req.body);
-        if (req.body.attachedFiles) {
-          (async () => {
-            for (var i = 0; i < req.body.attachedFiles.length; i++) {
+        if (req.files) {
+          async () => {
+            for (var i = 0; i < req.files.length; i++) {
               let savedFile;
               let uploadedFile = await uploadController.saveFile(
                 req.user.id,
-                req.body.attachedFiles[i]
+                req.files[i]
               );
               if (uploadedFile) {
                 savedFile = {
+                  documentID: uploadedFile._id,
                   fileLink: uploadedFile.fileLink,
                 };
                 console.log(savedFile);
                 featuredWork['attachedFiles'].push(savedFile);
               } else {
-                console.log('fuck');
+                console.log("file somehow didn't save");
               }
             }
+            // let savedFile;
+            // let uploadedFile = await uploadController.saveFile(req);
+            // console.log(uploadedFile);
+            // if(uploadedFile){
+            //     savedFile = {
+            //         fileLink: uploadedFile.fileLink
+            //     }
+            //     console.log(savedFile);
+            //     featuredWork["attachedFiles"].push(savedFile);
+            // }else{
+            //     console.log("fuck");
+            // }
 
             featuredWork.save((err, result) => {
               if (err) {
@@ -75,7 +87,7 @@ const createFeaturedWork = async (req, res) => {
                 res.status(200).json(result);
               }
             });
-          })();
+          };
         } else {
           featuredWork.save((err, result) => {
             if (err) {
@@ -103,7 +115,7 @@ const addFiles = async (req, res) => {
           );
           if (uploadedFile) {
             savedFile = {
-              //documentID: uploadedFile._id,
+              documentID: uploadedFile._id,
               fileLink: uploadedFile.fileLink,
             };
             console.log(savedFile);
@@ -159,25 +171,53 @@ const addFiles = async (req, res) => {
   }
 };
 
+// Remove attached files from featured work
 const removeFiles = async (req, res) => {
   try {
-    await featuredWork.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: { attachedFiles: { $in: req.body.attachedFiles } },
-      },
-      { new: true },
-      (err, result) => {
-        if (err) {
-          throw err;
+    if (req.body.attachedFiles) {
+      await filesController.deleteFiles(req.body.attachedFiles);
+      console.log(req.body.attachedFiles);
+      console.log('Time to update');
+
+      let deleteIDs = req.body.attachedFiles.map((file) => {
+        return file._id;
+      });
+      await FeaturedWork.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: { attachedFiles: { _id: { $in: deleteIDs } } },
+        },
+        { new: true },
+        (err, result) => {
+          if (err) {
+            throw err;
+          }
+          if (result) {
+            console.log(result);
+            res.status(200).json(result);
+            // Maybe call delete files api after calling this api?
+          } else {
+            console.log('damn man');
+          }
         }
-        if (result) {
-          res.status(200).json(result);
-          // Maybe call delete files api after calling this api?
-        }
-      }
-    );
+      );
+    } else {
+      res.status(400).json('No files specified');
+    }
+
+    // await featuredWork.findByIdAndUpdate(req.params.id, {
+    //     $pull: { attachedFiles: { $in: req.body.attachedFiles }}
+    // }, {new: true}, (err, result) => {
+    //     if(err){
+    //         throw err;
+    //     }
+    //     if(result){
+    //         res.status(200).json(result);
+    //         // Maybe call delete files api after calling this api?
+    //     }
+    // })
   } catch (error) {
+    console.log('Something happened');
     res.status(400).json('Failed to remove attached files');
   }
 };
@@ -332,39 +372,56 @@ const getFeaturedWork = async (req, res) => {
 // - Have the backend check if the featuredWork has an attachedFile, and if they do look for the document, then delete its s3 instance and record
 const removeFeaturedWork = async (req, res) => {
   try {
-    // await FeaturedWork.findById({_id: req.params.id}, (err, result) => {
-    //     if(err){
-    //         console.log("Error");
-    //     }else{
-    //         if(result.attachedFile){
-
-    //         }
-    //     }
-    // })
-    await FeaturedWork.findByIdAndDelete(req.params.id, (err, result) => {
+    await FeaturedWork.findById(req.params.id, (err, result) => {
       if (err) {
-        console.log('failed to delete');
         throw err;
       }
+      console.log(result);
       if (result) {
-        res.status(200).json({
-          message: 'Successfully deleted featured work',
-          filesToDelete: result.attachedFiles,
+        if (result.attachedFiles) {
+          (async () => {
+            await filesController.deleteFiles(result.attachedFiles);
+          })();
+        }
+        FeaturedWork.deleteOne({ _id: req.params.id }, (err, doc) => {
+          if (err) {
+            throw err;
+          } else {
+            res.status(200).json(doc);
+          }
         });
       } else {
-        res.status(404).json('Failed to find featured work');
+        res.status(404).json('Featured work not found');
       }
-
-      // else{
-      //     if(result.n === 0){
-      //         console.log("nothing deleted");
-      //         res.status(400).json("Attempted to delete something that doesn't exist");
-      //     }else{
-      //         console.log("deleted");
-      //         res.status(200).json("successfully deleted featured work");
-      //     }
-      // }
     });
+    // await FeaturedWork.findByIdAndDelete(req.params.id, (err, result) => {
+    //     if(err){
+    //         console.log("failed to delete");
+    //         throw err;
+    //     }
+    //     console.log(result);
+    //     if(result){
+    //         //console.log(result);
+    //         if(result.attachedFiles){
+    //             (async () => {
+    //                 await filesController.deleteFiles(result.attachedFiles);
+    //             })();
+    //         }
+    //         res.status(200).json("successfuly deleted");
+    //     }else{
+    //         res.status(404).json("Failed to find featured work");
+    //     }
+
+    // else{
+    //     if(result.n === 0){
+    //         console.log("nothing deleted");
+    //         res.status(400).json("Attempted to delete something that doesn't exist");
+    //     }else{
+    //         console.log("deleted");
+    //         res.status(200).json("successfully deleted featured work");
+    //     }
+    // }
+    //})
   } catch (error) {
     res.status(400).send(error);
   }

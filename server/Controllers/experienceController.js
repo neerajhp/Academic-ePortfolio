@@ -1,4 +1,4 @@
-const Experience = require('../Models/Experience');
+const Experience = require("../Models/Experience");
 
 // Post a new experience record (Employment, volunteering, extracurricular)
 const addExperience = async (req, res) => {
@@ -29,26 +29,26 @@ const addExperience = async (req, res) => {
           throw err;
         }
         if (!result) {
-          console.log('New experience');
+          console.log("New experience");
           newExperience.save((err, result) => {
             if (err) {
               throw err;
             }
             if (!result) {
-              res.status(400).json('Failed to save experience');
+              res.status(400).json("Failed to save experience");
             } else {
               res.status(200).json(result);
-              console.log('Saved');
+              console.log("Saved");
             }
           });
         } else {
-          console.log('Duplicate');
-          res.status(400).json('A duplicate exists');
+          console.log("Duplicate");
+          res.status(400).json("A duplicate exists");
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Error while trying to save new experience');
+    res.status(400).json("Error while trying to save new experience");
   }
 };
 
@@ -64,7 +64,7 @@ const editExperience = async (req, res, next) => {
           throw err;
         }
         if (result) {
-          console.log('Updated');
+          console.log("Updated");
           Experience.findById(req.params.id, (err, exp) => {
             if (err) {
               throw err;
@@ -72,7 +72,7 @@ const editExperience = async (req, res, next) => {
             res.status(200).json(exp);
           });
         } else {
-          res.status(404).json('Failed to find experience');
+          res.status(404).json("Failed to find experience");
         }
       }
     );
@@ -108,21 +108,21 @@ const getAllExperience = async (req, res) => {
         throw err;
       }
       if (result) {
-        console.log('Found experiences');
+        console.log("Found experiences");
 
         const orgExp = sortExp(result);
 
         res.status(200).json(orgExp);
       } else {
-        console.log('Not found');
-        res.status(404).json('No experience found');
+        console.log("Not found");
+        res.status(404).json("No experience found");
       }
     });
 
     // Check for empty list too later
   } catch (error) {
     console.log(error);
-    res.status(400).json('Error while looking for experience');
+    res.status(400).json("Error while looking for experience");
   }
 };
 
@@ -152,11 +152,11 @@ const sortExp = (obj) => {
 
   if (obj != null) {
     for (let elem of obj) {
-      if (elem.type == 'employment') {
+      if (elem.type == "employment") {
         orgExp.employment.push(elem);
-      } else if (elem.type == 'volunteering') {
+      } else if (elem.type == "volunteering") {
         orgExp.volunteering.push(elem);
-      } else if (elem.type == 'extracurricular') {
+      } else if (elem.type == "extracurricular") {
         orgExp.extracurricular.push(elem);
       }
     }
@@ -181,10 +181,10 @@ const findAll = async (userID) => {
         throw err;
       }
       if (result) {
-        console.log('Found experiences');
+        console.log("Found experiences");
         exp = result;
       } else {
-        console.log('Not found');
+        console.log("Not found");
         exp = null;
       }
     });
@@ -200,11 +200,11 @@ const findAll = async (userID) => {
     };
 
     for (let elem of exp) {
-      if (elem.type == 'employment') {
+      if (elem.type == "employment") {
         orgExp.employment.push(elem);
-      } else if (elem.type == 'volunteering') {
+      } else if (elem.type == "volunteering") {
         orgExp.volunteering.push(elem);
-      } else if (elem.type == 'extracurricular') {
+      } else if (elem.type == "extracurricular") {
         orgExp.extracurricular.push(elem);
       }
     }
@@ -226,11 +226,11 @@ const getExperience = async (req, res, next) => {
       if (result) {
         res.status(200).json(result);
       } else {
-        res.status(404).json('Failed to find experience');
+        res.status(404).json("Failed to find experience");
       }
     });
   } catch (error) {
-    res.status(400).json('Error occured while looking for experience');
+    res.status(400).json("Error occured while looking for experience");
   }
 };
 
@@ -239,9 +239,9 @@ const deleteAllExperience = async (req, res) => {
   try {
     let deleteStatus = await removeAll(req.user.id);
     if (!deleteStatus) {
-      res.status(400).json('Nothing was deleted');
+      res.status(400).json("Nothing was deleted");
     } else {
-      res.status(200).json('Experience cleared');
+      res.status(200).json("Experience cleared");
     }
   } catch (error) {
     res.status(400).json("Error occured while deleting the user's experiences");
@@ -278,11 +278,11 @@ const deleteExperience = async (req, res, next) => {
       if (result.deletedCount == 1) {
         res.status(200).json(result);
       } else {
-        res.status(400).json('Failed to delete experience');
+        res.status(400).json("Failed to delete experience");
       }
     });
   } catch (error) {
-    res.status(400).json('Error occured while deleting');
+    res.status(400).json("Error occured while deleting");
   }
 };
 
@@ -293,7 +293,7 @@ const getTypeExperience = async (userID, type) => {
     if (err) {
       throw err;
     }
-    console.log('Experience found');
+    console.log("Experience found");
     experience = result;
   });
   return experience;
@@ -302,9 +302,9 @@ const getTypeExperience = async (userID, type) => {
 // Gets the user's employment history
 const getEmploymentHistory = async (req, res) => {
   try {
-    let result = await getTypeExperience(req.user.id, 'employment');
+    let result = await getTypeExperience(req.user.id, "employment");
     if (!result || result.length === 0) {
-      res.status(404).json('No Employment history found');
+      res.status(404).json("No Employment history found");
     } else {
       res.status(200).json(result);
     }
@@ -319,9 +319,9 @@ const getEmploymentHistory = async (req, res) => {
 const viewEmploymentHistory = async (req, res) => {
   try {
     let userID = req.body.id;
-    let result = await getTypeExperience(userID, 'employment');
+    let result = await getTypeExperience(userID, "employment");
     if (!result || result.length === 0) {
-      res.status(404).json('The user has no Employment history found');
+      res.status(404).json("The user has no Employment history found");
     } else {
       res.status(200).json(result);
     }
@@ -335,9 +335,9 @@ const viewEmploymentHistory = async (req, res) => {
 // Gets the user's volunteering history
 const getVolunteeringHistory = async (req, res) => {
   try {
-    let result = await getTypeExperience(req.user.id, 'volunteering');
+    let result = await getTypeExperience(req.user.id, "volunteering");
     if (!result || result.length === 0) {
-      res.status(404).json('No Volunteering history found');
+      res.status(404).json("No Volunteering history found");
     } else {
       res.status(200).json(result);
     }
@@ -352,9 +352,9 @@ const getVolunteeringHistory = async (req, res) => {
 const viewVolunteeringHistory = async (req, res) => {
   try {
     let userID = req.body.id;
-    let result = await getTypeExperience(userID, 'volunteering');
+    let result = await getTypeExperience(userID, "volunteering");
     if (!result || result.length === 0) {
-      res.status(404).json('The user has no volunteering history found');
+      res.status(404).json("The user has no volunteering history found");
     } else {
       res.status(200).json(result);
     }
@@ -368,9 +368,9 @@ const viewVolunteeringHistory = async (req, res) => {
 // Gets the user's volunteering history
 const getExtracurriculars = async (req, res) => {
   try {
-    let result = await getTypeExperience(req.user.id, 'extracurricular');
+    let result = await getTypeExperience(req.user.id, "extracurricular");
     if (!result || result.length === 0) {
-      res.status(404).json('No extracurriculars found');
+      res.status(404).json("No extracurriculars found");
     } else {
       res.status(200).json(result);
     }
@@ -383,9 +383,9 @@ const getExtracurriculars = async (req, res) => {
 const viewExtracurriculars = async (req, res) => {
   try {
     let userID = req.body.id;
-    let result = await getTypeExperience(userID, 'extracurricular');
+    let result = await getTypeExperience(userID, "extracurricular");
     if (!result || result.length === 0) {
-      res.status(404).json('The user has no extracurriculars found');
+      res.status(404).json("The user has no extracurriculars found");
     } else {
       res.status(200).json(result);
     }

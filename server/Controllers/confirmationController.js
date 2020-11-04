@@ -1,11 +1,11 @@
-const User = require('../Models/User.js');
-const Token = require('../Models/Token');
-const Reset = require('../Models/Reset');
+const User = require("../Models/User.js");
+const Token = require("../Models/Token");
+const Reset = require("../Models/Reset");
 
-var bcrypt = require('bcrypt');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-const { google } = require('googleapis');
+var bcrypt = require("bcrypt");
+var crypto = require("crypto");
+var nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -33,7 +33,7 @@ const confirmationPost = async (req, res) => {
         return res
           .status(400)
           .json(
-            'We were unable to find a valid token. Your token my have expired.'
+            "We were unable to find a valid token. Your token my have expired."
           );
       } else {
         // If we found a token, find a matching user
@@ -46,11 +46,11 @@ const confirmationPost = async (req, res) => {
             if (!user)
               return res
                 .status(400)
-                .json('We were unable to find a user for this token.');
+                .json("We were unable to find a user for this token.");
             if (user.isVerified)
               return res
                 .status(400)
-                .json('This user has already been verified.');
+                .json("This user has already been verified.");
 
             // Verify and save the user
             user.isVerified = true;
@@ -62,7 +62,7 @@ const confirmationPost = async (req, res) => {
               }
               res
                 .status(200)
-                .json('The account has been verified. Please log in.');
+                .json("The account has been verified. Please log in.");
             });
           }
         );
@@ -80,7 +80,7 @@ const sendTokenPost = async (req, res) => {
       // Confirmation Token
       var token = new Token({
         userID: user._id,
-        token: crypto.randomBytes(16).toString('hex'),
+        token: crypto.randomBytes(16).toString("hex"),
       });
       token.save(function (err) {
         if (err) {
@@ -89,10 +89,10 @@ const sendTokenPost = async (req, res) => {
           });
         }
         var transporter = nodemailer.createTransport({
-          service: 'gmail',
+          service: "gmail",
           auth: {
-            type: 'OAuth2',
-            user: 'homealone30022@gmail.com',
+            type: "OAuth2",
+            user: "homealone30022@gmail.com",
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             refreshToken: process.env.REFRESH_TOKEN,
@@ -100,16 +100,16 @@ const sendTokenPost = async (req, res) => {
           },
         });
         var mailOptions = {
-          from: 'homealone30022@gmail.com',
+          from: "homealone30022@gmail.com",
           to: user.email,
-          subject: 'Account Verification',
+          subject: "Account Verification",
           text:
-            'Hello from Team Home Alone,\n\n' +
-            'Please verify your account by clicking the link: \n' +
+            "Hello from Team Home Alone,\n\n" +
+            "Please verify your account by clicking the link: \n" +
             req.headers.referer +
-            '/confirmation/' +
+            "/confirmation/" +
             token.token +
-            '\n',
+            "\n",
         };
         transporter.sendMail(mailOptions, function (err) {
           if (err) {
@@ -119,7 +119,7 @@ const sendTokenPost = async (req, res) => {
           }
           res
             .status(200)
-            .json('A verification email has been sent to ' + user.email + '.');
+            .json("A verification email has been sent to " + user.email + ".");
         });
       });
     }
@@ -136,16 +136,16 @@ const resendTokenPost = async (req, res) => {
       if (!user)
         return res
           .status(400)
-          .json('We were unable to find a user with that email.');
+          .json("We were unable to find a user with that email.");
       if (user.isVerified) {
         return res
           .status(400)
-          .json('This account has already been verified. Please log in.');
+          .json("This account has already been verified. Please log in.");
       } else {
         // Create a verification token, save it, and send email
         var token = new Token({
           userID: user._id,
-          token: crypto.randomBytes(16).toString('hex'),
+          token: crypto.randomBytes(16).toString("hex"),
         });
 
         // Save the token
@@ -158,10 +158,10 @@ const resendTokenPost = async (req, res) => {
 
           // Send the email
           var transporter = nodemailer.createTransport({
-            service: 'gmail',
+            service: "gmail",
             auth: {
-              type: 'OAuth2',
-              user: 'homealone30022@gmail.com',
+              type: "OAuth2",
+              user: "homealone30022@gmail.com",
               clientId: process.env.GOOGLE_CLIENT_ID,
               clientSecret: process.env.GOOGLE_CLIENT_SECRET,
               refreshToken: process.env.REFRESH_TOKEN,
@@ -169,16 +169,16 @@ const resendTokenPost = async (req, res) => {
             },
           });
           var mailOptions = {
-            from: 'homealone30022@gmail.com',
+            from: "homealone30022@gmail.com",
             to: user.email,
-            subject: 'Account Verification',
+            subject: "Account Verification",
             text:
-              'Hello from Team Home Alone,\n\n' +
-              'Please verify your account by clicking the link: \n' +
+              "Hello from Team Home Alone,\n\n" +
+              "Please verify your account by clicking the link: \n" +
               req.headers.referer +
-              '/confirmation/' +
+              "/confirmation/" +
               token.token +
-              '\n',
+              "\n",
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
@@ -189,7 +189,7 @@ const resendTokenPost = async (req, res) => {
             res
               .status(200)
               .json(
-                'A verification email has been sent to ' + user.email + '.'
+                "A verification email has been sent to " + user.email + "."
               );
           });
         });
@@ -211,7 +211,7 @@ const resetPut = async (req, res) => {
         return res
           .status(400)
           .json(
-            'We were unable to find a valid token. Your token my have expired.'
+            "We were unable to find a valid token. Your token my have expired."
           );
       } else {
         // If we found a token, find a matching user
@@ -227,7 +227,7 @@ const resetPut = async (req, res) => {
               if (!user)
                 return res
                   .status(400)
-                  .json('We were unable to find a user for this token.');
+                  .json("We were unable to find a user for this token.");
             }
           );
         });
@@ -239,9 +239,9 @@ const resetPut = async (req, res) => {
             if (result) {
               return res
                 .status(200)
-                .json('The password has been reset. Please log in.');
+                .json("The password has been reset. Please log in.");
             } else {
-              console.log('not deleted');
+              console.log("not deleted");
             }
           }
         );
@@ -259,17 +259,17 @@ const sendResetPost = async (req, res) => {
     (err, user) => {
       if (err) {
         console.log(err);
-        return res.status(400).json('An error has occured');
+        return res.status(400).json("An error has occured");
       }
       if (!user) {
         return res
           .status(400)
-          .json('We were unable to find a user with that email.');
+          .json("We were unable to find a user with that email.");
       } else {
         // Create a verification token, save it, and send email
         var token = new Reset({
           userID: user._id,
-          token: crypto.randomBytes(16).toString('hex'),
+          token: crypto.randomBytes(16).toString("hex"),
         });
 
         // Save the token
@@ -282,10 +282,10 @@ const sendResetPost = async (req, res) => {
 
           // Send the email
           var transporter = nodemailer.createTransport({
-            service: 'gmail',
+            service: "gmail",
             auth: {
-              type: 'OAuth2',
-              user: 'homealone30022@gmail.com',
+              type: "OAuth2",
+              user: "homealone30022@gmail.com",
               clientId: process.env.GOOGLE_CLIENT_ID,
               clientSecret: process.env.GOOGLE_CLIENT_SECRET,
               refreshToken: process.env.REFRESH_TOKEN,
@@ -293,16 +293,16 @@ const sendResetPost = async (req, res) => {
             },
           });
           var mailOptions = {
-            from: 'homealone30022@gmail.com',
+            from: "homealone30022@gmail.com",
             to: user.email,
-            subject: 'Account Reset',
+            subject: "Account Reset",
             text:
-              'Hello from Team Home Alone,\n\n' +
-              'Please reset your account by clicking the link: \n' +
+              "Hello from Team Home Alone,\n\n" +
+              "Please reset your account by clicking the link: \n" +
               req.headers.referer +
-              '/' +
+              "/" +
               token.token +
-              '\n',
+              "\n",
           };
           transporter.sendMail(mailOptions, function (err) {
             if (err) {
@@ -312,7 +312,7 @@ const sendResetPost = async (req, res) => {
             }
             res
               .status(200)
-              .json('A reset email has been sent to ' + user.email + '.');
+              .json("A reset email has been sent to " + user.email + ".");
           });
         });
       }

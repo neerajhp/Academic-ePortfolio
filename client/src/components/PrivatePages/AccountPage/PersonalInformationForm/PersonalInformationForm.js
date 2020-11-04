@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { Paper, Typography, Grid, Button } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { useState } from "react";
+import { Formik } from "formik";
+import { Paper, Typography, Grid, Button } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-import FormikField from '../../../utils/FormikField';
-import validationSchema from './Validation';
-import API from '../../../../api/API';
+import FormikField from "../../../utils/FormikField";
+import validationSchema from "./Validation";
+import API from "../../../../api/API";
 
 /* ================ Component ================ */
 
 const PersonalInformationForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
-  const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
+  const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : "";
 
   return (
     <Paper className={globalClasses.card}>
       <div className={globalClasses.title}>
-        <Typography variant='h2'>Personal information</Typography>
+        <Typography variant="h2">Personal information</Typography>
       </div>
       <div className={globalClasses.formContainer}>
         <Formik
@@ -40,7 +40,7 @@ const PersonalInformationForm = ({ user, globalClasses }) => {
               })
               .catch((err) => {
                 console.log(err);
-                actions.setFieldError('mobileNumber', err.response.data);
+                actions.setFieldError("mobileNumber", err.response.data);
                 actions.setSubmitting(false);
               });
           }}
@@ -54,9 +54,9 @@ const PersonalInformationForm = ({ user, globalClasses }) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <FormikField
-                    label='FirstName'
+                    label="FirstName"
                     formikProps={formikProps}
-                    formikKey='firstName'
+                    formikKey="firstName"
                     required
                     defaultValue={user.firstName}
                     className={`${globalClasses.field} ${fieldSubmitted}`}
@@ -64,9 +64,9 @@ const PersonalInformationForm = ({ user, globalClasses }) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormikField
-                    label='LastName'
+                    label="LastName"
                     formikProps={formikProps}
-                    formikKey='lastName'
+                    formikKey="lastName"
                     required
                     defaultValue={user.lastName}
                     className={`${globalClasses.field} ${fieldSubmitted}`}
@@ -74,19 +74,19 @@ const PersonalInformationForm = ({ user, globalClasses }) => {
                 </Grid>
               </Grid>
               <FormikField
-                label='Mobile Number'
+                label="Mobile Number"
                 formikProps={formikProps}
-                formikKey='mobileNumber'
+                formikKey="mobileNumber"
                 required
                 defaultValue={user.mobileNumber}
                 className={`${globalClasses.field} ${fieldSubmitted}`}
               />
 
               <FormikField
-                label='Date of Birth'
+                label="Date of Birth"
                 formikProps={formikProps}
-                formikKey='birthDate'
-                type='date'
+                formikKey="birthDate"
+                type="date"
                 required
                 defaultValue={
                   user.birthDate !== undefined && user.birthDate !== null
@@ -100,11 +100,11 @@ const PersonalInformationForm = ({ user, globalClasses }) => {
               />
               <div className={globalClasses.buttonWrapper}>
                 <Button
-                  type='Submit'
+                  type="Submit"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   disabled={!formikProps.isValid || formikProps.isSubmitting}
-                  color='secondary'
+                  color="secondary"
                 >
                   <Typography>Update</Typography>
                 </Button>

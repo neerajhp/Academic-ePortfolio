@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 //User Schema
 const userSchema = mongoose.Schema({
@@ -33,32 +33,32 @@ const userSchema = mongoose.Schema({
   socialMedia: {
     linkedIn: {
       type: String,
-      default: '',
+      default: "",
     },
     facebook: {
       type: String,
-      default: '',
+      default: "",
     },
     instagram: {
       type: String,
-      default: '',
+      default: "",
     },
     youtube: {
       type: String,
-      default: '',
+      default: "",
     },
     twitter: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   biography: {
     type: String,
-    default: '',
+    default: "",
   },
   aboutMe: {
     type: String,
-    default: '',
+    default: "",
   },
   skills: {
     type: [String],
@@ -79,6 +79,6 @@ const userSchema = mongoose.Schema({
 });
 
 // Binds the userSchema to a user model
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

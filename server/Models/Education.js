@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 //Education history must support multiple entries of universities or highschool, start and end date
 // not overlapping, end date not more than current date available create dropdown menu to and
@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const eduSchema = mongoose.Schema({
   edu_type: {
     type: String,
-    enum: ['University', 'Highschool'],
+    enum: ["University", "Highschool"],
     required: true,
   },
   user_id: {
@@ -50,6 +50,6 @@ const eduSchema = mongoose.Schema({
   },
 });
 
-const Edu = mongoose.model('Edu', eduSchema);
+const Edu = mongoose.model("Edu", eduSchema);
 
 module.exports = Edu;

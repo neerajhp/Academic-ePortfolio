@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Avatar, Button, Link, Typography } from '@material-ui/core';
-import { Formik } from 'formik';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
-import API from '../../../api/API';
+import React, { useState } from "react";
+import { Avatar, Button, Link, Typography } from "@material-ui/core";
+import { Formik } from "formik";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import FormikField from "../../utils/FormikField";
+import validationSchema from "./Validation";
+import API from "../../../api/API";
 
 /* ================ Component ================ */
 
@@ -19,21 +19,21 @@ const AccountVerifiedPage = ({ globalClasses, match }) => {
           <Avatar className={globalClasses.avatar}>
             <ThumbUpIcon className={globalClasses.icon} />
           </Avatar>
-          <Typography variant='h2'>Congratulations!</Typography>
+          <Typography variant="h2">Congratulations!</Typography>
           <Typography>
             You now have an academic ePorfolio, login and start editing!
           </Typography>
           <Button
-            type='Submit'
+            type="Submit"
             fullWidth
-            variant='contained'
+            variant="contained"
             className={globalClasses.landingButton}
           >
             <Link
-              href='/home/login'
-              variant='body2'
-              color='inherit'
-              underline='none'
+              href="/home/login"
+              variant="body2"
+              color="inherit"
+              underline="none"
             >
               Click here to login
             </Link>
@@ -50,13 +50,13 @@ const AccountVerifiedPage = ({ globalClasses, match }) => {
           <Avatar className={globalClasses.avatar}>
             <CheckCircleIcon className={globalClasses.icon} />
           </Avatar>
-          <Typography variant='h2' align='center'>
+          <Typography variant="h2" align="center">
             Input your Email to verify
           </Typography>
 
           <Formik
             initialValues={{
-              email: '',
+              email: "",
             }}
             onSubmit={(values, actions) => {
               // Submit login information
@@ -82,17 +82,17 @@ const AccountVerifiedPage = ({ globalClasses, match }) => {
                 onSubmit={formikProps.handleSubmit}
               >
                 <FormikField
-                  label='Email'
+                  label="Email"
                   formikProps={formikProps}
-                  formikKey='email'
+                  formikKey="email"
                   required
                   className={globalClasses.inputField}
                 />
 
                 <Button
-                  type='Submit'
+                  type="Submit"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   className={globalClasses.submit}
                   disabled={!formikProps.isValid}
                 >

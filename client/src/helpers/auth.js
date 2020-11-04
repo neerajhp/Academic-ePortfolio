@@ -1,9 +1,9 @@
-import cookie from 'js-cookie';
+import cookie from "js-cookie";
 
 // import { GoogleLogout } from 'react-google-login';
 
 export const setCookie = (key, value, rememberMe) => {
-  if (window !== 'undefined') {
+  if (window !== "undefined") {
     if (rememberMe) {
       cookie.set(key, value, {
         // 1 Day
@@ -16,7 +16,7 @@ export const setCookie = (key, value, rememberMe) => {
 };
 // remove from cookie
 export const removeCookie = (key) => {
-  if (window !== 'undefined') {
+  if (window !== "undefined") {
     cookie.remove(key, {
       expires: 1,
     });
@@ -26,34 +26,34 @@ export const removeCookie = (key) => {
 // Get from cookie such as stored token
 // Will be useful when we need to make request to server with token
 export const getCookie = (key) => {
-  if (window !== 'undefined') {
+  if (window !== "undefined") {
     return cookie.get(key);
   }
 };
 
 // Set in localstorage
 export const setLocalStorage = (key, value) => {
-  if (window !== 'undefined') {
+  if (window !== "undefined") {
     localStorage.setItem(key, JSON.stringify(value));
   }
 };
 
 // Remove from localstorage
 export const removeLocalStorage = (key) => {
-  if (window !== 'undefined') {
+  if (window !== "undefined") {
     localStorage.removeItem(key);
   }
 };
 
 // Auth enticate user by passing data to cookie and localstorage during signin
 export const authenticate = (response, rememberMe = false) => {
-  setCookie('token', response, rememberMe);
+  setCookie("token", response, rememberMe);
 };
 
 // Access user info from localstorage
 export const isAuth = () => {
-  if (window !== 'undefined') {
-    const cookieChecked = getCookie('token');
+  if (window !== "undefined") {
+    const cookieChecked = getCookie("token");
     if (cookieChecked) {
       return true;
     } else {
@@ -63,6 +63,6 @@ export const isAuth = () => {
 };
 
 export const logout = (next) => {
-  removeCookie('token');
+  removeCookie("token");
   next();
 };

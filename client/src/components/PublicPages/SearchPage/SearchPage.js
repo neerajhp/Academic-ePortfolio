@@ -1,49 +1,49 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
   IconButton,
   InputAdornment,
   Paper,
   Link,
-} from '@material-ui/core';
-import { Formik } from 'formik';
-import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
-import API from '../../../api/API';
-import SearchIcon from '@material-ui/icons/Search';
-import SearchCard from './SearchCard';
-import EmptyCard from './EmptyCard';
-import { Link as RouterLink } from 'react-router-dom';
+} from "@material-ui/core";
+import { Formik } from "formik";
+import FormikField from "../../utils/FormikField";
+import validationSchema from "./Validation";
+import API from "../../../api/API";
+import SearchIcon from "@material-ui/icons/Search";
+import SearchCard from "./SearchCard";
+import EmptyCard from "./EmptyCard";
+import { Link as RouterLink } from "react-router-dom";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => {
   return {
     searchContainer: {
-      height: '50vh',
+      height: "50vh",
     },
 
     searchBar: {
-      width: '40%',
+      width: "40%",
       marginLeft: theme.spacing(3),
-      display: 'flex',
-      flexDirection: 'column',
+      display: "flex",
+      flexDirection: "column",
     },
 
     iconButton: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     searchResults: {
-      background: 'transparent',
-      maxHeight: '50vh',
+      background: "transparent",
+      maxHeight: "50vh",
       marginLeft: theme.spacing(3),
-      overflow: 'auto',
-      width: '50vw',
-      display: 'flex',
-      flexDirection: 'column',
+      overflow: "auto",
+      width: "50vw",
+      display: "flex",
+      flexDirection: "column",
     },
     loginContainer: {
-      position: 'fixed',
+      position: "fixed",
       bottom: 0,
       marginBottom: theme.spacing(2),
     },
@@ -58,7 +58,7 @@ const SearchPage = ({ globalClasses }) => {
   var searchResults;
 
   if (results === null) {
-    searchResults = <EmptyCard message={'...Start typing to search!'} />;
+    searchResults = <EmptyCard message={"...Start typing to search!"} />;
   } else if (results === []) {
     searchResults = <EmptyCard message={"We can't find a profile to match"} />;
   } else {
@@ -71,14 +71,14 @@ const SearchPage = ({ globalClasses }) => {
     <React.Fragment>
       <div className={classes.searchContainer}>
         <div className={globalClasses.banner}>
-          <Typography variant='h1' color='textSecondary'>
+          <Typography variant="h1" color="textSecondary">
             Search for Someone
           </Typography>
         </div>
         <div className={classes.searchBar}>
           <Formik
             initialValues={{
-              search: '',
+              search: "",
             }}
             onSubmit={(values, actions) => {
               console.log(values.search);
@@ -95,17 +95,17 @@ const SearchPage = ({ globalClasses }) => {
               >
                 <FormikField
                   formikProps={formikProps}
-                  formikKey='search'
+                  formikKey="search"
                   required
                   className={globalClasses.inputField}
-                  label='Search for someone'
+                  label="Search for someone"
                   InputProps={{
                     endAdornment: (
-                      <InputAdornment position='end'>
+                      <InputAdornment position="end">
                         <IconButton
-                          type='submit'
+                          type="submit"
                           className={classes.iconButton}
-                          aria-label='search'
+                          aria-label="search"
                         >
                           <SearchIcon />
                         </IconButton>
@@ -123,12 +123,12 @@ const SearchPage = ({ globalClasses }) => {
         </Paper>
       </div>
       <div className={classes.loginContainer}>
-        {' '}
+        {" "}
         <Link
           component={RouterLink}
-          to='/home/login'
-          variant='h3'
-          color='textSecondary'
+          to="/home/login"
+          variant="h3"
+          color="textSecondary"
         >
           Login
         </Link>

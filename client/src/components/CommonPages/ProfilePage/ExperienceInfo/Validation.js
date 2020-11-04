@@ -1,11 +1,11 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 
 const validationSchema = yup.object().shape({
   experiences: yup.array().of(
     yup.object().shape({
       monthEnd: yup
         .number()
-        .test('continuity', 'Invalid month', function (value) {
+        .test("continuity", "Invalid month", function (value) {
           if (
             this.parent.yearStart &&
             this.parent.yearStart === this.parent.yearEnd

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Redirect, Link as RouterLink } from 'react-router-dom';
-import { Formik } from 'formik';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import { Redirect, Link as RouterLink } from "react-router-dom";
+import { Formik } from "formik";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Divider,
   Button,
@@ -11,15 +11,15 @@ import {
   FormControlLabel,
   Checkbox,
   CircularProgress,
-} from '@material-ui/core';
-import { authenticate } from '../../../helpers/auth';
-import { GoogleLogin } from 'react-google-login';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import API from '../../../api/API';
-import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
-import googleLogo from '../../../assets/Forms/googleLogo.svg';
-import FacebookIcon from '@material-ui/icons/Facebook';
+} from "@material-ui/core";
+import { authenticate } from "../../../helpers/auth";
+import { GoogleLogin } from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import API from "../../../api/API";
+import FormikField from "../../utils/FormikField";
+import validationSchema from "./Validation";
+import googleLogo from "../../../assets/Forms/googleLogo.svg";
+import FacebookIcon from "@material-ui/icons/Facebook";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -27,13 +27,13 @@ const useStyles = makeStyles((theme) => {
       color: theme.palette.text.secondary,
     },
     forgotPassword: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "center",
     },
     loginDivider: {
       margin: `${theme.spacing(2)}px 0`,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
     },
     signupButton: {
       margin: `${theme.spacing(1)}px 0`,
@@ -42,19 +42,19 @@ const useStyles = makeStyles((theme) => {
     },
     googleButton: {
       marginTop: `${theme.spacing(1)}px`,
-      color: '#FFFFFF',
-      backgroundColor: '#4285F4',
-      '&:hover': {
-        color: '#FFFFFF',
-        backgroundColor: '#1A4d94',
+      color: "#FFFFFF",
+      backgroundColor: "#4285F4",
+      "&:hover": {
+        color: "#FFFFFF",
+        backgroundColor: "#1A4d94",
       },
     },
     facebookButton: {
       marginTop: `${theme.spacing(1)}px`,
-      color: '#FFFFFF',
-      backgroundColor: '#4168b1',
-      '&:hover': {
-        backgroundColor: '#3c5fa2',
+      color: "#FFFFFF",
+      backgroundColor: "#4168b1",
+      "&:hover": {
+        backgroundColor: "#3c5fa2",
       },
     },
     buttonLogo: {
@@ -75,13 +75,13 @@ const LoginPage = ({ globalClasses }) => {
   const sendGoogleToken = (idToken) => {
     API.googleLogin(idToken)
       .then((res) => {
-        console.log('Got it');
+        console.log("Got it");
         console.log(res.data);
         authenticate(res.data.token);
         setLoggedIn(true);
       })
       .catch((err) => {
-        console.log('GOOGLE SIGNIN ERROR', err.response);
+        console.log("GOOGLE SIGNIN ERROR", err.response);
       });
   };
 
@@ -97,7 +97,7 @@ const LoginPage = ({ globalClasses }) => {
         setLoggedIn(true);
       })
       .catch((error) => {
-        console.log('FACEBOOK SIGNIN ERROR', error.response);
+        console.log("FACEBOOK SIGNIN ERROR", error.response);
       });
   };
 
@@ -108,16 +108,16 @@ const LoginPage = ({ globalClasses }) => {
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
-        <Typography variant='h1'>Login to your Profile</Typography>
+        <Typography variant="h1">Login to your Profile</Typography>
       </div>
       <div className={globalClasses.formContainer}>
-        {isLoggedIn && <Redirect to='/' />}
+        {isLoggedIn && <Redirect to="/" />}
         {!isLoggedIn && (
           <div className={globalClasses.formPaper}>
             <Formik
               initialValues={{
-                email: '',
-                password: '',
+                email: "",
+                password: "",
                 rememberMe: false,
               }}
               onSubmit={(values, actions) => {
@@ -157,19 +157,19 @@ const LoginPage = ({ globalClasses }) => {
                   onSubmit={formikProps.handleSubmit}
                 >
                   <FormikField
-                    label='Email'
+                    label="Email"
                     formikProps={formikProps}
-                    formikKey='email'
-                    autoComplete='email'
+                    formikKey="email"
+                    autoComplete="email"
                     required
                     className={globalClasses.inputField}
                   />
                   <FormikField
-                    label='Password'
+                    label="Password"
                     formikProps={formikProps}
-                    formikKey='password'
-                    type='password'
-                    autoComplete='current-password'
+                    formikKey="password"
+                    type="password"
+                    autoComplete="current-password"
                     required
                     disabled={resendRqd}
                     className={globalClasses.inputField}
@@ -180,12 +180,12 @@ const LoginPage = ({ globalClasses }) => {
                         className={classes.rememberMe}
                         control={
                           <Checkbox
-                            value='remember'
-                            color='default'
-                            onChange={formikProps.handleChange('rememberMe')}
+                            value="remember"
+                            color="default"
+                            onChange={formikProps.handleChange("rememberMe")}
                           />
                         }
-                        label='Remember me'
+                        label="Remember me"
                       />
                     </Grid>
 
@@ -196,9 +196,9 @@ const LoginPage = ({ globalClasses }) => {
                       className={classes.forgotPassword}
                     >
                       <Link
-                        href='./reset'
-                        variant='body2'
-                        color='textSecondary'
+                        href="./reset"
+                        variant="body2"
+                        color="textSecondary"
                       >
                         Forgot Password?
                       </Link>
@@ -208,13 +208,13 @@ const LoginPage = ({ globalClasses }) => {
                   {!resendRqd && (
                     <div className={globalClasses.buttonWrapper}>
                       <Button
-                        type='Submit'
+                        type="Submit"
                         fullWidth
-                        variant='contained'
+                        variant="contained"
                         disabled={
                           !formikProps.isValid || formikProps.isSubmitting
                         }
-                        color='secondary'
+                        color="secondary"
                       >
                         <Typography>Log In</Typography>
                       </Button>
@@ -229,31 +229,31 @@ const LoginPage = ({ globalClasses }) => {
                   {resendRqd && (
                     <RouterLink
                       to={{
-                        pathname: '/home/signup',
+                        pathname: "/home/signup",
                         state: {
                           email: formikProps.values.email,
                         },
                       }}
-                      style={{ color: '#FFFFFF', textDecoration: 'none' }}
+                      style={{ color: "#FFFFFF", textDecoration: "none" }}
                     >
                       <Button
-                        variant='contained'
+                        variant="contained"
                         className={globalClasses.landingButton}
-                        color='primary'
+                        color="primary"
                         fullWidth
-                        underline='none'
+                        underline="none"
                       >
-                        {' '}
+                        {" "}
                         <Typography>Get a new link</Typography>
                       </Button>
                     </RouterLink>
                   )}
 
                   <Divider className={classes.loginDivider} />
-                  <Link href='./signup' underline='none'>
+                  <Link href="./signup" underline="none">
                     <Button
                       fullWidth
-                      variant='contained'
+                      variant="contained"
                       className={globalClasses.submit}
                     >
                       Signup for a Portfolio
@@ -265,15 +265,15 @@ const LoginPage = ({ globalClasses }) => {
                         clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
                         onSuccess={responseGoogle}
                         onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
+                        cookiePolicy={"single_host_origin"}
                         render={(renderProps) => (
                           <Button
                             fullWidth
-                            variant='contained'
+                            variant="contained"
                             className={classes.googleButton}
                             startIcon={
                               <img
-                                alt='google-logo'
+                                alt="google-logo"
                                 src={googleLogo}
                                 className={classes.buttonLogo}
                               />
@@ -289,12 +289,12 @@ const LoginPage = ({ globalClasses }) => {
                     <Grid item xs={6}>
                       <FacebookLogin
                         appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
-                        autoLoad={true}
+                        autoLoad={false}
                         callback={responseFacebook}
                         render={(renderProps) => (
                           <Button
                             fullWidth
-                            variant='contained'
+                            variant="contained"
                             className={classes.facebookButton}
                             startIcon={
                               <FacebookIcon className={classes.buttonLogo} />

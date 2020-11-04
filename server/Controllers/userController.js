@@ -1,13 +1,13 @@
-const express = require('express');
-const User = require('../Models/User.js');
-var bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const express = require("express");
+const User = require("../Models/User.js");
+var bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-require('dotenv').config();
-const { OAuth2Client } = require('google-auth-library');
-const fetch = require('node-fetch');
+require("dotenv").config();
+const { OAuth2Client } = require("google-auth-library");
+const fetch = require("node-fetch");
 
-const { sendTokenPost } = require('./confirmationController');
+const { sendTokenPost } = require("./confirmationController");
 
 const saltRounds = 10;
 
@@ -39,20 +39,20 @@ const postSignup = async (req, res) => {
       }
       // If its a new email, check the username's uniqueness
       if (!account) {
-        console.log('email is unique');
+        console.log("email is unique");
         let userName = generateUniqueUserName(newUser.email);
         userName.then(async (result) => {
           try {
             newUser.userName = result;
             await newUser.save();
-            res.status(200).json('New user saved');
+            res.status(200).json("New user saved");
             await sendTokenPost(req, res);
           } catch {
-            res.status(400).json('User not saved');
+            res.status(400).json("User not saved");
           }
         });
       } else {
-        res.status(400).json('An account with this email already exists');
+        res.status(400).json("An account with this email already exists");
       }
     });
   });
@@ -67,7 +67,7 @@ const generateUniqueUserName = async (email) => {
   var username;
   var allGood = false;
   while (!allGood) {
-    console.log('Start the loop');
+    console.log("Start the loop");
     await User.findOne({ userName: proposedName }, (err, result) => {
       if (err) {
         throw err;
@@ -78,7 +78,7 @@ const generateUniqueUserName = async (email) => {
         username = proposedName;
       } else {
         proposedName += Math.floor(Math.random() * 100 + 1);
-        console.log('Username not good');
+        console.log("Username not good");
       }
     });
   }
@@ -98,12 +98,12 @@ const postLogin = async (req, res) => {
     .then((profile) => {
       //Email does not exist
       if (!profile)
-        return res.status(409).json('Email does not match our records');
+        return res.status(409).json("Email does not match our records");
       // Account is not verified
       if (!profile.isVerified) {
         res
           .status(401)
-          .json('The account is not verified, please check your email');
+          .json("The account is not verified, please check your email");
       } else {
         //compared the hashed password the user entered and the one in database
         bcrypt.compare(req.body.password, profile.password, function (
@@ -132,13 +132,13 @@ const postLogin = async (req, res) => {
               }
             );
           } else {
-            res.status(409).json('Email and Password do not match our records');
+            res.status(409).json("Email and Password do not match our records");
           }
         });
       }
     })
     .catch((err) => {
-      console.log('Error is ', err.message);
+      console.log("Error is ", err.message);
     });
 };
 
@@ -164,7 +164,7 @@ const googleLogin = (req, res) => {
               { id: user._id },
               process.env.SECRET_OR_KEY,
               {
-                expiresIn: '7d',
+                expiresIn: "7d",
               }
             );
             const { id, email } = user;
@@ -188,26 +188,26 @@ const googleLogin = (req, res) => {
                 userName: userName,
                 password: hash,
                 //Format: YYYY-MM-DD
-                birthDate: '',
-                mobileNumber: '',
-                biography: '',
-                skills: '',
+                birthDate: "",
+                mobileNumber: "",
+                biography: "",
+                skills: "",
                 isVerified: true,
                 tutorial: true,
               });
 
               newUser.save((err, data) => {
                 if (err) {
-                  console.log('ERROR GOOGLE LOGIN ON USER SAVE', err);
+                  console.log("ERROR GOOGLE LOGIN ON USER SAVE", err);
                   return res.status(400).json({
-                    error: 'User signup failed with google',
+                    error: "User signup failed with google",
                   });
                 }
                 const token = jwt.sign(
                   { id: data._id },
                   process.env.SECRET_OR_KEY,
                   {
-                    expiresIn: '7d',
+                    expiresIn: "7d",
                   }
                 );
                 const { id, email } = data;
@@ -221,21 +221,21 @@ const googleLogin = (req, res) => {
         });
       } else {
         return res.status(400).json({
-          error: 'Google login failed. Try again',
+          error: "Google login failed. Try again",
         });
       }
     });
 };
 
 const facebookLogin = (req, res) => {
-  console.log('FACEBOOK LOGIN REQ BODY', req.body);
+  console.log("FACEBOOK LOGIN REQ BODY", req.body);
   const { userID, accessToken } = req.body;
 
   const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
 
   return (
     fetch(url, {
-      method: 'GET',
+      method: "GET",
     })
       .then((response) => response.json())
       // .then((response) => console.log(response))
@@ -247,7 +247,7 @@ const facebookLogin = (req, res) => {
               { id: user._id },
               process.env.SECRET_OR_KEY,
               {
-                expiresIn: '7d',
+                expiresIn: "7d",
               }
             );
             const { id, email } = user;
@@ -256,8 +256,8 @@ const facebookLogin = (req, res) => {
               user: { id, email },
             });
           } else {
-            let given_name = name.split(' ')[0];
-            let family_name = name.split(' ')[1];
+            let given_name = name.split(" ")[0];
+            let family_name = name.split(" ")[1];
             let password = email + process.env.SECRET_OR_KEY;
             let userName = generateUniqueUserName(email);
             userName.then((result) => {
@@ -272,25 +272,25 @@ const facebookLogin = (req, res) => {
                 userName: userName,
                 password: hash,
                 //Format: YYYY-MM-DD
-                birthDate: '',
-                mobileNumber: '',
-                biography: '',
-                skills: '',
+                birthDate: "",
+                mobileNumber: "",
+                biography: "",
+                skills: "",
                 isVerified: true,
                 tutorial: true,
               });
               newUser.save((err, data) => {
                 if (err) {
-                  console.log('ERROR FACEBOOK LOGIN ON USER SAVE', err);
+                  console.log("ERROR FACEBOOK LOGIN ON USER SAVE", err);
                   return res.status(400).json({
-                    error: 'User signup failed with facebook',
+                    error: "User signup failed with facebook",
                   });
                 }
                 const token = jwt.sign(
                   { id: data._id },
                   process.env.SECRET_OR_KEY,
                   {
-                    expiresIn: '7d',
+                    expiresIn: "7d",
                   }
                 );
                 const { id, email } = data;
@@ -305,7 +305,7 @@ const facebookLogin = (req, res) => {
       })
       .catch((error) => {
         res.json({
-          error: 'Facebook login failed. Try later',
+          error: "Facebook login failed. Try later",
         });
       })
   );
@@ -331,21 +331,21 @@ const changeUserName = async (req, res) => {
             if (result) {
               res.status(200).json(result.userName);
             } else {
-              res.status(404).json('The user was not found');
+              res.status(404).json("The user was not found");
             }
           }
         );
       } else {
         if (result._id == req.user.id) {
-          res.status(200).json('User inputted the same username');
+          res.status(200).json("User inputted the same username");
         } else {
           // Suggest a new username
-          res.status(400).json('Username not unique');
+          res.status(400).json("Username not unique");
         }
       }
     });
   } catch (error) {
-    res.status(400).json('Failed to update username');
+    res.status(400).json("Failed to update username");
   }
 };
 
@@ -391,7 +391,7 @@ const getUserInformation = async (req, res) => {
         };
         res.status(200).json(userInfo);
       } else {
-        res.status(404).json('User not found');
+        res.status(404).json("User not found");
         //userInfo = null;
       }
     });
@@ -413,7 +413,7 @@ const viewerGetUserInformation = async (req, res) => {
     if (userInfo) {
       res.status(200).json(userInfo);
     } else {
-      res.status(400).json('User not found');
+      res.status(400).json("User not found");
     }
   } catch (error) {
     res.status(400).json(error);
@@ -426,7 +426,7 @@ const editUserInformation = async (req, res) => {
   try {
     const objectModel = Object.assign(req.body);
     if (objectModel.password || objectModel.email) {
-      res.status(400).json('This function cannot change the password or email');
+      res.status(400).json("This function cannot change the password or email");
       return;
     }
     await User.updateOne({ _id: req.user.id }, objectModel, (err, result) => {
@@ -434,14 +434,14 @@ const editUserInformation = async (req, res) => {
         throw err;
       }
       if (result) {
-        res.status(200).json('Successfully updated user information');
+        res.status(200).json("Successfully updated user information");
         // if(result.nModified == 0){
         //   res.status(400).json("Attempted to edit a property that doesn't exist in the record");
         // }else{
         //   res.status(200).json("Successfully updated user information");
         // }
       } else {
-        res.status(404).json('User not found');
+        res.status(404).json("User not found");
       }
     });
   } catch (error) {
@@ -455,7 +455,7 @@ const getUserID = async (req, res) => {
     if (userID) {
       res.status(200).json(userID._id);
     } else {
-      res.status(400).json('User not found');
+      res.status(400).json("User not found");
     }
   } catch (error) {
     res.status(400).json(error);
@@ -473,9 +473,9 @@ const updateEmail = async (req, res) => {
           throw err;
         }
         if (result) {
-          res.status(200).json('Email updated');
+          res.status(200).json("Email updated");
         } else {
-          res.status(404).json('User not found');
+          res.status(404).json("User not found");
         }
       }
     );
@@ -510,16 +510,16 @@ const changePassword = async (req, res) => {
             req.user.id,
             { password: hash },
             (err, result) => {
-              res.status(200).json('Password updated');
+              res.status(200).json("Password updated");
             }
           );
         });
       } else {
-        res.status(400).json('User inputted the wrong password');
+        res.status(400).json("User inputted the wrong password");
       }
     });
   } catch (error) {
-    res.status(400).json('Errow while trying to change password');
+    res.status(400).json("Errow while trying to change password");
   }
 };
 
@@ -532,11 +532,11 @@ const getTutorial = async (req, res) => {
       if (result) {
         res.status(200).json(result.tutorial);
       } else {
-        res.status(404).json('user not found');
+        res.status(404).json("user not found");
       }
     });
   } catch (error) {
-    res.status(400).json('Failed to get tutorial value');
+    res.status(400).json("Failed to get tutorial value");
   }
 };
 
@@ -551,21 +551,20 @@ const finishTutorial = async (req, res) => {
           throw err;
         }
         if (result) {
-          await User.findById(req.user.id, (err ,result) => {
+          await User.findById(req.user.id, (err, result) => {
             if (err) {
-              throw err
+              throw err;
             } else {
               res.status(200).json(result.tutorial);
             }
-            
-          })
+          });
         } else {
-          res.status(404).json('User not found');
+          res.status(404).json("User not found");
         }
       }
     );
   } catch (error) {
-    res.status(400).json('Error while trying to update tutorial field');
+    res.status(400).json("Error while trying to update tutorial field");
   }
 };
 
@@ -574,15 +573,15 @@ const searchUsers = async (req, res) => {
   try {
     // console.log(req)
     let name = {};
-    if (req.query.name.split(' ')[0]) {
-      name.firstName = req.query.name.split(' ')[0];
+    if (req.query.name.split(" ")[0]) {
+      name.firstName = req.query.name.split(" ")[0];
     }
-    if (req.query.name.split(' ')[1]) {
-      name.lastName = req.query.name.split(' ')[1];
+    if (req.query.name.split(" ")[1]) {
+      name.lastName = req.query.name.split(" ")[1];
     }
     console.log(name);
     await User.find(name)
-      .select('userName')
+      .select("userName")
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -590,12 +589,12 @@ const searchUsers = async (req, res) => {
         if (result) {
           res.status(200).json(result);
         } else {
-          res.status(404).json('The user was not found');
+          res.status(404).json("The user was not found");
         }
       });
   } catch (error) {
     console.log(error);
-    res.status(400).json('Error while trying to find user');
+    res.status(400).json("Error while trying to find user");
   }
 };
 

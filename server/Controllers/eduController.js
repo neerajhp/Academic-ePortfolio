@@ -1,8 +1,6 @@
-const {
-  arrayIncludes
-} = require('@material-ui/pickers/_helpers/utils');
-const Edu = require('../Models/Education');
-const { editUserInformation } = require('./profileController');
+const { arrayIncludes } = require("@material-ui/pickers/_helpers/utils");
+const Edu = require("../Models/Education");
+const { editUserInformation } = require("./profileController");
 // University
 const postEdu = async (req, res) => {
   try {
@@ -19,35 +17,38 @@ const postEdu = async (req, res) => {
         yearStart: req.body.yearStart,
         monthEnd: req.body.monthEnd,
         yearEnd: req.body.yearEnd,
-        graduated: req.body.graduated
-      })
-
-      await Edu.findOne({
-        user_id: req.user.id,
-        schoolName: newEdu.schoolName,
-        yearStart: newEdu.yearStart,
-        yearEnd: newEdu.yearEnd
-      }, (err, result) => {
-        if (err) {
-          console.log("Error found");
-          throw err;
-        }
-        if (result) {
-          res.status(400).json("Education record already exists");
-        } else {
-          newEdu.save((err, file) => {
-            if (err) {
-              console.log("Error found");
-              throw (err)
-            } else {
-              console.log("saved");
-              res.status(200).json(file);
-            }
-          })
-        }
+        graduated: req.body.graduated,
       });
+
+      await Edu.findOne(
+        {
+          user_id: req.user.id,
+          schoolName: newEdu.schoolName,
+          yearStart: newEdu.yearStart,
+          yearEnd: newEdu.yearEnd,
+        },
+        (err, result) => {
+          if (err) {
+            console.log("Error found");
+            throw err;
+          }
+          if (result) {
+            res.status(400).json("Education record already exists");
+          } else {
+            newEdu.save((err, file) => {
+              if (err) {
+                console.log("Error found");
+                throw err;
+              } else {
+                console.log("saved");
+                res.status(200).json(file);
+              }
+            });
+          }
+        }
+      );
     } else {
-      res.status(400).json("Education type invalid")
+      res.status(400).json("Education type invalid");
     }
   } catch (err) {
     res.status(400).json("Something's wrong");
@@ -69,30 +70,34 @@ const postEdu = async (req, res) => {
 // };
 
 // Gets all of the user's education records
-const getEdu = async(req, res) => {
-  try{
-    await Edu.find({
-      user_id: req.user.id
-    }, (err, result) => {
-      if(err){
-        console.log(err);
-        throw err;
+const getEdu = async (req, res) => {
+  try {
+    await Edu.find(
+      {
+        user_id: req.user.id,
+      },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+        console.log("result found");
+        if (!result) {
+          console.log("User has no education history");
+          res.status(404).json("User has no education history");
+        } else {
+          console.log("Education found");
+          result.sort(
+            (a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart)
+          );
+          res.status(200).json(result);
+        }
       }
-      console.log("result found");
-      if(!result){
-        console.log("User has no education history");
-        res.status(404).json("User has no education history");
-      }else{
-        console.log("Education found");
-        result.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
-        res.status(200).json(result);
-  
-      }
-    });
-  }catch(error){
+    );
+  } catch (error) {
     res.status(400).json("Error");
   }
-}
+};
 
 // Gets the viewed user's education records
 const viewerGetEdu = async (req, res) => {
@@ -107,20 +112,22 @@ const viewerGetEdu = async (req, res) => {
   } catch (error) {
     res.status(400).json("Failed to get user's education");
   }
-}
+};
 
 // Updates a certain education record
 const putEdu = async (req, res) => {
-  await Edu.findOneAndUpdate({
+  await Edu.findOneAndUpdate(
+    {
       _id: req.params.id,
       user_id: req.user.id,
     },
     req.body,
     function (err, result) {
       if (!result) {
-        res.status(404).json('Education history not found');
+        res.status(404).json("Education history not found");
       } else {
-        Edu.findById({
+        Edu.findById(
+          {
             _id: req.params.id,
           },
           function (err, updated) {
@@ -134,19 +141,22 @@ const putEdu = async (req, res) => {
 
 // Deletes a specific education record
 const deleteEdu = async (req, res) => {
-  try{
-    console.log('id: ', req.params.id);
-    await Edu.findOneAndDelete({_id: req.params.id, user_id: req.user.id}, function (err, result) {
-      if(err){
-        throw err;
+  try {
+    console.log("id: ", req.params.id);
+    await Edu.findOneAndDelete(
+      { _id: req.params.id, user_id: req.user.id },
+      function (err, result) {
+        if (err) {
+          throw err;
+        }
+        if (!result) {
+          res.status(404).json("Education record not found");
+        } else {
+          res.status(200).json("Education record deleted");
+        }
       }
-      if (!result) {
-        res.status(404).json("Education record not found");
-      } else {
-        res.status(200).json('Education record deleted');
-      }
-    });
-  }catch(error){
+    );
+  } catch (error) {
     res.status(400).json("Failed to delete education record");
   }
 };
@@ -157,57 +167,59 @@ const deleteAllEdu = async (req, res) => {
     let result = await clearEdu(req.user.id);
     console.log(result);
     if (result) {
-      console.log('Files have been deleted');
-      res.status(200).json('All records have been deleted');
+      console.log("Files have been deleted");
+      res.status(200).json("All records have been deleted");
     } else {
-      res.status(400).json('No records were found');
+      res.status(400).json("No records were found");
     }
   } catch (err) {
-    res.status(400).json('Records were not deleted');
+    res.status(400).json("Records were not deleted");
   }
 };
 
 // Removes all education
 const clearEdu = async (userID) => {
   let deleteStatus;
-  await Edu.deleteMany({
-    user_id: userID
-  }, (err, result) => {
-    if (err) {
-      throw err;
-    } else {
-      if (result.deletedCount === 0) {
-        console.log('Nothing to delete');
-        deleteStatus = false;
+  await Edu.deleteMany(
+    {
+      user_id: userID,
+    },
+    (err, result) => {
+      if (err) {
+        throw err;
       } else {
-        console.log("The user's education has been cleared");
-        deleteStatus = true;
+        if (result.deletedCount === 0) {
+          console.log("Nothing to delete");
+          deleteStatus = false;
+        } else {
+          console.log("The user's education has been cleared");
+          deleteStatus = true;
+        }
       }
     }
-  });
+  );
   return deleteStatus;
 };
 
 // Searches for all of the user's education records
 const searchAllEdu = async (userID) => {
-  try{
+  try {
     let edu;
-    await Edu.find({user_id: userID}, (err, result) => {
-      if(err){
-          console.log(err);
-          throw err;
+    await Edu.find({ user_id: userID }, (err, result) => {
+      if (err) {
+        console.log(err);
+        throw err;
       }
-      if(result){
-          edu = result;
-          edu.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
+      if (result) {
+        edu = result;
+        edu.sort((a, b) => parseFloat(b.yearStart) - parseFloat(a.yearStart));
       }
     });
     return edu;
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
-
-}
+};
 
 module.exports = {
   postEdu,

@@ -51,6 +51,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
+    "prettier": "^2.1.2",
     "react-avatar-edit": "^0.8.3",
     "react-google-login": "^5.1.21",
     "yup": "^0.29.3"

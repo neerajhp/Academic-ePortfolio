@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import API from '../../../api/API';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import API from "../../../api/API";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
   CircularProgress,
@@ -11,70 +11,71 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import InfoIcon from '@material-ui/icons/Info';
-import FaceIcon from '@material-ui/icons/Face';
-import CreateIcon from '@material-ui/icons/Create';
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import CharacterCard from './CharacterInfo/CharacterCard';
-import EducationCard from './EducationInfo/EducationCard';
-import ExperienceCard from './ExperienceInfo/ExperienceCard';
-import SkillsCard from './SkillsInfo/SkillsCard';
-import ReflectionCard from './ReflectionInfo/ReflectionCard';
-import ProjectCard from './ProjectInfo/ProjectCard';
-import Tutorial from '../../PrivatePages/Tutorial/Tutorial';
-import AboutCard from './AboutInfo/AboutCard';
-import EmptyCard from './EmptyCard/EmptyCard';
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import InfoIcon from "@material-ui/icons/Info";
+import FaceIcon from "@material-ui/icons/Face";
+import CreateIcon from "@material-ui/icons/Create";
+import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import CharacterCard from "./CharacterInfo/CharacterCard";
+import EducationCard from "./EducationInfo/EducationCard";
+import ExperienceCard from "./ExperienceInfo/ExperienceCard";
+import SkillsCard from "./SkillsInfo/SkillsCard";
+import ReflectionCard from "./ReflectionInfo/ReflectionCard";
+import ProjectCard from "./ProjectInfo/ProjectCard";
+import ProjectDialog from "./ProjectInfo/ProjectDialog";
+import Tutorial from "../../PrivatePages/Tutorial/Tutorial";
+import AboutCard from "./AboutInfo/AboutCard";
+import EmptyCard from "./EmptyCard/EmptyCard";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   loading: {
-    height: '90vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "90vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   navSection: {
-    position: 'fixed',
-    width: '25vw',
-    height: '100vh',
-    marginTop: '1%',
-    zIndex: '100',
+    position: "fixed",
+    width: "25vw",
+    height: "100vh",
+    marginTop: "1%",
+    zIndex: "100",
   },
   container: {
-    maxWidth: '100%',
-    overflowX: 'hidden',
+    maxWidth: "100%",
+    overflowX: "hidden",
   },
   navBar: {
-    marginLeft: '0.5em',
+    marginLeft: "0.5em",
     background: theme.palette.primary.main,
     color: theme.palette.text.secondary,
   },
   navBarIcon: {
     fontSize: 30,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
 
   sectionContainer: {
-    position: 'absolute',
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: '1%',
+    position: "absolute",
+    display: "flex",
+    flexDirection: "row",
+    marginTop: "1%",
   },
   section: {
-    width: '100vw',
-    minHeight: '100vh',
-    display: 'flex',
+    width: "100vw",
+    minHeight: "100vh",
+
     flexGrow: 1,
-    paddingLeft: '25vw',
-    paddingRight: '0.5em',
-    flexFlow: 'row wrap',
-    alignItems: 'stretch',
-    transition: 'all 700ms',
+    paddingLeft: "25vw",
+    paddingRight: "1.5em",
+
+    alignItems: "stretch",
+    transition: "all 700ms",
   },
   icon: { fontSize: 80 },
 }));
@@ -107,7 +108,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
         })
         .catch((err) => {
           if (err.response.status === 404) {
-            console.log('Not Found');
+            console.log("Not Found");
             setProfileNotFound(true);
           } else if (err.response.status === 403) {
             setProfilePrivate(true);
@@ -125,27 +126,62 @@ const ProfilePage = ({ isOwner = true, match }) => {
 
   //Functions to return UI for empty records
   const getExperience = () => {
-    if (user.experience === undefined || user.experience.length === 0) {
-      return <EmptyCard name={user.firstName} prompt={'Experience'} />;
+    if (
+      !isOwner &&
+      (user.experience === undefined || user.experience.length === 0)
+    ) {
+      return <EmptyCard name={user.firstName} prompt={"Experience"} />;
     } else {
       return <ExperienceCard experience={user.experience} editable={owner} />;
     }
   };
 
   const getEducation = () => {
-    if (user.education === undefined || user.experience.length === 0) {
-      return <EmptyCard name={user.firstName} prompt={'Education'} />;
+    if (
+      !isOwner &&
+      (user.education === undefined || user.experience.length === 0)
+    ) {
+      return <EmptyCard name={user.firstName} prompt={"Education"} />;
     } else {
       return <EducationCard education={user.education} editable={owner} />;
     }
   };
 
   const getSkills = () => {
-    console.log(user.skills);
-    if (user.skills === undefined || user.skills.length === 0) {
-      return <EmptyCard name={user.firstName} prompt={'Skills'} />;
+    if (!isOwner && (user.skills === undefined || user.skills.length === 0)) {
+      return <EmptyCard name={user.firstName} prompt={"Skills"} />;
     } else {
       return <SkillsCard skills={user.skills} editable={owner} />;
+    }
+  };
+
+  const getProjects = () => {
+    if (
+      !isOwner &&
+      (user.showcase === undefined || user.showcase.length === 0)
+    ) {
+      return <EmptyCard name={user.firstName} prompt={"Project"} />;
+    } else {
+      return (
+        <React.Fragment>
+          {user.showcase.map((project, i) => (
+            <React.Fragment key={i}>
+              <ProjectCard
+                content={project}
+                editable={owner}
+                updateProfile={setUser}
+              />
+            </React.Fragment>
+          ))}
+          {isOwner && (
+            <ProjectDialog
+              empty={true}
+              project={{ title: "", description: "" }}
+              updateProfile={setUser}
+            />
+          )}
+        </React.Fragment>
+      );
     }
   };
 
@@ -156,8 +192,8 @@ const ProfilePage = ({ isOwner = true, match }) => {
       <div>
         <div className={classes.loading}>
           <SentimentDissatisfiedIcon className={classes.icon} />
-          <Typography variant='h2'>Profile Not Found</Typography>
-          <Link variant='h2' component={RouterLink} to='/home/landing'>
+          <Typography variant="h2">Profile Not Found</Typography>
+          <Link variant="h2" component={RouterLink} to="/home/landing">
             Click here to return Home
           </Link>
         </div>
@@ -169,8 +205,8 @@ const ProfilePage = ({ isOwner = true, match }) => {
       <div>
         <div className={classes.loading}>
           <VisibilityOffIcon className={classes.icon} />
-          <Typography variant='h2'>This profile is private</Typography>
-          <Link variant='h2' component={RouterLink} to='/home/landing'>
+          <Typography variant="h2">This profile is private</Typography>
+          <Link variant="h2" component={RouterLink} to="/home/landing">
             Click here to return Home
           </Link>
         </div>
@@ -181,7 +217,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
       <div>
         <div className={classes.loading}>
           <CircularProgress />
-          <Typography variant='h2'>Fetching User Data</Typography>
+          <Typography variant="h2">Fetching User Data</Typography>
         </div>
       </div>
     );
@@ -196,25 +232,25 @@ const ProfilePage = ({ isOwner = true, match }) => {
                   <ListItemIcon>
                     <FaceIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText primary='My Profile'></ListItemText>
+                  <ListItemText primary="My Profile"></ListItemText>
                 </ListItem>
                 <ListItem button onClick={() => setSection(2)}>
                   <ListItemIcon>
                     <CreateIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText primary='My Reflections'></ListItemText>
+                  <ListItemText primary="My Reflections"></ListItemText>
                 </ListItem>
                 <ListItem button onClick={() => setSection(3)}>
                   <ListItemIcon>
                     <MenuBookIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText primary='My Projects'></ListItemText>
+                  <ListItemText primary="My Projects"></ListItemText>
                 </ListItem>
                 <ListItem button onClick={() => setSection(4)}>
                   <ListItemIcon>
                     <InfoIcon className={classes.navBarIcon} />
                   </ListItemIcon>
-                  <ListItemText primary='About'></ListItemText>
+                  <ListItemText primary="About"></ListItemText>
                 </ListItem>
               </List>
             </Paper>
@@ -224,7 +260,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
           <div className={classes.sectionContainer}>
             <div
               className={classes.section}
-              style={{ marginLeft: section * -100 + 'vw' }}
+              style={{ marginLeft: section * -100 + "vw" }}
             >
               Placeholder section
             </div>
@@ -236,14 +272,8 @@ const ProfilePage = ({ isOwner = true, match }) => {
             </div>
             <div className={classes.section}>
               <ReflectionCard />
-
             </div>
-            <div className={classes.section}>
-              <ProjectCard type={'large'} />
-              <ProjectCard type={'small'} />
-              <ProjectCard type={'small'} />
-              <ProjectCard type={'medium'} />
-            </div>
+            <div className={classes.section}>{getProjects()}</div>
             <div className={classes.section}>
               <AboutCard about={user.aboutMe} editable={owner} />
             </div>

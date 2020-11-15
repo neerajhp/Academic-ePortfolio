@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
   Table,
@@ -7,64 +7,64 @@ import {
   TableCell,
   Typography,
   TableBody,
-} from '@material-ui/core';
-import EducationDialog from './EducationDialog';
+} from "@material-ui/core";
+import EducationDialog from "./EducationDialog";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   card: {
-    margin: '0 0 1% 1%',
-    width: '100%',
+    margin: "0 0 1% 1%",
+    width: "100%",
     padding: theme.spacing(5),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  title: { width: '100%' },
+  title: { width: "100%" },
   emptySection: {
     margin: theme.spacing(2),
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
   },
   tableContainer: {
-    width: '90%',
+    width: "90%",
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(3),
     marginTop: theme.spacing(1),
   },
 
   period: {
-    width: '30%',
-    verticalAlign: 'top',
+    width: "30%",
+    verticalAlign: "top",
   },
   education: {
-    verticalAlign: 'top',
+    verticalAlign: "top",
   },
   editDialogContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    position: 'relative',
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    position: "relative",
   },
 }));
 
 /* ================ Constants ================ */
 
 const MONTHS = {
-  1: 'Jan',
-  2: 'Feb',
-  3: 'Mar',
-  4: 'Apr',
-  5: 'May',
-  6: 'Jun',
-  7: 'Jul',
-  8: 'Aug',
-  9: 'Sep',
-  10: 'Oct',
-  11: 'Nov',
-  12: 'Dec',
+  1: "Jan",
+  2: "Feb",
+  3: "Mar",
+  4: "Apr",
+  5: "May",
+  6: "Jun",
+  7: "Jul",
+  8: "Aug",
+  9: "Sep",
+  10: "Oct",
+  11: "Nov",
+  12: "Dec",
 };
 
 /* ================ Component ================ */
@@ -100,13 +100,13 @@ const EducationCard = ({ education, editable }) => {
                     </Typography>
                   </TableCell>
                   <TableCell className={classes.education}>
-                    <Typography variant='h3'>{edu.schoolName}</Typography>
-                    {edu.edu_type === 'University' ? (
+                    <Typography variant="h3">{edu.schoolName}</Typography>
+                    {edu.edu_type === "University" ? (
                       <Typography>
                         {edu.unicourseName} {edu.unimajorName}
                       </Typography>
                     ) : (
-                      ''
+                      ""
                     )}
                   </TableCell>
                 </TableRow>
@@ -120,8 +120,8 @@ const EducationCard = ({ education, editable }) => {
 
   return (
     <Paper className={classes.card}>
-      <Typography className={classes.title} variant='h2'>
-        Education{' '}
+      <Typography className={classes.title} variant="h2">
+        Education{" "}
       </Typography>
       {getRecord(records)}
       {editable && (

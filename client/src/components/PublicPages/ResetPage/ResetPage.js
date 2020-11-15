@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import MailIcon from '@material-ui/icons/Mail';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormikField from '../../utils/FormikField';
-import { validationSchema } from './Validation';
-import API from '../../../api/API';
+import React, { useState } from "react";
+import { Formik } from "formik";
+import { Typography, Avatar, Grid, Link, Button } from "@material-ui/core";
+import MailIcon from "@material-ui/icons/Mail";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormikField from "../../utils/FormikField";
+import { validationSchema } from "./Validation";
+import API from "../../../api/API";
 
 /* ================ Component ================ */
 
@@ -14,7 +14,7 @@ const ResetPage = ({ globalClasses }) => {
 
   const [Submitted, setSubmitted] = useState(false);
   const [resubmitting, setResubmitting] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [resendMessage, setResendMessage] = useState(false);
   const [resendError, setResendError] = useState(false);
 
@@ -38,22 +38,22 @@ const ResetPage = ({ globalClasses }) => {
           <Avatar className={classes.avatar}>
             <MailIcon className={classes.icon} />
           </Avatar>
-          <Typography variant='h5' align='center'>
+          <Typography variant="h5" align="center">
             An email has been sent to <br />
             {email}
           </Typography>
-          <Typography variant='h4' align='center'>
+          <Typography variant="h4" align="center">
             Click the link in your email to reset your password
           </Typography>
 
           <div className={globalClasses.buttonWrapper}>
             <Button
-              type='Submit'
+              type="Submit"
               fullWidth
-              variant='contained'
+              variant="contained"
               className={classes.submit}
               disabled={resubmitting}
-              color='secondary'
+              color="secondary"
               onClick={() => resendEmail(email)}
             >
               <Typography>
@@ -68,14 +68,14 @@ const ResetPage = ({ globalClasses }) => {
             )}
           </div>
           {resendMessage && (
-            <Typography color='secondary'>Email has been resent</Typography>
+            <Typography color="secondary">Email has been resent</Typography>
           )}
           {resendError && (
             <React.Fragment>
-              <Typography color='error'>{resendError}</Typography>
+              <Typography color="error">{resendError}</Typography>
               <Typography>
-                <Link href='./signup' color='textSecondary'>
-                  Click here to signup{' '}
+                <Link href="./signup" color="textSecondary">
+                  Click here to signup{" "}
                 </Link>
               </Typography>
             </React.Fragment>
@@ -88,7 +88,7 @@ const ResetPage = ({ globalClasses }) => {
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
-        <Typography variant='h1' color='textSecondary'>
+        <Typography variant="h1" color="textSecondary">
           Reset your new Portfolio
         </Typography>
       </div>
@@ -96,7 +96,7 @@ const ResetPage = ({ globalClasses }) => {
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              email: '',
+              email: "",
             }}
             onSubmit={(values, actions) => {
               API.emailresetPassword(values.email)
@@ -105,7 +105,7 @@ const ResetPage = ({ globalClasses }) => {
                   setEmail(values.email);
                 })
                 .catch((err) => {
-                  actions.setFieldError('email', err.response.data);
+                  actions.setFieldError("email", err.response.data);
                   actions.setSubmitting(false);
                 });
             }}
@@ -117,20 +117,20 @@ const ResetPage = ({ globalClasses }) => {
                 onSubmit={formikProps.handleSubmit}
               >
                 <FormikField
-                  label='Email'
+                  label="Email"
                   formikProps={formikProps}
-                  formikKey='email'
+                  formikKey="email"
                   required
                   className={classes.inputField}
                 />
 
                 <div className={globalClasses.buttonWrapper}>
                   <Button
-                    type='Submit'
+                    type="Submit"
                     fullWidth
-                    variant='contained'
+                    variant="contained"
                     disabled={!formikProps.isValid || formikProps.isSubmitting}
-                    color='secondary'
+                    color="secondary"
                   >
                     <Typography>Reset</Typography>
                   </Button>
@@ -143,7 +143,7 @@ const ResetPage = ({ globalClasses }) => {
                 </div>
                 <Grid container>
                   <Grid item xs>
-                    <Link href='./login' variant='body2' color='textSecondary'>
+                    <Link href="./login" variant="body2" color="textSecondary">
                       Back to Log In
                     </Link>
                   </Grid>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 axios.defaults.baseURL = window.location.origin;
 axios.defaults.withCredentials = true;
@@ -6,7 +6,7 @@ axios.defaults.withCredentials = true;
 export default {
   //userSignup
   userSignup: function (user) {
-    return axios.post('/api/user/signup', {
+    return axios.post("/api/user/signup", {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -15,7 +15,7 @@ export default {
   },
 
   resendToken: function (userEmail) {
-    return axios.post('/api/confirmation/resend', {
+    return axios.post("/api/confirmation/resend", {
       email: userEmail,
     });
   },
@@ -25,7 +25,7 @@ export default {
     });
   },
   emailresetPassword: function (userEmail) {
-    return axios.post('/api/confirmation/reset', {
+    return axios.post("/api/confirmation/reset", {
       email: userEmail,
     });
   },
@@ -35,7 +35,7 @@ export default {
     });
   },
   userLogin: function (user) {
-    return axios.post('/api/user/login', {
+    return axios.post("/api/user/login", {
       email: user.email,
       password: user.password,
     });
@@ -48,41 +48,41 @@ export default {
   },
 
   facebookLogin: function (userID, accessToken) {
-    return axios.post('api/user/facebooklogin', {
+    return axios.post("api/user/facebooklogin", {
       userID,
       accessToken,
     });
   },
 
   userSearch: function (searchName) {
-    return axios.get('api/user/search', { params: { name: searchName } });
+    return axios.get("api/user/search", { params: { name: searchName } });
   },
 
   /* ================ Authorised Calls ================ */
   getUserInfo: () => {
-    return axios.get('/api/user/userInfo');
+    return axios.get("/api/user/userInfo");
   },
 
   getUserProfile: () => {
-    return axios.get('/api/profile/');
+    return axios.get("/api/profile/");
   },
 
   getCV: function () {
-    return axios.get('/api/profile/cv');
+    return axios.get("/api/profile/cv");
   },
   getProfilePic: function () {
-    return axios.get('/api/profile/profile-pic');
+    return axios.get("/api/profile/profile-pic");
   },
   getBio: function () {
-    return axios.get('/api/profile/bio');
+    return axios.get("/api/profile/bio");
   },
   // Gets all education records
   getEducation: function () {
-    return axios.get('/api/profile/education');
+    return axios.get("/api/profile/education");
   },
   // Creates an education record
   postEducation: function (body) {
-    return axios.post('/api/profile/education', {
+    return axios.post("/api/profile/education", {
       edu_type: body.edu_type,
       schoolName: body.schoolName,
       unicourseName: body.unicourseName,
@@ -113,63 +113,63 @@ export default {
   },
   // Delete all user education records
   clearEducation: function () {
-    return axios.delete('/api/profile/education');
+    return axios.delete("/api/profile/education");
   },
   // Gets all of the user's uploaded files (except profile picture and cv)
 
   getAllFiles: function () {
-    return axios.get('api/files/'); // Gets an array of all Document objects that belong to the user
+    return axios.get("api/files/"); // Gets an array of all Document objects that belong to the user
   },
 
   // So bio is supposed to come from the body, but idk how to attach it to this json
   updateBio: function (body) {
-    return axios.put('/api/profile/bio', {
+    return axios.put("/api/profile/bio", {
       biography: body.bio,
     });
   },
 
   // Update tutorial boolean
   updateTutorial: function (body) {
-    return axios.put('/api/user/update/tutorial');
+    return axios.put("/api/user/update/tutorial");
   },
   // Single upload of file
   uploadFile: function (body) {
-    return axios.post('/api/upload/file', {
+    return axios.post("/api/upload/file}", {
       file: body.file,
     });
   },
-  uploadFiles: function (body) {
-    return axios.post('/api/upload/files', {
+  uploadFiles: function (body, recordID) {
+    return axios.post("/api/upload/files/${recordID", {
       // The files key must be "document"
       files: body.files,
     });
   },
   uploadCV: function (body) {
-    return axios.post('/api/upload/cv', {
+    return axios.post("/api/upload/cv", {
       file: body.file, // This is a single file
     });
   },
   deleteCV: function () {
-    return axios.delete('/api/files/cv');
+    return axios.delete("/api/files/cv");
   },
   uploadProfilePic: function (body) {
-    return axios.post('/api/upload/profile-pic', {
+    return axios.post("/api/upload/profile-pic", {
       // The file key is "profile-pic"
       file: body.file,
     });
   },
   deleteProfilePic: function () {
-    return axios.delete('/api/files/profile-pic');
+    return axios.delete("/api/files/profile-pic");
   },
   // Single upload of image
   uploadImage: function (body) {
-    return axios.post('/api/upload/image', {
+    return axios.post("/api/upload/image", {
       file: body.file,
     });
   },
   // Multiple uploads of images
   uploadImages: function (body) {
-    return axios.post('/api/upload/images', {
+    return axios.post("/api/upload/images", {
       // The file key is "image"
       files: body.files, // This is an array of images (current limit: 5 files)
     });
@@ -193,7 +193,7 @@ export default {
   // Use this if the link doesn't work (Not sure if this will work)
   // At the moment this only works for displaying the logged in user's profile picture
   displayProfilePic: function () {
-    return axios.get('/api/files/image/profile-pic');
+    return axios.get("/api/files/image/profile-pic");
   },
   // Deletes the file by objectID
   deleteFile: function (recordID) {
@@ -201,34 +201,34 @@ export default {
   },
   // Deletes multiple files
   deleteFiles: function (body) {
-    return axios.delete('/api/files/delete', {
+    return axios.delete("/api/files/delete", {
       IDs: body.IDs,
     });
   },
   // Deletes all of the user's files (documents, images, profile picture and cv)
   // Its probably best if this api is only used for deleting a profile
   clearFiles: function () {
-    return axios.delete('/api/files');
+    return axios.delete("/api/files");
   },
   // Gets the user's skills array
   getSkills: function () {
-    return axios.get('/api/profile/skills');
+    return axios.get("/api/profile/skills");
   },
   // Add skills to the user's skills array (At the moment there is no limit on the number of skills)
   addSkills: function (body) {
-    return axios.put('api/profile/skills', {
+    return axios.put("api/profile/skills", {
       skills: body.skills,
     });
   },
   // Removes specified skills from the user's skills array
   removeSkills: function (body) {
-    return axios.delete('api/profile/skills', {
+    return axios.delete("api/profile/skills", {
       skills: body.skills,
     });
   },
   // Creates a featured work
   createFeaturedWork: function (body) {
-    return axios.post('api/profile/featured-work', {
+    return axios.post("api/profile/featured-work", {
       title: body.title,
       type: body.type,
       description: body.description,
@@ -243,7 +243,7 @@ export default {
   },
   // Gets all of the user's featured works
   getAllFeaturedWorks: function () {
-    return axios.get('api/profile/featured-work');
+    return axios.get("api/profile/featured-work");
   },
   // Gets a specific featured work
   getFeaturedWork: function (recordID) {
@@ -261,15 +261,14 @@ export default {
     });
   },
   // Attach a file to a featured work
-  attachFilesFeaturedWork: function (body, recordID) {
-    return axios.put(`api/profile/featured-work/files/${recordID}`, {
-      // Idk if I'm doing this right
-      files: body.files
+  attachFilesFeaturedWork: function (formData, recordID) {
+    return axios.put(`api/profile/featured-work/files/${recordID}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  removeAttachedFilesFeaturedWork: function (body, recordID){
+  removeAttachedFilesFeaturedWork: function (body, recordID) {
     return axios.delete(`api/profile/featured-work/files/${recordID}`, {
-      attachedFiles: body.attachedFiles
+      attachedFiles: body.attacheFiles,
     });
   },
   // Removes a specific featured work
@@ -278,11 +277,11 @@ export default {
   },
   // Removes all of the user's featured works
   clearShowCase: function () {
-    return axios.delete('api/profile/featured-work');
+    return axios.delete("api/profile/featured-work");
   },
   // Gets all of the user's blog posts
   getAllBlogs: function () {
-    return axios.get('api/blog');
+    return axios.get("api/blog");
   },
 
   // Gets a specific blog post
@@ -291,7 +290,7 @@ export default {
   },
   // Create a new blog post
   createBlog: function (body) {
-    return axios.post('api/blog', {
+    return axios.post("api/blog", {
       title: body.title,
       dateCreated: body.dateCreated,
       content: body.content,
@@ -323,44 +322,44 @@ export default {
   },
   // Removes all of the user's blogs
   clearBlogs: function () {
-    return axios.delete('api/blog');
+    return axios.delete("api/blog");
   },
   // Get about me
   getAboutMe: function () {
-    return axios.get('api/profile/aboutMe');
+    return axios.get("api/profile/aboutMe");
   },
   // Get tutorial
   getTutorial: function () {
-    return axios.get('api/user/tutorial', {});
+    return axios.get("api/user/tutorial", {});
   },
   // Finish tutorial
   finishTutorial: function () {
-    return axios.put('api/user/update/tutorial', {});
+    return axios.put("api/user/update/tutorial", {});
   },
   // Edit about me
   editAboutMe: function (body) {
-    return axios.put('api/profile/aboutMe', {
+    return axios.put("api/profile/aboutMe", {
       aboutMe: body,
     });
   },
   // Get social media
   getSocialMedia: function (body) {
-    return axios.get('api/profile/social-media');
+    return axios.get("api/profile/social-media");
   },
   // Edit social media links
   editSocialMedia: function (body) {
-    return axios.put('api/profile/social-media', {
+    return axios.put("api/profile/social-media", {
       // e.g. [{site: "facebook", link: "www.facebook.com"}, {site: "linkedIn", link: "www.linkedIn.com"}]
       body,
     });
   },
   // Get user information
   getUserInformation: function () {
-    return axios.get('api/user/userInfo');
+    return axios.get("api/user/userInfo");
   },
   // Edit User information (name, mobile number, birthdate)
   editUserInformation: function (body) {
-    return axios.put('api/user/userInfo', {
+    return axios.put("api/user/userInfo", {
       firstName: body.firstName,
       lastName: body.lastName,
       mobileNumber: body.mobileNumber,
@@ -369,30 +368,30 @@ export default {
   },
   // Updates a logged in user's email
   updateEmail: function (body) {
-    return axios.put('api/user/update/email', { email: body.email });
+    return axios.put("api/user/update/email", { email: body.email });
   },
   // Get user privacy option
   getPrivacy: function () {
-    return axios.get('api/profile/private');
+    return axios.get("api/profile/private");
   },
   // Change user privacy
   changePrivacy: function (body) {
-    return axios.put('api/profile/private', { private: body.private });
+    return axios.put("api/profile/private", { private: body.private });
   },
   changePassword: function (body) {
-    return axios.put('api/user/update/password', {
+    return axios.put("api/user/update/password", {
       oldPassword: body.oldPassword,
       newPassword: body.newPassword,
     });
   },
   changeUserName: function (body) {
-    return axios.put('api/user/update/username', {
+    return axios.put("api/user/update/username", {
       userName: body.userName,
     });
   },
   // Create an experience card
   createExperience: function (body) {
-    return axios.post('api/experience', {
+    return axios.post("api/experience", {
       type: body.type,
       organization: body.organization,
       role: body.role,
@@ -406,15 +405,15 @@ export default {
   },
   // Gets all of the user's experience (All types)
   getAllExperience: function () {
-    return axios.get('api/experience');
+    return axios.get("api/experience");
   },
   // Gets the user's employment history
   getEmploymentHist: function () {
-    return axios.get('api/experience/employment');
+    return axios.get("api/experience/employment");
   },
   // Gets the user's volunteering history
   getVolunteeringHist: function () {
-    return axios.get('api/experience/volunteering');
+    return axios.get("api/experience/volunteering");
   },
   // Deletes an experience card
   deleteExperience: function (recordID) {
@@ -479,7 +478,7 @@ export default {
   /* =========== Confirmation =========== */
   // Resends account confirmation token
   resendTokenPost: function (body) {
-    return axios.post('/api/confirmation/resend', {});
+    return axios.post("/api/confirmation/resend", {});
   },
   // Verifies account
   confirmationPost: function (body, token) {
@@ -489,7 +488,7 @@ export default {
   },
   // Sends reset password email
   sendResetPost: function (body, token) {
-    return axios.post('/api/confirmation/reset', {
+    return axios.post("/api/confirmation/reset", {
       email: body.email,
     });
   },

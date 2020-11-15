@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { Paper, Typography, Button } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormikField from '../../../utils/FormikField';
-import { emailValidationSchema, passwordValidationSchema } from './Validation';
-import API from '../../../../api/API';
+import React, { useState } from "react";
+import { Formik } from "formik";
+import { Paper, Typography, Button } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormikField from "../../../utils/FormikField";
+import { emailValidationSchema, passwordValidationSchema } from "./Validation";
+import API from "../../../../api/API";
 
 /* ================ Component ================ */
 
@@ -12,20 +12,20 @@ const AccountInformationForm = ({ user, globalClasses }) => {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const emailFieldSubmitted = emailSubmitted
     ? globalClasses.fieldSubmitted
-    : '';
+    : "";
 
   const [passwordSubmitted, setPasswordSubmitted] = useState(false);
   const passwordFieldSubmitted = passwordSubmitted
     ? globalClasses.fieldSubmitted
-    : '';
+    : "";
 
   return (
     <Paper className={globalClasses.card}>
       <div className={globalClasses.title}>
-        <Typography variant='h2'>Account information</Typography>
+        <Typography variant="h2">Account information</Typography>
       </div>
       <div className={globalClasses.formContainer}>
-        <Typography variant='h2' className={globalClasses.formTitle}>
+        <Typography variant="h2" className={globalClasses.formTitle}>
           Update your Email
         </Typography>
 
@@ -44,7 +44,7 @@ const AccountInformationForm = ({ user, globalClasses }) => {
               })
               .catch((err) => {
                 console.log(err);
-                actions.setFieldError('email', err.response.data);
+                actions.setFieldError("email", err.response.data);
                 actions.setSubmitting(false);
               });
           }}
@@ -56,9 +56,9 @@ const AccountInformationForm = ({ user, globalClasses }) => {
               onSubmit={formikProps.handleSubmit}
             >
               <FormikField
-                label='Email'
+                label="Email"
                 formikProps={formikProps}
-                formikKey='email'
+                formikKey="email"
                 required
                 className={`${globalClasses.field} ${emailFieldSubmitted}`}
                 defaultValue={formikProps.initialValues.email}
@@ -66,10 +66,10 @@ const AccountInformationForm = ({ user, globalClasses }) => {
 
               <div className={globalClasses.buttonWrapper}>
                 <Button
-                  type='Submit'
+                  type="Submit"
                   fullWidth
-                  variant='contained'
-                  color='secondary'
+                  variant="contained"
+                  color="secondary"
                   disabled={!formikProps.isValid || formikProps.isSubmitting}
                 >
                   <Typography>Update</Typography>
@@ -87,14 +87,14 @@ const AccountInformationForm = ({ user, globalClasses }) => {
       </div>
 
       <div className={globalClasses.formContainer}>
-        <Typography variant='h2' className={globalClasses.formTitle}>
+        <Typography variant="h2" className={globalClasses.formTitle}>
           Update your Password
         </Typography>
         <Formik
           initialValues={{
-            oldPassword: '',
-            newPassword: '',
-            confirmNewPassword: '',
+            oldPassword: "",
+            newPassword: "",
+            confirmNewPassword: "",
           }}
           onSubmit={(values, actions) => {
             setPasswordSubmitted(false);
@@ -109,7 +109,7 @@ const AccountInformationForm = ({ user, globalClasses }) => {
               })
               .catch((err) => {
                 console.log(err);
-                actions.setFieldError('oldPassword', err.response.data);
+                actions.setFieldError("oldPassword", err.response.data);
                 actions.setSubmitting(false);
               });
           }}
@@ -121,35 +121,35 @@ const AccountInformationForm = ({ user, globalClasses }) => {
               onSubmit={formikProps.handleSubmit}
             >
               <FormikField
-                label='Current Password'
+                label="Current Password"
                 formikProps={formikProps}
-                formikKey='oldPassword'
-                type='password'
+                formikKey="oldPassword"
+                type="password"
                 required
                 className={`${globalClasses.field} ${passwordFieldSubmitted}`}
               />
               <FormikField
-                label='Password'
+                label="Password"
                 formikProps={formikProps}
-                formikKey='newPassword'
-                type='password'
+                formikKey="newPassword"
+                type="password"
                 required
                 className={`${globalClasses.field} ${passwordFieldSubmitted}`}
               />
               <FormikField
-                label='Confirm Password'
+                label="Confirm Password"
                 formikProps={formikProps}
-                formikKey='confirmNewPassword'
-                type='password'
+                formikKey="confirmNewPassword"
+                type="password"
                 required
                 className={`${globalClasses.field} ${passwordFieldSubmitted}`}
               />
               <div className={globalClasses.buttonWrapper}>
                 <Button
-                  type='Submit'
+                  type="Submit"
                   fullWidth
-                  variant='contained'
-                  color='secondary'
+                  variant="contained"
+                  color="secondary"
                   disabled={!formikProps.isValid || formikProps.isSubmitting}
                 >
                   <Typography>Update</Typography>

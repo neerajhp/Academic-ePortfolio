@@ -5,7 +5,6 @@ const { authenticateToken } = require("../Middleware/authenticate");
 
 router.use(authenticateToken);
 
-
 router.post("/", blogController.postBlog);
 
 router.get("/", blogController.getAllBlogs);
@@ -21,6 +20,5 @@ router.get("/:id", blogController.getBlog);
 router.delete("/:id", blogController.deleteBlog);
 
 router.put("/:id", blogController.updateBlog);
-
 
 module.exports = router;

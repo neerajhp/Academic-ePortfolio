@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import API from '../../../api/API';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
+import API from "../../../api/API";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   CircularProgress,
   Paper,
@@ -9,120 +9,120 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@material-ui/core';
-import FaceIcon from '@material-ui/icons/Face';
-import AccountInformationForm from './AccountInformationForm/AccountInformationForm';
-import PersonalInformationForm from './PersonalInformationForm/PersonalInformationForm';
-import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
-import Tutorial from '../Tutorial/Tutorial';
+} from "@material-ui/core";
+import FaceIcon from "@material-ui/icons/Face";
+import AccountInformationForm from "./AccountInformationForm/AccountInformationForm";
+import PersonalInformationForm from "./PersonalInformationForm/PersonalInformationForm";
+import ProfileSettingsForm from "./ProfileSettingsForm/ProfileSettingsForm";
+import Tutorial from "../Tutorial/Tutorial";
 
 /* ================ Styling ================ */
 const useStyles = makeStyles((theme) => ({
   //Page container
 
   loading: {
-    height: '90vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "90vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   navSection: {
-    position: 'fixed',
-    width: '25vw',
-    marginTop: '1%',
-    zIndex: '100',
+    position: "fixed",
+    width: "25vw",
+    marginTop: "1%",
+    zIndex: "100",
   },
   container: {
-    maxWidth: '100%',
-    overflowX: 'hidden',
+    maxWidth: "100%",
+    overflowX: "hidden",
   },
   navBar: {
-    marginLeft: '0.5em',
+    marginLeft: "0.5em",
     background: theme.palette.primary.main,
     color: theme.palette.text.secondary,
   },
   navBarIcon: {
     fontSize: 30,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   sectionContainer: {
-    position: 'absolute',
-    display: 'flex',
-    zIndex: '-1',
-    marginTop: '1%',
+    position: "absolute",
+    display: "flex",
+    zIndex: "-1",
+    marginTop: "1%",
   },
   section: {
-    width: '100vw',
-    minHeight: '100vh',
-    display: 'flex',
+    width: "100vw",
+    minHeight: "100vh",
+    display: "flex",
     flexGrow: 1,
-    paddingLeft: '25vw',
-    paddingRight: '0.5em',
-    flexFlow: 'row wrap',
-    alignItems: 'stretch',
-    transition: 'all 700ms',
+    paddingLeft: "25vw",
+    paddingRight: "0.5em",
+    flexFlow: "row wrap",
+    alignItems: "stretch",
+    transition: "all 700ms",
   },
 
   card: {
-    margin: '0 0 1% 1%',
-    width: '100%',
-    padding: '5%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    margin: "0 0 1% 1%",
+    width: "100%",
+    padding: "5%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   title: {
-    width: '100%',
+    width: "100%",
     marginBottom: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'row',
-    '&::after': {
+    display: "flex",
+    flexDirection: "row",
+    "&::after": {
       content: '""',
-      flex: '1 1',
-      borderColor: '#D9D7D7',
-      borderBottom: '1px solid',
-      margin: 'auto',
+      flex: "1 1",
+      borderColor: "#D9D7D7",
+      borderBottom: "1px solid",
+      margin: "auto",
     },
   },
   formContainer: {
-    width: '100%',
-    height: '30%',
-    display: 'flex',
+    width: "100%",
+    height: "30%",
+    display: "flex",
     marginBottom: theme.spacing(2),
   },
   form: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
   formTitle: {
-    width: '25%',
+    width: "25%",
   },
 
   field: {
     flexGrow: 1,
-    '& .MuiFormLabel-root': {
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary,
     },
   },
   fieldSubmitted: {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
         borderColor: theme.palette.secondary.main,
       },
     },
   },
   buttonWrapper: {
     margin: theme.spacing(1),
-    position: 'relative',
-    alignSelf: 'flex-end',
+    position: "relative",
+    alignSelf: "flex-end",
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     marginTop: -12,
     marginLeft: -12,
   },
@@ -152,7 +152,7 @@ const AccountPage = () => {
     pageContent = (
       <div className={classes.loading}>
         <CircularProgress />
-        <Typography variant='h2'>Fetching User Data</Typography>
+        <Typography variant="h2">Fetching User Data</Typography>
       </div>
     );
   } else {
@@ -165,7 +165,7 @@ const AccountPage = () => {
                 <ListItemIcon>
                   <FaceIcon className={classes.navBarIcon} />
                 </ListItemIcon>
-                <ListItemText primary='My Information'></ListItemText>
+                <ListItemText primary="My Information"></ListItemText>
               </ListItem>
             </List>
           </Paper>

@@ -1,15 +1,15 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#0f2840', overlay: '#455765' },
-    secondary: { main: '#648818', overlay: '#b1c38e' },
-    tertiary: { main: '#012611' },
-    neutral: { light: '#f6f6f6', main: '#D9D7D7' },
-    text: { primary: '#000000', secondary: '#FFFFFF' },
+    primary: { main: "#0f2840", overlay: "#455765" },
+    secondary: { main: "#648818", overlay: "#b1c38e" },
+    tertiary: { main: "#012611" },
+    neutral: { light: "#f6f6f6", main: "#D9D7D7" },
+    text: { primary: "#000000", secondary: "#FFFFFF" },
   },
   typography: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontWeight: 400,
     fontSize: 12,
     h1: {
@@ -32,9 +32,9 @@ const theme = createMuiTheme({
 
   overrides: {
     MuiCssBaseline: {
-      '@global': {
+      "@global": {
         body: {
-          overflowX: 'hidden',
+          overflowX: "hidden",
         },
       },
     },

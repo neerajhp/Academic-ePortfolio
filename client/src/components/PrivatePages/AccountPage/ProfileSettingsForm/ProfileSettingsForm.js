@@ -1,24 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Formik } from 'formik';
-import { Paper, Typography, Button, Switch, FormControlLabel} from '@material-ui/core';
+import { Formik } from "formik";
+import {
+  Paper,
+  Typography,
+  Button,
+  Switch,
+  FormControlLabel,
+} from "@material-ui/core";
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormikField from '../../../utils/FormikField';
-import validationSchema from './Validation';
-import API from '../../../../api/API';
-
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormikField from "../../../utils/FormikField";
+import validationSchema from "./Validation";
+import API from "../../../../api/API";
 
 /* ================ Component ================ */
 
 const ProfileSettingsForm = ({ user, globalClasses }) => {
   const [Submitted, setSubmitted] = useState(false);
-  const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : '';
+  const fieldSubmitted = Submitted ? globalClasses.fieldSubmitted : "";
   const [checked, setChecked] = useState(() => {
-    API.getPrivacy().then(({data}) => {
-      console.log(data)
-      return data
-    })
+    API.getPrivacy().then(({ data }) => {
+      console.log(data);
+      return data;
+    });
   });
 
   const toggleChecked = () => {
@@ -30,7 +35,7 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
   return (
     <Paper className={globalClasses.card}>
       <div className={globalClasses.title}>
-        <Typography variant='h2'>Profile Settings</Typography>
+        <Typography variant="h2">Profile Settings</Typography>
       </div>
       <div className={globalClasses.formContainer}>
         <Formik
@@ -43,7 +48,7 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
             console.log(values);
             API.changePrivacy({
               private: checked,
-            })
+            });
             API.editUserInformation({
               url: values.url,
             })
@@ -53,7 +58,7 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
               })
               .catch((err) => {
                 console.log(err);
-                actions.setFieldError('url', err.response.data);
+                actions.setFieldError("url", err.response.data);
                 actions.setSubmitting(false);
               });
           }}
@@ -65,27 +70,30 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
               onSubmit={formikProps.handleSubmit}
             >
               <FormikField
-                label='Custom URL'
+                label="Custom URL"
                 formikProps={formikProps}
-                formikKey='url'
+                formikKey="url"
                 // required
                 value={user.url}
                 className={`${globalClasses.field} ${fieldSubmitted}`}
               />
               <FormControlLabel
-                control={<Switch
-                checked={checked}
-                onChange={toggleChecked}
-                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />}
-                label="Set Profile To Private Mode" labelPlacement="start"
+                control={
+                  <Switch
+                    checked={checked}
+                    onChange={toggleChecked}
+                    inputProps={{ "aria-label": "secondary checkbox" }}
+                  />
+                }
+                label="Set Profile To Private Mode"
+                labelPlacement="start"
               />
               <div className={globalClasses.buttonWrapper}>
                 <Button
-                  type='Submit'
-                  color='secondary'
+                  type="Submit"
+                  color="secondary"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   disabled={!formikProps.isValid || formikProps.isSubmitting}
                 >
                   <Typography>Update</Typography>
@@ -97,8 +105,6 @@ const ProfileSettingsForm = ({ user, globalClasses }) => {
                   />
                 )}
               </div>
-
-
             </form>
           )}
         </Formik>

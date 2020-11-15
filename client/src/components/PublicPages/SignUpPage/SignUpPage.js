@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Formik } from 'formik';
-import { Typography, Avatar, Grid, Link, Button } from '@material-ui/core';
-import MailIcon from '@material-ui/icons/Mail';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormikField from '../../utils/FormikField';
-import validationSchema from './Validation';
-import API from '../../../api/API';
+import React, { useState, useEffect } from "react";
+import { Formik } from "formik";
+import { Typography, Avatar, Grid, Link, Button } from "@material-ui/core";
+import MailIcon from "@material-ui/icons/Mail";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormikField from "../../utils/FormikField";
+import validationSchema from "./Validation";
+import API from "../../../api/API";
 
 /* ================ Component ================ */
 
@@ -14,7 +14,7 @@ const SignUpPage = ({ globalClasses, location }) => {
 
   const [Submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState(
-    'No email has been provided. Return to the signup page.'
+    "No email has been provided. Return to the signup page."
   );
   const [resendMessage, setResendMessage] = useState(null);
   const [resendError, setResendError] = useState(null);
@@ -46,25 +46,25 @@ const SignUpPage = ({ globalClasses, location }) => {
           <Avatar className={classes.avatar}>
             <MailIcon className={classes.icon} />
           </Avatar>
-          <Typography variant='h2'>Congratulations!</Typography>
-          <Typography variant='h4' align='center'>
+          <Typography variant="h2">Congratulations!</Typography>
+          <Typography variant="h4" align="center">
             You're on your way to getting started with your own academic
             ePorfolio!
           </Typography>
-          <Typography variant='h5' align='center'>
+          <Typography variant="h5" align="center">
             An email has been sent to {email}
           </Typography>
-          <Typography variant='h4' align='center'>
-            Verify your email and then{' '}
-            <Link href='./login' variant='h4' color='textSecondary'>
+          <Typography variant="h4" align="center">
+            Verify your email and then{" "}
+            <Link href="./login" variant="h4" color="textSecondary">
               Log In!
             </Link>
           </Typography>
           <Button
             fullWidth
-            variant='contained'
+            variant="contained"
             className={classes.submit}
-            color='primary'
+            color="primary"
             onClick={() => resendEmail(email)}
           >
             <Typography>
@@ -72,14 +72,14 @@ const SignUpPage = ({ globalClasses, location }) => {
             </Typography>
           </Button>
           {resendMessage && (
-            <Typography color='secondary'>Email has been resent</Typography>
+            <Typography color="secondary">Email has been resent</Typography>
           )}
           {resendError && (
             <React.Fragment>
-              <Typography color='error'>{resendError}</Typography>
+              <Typography color="error">{resendError}</Typography>
               <Typography>
-                <Link href='./landing' color='textSecondary'>
-                  Click here to begin process again{' '}
+                <Link href="./landing" color="textSecondary">
+                  Click here to begin process again{" "}
                 </Link>
               </Typography>
             </React.Fragment>
@@ -92,7 +92,7 @@ const SignUpPage = ({ globalClasses, location }) => {
   return (
     <React.Fragment>
       <div className={globalClasses.banner}>
-        <Typography variant='h1' color='textSecondary'>
+        <Typography variant="h1" color="textSecondary">
           Create your new Portfolio
         </Typography>
       </div>
@@ -100,11 +100,11 @@ const SignUpPage = ({ globalClasses, location }) => {
         <div className={classes.formPaper}>
           <Formik
             initialValues={{
-              firstName: '',
-              lastName: '',
-              email: '',
-              password: '',
-              confirmPassword: '',
+              firstName: "",
+              lastName: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
             }}
             onSubmit={(values, actions) => {
               API.userSignup({
@@ -118,7 +118,7 @@ const SignUpPage = ({ globalClasses, location }) => {
                   setEmail(values.email);
                 })
                 .catch((err) => {
-                  actions.setFieldError('email', err.response.data);
+                  actions.setFieldError("email", err.response.data);
                   actions.setSubmitting(false);
                 });
             }}
@@ -132,54 +132,54 @@ const SignUpPage = ({ globalClasses, location }) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <FormikField
-                      label='FirstName'
+                      label="FirstName"
                       formikProps={formikProps}
-                      formikKey='firstName'
+                      formikKey="firstName"
                       required
                       className={classes.inputField}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <FormikField
-                      label='LastName'
+                      label="LastName"
                       formikProps={formikProps}
-                      formikKey='lastName'
+                      formikKey="lastName"
                       required
                       className={classes.inputField}
                     />
                   </Grid>
                 </Grid>
                 <FormikField
-                  label='Email'
+                  label="Email"
                   formikProps={formikProps}
-                  formikKey='email'
+                  formikKey="email"
                   required
                   className={classes.inputField}
                 />
                 <FormikField
-                  label='Password'
+                  label="Password"
                   formikProps={formikProps}
-                  formikKey='password'
-                  type='password'
+                  formikKey="password"
+                  type="password"
                   required
                   className={classes.inputField}
                 />
                 <FormikField
-                  label='Confirm Password'
+                  label="Confirm Password"
                   formikProps={formikProps}
-                  formikKey='confirmPassword'
-                  type='password'
+                  formikKey="confirmPassword"
+                  type="password"
                   required
                   className={classes.inputField}
                 />
 
                 <div className={globalClasses.buttonWrapper}>
                   <Button
-                    type='Submit'
+                    type="Submit"
                     fullWidth
-                    variant='contained'
+                    variant="contained"
                     disabled={!formikProps.isValid || formikProps.isSubmitting}
-                    color='secondary'
+                    color="secondary"
                   >
                     <Typography>Sign Up</Typography>
                   </Button>
@@ -192,7 +192,7 @@ const SignUpPage = ({ globalClasses, location }) => {
                 </div>
                 <Grid container>
                   <Grid item xs>
-                    <Link href='./login' variant='body2' color='textSecondary'>
+                    <Link href="./login" variant="body2" color="textSecondary">
                       Log In
                     </Link>
                   </Grid>

@@ -47,3 +47,4 @@ describe('landing page', () => {
         cy.url().should('eq', 'http://localhost:3000/home/search')
     })
   })
+

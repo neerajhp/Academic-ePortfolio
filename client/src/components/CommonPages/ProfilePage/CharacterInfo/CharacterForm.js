@@ -1,15 +1,15 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Field, Formik } from 'formik';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Field, Formik } from "formik";
 import {
   DialogContent,
   DialogActions,
   Typography,
   Button,
-  TextField
-} from '@material-ui/core';
-import API from '../../../../api/API';
-import CircularProgress from '@material-ui/core/CircularProgress';
+  TextField,
+} from "@material-ui/core";
+import API from "../../../../api/API";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 /* ================ Styling ================ */
 
@@ -17,45 +17,45 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const useStyles = makeStyles((theme) => ({
   form: {
     flexGrow: 1,
-    padding: '0 5% 0 5%',
-    '& .MuiFormLabel-root': {
+    padding: "0 5% 0 5%",
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary, // or black
     },
   },
   divider: {
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.secondary.main,
   },
   addButton: {
     marginTop: theme.spacing(3),
   },
   buttonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
   addButtonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
 /* ================ Component ================ */
 
-const ContentField = ({record }) => {
+const ContentField = ({ record }) => {
   return (
-    <Field name={'bio'}>
+    <Field name={"bio"}>
       {({ field, meta }) => {
         return (
           <TextField
-            color='primary'
-            variant='outlined'
-            margin='dense'
+            color="primary"
+            variant="outlined"
+            margin="dense"
             fullWidth
             multiline
             rows={4}
             defaultValue={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
+            helperText={meta.touched && meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             onBlur={field.onBlur(field.name)}
             error={meta.touched && Boolean(meta.error)}
@@ -75,11 +75,11 @@ const CharacterForm = ({ handleClose, records }) => {
 
   return (
     <Formik
-        initialValues={{
-         'bio' : records
-        }}
+      initialValues={{
+        bio: records,
+      }}
       onSubmit={(values, actions) => {
-        console.log(values)
+        console.log(values);
         API.updateBio(values).then(handleClose());
       }}
     >
@@ -87,7 +87,7 @@ const CharacterForm = ({ handleClose, records }) => {
         <React.Fragment>
           <DialogContent dividers>
             <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
-              <ContentField record = {records}/>
+              <ContentField record={records} />
             </form>
           </DialogContent>
           <DialogActions>
@@ -96,7 +96,7 @@ const CharacterForm = ({ handleClose, records }) => {
             </Button>
             <div>
               <Button
-                type='Submit'
+                type="Submit"
                 className={classes.button}
                 onClick={() => formikProps.handleSubmit()}
                 disabled={!formikProps.isValid}

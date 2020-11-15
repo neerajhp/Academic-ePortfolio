@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Field, FieldArray, Formik } from "formik";
-import { Typography, Button, Divider, TextField } from "@material-ui/core";
+import { Formik } from "formik";
+import {
+  Typography,
+  Button,
+  CircularProgress,
+  DialogActions,
+  DialogContent,
+} from "@material-ui/core";
+
 import API from "../../../../api/API";
+import FormikField from "../../../utils/FormikField";
+import RTE from "../../../utils/RTE";
+import { DropzoneArea } from "material-ui-dropzone";
+import axios from "axios";
 
 /* ================ Styling ================ */
 
@@ -31,118 +42,231 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
+  inputField: {
+    "& .MuiInputBase-input": {
+      color: theme.palette.text.primary,
+    },
+    "& .MuiFormLabel-root": {
+      color: theme.palette.text.primary,
+    },
+  },
+  rteContainer: {
+    marginBottom: theme.spacing(3),
+  },
+  buttonWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 /* ================ Component ================ */
 
-const FormField = ({ type, label, index, record }) => {
-  return (
-    <Field name={type}>
-      {({ field, meta }) => {
-        return (
-          <TextField
-            color="primary"
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            label={label}
-            defaultValue={record}
-            helperText={meta.touched && meta.error ? meta.error : " "}
-            onChange={field.onChange(field.name)}
-            onBlur={field.onBlur(field.name)}
-            error={meta.touched && Boolean(meta.error)}
-          />
-        );
-      }}
-    </Field>
-  );
-};
-
-const ContentField = ({ type, label, index, record }) => {
-  return (
-    <Field name={type}>
-      {({ field, meta }) => {
-        return (
-          <TextField
-            color="primary"
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            multiline
-            rows={4}
-            label={label}
-            defaultValue={record}
-            helperText={meta.touched && meta.error ? meta.error : " "}
-            onChange={field.onChange(field.name)}
-            onBlur={field.onBlur(field.name)}
-            error={meta.touched && Boolean(meta.error)}
-          />
-        );
-      }}
-    </Field>
-  );
-};
-
-//   const ContentField = ({ type, label, index, record })=>{
-//       return
-//   }
-
-const ProjectForm = ({ handleClose, records }) => {
+const ProjectForm = ({ handleClose, records, newWork }) => {
   const classes = useStyles();
+
+  //RTE
+  const [rteValue, setRTEValue] = useState([]);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+
+  // remove
+  const handleDel = () => {
+    API.removeFeaturedWork(records._id).then((result) => {
+      if (result.status === 200) {
+        handleClose();
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (records.description === undefined || records.description.length === 0) {
+      records.description = [
+        {
+          type: "paragraph",
+          children: [{ text: "Describe your project here" }],
+        },
+      ];
+    }
+
+    setRTEValue(records.description);
+    // setAttachedFiles(records.attachedFiles);
+  }, [records.description]);
+
+  //upload files
+  const handleChooseFile = (e) => {
+    e.preventDefault();
+    const attachedFiles = e.target.files;
+    if (!attachedFiles.length) {
+      return false;
+    }
+    if (attachedFiles.length < 6) {
+      let param = new FormData();
+      for (const key in attachedFiles) {
+        if (attachedFiles.hasOwnProperty(key)) {
+          const item = attachedFiles[key];
+          param.append("document", item);
+        }
+      }
+      axios({
+        method: "post",
+        url: "/api/upload/files",
+        data: param,
+        headers: {
+          Authorization: "Bearer: " + JSON.parse(localStorage.getItem("token")),
+        },
+        responseType: "blob",
+      }).then((result) => {});
+      API.uploadFiles(attachedFiles, records._id).then((result) => {
+        if (result.status === 200) {
+          console.log(result);
+        }
+      });
+    }
+  };
+
+  //test console
+  // const attachedFiles = new File(['foo'], 'file', {
+  //   type: '.PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx',
+  // });
 
   return (
     <Formik
       initialValues={{
-        ...records,
+        title: records.title,
+        description: rteValue,
+        attachedFiles: records.attachedFiles,
+        image: "",
+        url: "",
+        fileUpload: [],
       }}
       onSubmit={(values, actions) => {
-        API.editFeaturedWork(values, records.recordID).then(({ data }) => {
-          handleClose();
-        });
+        let featuredWork = {
+          title: values.title,
+          description: rteValue,
+          attachedFiles: values.attachedFiles,
+          image: values.image,
+          url: values.url,
+          fileUpload: values.fileUpload,
+        };
+        console.log(values.fileUpload);
+        if (newWork) {
+          API.createFeaturedWork(featuredWork).then(({ res }) => {
+            console.log(res);
+            handleClose();
+          });
+          // API.createFeaturedWork(featuredWork)
+          //   .then(({ res }) => {
+          //     console.log(res);
+          //     return API.attachFilesFeaturedWork(values.attachedFiles, res._id);
+          //   })
+          //   .then((res) => {
+          //     console.log(res);
+          //     handleClose();
+          //   });
+        } else {
+          API.editFeaturedWork(featuredWork, records._id)
+            .then((res) => {
+              let formData = new FormData();
+
+              values.fileUpload.map((fileMap) => {
+                formData.append("<NAME>", fileMap);
+              });
+
+              return API.attachFilesFeaturedWork(formData, res._id);
+            })
+            .then((res) => {
+              console.log(res);
+              handleClose();
+            });
+        }
       }}
     >
       {(formikProps) => (
         <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
-          <Divider className={classes.divider} />
-          <FieldArray
-            name="project"
-            render={(fieldArrayProps) => (
-              <React.Fragment>
-                <Typography>Title</Typography>
+          <DialogContent dividers>
+            <FormikField
+              className={classes.inputField}
+              label="Project Title"
+              formikProps={formikProps}
+              formikKey="title"
+              defaultValue={records.title}
+              required
+            />
 
-                <FormField
-                  type={"title"}
-                  // record={projects.title}
-                />
+            <div className={classes.rteContainer}>
+              <RTE defaultValue={rteValue} setValue={setRTEValue} />
+            </div>
 
-                <Typography>Project</Typography>
-
-                <ContentField
-                  type={"description"}
-                  rowsMax={4}
-                  // record={projects.title}
-                />
-              </React.Fragment>
-            )}
-          />
-
-          <div className={classes.buttonContainer}>
-            <Button
-              className={classes.button}
-              onClick={() => handleClose()}
-              color="primary"
-            >
-              <Typography>Cancel</Typography>
-            </Button>
-            <Button
-              type="Submit"
-              className={classes.button}
-              disabled={!formikProps.isValid}
-              color="primary"
-            >
-              <Typography>Update</Typography>
-            </Button>
-          </div>
+            <div className={classes.dropzoneContainer}>
+              <DropzoneArea
+                attachedFiles={attachedFiles}
+                acceptedFiles={[
+                  ".PDF,.png,.jpeg.JPEG,.pdf,.mp4,.MP4,.DOCX,.docx",
+                ]}
+                dropzoneText={"Drag and drop an image here or click"}
+                filesLimit={5}
+                onDrop={(file) => {
+                  formikProps.setFieldValue(
+                    "fileUpload",
+                    formikProps.values.fileUpload.concat(file)
+                  );
+                }}
+              />
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <div className={classes.buttonContainer}>
+              <div className={classes.buttonWrapper}>
+                <Button
+                  type="Submit"
+                  className={classes.button}
+                  onClick={() => handleDel(records._id)}
+                  color="primary"
+                >
+                  <Typography>Delete</Typography>
+                </Button>
+                {formikProps.isSubmitting && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+              <div className={classes.buttonWrapper}>
+                <Button
+                  className={classes.button}
+                  onClick={() => handleClose()}
+                  color="primary"
+                >
+                  <Typography>Cancel</Typography>
+                </Button>
+              </div>
+              <div className={classes.buttonWrapper}>
+                <Button
+                  type="Submit"
+                  className={classes.button}
+                  disabled={!formikProps.isValid}
+                  onClick={() => formikProps.handleSubmit()}
+                  color="primary"
+                >
+                  <Typography>Update</Typography>
+                </Button>
+                {formikProps.isSubmitting && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+            </div>
+          </DialogActions>
         </form>
       )}
     </Formik>

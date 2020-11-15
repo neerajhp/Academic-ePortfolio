@@ -1,218 +1,218 @@
 const Document = require("../Models/Document");
-const User = require('../Models/User');
+const User = require("../Models/User");
 
-
-require('dotenv').config();
+require("dotenv").config();
 
 const filesController = require("../Controllers/filesController");
 
-
 // Allows the upload of a single file
 const uploadSingle = async (req, res) => {
-    try{
-        if(req.file){
-            var newFile = new Document({
-                user_id: req.user.id,
-                fieldName: req.file.fieldname,
-                fileType: req.file.mimetype,
-                fileLink: req.file.location,
-                s3_key: `user-${req.user.id}/${req.file.originalname}`,
-            });
-            //console.log(newFile);
-            await Document.findOne({user_id: req.user.id, s3_key: newFile.s3_key}, (err, result) => {
-                if(err){
-                    res.status(400).json("something's wrong");
-                }else{
-                    if(result){
-                        res.status(400).json("File already exists");
-                    }else{
-                        console.log(newFile);
-                        newFile.save((err, result) => {
-                            if(err){
-                                throw err;
-                            }else{
-                                console.log("File to be saved");
-                                res.status(200).json(result);
-                            }
-                        });
-                    }
+  try {
+    if (req.file) {
+      var newFile = new Document({
+        user_id: req.user.id,
+        fieldName: req.file.fieldname,
+        fileType: req.file.mimetype,
+        fileLink: req.file.location,
+        s3_key: `user-${req.user.id}/${req.file.originalname}`,
+      });
+      //console.log(newFile);
+      await Document.findOne(
+        { user_id: req.user.id, s3_key: newFile.s3_key },
+        (err, result) => {
+          if (err) {
+            res.status(400).json("something's wrong");
+          } else {
+            if (result) {
+              res.status(400).json("File already exists");
+            } else {
+              console.log(newFile);
+              newFile.save((err, result) => {
+                if (err) {
+                  throw err;
+                } else {
+                  console.log("File to be saved");
+                  res.status(200).json(result);
                 }
-            });
-            
-        }else{
-            throw Error();
+              });
+            }
+          }
         }
-    }catch(err){
-        res.status(400).json({error: "Unable to upload file."});
-        console.log(err);
+      );
+    } else {
+      throw Error();
     }
+  } catch (err) {
+    res.status(400).json({ error: "Unable to upload file." });
+    console.log(err);
+  }
 };
 
 const saveFile = async (userID, file) => {
-    let savedFile;
-    let savedStatus = false;
-    
-    var newFile = new Document({
-        user_id: userID,
-        fieldName: file.fieldname,
-        fileType: file.mimetype,
-        fileLink: file.location,
-        s3_key: `user-${userID}/${file.originalname}`,
-    });
+  let savedFile;
+  let savedStatus = false;
 
-    await Document.findOne({user_id: userID, s3_key: newFile.s3_key}, (err, result) => {
-        let savedFile;
-        console.log("Looking for file");
-        if(err){
-            throw err;
-        }
-        if(result){
-            console.log("Document already exists");
-            savedFile = null;
-            savedStatus = false;
-            // return savedFile;
-            //return null;
-        }else{
-            console.log("abt to save");
-            savedStatus = true;
-            // newFile.save((err, result) => {
-            //     if(err){
-            //         throw err;
-            //     }else{
-            //         console.log("File saved");
-            //         savedFile = result;
-            //     }
-            // });
-        }
-    });
+  var newFile = new Document({
+    user_id: userID,
+    fieldName: file.fieldname,
+    fileType: file.mimetype,
+    fileLink: file.location,
+    s3_key: `user-${userID}/${file.originalname}`,
+  });
 
-    if(savedStatus){
-        savedFile = await newFile.save()
-    }else{
+  await Document.findOne(
+    { user_id: userID, s3_key: newFile.s3_key },
+    (err, result) => {
+      let savedFile;
+      console.log("Looking for file");
+      if (err) {
+        throw err;
+      }
+      if (result) {
+        console.log("Document already exists");
         savedFile = null;
+        savedStatus = false;
+        // return savedFile;
+        //return null;
+      } else {
+        console.log("abt to save");
+        savedStatus = true;
+        // newFile.save((err, result) => {
+        //     if(err){
+        //         throw err;
+        //     }else{
+        //         console.log("File saved");
+        //         savedFile = result;
+        //     }
+        // });
+      }
     }
+  );
 
-    console.log("I'm abt to return " + savedFile)
-    return savedFile
-    
-}
+  if (savedStatus) {
+    savedFile = await newFile.save();
+  } else {
+    savedFile = null;
+  }
+
+  console.log("I'm abt to return " + savedFile);
+  return savedFile;
+};
 
 // Upload cv API
 const uploadCV = async (req, res) => {
-    await filesController.deleteExclusiveFile(req.user.id, "cv");
+  await filesController.deleteExclusiveFile(req.user.id, "cv");
 
-    await uploadSingle(req, res);
-    console.log("new cv uploaded");
-}
+  await uploadSingle(req, res);
+  console.log("new cv uploaded");
+};
 
 // Upload profile picture API
 const uploadProfilePic = async (req, res) => {
-    await filesController.deleteExclusiveFile(req.user.id, "profile-pic");
-    await uploadSingle(req, res);
-    await User.findByIdAndUpdate(
-        req.user.id,
-        {profilePic: req.body.location},   
-        { new: true },
-    )
-    console.log(req.file.location)
-    console.log("new profile pic uploaded");
-}
+  await filesController.deleteExclusiveFile(req.user.id, "profile-pic");
+  await uploadSingle(req, res);
+  await User.findByIdAndUpdate(
+    req.user.id,
+    { profilePic: req.body.location },
+    { new: true }
+  );
+  console.log(req.file.location);
+  console.log("new profile pic uploaded");
+};
 
 // Allows the upload of multiple files
 const uploadMultiple = async (req, res) => {
-    try{
-        console.log("Attempting to upload new files")
-        if(req.files.length <= 0){
-            res.status(400).json("You must select at least 1 file");
-        }else{
-            // Creates a document reference for each file 
-        // These references are then saved to mongoDB
-            let newFiles = [];
-            let existingFiles = [];
-            for(var i = 0; i < req.files.length; i++){
-                var newFile = new Document({
-                    user_id: req.user.id,
-                    fieldName: req.files[i].fieldname,
-                    fileType: req.files[i].mimetype,
-                    fileLink: req.files[i].location,
-                    s3_key: `user-${req.user.id}/${req.files[i].originalname}`,
-                })
-                
-                await Document.findOne({user_id: newFile.user_id, s3_key: newFile.s3_key}, (err, result) => {
-                    if(err){
-                        console.log("Couldn't find the record");
-                        throw err;
-                    }else{
-                        // File already exists 
-                        if(result){
-                            existingFiles.push(req.files[i].originalname);
-                        // File is newly uploaded
-                        }else{
-                            newFiles.push(newFile);
-                        }
-                    }
-                });
+  try {
+    console.log("Attempting to upload new files");
+    if (req.files.length <= 0) {
+      res.status(400).json("You must select at least 1 file");
+    } else {
+      // Creates a document reference for each file
+      // These references are then saved to mongoDB
+      let newFiles = [];
+      let existingFiles = [];
+      for (var i = 0; i < req.files.length; i++) {
+        var newFile = new Document({
+          user_id: req.user.id,
+          fieldName: req.files[i].fieldname,
+          fileType: req.files[i].mimetype,
+          fileLink: req.files[i].location,
+          s3_key: `user-${req.user.id}/${req.files[i].originalname}`,
+        });
 
-
+        await Document.findOne(
+          { user_id: newFile.user_id, s3_key: newFile.s3_key },
+          (err, result) => {
+            if (err) {
+              console.log("Couldn't find the record");
+              throw err;
+            } else {
+              // File already exists
+              if (result) {
+                existingFiles.push(req.files[i].originalname);
+                // File is newly uploaded
+              } else {
+                newFiles.push(newFile);
+              }
             }
-            
-            // Aborts the function if there are no new files to upload
-            if(existingFiles.length === req.files.length){
-                res.status(400).json({
-                    "files": existingFiles,
-                    "error": "These files already exist"
-                });
-                return;
-            }
+          }
+        );
+      }
 
-            await Document.insertMany(newFiles, (err, result) => {
-                if(err){
-                    res.status(400).json(err);
-                }else{
-                    if(result){
-                        res.status(200).json({
-                            uploaded_files: result,
-                            failed_uploads: existingFiles
-                        });
-                    }else{
-                        res.status(400).json("Failed to upload files");
-                    }
-                }
+      // Aborts the function if there are no new files to upload
+      if (existingFiles.length === req.files.length) {
+        res.status(400).json({
+          files: existingFiles,
+          error: "These files already exist",
+        });
+        return;
+      }
+
+      await Document.insertMany(newFiles, (err, result) => {
+        if (err) {
+          res.status(400).json(err);
+        } else {
+          if (result) {
+            res.status(200).json({
+              uploaded_files: result,
+              failed_uploads: existingFiles,
             });
-
-            // // Checks whether or not files have been uploaded
-            // if(newFiles.length === 0){
-            //     res.status(400).json("Failed to upload files");
-            // }else{
-            //     await Document.insertMany(newFiles, (err, result) => {
-            //         if(err){
-            //             res.status(400).json(err);
-            //         }else{
-            //             if(result){
-            //                 res.status(200).json({
-            //                     uploaded_files: result,
-            //                     failed_uploads: existingFiles
-            //                 });
-            //             }else{
-            //                 res.status(400).json("Failed to upload files");
-            //             }
-            //         }
-            //     });
-            // }
+          } else {
+            res.status(400).json("Failed to upload files");
+          }
         }
+      });
 
-        
-    }catch(err){
-        res.status(400).json({error: "Unable to upload files."});
-        console.log(err);
+      // // Checks whether or not files have been uploaded
+      // if(newFiles.length === 0){
+      //     res.status(400).json("Failed to upload files");
+      // }else{
+      //     await Document.insertMany(newFiles, (err, result) => {
+      //         if(err){
+      //             res.status(400).json(err);
+      //         }else{
+      //             if(result){
+      //                 res.status(200).json({
+      //                     uploaded_files: result,
+      //                     failed_uploads: existingFiles
+      //                 });
+      //             }else{
+      //                 res.status(400).json("Failed to upload files");
+      //             }
+      //         }
+      //     });
+      // }
     }
+  } catch (err) {
+    res.status(400).json({ error: "Unable to upload files." });
+    console.log(err);
+  }
 };
 
-
 module.exports = {
-    uploadSingle,
-    uploadMultiple,
-    uploadCV,
-    uploadProfilePic,
-    saveFile
+  uploadSingle,
+  uploadMultiple,
+  uploadCV,
+  uploadProfilePic,
+  saveFile,
 };

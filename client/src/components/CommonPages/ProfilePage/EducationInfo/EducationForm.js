@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Field, FieldArray, Formik } from 'formik';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Field, FieldArray, Formik } from "formik";
 import {
   Typography,
   Button,
@@ -13,36 +13,36 @@ import {
   Grid,
   DialogContent,
   DialogActions,
-} from '@material-ui/core';
-import SchoolIcon from '@material-ui/icons/School';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import validationSchema from './Validation';
-import API from '../../../../api/API';
+} from "@material-ui/core";
+import SchoolIcon from "@material-ui/icons/School";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import validationSchema from "./Validation";
+import API from "../../../../api/API";
 
 /* ================ Styling ================ */
 
 // Form Styles
 const useStyles = makeStyles((theme) => ({
   schoolEntry: {
-    display: 'flex',
-    paddingLeft: '5%',
+    display: "flex",
+    paddingLeft: "5%",
     marginTop: theme.spacing(2),
   },
   form: {
     flexGrow: 1,
-    padding: '0 5% 0 5%',
-    '& .MuiFormLabel-root': {
+    padding: "0 5% 0 5%",
+    "& .MuiFormLabel-root": {
       color: theme.palette.text.primary, // or black
     },
   },
   periodInfo: {
-    display: 'flex',
+    display: "flex",
   },
   divider: {
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.tertiary.main,
   },
 
@@ -50,13 +50,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   buttonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
   addButtonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
   },
   graduatedButton: {
     marginBottom: theme.spacing(3),
@@ -74,13 +74,13 @@ const FormField = ({ type, label, index, record }) => {
       {({ field, meta }) => {
         return (
           <TextField
-            color='primary'
-            variant='outlined'
-            margin='dense'
+            color="primary"
+            variant="outlined"
+            margin="dense"
             fullWidth
             label={label}
             defaultValue={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
+            helperText={meta.touched && meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             onBlur={field.onBlur(field.name)}
             error={meta.touched && Boolean(meta.error)}
@@ -99,16 +99,16 @@ const FormEduSelect = ({ record, index }) => {
           <TextField
             fullWidth
             select
-            variant='outlined'
-            margin='dense'
-            label='Education Type'
+            variant="outlined"
+            margin="dense"
+            label="Education Type"
             value={record}
-            helperText={meta.touched && meta.error ? meta.error : ' '}
+            helperText={meta.touched && meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             error={meta.touched && Boolean(meta.error)}
           >
-            <MenuItem value={'Highschool'}>HighSchool</MenuItem>
-            <MenuItem value={'University'}>University</MenuItem>
+            <MenuItem value={"Highschool"}>HighSchool</MenuItem>
+            <MenuItem value={"University"}>University</MenuItem>
           </TextField>
         );
       }}
@@ -118,18 +118,18 @@ const FormEduSelect = ({ record, index }) => {
 
 const FormMonthSelect = ({ record, index, milestone }) => {
   const MONTHS = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   return (
@@ -139,11 +139,11 @@ const FormMonthSelect = ({ record, index, milestone }) => {
           <TextField
             fullWidth
             select
-            variant='outlined'
-            margin='dense'
-            label='Month'
+            variant="outlined"
+            margin="dense"
+            label="Month"
             value={record}
-            helperText={meta.error ? meta.error : ' '}
+            helperText={meta.error ? meta.error : " "}
             onChange={field.onChange(field.name)}
             error={Boolean(meta.error)}
           >
@@ -162,7 +162,7 @@ const FormMonthSelect = ({ record, index, milestone }) => {
 const FormYearSelect = ({ record, index, milestone }) => {
   var years = Array.from(new Array(20), (val, index) => YEAR - index);
 
-  if (milestone === 'yearEnd') {
+  if (milestone === "yearEnd") {
     const year = record.yearStart;
     years = Array.from(new Array(20), (val, index) => year + index);
   }
@@ -174,11 +174,11 @@ const FormYearSelect = ({ record, index, milestone }) => {
           <TextField
             fullWidth
             select
-            variant='outlined'
-            margin='dense'
-            label='Year'
+            variant="outlined"
+            margin="dense"
+            label="Year"
             value={
-              milestone === 'yearStart' ? record.yearStart : record.yearEnd
+              milestone === "yearStart" ? record.yearStart : record.yearEnd
             }
             onChange={field.onChange(field.name)}
           >
@@ -204,13 +204,13 @@ const FormGraduatedCheckBox = ({ index }) => {
             control={
               <Checkbox
                 checked={field.value}
-                icon={<SchoolIcon color='disabled' />}
-                checkedIcon={<SchoolIcon color='secondary' />}
-                size='medium'
+                icon={<SchoolIcon color="disabled" />}
+                checkedIcon={<SchoolIcon color="secondary" />}
+                size="medium"
                 {...field}
               />
             }
-            label='Graduated'
+            label="Graduated"
             className={classes.graduatedButton}
           />
         );
@@ -259,34 +259,34 @@ const EducationForm = ({ handleClose, records }) => {
           <DialogContent dividers>
             <form classes={classes.form} onSubmit={formikProps.handleSubmit}>
               <FieldArray
-                name='schools'
+                name="schools"
                 render={(fieldArrayProps) => (
                   <React.Fragment>
                     {formikProps.values.schools.map((school, i) => (
                       <React.Fragment key={i}>
                         <div className={classes.schoolEntry}>
                           <MenuBookIcon
-                            color='primary'
+                            color="primary"
                             style={{ fontSize: 40 }}
                           />
                           <div className={classes.form}>
                             <FormEduSelect record={school.edu_type} index={i} />
 
                             <FormField
-                              type={'schoolName'}
-                              label={'School Name'}
+                              type={"schoolName"}
+                              label={"School Name"}
                               index={i}
                               record={school.schoolName}
                             />
-                            {school.edu_type === 'University' ? (
+                            {school.edu_type === "University" ? (
                               <FormField
-                                type={'unicourseName'}
-                                label={'Course Name'}
+                                type={"unicourseName"}
+                                label={"Course Name"}
                                 index={i}
                                 record={school.unicourseName}
                               />
                             ) : (
-                              ''
+                              ""
                             )}
                             <div className={classes.periodInfo}>
                               <Grid container spacing={2}>
@@ -297,14 +297,14 @@ const EducationForm = ({ handleClose, records }) => {
                                   <FormMonthSelect
                                     record={school.monthStart}
                                     index={i}
-                                    milestone={'monthStart'}
+                                    milestone={"monthStart"}
                                   />
                                 </Grid>
                                 <Grid item xs={12} sm={5}>
                                   <FormYearSelect
                                     record={school}
                                     index={i}
-                                    milestone={'yearStart'}
+                                    milestone={"yearStart"}
                                   />
                                 </Grid>
                               </Grid>
@@ -318,21 +318,21 @@ const EducationForm = ({ handleClose, records }) => {
                                   <FormMonthSelect
                                     record={school.monthEnd}
                                     index={i}
-                                    milestone={'monthEnd'}
+                                    milestone={"monthEnd"}
                                   />
                                 </Grid>
                                 <Grid item xs={12} sm={5}>
                                   <FormYearSelect
                                     record={school}
                                     index={i}
-                                    milestone={'yearEnd'}
+                                    milestone={"yearEnd"}
                                   />
                                 </Grid>
                               </Grid>
                             </div>
                             <div className={classes.periodInfo}>
                               <Grid container spacing={2}>
-                                <Grid item xs={12} sm={2} align='center'>
+                                <Grid item xs={12} sm={2} align="center">
                                   <FormGraduatedCheckBox index={i} />
                                 </Grid>
                               </Grid>
@@ -363,10 +363,10 @@ const EducationForm = ({ handleClose, records }) => {
                         className={classes.button}
                         onClick={() =>
                           fieldArrayProps.push({
-                            edu_type: '',
-                            schoolName: '',
-                            unicourseName: '',
-                            unimajorname: '',
+                            edu_type: "",
+                            schoolName: "",
+                            unicourseName: "",
+                            unimajorname: "",
                             monthStart: 1,
                             yearStart: YEAR,
                             monthEnd: 12,
@@ -374,7 +374,7 @@ const EducationForm = ({ handleClose, records }) => {
                             graduated: false,
                           })
                         }
-                        color='secondary'
+                        color="secondary"
                         startIcon={<AddIcon style={{ fontSize: 30 }} />}
                       >
                         Add a school
@@ -390,17 +390,17 @@ const EducationForm = ({ handleClose, records }) => {
             <Button
               className={classes.button}
               onClick={() => handleClose()}
-              color='primary'
+              color="primary"
             >
               <Typography>Cancel</Typography>
             </Button>
             <div className={classes.buttonWrapper}>
               <Button
-                type='Submit'
+                type="Submit"
                 className={classes.submit}
                 onClick={() => formikProps.handleSubmit()}
                 disabled={!formikProps.isValid || formikProps.isSubmitting}
-                color='primary'
+                color="primary"
               >
                 <Typography>Update</Typography>
               </Button>

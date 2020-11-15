@@ -77,9 +77,9 @@ const ReflectionCard = ({ reflection }) => {
 
 
   const getRecord = (reflection) => {
-    API.getAllBlogs().then(({ data }) => {
-      setRecords(data);
-    });
+    // API.getAllBlogs().then(({ data }) => {
+    //   setRecords(data);
+    // });
     if (!(Array.isArray(reflection) && reflection.length)) {
       return (
         <div className={classes.emptySection}>

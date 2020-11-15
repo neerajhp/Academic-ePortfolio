@@ -249,6 +249,50 @@ const removeAllBlogs = async (userID) => {
     return deleteCount;
 }
 
+// Searches for all of the user's education records
+// const searchAllBlogs = async (userID) => {
+//     try{
+//       let blog;
+//       await Blog.find({user_id: userID}, (err, result) => {
+//         if(err){
+//             console.log(err);
+//             throw err;
+//         }
+//         if(result){
+//             blog = result;
+//         }
+//       });
+//       return blog;
+//     }catch(error){
+//       console.log(error);
+//     }
+  
+//   }
+
+  // Gets all of the user's blogs (API)
+const searchAllBlogs = async (userID) => {
+    try{
+        let sortedBlogs;
+        await Blog.find({user_id: userID}, (err, result) => {
+            if(err){
+                throw err;
+            }
+            if(result){
+                sortedBlogs = result.sort(customDateSort);
+            }
+        });
+        return sortedBlogs;
+        // let blogs = await findBlogs(req.user.id);
+        // if(!blogs){
+        //     res.status(400).json("No blogs found");
+        // }else{
+        //     res.status(200).json(blogs);
+        // }
+    }catch(error){
+        console.log(error);
+    }
+}
+
 module.exports = {
     postBlog,
     getAllBlogs,
@@ -259,5 +303,6 @@ module.exports = {
     removeAllBlogs,
     updateBlog,
     addImages,
-    removeImages
+    removeImages,
+    searchAllBlogs
 }

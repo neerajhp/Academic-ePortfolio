@@ -162,7 +162,9 @@ const ProfilePage = ({ isOwner = true, match }) => {
       return <EmptyCard name={user.firstName} prompt={'Reflection'} />;
     } else {
       return <ReflectionCard reflection={user.reflection}/>;
-
+    }
+  }
+  
   const getProjects = () => {
     if (
       !isOwner &&

@@ -281,15 +281,15 @@ const ProfilePage = ({ isOwner = true, match }) => {
               {getSkills()}
             </div>
             <div className={classes.section}>
-              <ReflectionCard reflection={user.reflection} />
+              {/* <ReflectionCard reflection={user.reflection} /> */}
               {/* {getReflection()} */}
 
-            </div>
+            {/* </div>
             <div className={classes.section}>
               <ProjectCard type={'large'} />
               <ProjectCard type={'small'} />
               <ProjectCard type={'small'} />
-              <ProjectCard type={'medium'} />
+              <ProjectCard type={'medium'} /> */}
             </div>
             <div className={classes.section}>{getProjects()}</div>
             <div className={classes.section}>

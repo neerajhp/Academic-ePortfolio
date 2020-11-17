@@ -54,14 +54,6 @@ const getAllInfo = async (userID) => {
       console.log("Education found");
     }
 
-    let allBlogs = await blogController.searchAllBlogs(userID);
-    if (!allBlogs || allBlogs.length ===0) {
-      console.log('blog not found');
-      allBlogs = [];
-    } else {
-      console.log('blog found');
-    }
-
     let allExperience = await expController.findAll(userID);
     if (!allExperience || allExperience.length === 0) {
       console.log("Experience not found");
@@ -90,7 +82,6 @@ const getAllInfo = async (userID) => {
       skills: userRecord.skills,
       profilePic: profilePic,
       showcase: featuredWorks,
-      reflection: allBlogs,
       education: allEducation,
       experience: allExperience,
       tutorial: userRecord.tutorial,
@@ -216,8 +207,6 @@ const searchFeaturedWorks = async (userID) => {
     console.log(error);
   }
 };
-
-
 
 // Looks for the user's cv
 const searchCV = async (userID) => {

@@ -55,7 +55,6 @@ const ReflectionDialog = ({ records, setRecords, empty }) => {
   };
 
   const handleClose = () => {
-    console.log('something');
     API.getAllBlogs().then(({ data }) => {
       setRecords(data);
       setOpen(false);

@@ -102,6 +102,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
   useEffect(() => {
     //Unauthorised API call if user is a public viewer
     if (!owner) {
+
       API.viewerGetProfile(userName)
         .then(({ data }) => {
           setUser(data);
@@ -155,6 +156,15 @@ const ProfilePage = ({ isOwner = true, match }) => {
     }
   };
 
+  const getReflection = () => {
+    console.log(user);
+    if (user.reflection === undefined || user.reflection.length === 0) {
+      return <EmptyCard name={user.firstName} prompt={'Reflection'} />;
+    } else {
+      return <ReflectionCard reflection={user.reflection}/>;
+    }
+  }
+  
   const getProjects = () => {
     if (
       !isOwner &&
@@ -271,7 +281,15 @@ const ProfilePage = ({ isOwner = true, match }) => {
               {getSkills()}
             </div>
             <div className={classes.section}>
-              <ReflectionCard />
+              <ReflectionCard reflection={user.reflection} />
+              {/* {getReflection()} */}
+
+            </div>
+            <div className={classes.section}>
+              <ProjectCard type={'large'} />
+              <ProjectCard type={'small'} />
+              <ProjectCard type={'small'} />
+              <ProjectCard type={'medium'} />
             </div>
             <div className={classes.section}>{getProjects()}</div>
             <div className={classes.section}>

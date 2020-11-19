@@ -280,7 +280,7 @@ const ProfilePage = ({ isOwner = true, match }) => {
               {getEducation()}
               {getSkills()}
             </div>
-            <div className={classes.section}>>{getReflection()}</div>
+            <div className={classes.section}>{getReflection()}</div>
 
             <div className={classes.section}>{getProjects()}</div>
             <div className={classes.section}>

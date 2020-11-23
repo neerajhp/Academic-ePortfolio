@@ -157,10 +157,10 @@ const ProfilePage = ({ isOwner = true, match }) => {
 
   const getReflection = () => {
     console.log(user);
-    if (user.reflection === undefined || user.reflection.length === 0) {
+    if (!isOwner && (user.reflection === undefined || user.reflection.length === 0)) {
       return <EmptyCard name={user.firstName} prompt={'Reflection'} />;
     } else {
-      return <ReflectionCard reflection={user.reflection} />;
+      return <ReflectionCard reflection={user.reflection} editable={owner} />;
     }
   };
 

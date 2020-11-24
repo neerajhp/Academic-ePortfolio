@@ -55,7 +55,6 @@ const EducationDialog = ({ records, setRecords, empty }) => {
   };
 
   const handleClose = () => {
-    console.log('education getdata');
     API.getEducation().then(({ data }) => {
       setRecords(data);
       setOpen(false);

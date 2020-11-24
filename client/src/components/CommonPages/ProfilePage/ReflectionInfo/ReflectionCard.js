@@ -69,7 +69,7 @@ const MONTHS = {
 };
 
 /* ================ Component ================ */
-const ReflectionCard = ({ reflection }) => {
+const ReflectionCard = ({ reflection, editable}) => {
   const classes = useStyles();
 
   const [records, setRecords] = useState(reflection);
@@ -81,11 +81,11 @@ const ReflectionCard = ({ reflection }) => {
     if (!(Array.isArray(reflection) && reflection.length)) {
       return (
         <div className={classes.emptySection}>
-          <ReflectionDialog
+          {editable && (<ReflectionDialog
             records={records}
             setRecords={setRecords}
             empty={true}
-          />
+          />)}
         </div>
       );
     } else {
@@ -120,13 +120,16 @@ const ReflectionCard = ({ reflection }) => {
         Reflection{" "}
       </Typography>
       {getRecord(records)}
+      {editable && (
       <div className={classes.editDialogContainer}>
         <ReflectionDialog
           records={records}
           setRecords={setRecords}
           empty={false}
         />
-      </div>
+        </div>)}
+
+
     </Paper>
   );
 };

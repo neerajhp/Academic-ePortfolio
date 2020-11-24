@@ -1,9 +1,14 @@
+import "cypress-react-selector";
+import "@testing-library/cypress/add-commands";
+
 describe("Register Page", () => {
   //need to implement a way to reset db each test
 
   var num = Math.floor(Math.random() * 100 + 1);
 
   it("test valid signup", () => {
+    cy.waitForReact();
+
     cy.visit("http://localhost:3000/home/login");
     cy.get("button").eq(1).click();
     cy.url().should("eq", "http://localhost:3000/home/signup");
@@ -17,7 +22,9 @@ describe("Register Page", () => {
     cy.get("input").eq(4).type("aA@12345678");
     cy.get("button").last().click();
 
-    cy.url().should("eq", "http://localhost:3000/login");
+    cy.url().should("eq", "http://localhost:3000/signup");
+
+    cy.findByRole("heading", { name: /Congratulations!/i }).should("exist");
   });
 
   it("test duplicate email signup", () => {

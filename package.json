@@ -22,7 +22,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/pickers": "^3.2.10",
     "antd": "^4.7.0",
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "aws-sdk": "^2.773.0",
     "bcrypt": "^5.0.0",
     "bl": "^4.0.3",
